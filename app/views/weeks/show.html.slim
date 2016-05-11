@@ -1,0 +1,12 @@
+p#notice = notice
+
+p
+  strong Start date:
+  = @week.start_date
+p
+  strong End date:
+  = @week.end_date
+
+= link_to 'Edit', edit_week_path(@week)
+'|
+= link_to 'Back', weeks_path

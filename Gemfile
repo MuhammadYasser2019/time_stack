@@ -2,7 +2,7 @@ source 'https://rubygems.org'
 
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-ruby '2.2.0'
+ruby '2.2.4'
 gem 'rails', '4.2.5'
 # Use sqlite3 as the database for Active Record
 # Use SCSS for stylesheets
@@ -49,6 +49,7 @@ gem 'pundit'
 gem 'simple_form'
 gem 'slim-rails'
 gem 'therubyracer', :platform=>:ruby
+gem 'bower-rails'
 
 group :development do
   gem 'better_errors'

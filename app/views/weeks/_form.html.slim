@@ -1,0 +1,37 @@
+= form_for @week do |f|
+  - if @week.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@week.errors.count, "error")} prohibited this week from being saved:"
+      ul
+        - @week.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :start_date
+    = f.text_field :start_date, class: :range_date_time_picker
+  .field
+    = f.label :end_date
+    = f.text_field :end_date
+  fieldset class="form-inline"
+  table border="1"
+    thead
+      tr 
+        td Day
+        td Task 
+        td Hours
+        td Comments
+    tbody
+    = f.fields_for :time_entries do |cf|
+      tr  
+        td.date = cf.label cf.object.date.strftime("%A"), :class =>'form-control'
+        //td.date = cf.label :date, :class =>'form-control'
+        cf.hidden_field :date
+        td.project = cf.select :project, options_from_collection_for_select(@projects, "id", "name"), :class =>'form-control'
+        td.task = cf.select :task, options_from_collection_for_select(@tasks, "id", "description"), :class =>'form-control'
+        //= f.select :region, options_for_select(YAML.load_file("#{Rails.root}/config/regions.yml").collect{|x| [x[1]['name'], x[0]]}), class: "form-control", style: 'display:none;'
+        td.hour 
+          = cf.text_field :hours, :class =>'form-control input-sm'
+        td.comment 
+          = cf.text_field :comments, :class =>'form-control input-sm'
+      
+  .actions = f.submit

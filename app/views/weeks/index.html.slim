@@ -1,0 +1,23 @@
+h1 class="row" Weeks Defined
+
+table class="border"
+  thead
+    tr
+      th Start date
+      th End date
+      th
+      th
+      th
+
+  tbody
+    - @weeks.each do |week|
+      tr
+        td = week.start_date
+        td = week.end_date
+        td = link_to 'Show', week
+        td = link_to 'Edit', edit_week_path(week)
+        td = link_to 'Destroy', week, data: {:confirm => 'Are you sure?'}, :method => :delete
+
+br
+
+= link_to 'New Week', new_week_path
