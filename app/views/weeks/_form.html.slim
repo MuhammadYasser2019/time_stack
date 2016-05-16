@@ -12,26 +12,31 @@
   .field
     = f.label :end_date
     = f.text_field :end_date
+  .field
+  = f.fields_for :user_week_statuses do |uf|
+    = uf.select :status_id, options_from_collection_for_select(@statuses, "id", "status", uf.object.status_id), :class =>'form-control'
   fieldset class="form-inline"
   table border="1"
     thead
-      tr 
+      tr
+        td Date 
         td Day
-        td Task 
+        td Project 
+        td Task
         td Hours
-        td Comments
+        td Description
     tbody
     = f.fields_for :time_entries do |cf|
-      tr  
-        td.date = cf.label cf.object.date.strftime("%A"), :class =>'form-control'
-        //td.date = cf.label :date, :class =>'form-control'
-        cf.hidden_field :date
-        td.project = cf.select :project, options_from_collection_for_select(@projects, "id", "name"), :class =>'form-control'
-        td.task = cf.select :task, options_from_collection_for_select(@tasks, "id", "description"), :class =>'form-control'
+      tr
+        td.date = cf.label cf.object.date_of_activity, :class =>'form-control'  
+        td.date = cf.label cf.object.date_of_activity.strftime("%A"), :class =>'form-control'
+        //td.date = cf.label :date_of_activity, :class =>'form-control'
+        cf.hidden_field :id
+        td.project = cf.select :project_id, options_from_collection_for_select(@projects, "id", "name", cf.object.project_id), :class =>'form-control'
+        td.task = cf.select :task_id, options_from_collection_for_select(@tasks, "id", "description", cf.object.task_id), :class =>'form-control'
         //= f.select :region, options_for_select(YAML.load_file("#{Rails.root}/config/regions.yml").collect{|x| [x[1]['name'], x[0]]}), class: "form-control", style: 'display:none;'
         td.hour 
           = cf.text_field :hours, :class =>'form-control input-sm'
         td.comment 
-          = cf.text_field :comments, :class =>'form-control input-sm'
-      
+          = cf.text_area :comments, :class =>'form-control input-lg'
   .actions = f.submit

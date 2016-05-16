@@ -4,12 +4,19 @@ class WeeksController < ApplicationController
   # GET /weeks
   # GET /weeks.json
   def index
-    @weeks = Week.all
+    @projects =  Project.all
+    @weeks = Week.includes("user_week_statuses").all
   end
 
   # GET /weeks/1
   # GET /weeks/1.json
   def show
+    @projects =  Project.all
+    @week = Week.includes("user_week_statuses").find(params[:id])
+    status_ids = [1,2] 
+    @statuses = Status.find(status_ids)
+    @tasks = Task.all
+    
   end
 
   # GET /weeks/new
@@ -22,8 +29,20 @@ class WeeksController < ApplicationController
   # GET /weeks/1/edit
   def edit
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
-    @week = Week.find(params[:id])
+    @projects =  Project.all
+    @week = Week.includes("user_week_statuses").find(params[:id])
+    status_ids = [1,2] 
+    @statuses = Status.find(status_ids)
     @tasks = Task.all
+    logger.debug "weeks_controller - edit entered method"
+    if  @week.user_week_statuses.first.nil?
+      logger.debug "weeks_controller - edit now we found that no user_week_statuses are found, hence we will try to build it now"
+      @week.user_week_statuses.build
+      @week.user_week_statuses.first.user_id = current_user.id
+      @week.user_week_statuses.first.status_id = Status.find_by_status("NEW").id
+      logger.debug "weeks_controller - edit now ready to save the new user_week_statuses as #{@week.user_week_statuses}"
+      @week.save!
+    end
     
     if @week.time_entries.where("time_entries.user_id = ?", current_user.id).count == 0
       logger.debug "weeks_controller - edit- looks like no time was ever saved  for this user for this week. Lets create the array now"
@@ -31,9 +50,10 @@ class WeeksController < ApplicationController
       
       @week.time_entries.each_with_index do |te, i|
         logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
-        @week.time_entries[i].date = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day+i)
+        @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day+i)
         @week.time_entries[i].user_id = current_user.id
       end
+      @week.save!
     end
   end
 
@@ -56,8 +76,15 @@ class WeeksController < ApplicationController
   # PATCH/PUT /weeks/1
   # PATCH/PUT /weeks/1.json
   def update
+    logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
     respond_to do |format|
-      if @week.update(week_params)
+      if @week.update_attributes(week_params)
+        week_params['time_entries_attributes'].each_with_index  do |t,i|
+          logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
+          @week.time_entries.find(t[1]['id'].to_i).update(t[1])
+        end
+        logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
+        @week.save
         format.html { redirect_to @week, notice: 'Week was successfully updated.' }
         format.json { render :show, status: :ok, location: @week }
       else
@@ -85,6 +112,8 @@ class WeeksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
-      params.require(:week).permit(:start_date, :end_date)
+      params.require(:week).permit(:start_date, :end_date,
+      user_week_statuses_attributes: [:id, :user_id, :status_id, :_destroy],
+      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :comments, :_destroy])
     end
 end

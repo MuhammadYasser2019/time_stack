@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-    <title><%= content_for?(:title) ? yield(:title) : "foundation-rails" %></title>
+    <title><%= content_for?(:title) ? yield(:title) : "RSI - Time Tracking System" %></title>
 
     <%= stylesheet_link_tag    "application" %>
     <%= javascript_include_tag "vendor/modernizr" %>
@@ -13,8 +13,8 @@
   </head>
 
   <body>
-    <div class="row"><%= image_tag "RSILogo.jpg" %></div>
-    <div class="large-8 column"><%= yield %></div>
+    <%= render "layouts/header" %>
+    <%= yield %>
 
   </body>
 </html>
