@@ -5,7 +5,8 @@ class WeeksController < ApplicationController
   # GET /weeks.json
   def index
     @projects =  Project.all
-    @weeks = Week.includes("user_week_statuses").all
+    #@weeks = Week.includes("user_week_statuses").where("user_week_statuses.user_id =  ?", current_user.id)
+    @weeks  = Week.left_join_weeks(current_user.id, 1)
   end
 
   # GET /weeks/1
@@ -30,12 +31,13 @@ class WeeksController < ApplicationController
   def edit
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
     @projects =  Project.all
-    @week = Week.includes("user_week_statuses").find(params[:id])
+    @week = Week.left_joins_user_week_statuses(current_user.id,  params[:id]).first
+    
     status_ids = [1,2] 
     @statuses = Status.find(status_ids)
-    @tasks = Task.all
+    @tasks = Task.where(project_id: 1)
     logger.debug "weeks_controller - edit entered method"
-    if  @week.user_week_statuses.first.nil?
+    if  @week.status_id.nil?
       logger.debug "weeks_controller - edit now we found that no user_week_statuses are found, hence we will try to build it now"
       @week.user_week_statuses.build
       @week.user_week_statuses.first.user_id = current_user.id

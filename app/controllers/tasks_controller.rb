@@ -5,6 +5,7 @@ class TasksController < ApplicationController
   # GET /tasks.json
   def index
     @tasks = Task.all
+      
   end
 
   # GET /tasks/1
@@ -62,6 +63,15 @@ class TasksController < ApplicationController
       format.html { redirect_to tasks_url, notice: 'Task was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+  
+  def available_tasks
+    logger.debug "available_tasks - starting to process, params passed  are #{params[:id]}"
+    project_id  = params[:id]
+    
+    @tasks = Task.where(project_id: project_id)
+    logger.debug "available_tasks - leaving  @tasks is #{@tasks}"
+    
   end
 
   private

@@ -12,5 +12,5 @@ table class="border"
       tr
         td = week.start_date
         td = week.end_date
-        td = link_to find_status(week.user_week_statuses.first), find_status(week.user_week_statuses.first) == "NEW"  ? edit_week_path(week): week_path(week)   
+        td = link_to find_status(UserWeekStatus.first_for_user(current_user.id, week.id)), find_status(UserWeekStatus.first_for_user(current_user.id,week.id)) == "NEW"  ? edit_week_path(week): week_path(week)   
 br

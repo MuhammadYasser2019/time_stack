@@ -21,8 +21,8 @@ class ProjectsController < ApplicationController
   # GET /projects/1/edit
   def edit
     @customers = Customer.all
-    @project = Project.find(params[:id])
-    @project.includes(:tasks)
+    @project = Project.includes(:tasks).find(params[:id])
+    
   end
 
   # POST /projects

@@ -4,8 +4,11 @@
 			<%= image_tag "RSILogo.jpg" %>
 		</td>
 		<td>
-			<%= current_user.email if !current_user.nil? %><br/><%= link_to "Sign Out", destroy_user_session_path  if !current_user.nil? %>
-			<%= sign_in_path if current_user.nil? %>
+		<% if !current_user.nil? %>
+			<%= current_user.email %><br/><%= button_to 'Logout', destroy_user_session_path, :method => :delete %>
+		<% else %>
+			<%= link_to "Sign In", "/users/sign_in" %>
+		<% end %>
 		</td>
 	</tr>
 </table>

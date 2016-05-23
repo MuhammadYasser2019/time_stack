@@ -22,7 +22,7 @@
     tr
     = f.fields_for :tasks do |tf|
       td.code 
-        = tf.label :code, :class =>'form-control'
+        = tf.text_field :code, :class =>'form-control'
       td.desc 
-        = tf.label :description, :class =>'form-control'
+        = tf.text_field :description, :class =>'form-control'
   .actions = f.submit

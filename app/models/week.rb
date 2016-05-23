@@ -8,4 +8,20 @@ class Week < ActiveRecord::Base
     TimeEntry.where(week_id: id, user_id: current_user.id).take
     logger.debug "Week - current_user_time_entries leaving"
   end
+  
+  def self.left_join_weeks(some_user, status)
+    weeks = Week.arel_table
+    user_week_statuses = UserWeekStatus.arel_table
+
+    weeks = weeks.join(user_week_statuses, Arel::Nodes::OuterJoin).
+                  on(weeks[:id].eq(user_week_statuses[:week_id]), user_week_statuses[:user_id].eq(some_user)).
+                  join_sources
+                  
+    joins(weeks)
+  end
+  def self.left_joins_user_week_statuses(some_user, week_id)
+    weeks = Week.joins("LEFT JOIN `user_week_statuses` ON `user_week_statuses`.`week_id` = `weeks`.`id` AND `user_week_statuses`.`user_id` = #{some_user}").
+      where("weeks.id = ?",week_id).
+      select("weeks.id AS id, weeks.start_date AS start_date, weeks.end_date AS end_date, user_week_statuses.user_id  AS  user_id, user_week_statuses.status_id AS status_id")
+  end
 end
