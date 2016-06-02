@@ -1,10 +1,12 @@
-  tbody
-    tr  
-      td hello
-        = f.text_field :date, :class =>'form-control'
-      td hi
-        = f.text_field :task, :class =>'form-control'
-      td boliye
-        = f.text_field :hour, :class =>'form-control input-sm'
-      td khush rahengey
-        = f.text_field :comment, :class =>'form-control input-sm'
+  td.date 
+    = f.label f.object.date_of_activity, :class =>'form-control'
+  td.date = f.label f.object.date_of_activity.strftime("%A"), :class =>'form-control'
+  f.hidden_field :id
+  td.project = f.select :project_id, options_from_collection_for_select(@projects, "id", "name", f.object.project_id), :class =>'project_id'
+  td.task = f.select :task_id, options_from_collection_for_select(@tasks, "id", "description", f.object.task_id), :class =>'form-control'
+  td.hour 
+    = f.text_field :hours, :class =>'form-control input-sm'
+  td.comment 
+    = f.text_area :comments, :class =>'form-control input-lg'
+  td.add
+    = link_to "Add Row", "#none", class: "add_row", date_stamp: f.object.date_of_activity, day_value: f.object.date_of_activity.strftime("%A")

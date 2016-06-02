@@ -24,3 +24,29 @@ jQuery ($) ->
         console.log "data is "+item.code + "  "  + item.description
         $('#'+field_id).append($("<option></option>").attr("value",item.id).text(item.description))
       #task_id = $('#'+field_id+' :selected').val()
+  $('.add_row').click ->
+    
+    date_stamp = $(this).attr('date_stamp')
+    day_value = $(this).attr('day_value')
+    console.log "Clicked add  row" + day_value
+    $('#mytable').each ->
+      tds = '<tr>'
+      iter = 0
+      jQuery.each $('tr:last td', this), ->
+        if(iter == 0)
+          tds += '<td>' + date_stamp + '</td>'
+        else if (iter == 1)
+          tds += '<td>' + day_value + '</td>'
+        else
+          tds += '<td>' + $(this).html() + '</td>'
+          console.log "html being pushed into this cell is [ " + $(this).html + "]" 
+        iter++
+        return
+      tds += '<input type="hidden" value="" id="id"></tr>'
+      if $('tbody', this).length > 0
+        $('tbody', this).append tds
+      else
+        $(this).append tds
+        return
+      return
+    return false    

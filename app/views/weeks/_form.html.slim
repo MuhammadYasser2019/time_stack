@@ -16,7 +16,7 @@
   = f.fields_for :user_week_statuses do |uf|
     = uf.select :status_id, options_from_collection_for_select(@statuses, "id", "status", uf.object.status_id), :class =>'form-control'
   fieldset class="form-inline"
-  table border="1"
+  table border="1" id="mytable"
     thead
       tr
         td Date 
@@ -27,16 +27,5 @@
         td Description
     tbody
     = f.fields_for :time_entries do |cf|
-      tr
-        td.date = cf.label cf.object.date_of_activity, :class =>'form-control'  
-        td.date = cf.label cf.object.date_of_activity.strftime("%A"), :class =>'form-control'
-        //td.date = cf.label :date_of_activity, :class =>'form-control'
-        cf.hidden_field :id
-        td.project = cf.select :project_id, options_from_collection_for_select(@projects, "id", "name", cf.object.project_id), :class =>'project_id'
-        td.task = cf.select :task_id, options_from_collection_for_select(@tasks, "id", "description", cf.object.task_id), :class =>'form-control'
-        //= f.select :region, options_for_select(YAML.load_file("#{Rails.root}/config/regions.yml").collect{|x| [x[1]['name'], x[0]]}), class: "form-control", style: 'display:none;'
-        td.hour 
-          = cf.text_field :hours, :class =>'form-control input-sm'
-        td.comment 
-          = cf.text_area :comments, :class =>'form-control input-lg'
+      tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
   .actions = f.submit "Save Timesheet"

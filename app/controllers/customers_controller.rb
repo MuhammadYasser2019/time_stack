@@ -60,7 +60,15 @@ class CustomersController < ApplicationController
       format.json { head :no_content }
     end
   end
-
+  
+  def report
+    logger "report - params passed are  project_id: #{params[:project_id]},  start_date: #{params[:start_date]}, end_date: #{params[:end_date]}"
+    if !params[:project_id].nil?
+      logger.debug "report - now  running a report for project  #{params[:project_id]}"
+      
+    end 
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_customer
