@@ -24,29 +24,31 @@ jQuery ($) ->
         console.log "data is "+item.code + "  "  + item.description
         $('#'+field_id).append($("<option></option>").attr("value",item.id).text(item.description))
       #task_id = $('#'+field_id+' :selected').val()
-  $('.add_row').click ->
-    
-    date_stamp = $(this).attr('date_stamp')
-    day_value = $(this).attr('day_value')
-    console.log "Clicked add  row" + day_value
-    $('#mytable').each ->
-      tds = '<tr>'
-      iter = 0
-      jQuery.each $('tr:last td', this), ->
-        if(iter == 0)
-          tds += '<td>' + date_stamp + '</td>'
-        else if (iter == 1)
-          tds += '<td>' + day_value + '</td>'
-        else
-          tds += '<td>' + $(this).html() + '</td>'
-          console.log "html being pushed into this cell is [ " + $(this).html + "]" 
-        iter++
-        return
-      tds += '<input type="hidden" value="" id="id"></tr>'
-      if $('tbody', this).length > 0
-        $('tbody', this).append tds
-      else
-        $(this).append tds
-        return
-      return
-    return false    
+  value = 0
+  count = 0
+  $("tbody").on("click", ".add_row", ->
+    t = $(this).parent().parent("tr")
+    i = $(this).parent().parent("tr").next()
+    copy = t.clone()
+    console.log(i.is("input"))
+    if value == 0
+      value = parseInt($("table input:last").attr("value")) + 1
+    else
+      value += 1
+    if count == 0
+      count = $("tbody tr").length - 1
+    else
+      count += 1
+    console.log("VALUEEEEEE: " + value)
+    input = $('<input type="hidden" value="'+ value + '" id="" name="week[time_entries_attributes][' + count + '][id]" >')
+    console.log(input)
+    date_value = copy.children(".date:first").children().text()
+    date = $('<input type="hidden" value="' + date_value + '"  name="week[time_entries_attributes][' + count + '][date_of_activity]">')
+    date.insertAfter(copy.children(".date:first").children())
+    copy.children(".project").children().attr("name", "week[time_entries_attributes][" + count + "][project_id]")
+    copy.children(".task").children().attr("name", "week[time_entries_attributes][" + count + "][task_id]")
+    copy.children(".hour").children().attr("name", "week[time_entries_attributes][" + count + "][hours]")
+    copy.children(".comment").children().attr("name", "week[time_entries_attributes][" + count + "][comments]")
+    copy.insertAfter(i)
+    input.insertAfter(i.next())
+  )
