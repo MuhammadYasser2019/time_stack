@@ -1,0 +1,30 @@
+  h1 Report
+  p Start Date:
+   #{@week.start_date}
+  p End Date:
+   #{@week.end_date}
+  p Status:
+   #{Status.find(UserWeekStatus.first_for_user(current_user.id, params[:id]).status_id).status}
+  fieldset class="form-inline"
+  table border="1"
+    thead
+      tr
+        td Date 
+        td Day
+        td Project 
+        td Task
+        td Hours
+        td Description
+    tbody
+    - @week.time_entries.each do |t|
+      tr
+        td.date = t.date_of_activity
+        td.date = t.date_of_activity.strftime("%A") 
+        td.project = t.project.name
+        td.task = t.task.description
+        td.hour 
+          = t.hours
+        td.comment 
+          = t.comments
+ 
+  = link_to "Back to index", :weeks

@@ -11,7 +11,7 @@ Rails.application.routes.draw do
   post '/weeks/:id(.:format)' => 'weeks#update'
   # You can have the root of your site routed with "root"
   root 'weeks#index'
-
+  get 'weeks/:id/report' => 'weeks#report'
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 

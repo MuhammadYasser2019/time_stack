@@ -108,6 +108,10 @@ class WeeksController < ApplicationController
       end
     end
   end
+  
+  def report
+    @week = Week.find(params[:id])
+  end
 
   # DELETE /weeks/1
   # DELETE /weeks/1.json
