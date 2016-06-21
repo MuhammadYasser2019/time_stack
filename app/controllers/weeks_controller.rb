@@ -111,6 +111,12 @@ class WeeksController < ApplicationController
   
   def report
     @week = Week.find(params[:id])
+    @hours_sum = 0
+    @week.time_entries.each do |t|
+      if !t.hours.nil?
+        @hours_sum += t.hours
+      end
+    end
   end
 
   # DELETE /weeks/1

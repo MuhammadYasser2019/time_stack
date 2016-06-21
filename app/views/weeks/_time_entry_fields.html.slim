@@ -2,8 +2,10 @@
     = f.label f.object.date_of_activity, :class =>'form-control'
   td.date = f.label f.object.date_of_activity.strftime("%A"), :class =>'form-control'
   f.hidden_field :id
-  td.project = f.select :project_id, options_from_collection_for_select(@projects, "id", "name", f.object.project_id), :class =>'project_id'
-  td.task = f.select :task_id, options_from_collection_for_select(@tasks, "id", "description", f.object.task_id), :class =>'form-control'
+  td.project 
+    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", f.object.project_id), {}, {class: "project_id"})
+  td.task 
+    = f.select(:task_id, options_from_collection_for_select(@tasks, "id", "description", f.object.task_id), {}, {:class =>'task_id'})
   td.hour 
     = f.text_field :hours, :class =>'form-control input-sm'
   td.comment 
