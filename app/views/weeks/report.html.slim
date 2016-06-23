@@ -1,3 +1,4 @@
+div.report
   h1 Report
   p Start Date:
    #{@week.start_date}
@@ -5,7 +6,6 @@
    #{@week.end_date}
   p Status:
    #{Status.find(UserWeekStatus.first_for_user(current_user.id, params[:id]).status_id).status}
-  fieldset class="form-inline"
   table border="1"
     thead
       tr
@@ -33,5 +33,6 @@
       td Total Hours:
       td = @hours_sum
       td
- 
-  = link_to "Back to index", :weeks
+      
+  - if @week.user_week_statuses.last.status_id == 2
+      div.sig Manager's Signature __________________________________________________

@@ -87,7 +87,7 @@ class WeeksController < ApplicationController
       if t[0].to_i > 6
         logger.debug "#{t[1]}"
         unless TimeEntry.where(id: t[1]["id"]).present?
-          TimeEntry.create(id: t[1]["id"], week_id: @week.id, project_id: t[1]["project_id"], task_id: t[1]["task_id"], hours: t[1]["hours"], comments: t[1]["comments"])
+          TimeEntry.create(id: t[1]["id"], week_id: @week.id, project_id: t[1]["project_id"], task_id: t[1]["task_id"], hours: t[1]["hours"], user_id: current_user.id, comments: t[1]["comments"])
         end
       end
     end
@@ -100,7 +100,7 @@ class WeeksController < ApplicationController
         end
         logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
         @week.save
-        format.html { redirect_to @week, notice: 'Week was successfully updated.' }
+        format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
         format.json { render :show, status: :ok, location: @week }
       else
         format.html { render :edit }

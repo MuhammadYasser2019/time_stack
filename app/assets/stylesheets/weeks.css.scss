@@ -1,3 +1,31 @@
 // Place all the styles related to the weeks controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+table{
+  margin-left: auto;
+  margin-right: auto;
+}
+
+h1.row{
+  text-align:center;
+}
+
+.report{
+  text-align:center;
+}
+
+.sig{
+  padding: 50px;
+  margin:50px;
+}
+
+@media print{
+  .report{
+    text-align:center !important;
+  }
+  
+  .sig{
+    padding: 50px !important;
+    margin:50px !important;
+  }
+}
