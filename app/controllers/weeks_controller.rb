@@ -6,7 +6,7 @@ class WeeksController < ApplicationController
   def index
     @projects =  Project.all
     #@weeks = Week.includes("user_week_statuses").where("user_week_statuses.user_id =  ?", current_user.id)
-    @weeks  = Week.left_join_weeks(current_user.id, 1)
+    @weeks  = Week.left_join_weeks(current_user.id, 1).order(start_date: :desc).limit(10)
   end
 
   # GET /weeks/1
@@ -119,8 +119,20 @@ class WeeksController < ApplicationController
   
   def report
     @week = Week.find(params[:id])
+    @projects = Project.all
+    logger.debug "PROJECT quotes: #{!params[:project] == ''}"
+    logger.debug "PROJECT nil: #{!params[:project] == nil}"
+    logger.debug "PROJECT 1: #{!params[:project] == '5'}"
+    logger.debug "PROJECT value: #{params[:project]}"
+    logger.debug "commit: #{params[:commit]}"
+    if params[:commit] == "Change Project"
+      logger.debug "getting here?"
+      @time_entries = TimeEntry.where(project_id: params[:project], week_id: @week.id, user_id: current_user.id)
+    else
+      @time_entries = TimeEntry.where(week_id: @week.id, user_id: current_user.id)
+    end
     @hours_sum = 0
-    @week.time_entries.each do |t|
+    @time_entries.each do |t|
       if !t.hours.nil?
         @hours_sum += t.hours
       end

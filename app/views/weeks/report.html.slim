@@ -6,6 +6,9 @@ div.report
    #{@week.end_date}
   p Status:
    #{Status.find(UserWeekStatus.first_for_user(current_user.id, params[:id]).status_id).status}
+  = form_tag(params, :method => :get) do
+	  = select_tag :project, options_from_collection_for_select(@projects, "id", "name"), :include_blank => true
+	  = submit_tag "Change Project"
   table border="1"
     thead
       tr
@@ -16,7 +19,7 @@ div.report
         td Hours
         td Description
     tbody
-    - @week.time_entries.each do |t|
+    - @time_entries.each do |t|
       tr
         td.date = t.date_of_activity
         td.date = t.date_of_activity.strftime("%A") 
