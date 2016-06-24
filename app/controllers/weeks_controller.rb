@@ -84,8 +84,16 @@ class WeeksController < ApplicationController
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
     week_params["time_entries_attributes"].each do |t|
       logger.debug "#{t[0]}"
+      if t[1]["project_id"] == ""
+       t[1]["project_id"] = nil
+       t[1]["task_id"] = nil
+       unless TimeEntry.where(t[1]["id"]).nil?
+        TimeEntry.find(t[1]["id"]).update(project_id: nil, task_id: nil)
+       end
+      end
       if t[0].to_i > 6
-        logger.debug "#{t[1]}"
+        logger.debug "t[1][project_id]: #{t[1]['project_id']}"
+        logger.debug "t[1][task_id]: #{t[1]['task_id']}"
         unless TimeEntry.where(id: t[1]["id"]).present?
           TimeEntry.create(id: t[1]["id"], week_id: @week.id, project_id: t[1]["project_id"], task_id: t[1]["task_id"], hours: t[1]["hours"], user_id: current_user.id, comments: t[1]["comments"])
         end
