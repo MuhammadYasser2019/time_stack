@@ -27,5 +27,5 @@
         td Description
     tbody
     = f.fields_for :time_entries do |cf|
-      tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
+      tr disabled=true = render :partial => 'time_entry_fields', :locals => {:f => cf}
   .actions = f.submit "Save Timesheet"

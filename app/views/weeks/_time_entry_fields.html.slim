@@ -13,5 +13,14 @@
     = f.text_field :hours, :class =>'form-control input-sm'
   td.comment 
     = f.text_area :comments, :class =>'form-control input-lg'
+  td.exception
+   div.check
+  	span Sick Day?
+  	br
+  	  = f.check_box :sick, :class => 'exception-check'
+  	
+  	span Personal Day?
+  	br
+  	  = f.check_box :personal_day, :class => 'exception-check'
   td.add
     = link_to "Add Row", "#none", class: "add_row", date_stamp: f.object.date_of_activity, day_value: f.object.date_of_activity.strftime("%A")

@@ -28,6 +28,13 @@ jQuery ($) ->
       
   value = 0
   count = 0
+  $("tbody").on("click", ".exception-check", ->
+    tr = $(this).parent().parent().parent("tr")
+    if tr.attr("disabled") == false
+      tr.prop("disabled", true)
+    else
+      tr.prop("disabled", false)
+  ) 
   $("tbody").on("click", ".add_row", ->
     t = $(this).parent().parent("tr")
     i = $(this).parent().parent("tr").next()

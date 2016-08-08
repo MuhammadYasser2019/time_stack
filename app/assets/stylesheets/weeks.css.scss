@@ -19,6 +19,12 @@ h1.row{
   margin:50px;
 }
 
+.check{
+    font-size: 10px;
+    font-weight: bold;
+    text-align: center;
+}
+
 @media print{
   .report{
     text-align:center !important;

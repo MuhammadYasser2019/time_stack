@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160515154128) do
+ActiveRecord::Schema.define(version: 20160804163510) do
 
   create_table "customers", force: :cascade do |t|
     t.string   "name",       limit: 255
@@ -64,6 +64,8 @@ ActiveRecord::Schema.define(version: 20160515154128) do
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
     t.integer  "project_id",       limit: 4
+    t.boolean  "sick"
+    t.boolean  "personal_day"
   end
 
   add_index "time_entries", ["task_id"], name: "index_time_entries_on_task_id", using: :btree
