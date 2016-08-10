@@ -28,13 +28,7 @@ jQuery ($) ->
       
   value = 0
   count = 0
-  $("tbody").on("click", ".exception-check", ->
-    tr = $(this).parent().parent().parent("tr")
-    if tr.attr("disabled") == false
-      tr.prop("disabled", true)
-    else
-      tr.prop("disabled", false)
-  ) 
+
   $("tbody").on("click", ".add_row", ->
     t = $(this).parent().parent("tr")
     i = $(this).parent().parent("tr").next()
@@ -64,4 +58,33 @@ jQuery ($) ->
     copy.children(".comment").children().attr("id", "week_time_entries_attributes_" + count + "_comment")
     copy.insertAfter(i)
     input.insertAfter(i.next())
+  )
+  $("tbody").on("click", ".exception-check", ->
+    orig = $(this)
+    console.log(orig.is(":checked"))
+    console.log("exception-checkr?")
+    tr = $(this).parent().parent().parent("tr")
+    label = tr.find(".date1").children("label")
+    console.log(label.text())
+    date = label.text()
+    console.log("count: " + tr.siblings().length)
+    if orig.is(":checked")
+      console.log("already checked")
+      console.log("non-date: " + tr.next().next().find(".date1").children("label").text())
+      console.log("date: " + date)
+      result = confirm("This will remove any added rows to from this day. Proceed?");
+   	  if result
+   	   tr.find("input,button,textarea,select").attr("disabled", "disabled");
+   	   tr.siblings().each ->
+   	    console.log("sibling")
+        if $(this).find(".date1").children("label").text() == date
+         $(this).remove()
+      else
+       orig.prop("checked", false)
+      orig.removeAttr("disabled")
+    else
+      console.log("not checked")
+      tr.find("input,button,textarea,select").removeAttr("disabled");
+      
+    
   )
