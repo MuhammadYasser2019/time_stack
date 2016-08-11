@@ -23,4 +23,4 @@
   	br
   	  = f.check_box :personal_day, :class => 'exception-check'
   td.add
-    = link_to "Add Row", "#none", class: "add_row", date_stamp: f.object.date_of_activity, day_value: f.object.date_of_activity.strftime("%A")
+    = link_to "Add Row", "javascript:void(0)", class: "add_row", date_stamp: f.object.date_of_activity, day_value: f.object.date_of_activity.strftime("%A")

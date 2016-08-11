@@ -33,6 +33,20 @@ h1.row{
   margin-top: 15px;
 }
 
+#project{
+  margin: 0 33% 20px 33%;
+  width: 33%;
+}
+
+.field{
+  width: 33%;
+  margin: auto;
+}
+
+h1{
+  text-align:center;
+}
+
 @media print{
   .report{
     text-align:center !important;

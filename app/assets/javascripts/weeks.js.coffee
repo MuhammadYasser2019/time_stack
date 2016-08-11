@@ -75,6 +75,7 @@ jQuery ($) ->
       result = confirm("This will remove any added rows to from this day. Proceed?");
    	  if result
    	   tr.find("input,button,textarea,select").attr("disabled", "disabled");
+   	   tr.find("a").hide()
    	   tr.siblings().each ->
    	    console.log("sibling")
         if $(this).find(".date1").children("label").text() == date
@@ -85,6 +86,7 @@ jQuery ($) ->
     else
       console.log("not checked")
       tr.find("input,button,textarea,select").removeAttr("disabled");
+      tr.find("a").show()
       
     
   )

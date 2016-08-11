@@ -13,9 +13,9 @@
     = f.label :end_date
     = f.text_field :end_date
   .field
-  = f.fields_for :user_week_statuses do |uf|
+   = f.fields_for :user_week_statuses do |uf|
     = uf.select :status_id, options_from_collection_for_select(@statuses, "id", "status", uf.object.status_id), :class =>'form-control'
-  fieldset class="form-inline"
+
   table border="1" id="mytable"
     thead
       tr
