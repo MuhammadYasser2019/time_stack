@@ -50,7 +50,7 @@ class WeeksController < ApplicationController
       logger.debug "weeks_controller - edit- looks like no time was ever saved  for this user for this week. Lets create the array now"
       7.times {  @week.time_entries.build}
       
-      @week.time_entries.each_with_index do |te, i|
+      @week.time_entries.where("time_entries.user_id = ?", current_user.id).each_with_index do |te, i|
         logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
         logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
         logger.debug "i #{i}"
