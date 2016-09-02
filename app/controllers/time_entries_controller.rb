@@ -20,7 +20,7 @@ class TimeEntriesController < ApplicationController
         t = TimeEntry.new
         t.user = current_user
         t.week = @curr_week
-        t.date = @curr_week.start_date + i
+        t.date_of_activity = @curr_week.start_date + i
         t.hours = 0
         logger.debug "time_entries_controller - index - time_entry is #{t.inspect}"
         t.save!

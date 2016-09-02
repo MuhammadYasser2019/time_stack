@@ -4,9 +4,9 @@
   f.hidden_field :id
   td.project 
    -if f.object.sick || f.object.personal_day
-    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", f.object.project_id), {include_blank: true}, {class: "project_id", disabled: "disabled"})
+    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id", disabled: "disabled"})
    -else
-    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", f.object.project_id), {include_blank: true}, {class: "project_id"})
+    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id"}) 
   td.task
    - if !f.object.task_id.nil?
     - if f.object.sick || f.object.personal_day

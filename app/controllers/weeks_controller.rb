@@ -6,7 +6,7 @@ class WeeksController < ApplicationController
   def index
     @projects =  Project.all
     #@weeks = Week.includes("user_week_statuses").where("user_week_statuses.user_id =  ?", current_user.id)
-    @weeks  = Week.left_join_weeks(current_user.id, 1).order(start_date: :desc).limit(10)
+    @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(10)
   end
 
   # GET /weeks/1
@@ -22,8 +22,24 @@ class WeeksController < ApplicationController
 
   # GET /weeks/new
   def new
+    @projects =  Project.all
+    @tasks = Task.where(project_id: 1)
     @week = Week.new
-    
+    @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
+    @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')
+    @week.user_id = current_user.id
+    @week.status_id = 1
+    @week.save!
+    7.times {  @week.time_entries.build( user_id: current_user.id )}
+      
+    @week.time_entries.each_with_index do |te, i|
+      logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
+      logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
+      logger.debug "i #{i}"
+      @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
+      @week.time_entries[i].user_id = current_user.id
+    end
+    @week.save!
     
   end
 
@@ -31,34 +47,21 @@ class WeeksController < ApplicationController
   def edit
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
     @projects =  Project.all
-    @week = Week.left_joins_user_week_statuses(current_user.id,  params[:id]).first
+    @week = Week.joins(:time_entries).find(params[:id])
     
     status_ids = [1,2] 
     @statuses = Status.find(status_ids)
-    @tasks = Task.where(project_id: 1)
+    @tasks = Task.where(project_id: 1) if @tasks.blank?
     logger.debug "weeks_controller - edit entered method"
-    if  @week.status_id.nil?
-      logger.debug "weeks_controller - edit now we found that no user_week_statuses are found, hence we will try to build it now"
-      @week.user_week_statuses.build
-      @week.user_week_statuses.first.user_id = current_user.id
-      @week.user_week_statuses.first.status_id = Status.find_by_status("NEW").id
-      logger.debug "weeks_controller - edit now ready to save the new user_week_statuses as #{@week.user_week_statuses}"
-      @week.save!
+    @week.time_entries.each_with_index do |te, i|
+      logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
+      logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
+      logger.debug "i #{i}"
+      @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
+      @week.time_entries[i].user_id = current_user.id
     end
+    @week.save!
     
-    if @week.time_entries.where("time_entries.user_id = ?", current_user.id).count == 0
-      logger.debug "weeks_controller - edit- looks like no time was ever saved  for this user for this week. Lets create the array now"
-      7.times {  @week.time_entries.build}
-      
-      @week.time_entries.where("time_entries.user_id = ?", current_user.id).each_with_index do |te, i|
-        logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
-        logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
-        logger.debug "i #{i}"
-        @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
-        @week.time_entries[i].user_id = current_user.id
-      end
-      @week.save!
-    end
   end
 
   # POST /weeks
@@ -157,8 +160,7 @@ class WeeksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
-      params.require(:week).permit(:start_date, :end_date,
-      user_week_statuses_attributes: [:id, :user_id, :status_id, :_destroy],
+      params.require(:week).permit(:start_date, :end_date, :user_id, :status_id,
       time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :comments, :sick, :personal_day, :_destroy])
     end
 end

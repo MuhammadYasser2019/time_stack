@@ -13,6 +13,8 @@ table class="border"
       tr
         td = week.start_date
         td = week.end_date
-        td = link_to find_status(UserWeekStatus.first_for_user(current_user.id, week.id)), find_status(UserWeekStatus.first_for_user(current_user.id,week.id)) == "NEW"  ? edit_week_path(week): week_path(week)   
-		td = link_to "Report", "/weeks/#{week.id}/report" if find_status(UserWeekStatus.first_for_user(current_user.id,week.id)) == "SUBMITTED"
+        td = link_to find_status(week), find_status(week) == "NEW"  ? edit_week_path(week): week_path(week)   
+		td = link_to "Report", "/weeks/#{week.id}/report" if find_status(week) == "SUBMITTED"
+    tr
+      td = link_to "Enter Time for Current Week", "/weeks/new" if current_week_available(current_user).blank?		
 br

@@ -5,7 +5,7 @@ div.report
   p End Date:
    #{@week.end_date}
   p Status:
-   #{Status.find(UserWeekStatus.first_for_user(current_user.id, params[:id]).status_id).status}
+   #{Status.find(@week.status_id).status}
   = form_tag(params, :method => :get) do
 	  = select_tag :project, options_from_collection_for_select(@projects, "id", "name"), :include_blank => true
 	  = submit_tag "Change Project"
@@ -49,5 +49,5 @@ div.report
       td = @hours_sum
       td
       
-  - if @week.user_week_statuses.last.status_id == 2
+  - if @week.status_id == 2
       div.sig Manager's Signature __________________________________________________

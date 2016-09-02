@@ -12,8 +12,8 @@
   .field
     = f.label :end_date
     = f.text_field :end_date
-  .field
-   = f.select :status_id, options_from_collection_for_select(@statuses, "id", "status", f.object.status_id), :class =>'form-control'
+  /.field
+   /= f.select :status_id, options_from_collection_for_select(@statuses, "id", "status", status_id), :class =>'form-control'
 
   table border="1" id="mytable"
     thead
