@@ -20,9 +20,11 @@
         td Description
     tbody
     tr
-    = f.fields_for :tasks do |tf|
+    = f.fields_for :task do |tf|
       td.code 
         = tf.text_field :code, :class =>'form-control'
       td.desc 
         = tf.text_field :description, :class =>'form-control'
   .actions = f.submit
+
+  

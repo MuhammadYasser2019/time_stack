@@ -28,4 +28,20 @@ module WeeksHelper
       return project_id
     end
   end
+  
+  def user_represents_projects(current_user)
+    if Project.where(user_id: current_user).count == 0
+      return false
+    else
+      return true
+    end  
+  end
+  def user_represents_customers(current_user)
+    if Customer.where(user_id: current_user).count == 0
+      return false
+    else
+      return true
+    end  
+  end
+  
 end
