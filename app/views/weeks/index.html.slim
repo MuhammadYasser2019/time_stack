@@ -7,14 +7,16 @@ table class="border"
       th End date
       th Status
       th Report
+
       
   tbody
     - @weeks.each do |week|
       tr
         td = week.start_date
         td = week.end_date
-        td = link_to find_status(week), find_status(week) == "NEW"  ? edit_week_path(week): week_path(week)   
-		td = link_to "Report", "/weeks/#{week.id}/report" if find_status(week) == "SUBMITTED"
+        td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
+		td = link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
+
     tr
       td = link_to "Enter Time for Current Week", "/weeks/new" if current_week_available(current_user).blank?
       td

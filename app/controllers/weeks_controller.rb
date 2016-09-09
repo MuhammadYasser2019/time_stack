@@ -17,6 +17,8 @@ class WeeksController < ApplicationController
     status_ids = [1,2] 
     @statuses = Status.find(status_ids)
     @tasks = Task.all
+
+
     
   end
 
@@ -111,6 +113,11 @@ class WeeksController < ApplicationController
         end
         logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
         @week.save
+
+        if @week.status_id == 2
+          ApprovalMailer.mail_to_manager(@week, current_user).deliver
+        end
+
         format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
         format.json { render :show, status: :ok, location: @week }
       else
@@ -139,6 +146,9 @@ class WeeksController < ApplicationController
       if !t.hours.nil?
         @hours_sum += t.hours
       end
+    end
+    if @week.status_id == 3
+      @approved_by = User.find(@week.approved_by)
     end
   end
 

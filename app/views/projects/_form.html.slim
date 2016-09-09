@@ -27,4 +27,34 @@
         = tf.text_field :description, :class =>'form-control'
   .actions = f.submit
 
+  table
+    thead
+      tr
+        th Employee
+        th Start date
+        th End date
+        th Hours
+        th
+        th
+
+    tbody
+      - @applicaple_week.each do |at|
+        tr
+          td
+            at.label = User.find(at.user_id).email
+          td
+            at.label = at.start_date
+          td
+            at.label = at.end_date
+          td
+            at.label = TimeEntry.where(week_id: at.id).sum(:hours)
+          td = link_to "Approve","/projects/approve/#{at.id}", remote: true
+          td = link_to "Reject", "/projects/reject/#{at.id}", class: "comment_class" remote: true
+
+  div class= "approval-class"
+
+
+
+
+
   

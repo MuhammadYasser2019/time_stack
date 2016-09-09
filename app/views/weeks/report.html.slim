@@ -51,3 +51,6 @@ div.report
       
   - if @week.status_id == 2
       div.sig Manager's Signature __________________________________________________
+
+  - if @week.status_id == 3
+     div.approver "Approved by #{@approved_by.first_name} #{@approved_by.last_name} on #{@week.approved_date.strftime(('%Y-%m-%d'))}"

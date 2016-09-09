@@ -22,7 +22,8 @@ class ProjectsController < ApplicationController
   def edit
     @customers = Customer.all
     @project = Project.includes(:tasks).find(params[:id])
-    
+    @applicaple_week = Week.joins(:time_entries).where("weeks.status_id = ? and time_entries.project_id= ?", "2",params[:id]).select(:id, :user_id, :start_date, :end_date , :comments).distinct
+
   end
 
   # POST /projects
@@ -62,6 +63,35 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
       format.json { head :no_content }
+    end
+  end
+
+  def approve
+    w = Week.find(params[:id])
+    w.status_id = 3
+    w.approved_date = Time.now.strftime('%Y-%m-%d')
+    w.approved_by = current_user.id
+    w.save!
+
+    manager = current_user
+    ApprovalMailer.mail_to_user(w, manager).deliver
+    respond_to do |format|
+      format.html {flash[:notice] = "Approved"}
+      format.js
+    end
+
+  end
+
+  def reject
+    w = Week.find(params[:id])
+    w.status_id = 4
+    w.save!
+
+    @user = current_user
+    ApprovalMailer.mail_to_user(w, @user).deliver
+    respond_to do |format|
+      format.html {flash[:notice] = "Reject"}
+      format.js
     end
   end
 
