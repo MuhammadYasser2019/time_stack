@@ -38,7 +38,7 @@
         th
 
     tbody
-      - @applicaple_week.each do |at|
+      - @applicaple_week.each_with_index do |at, i|
         tr id = "#{at.user_id}"
           td
             at.label = User.find(at.user_id).email
@@ -51,9 +51,9 @@
           td = link_to "Approve","/projects/approve/#{at.id}", class: "approve-class", remote: true
           td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", remote: true
           td
-            at.button = button_to "Add Comment", id: "comment_#{at.user_id}"
+            at.button = button_tag "Add Comment", class: "add_comment", id: "add_comment_#{i}", type: "button"
           td
-            at.text = text_area_tag 'comments', at.comments, size: "15x0.5", required: true, class: "myclass", id: "reject_#{at.user_id}"
+            at.text = text_area_tag "Comments", at.comments, size: "15x0.5", required: true, class: "myclass", id: "comment_#{i}"
 
   div class= "approval-class"
 
