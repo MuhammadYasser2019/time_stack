@@ -67,14 +67,14 @@ class ProjectsController < ApplicationController
   end
 
   def approve
-    w = Week.find(params[:id])
-    w.status_id = 3
-    w.approved_date = Time.now.strftime('%Y-%m-%d')
-    w.approved_by = current_user.id
-    w.save!
+    @w = Week.find(params[:id])
+    # w.status_id = 3
+    @w.approved_date = Time.now.strftime('%Y-%m-%d')
+    @w.approved_by = current_user.id
+    # w.save!
 
     manager = current_user
-    ApprovalMailer.mail_to_user(w, manager).deliver
+    ApprovalMailer.mail_to_user(@w, manager).deliver
     respond_to do |format|
       format.html {flash[:notice] = "Approved"}
       format.js
@@ -83,14 +83,14 @@ class ProjectsController < ApplicationController
   end
 
   def reject
-    w = Week.find(params[:id])
-    w.status_id = 4
-    w.save!
-
+    @w = Week.find(params[:id])
+    # w.status_id = 4
+    # w.save!
+    logger.debug("in the controller")
     @user = current_user
-    ApprovalMailer.mail_to_user(w, @user).deliver
+    ApprovalMailer.mail_to_user(@w, @user).deliver
     respond_to do |format|
-      format.html {flash[:notice] = "Reject"}
+      # format.html {flash[:notice] = "Reject"}
       format.js
     end
   end

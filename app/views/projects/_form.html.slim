@@ -39,7 +39,7 @@
 
     tbody
       - @applicaple_week.each do |at|
-        tr
+        tr id = "#{at.user_id}"
           td
             at.label = User.find(at.user_id).email
           td
@@ -48,8 +48,12 @@
             at.label = at.end_date
           td
             at.label = TimeEntry.where(week_id: at.id).sum(:hours)
-          td = link_to "Approve","/projects/approve/#{at.id}", remote: true
-          td = link_to "Reject", "/projects/reject/#{at.id}", class: "comment_class" remote: true
+          td = link_to "Approve","/projects/approve/#{at.id}", class: "approve-class", remote: true
+          td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", remote: true
+          td
+            at.button = button_to "Add Comment", id: "comment_#{at.user_id}"
+          td
+            at.text = text_area_tag 'comments', at.comments, size: "15x0.5", required: true, class: "myclass", id: "reject_#{at.user_id}"
 
   div class= "approval-class"
 
