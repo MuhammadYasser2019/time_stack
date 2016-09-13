@@ -232,6 +232,8 @@ GEM
       ffi (>= 0.5.0)
     rdoc (4.2.2)
       json (~> 1.4)
+    recaptcha (3.3.0)
+      json
     ref (2.0.0)
     responders (2.2.0)
       railties (>= 4.2.0, < 5.1)
@@ -369,6 +371,7 @@ DEPENDENCIES
   rb-fchange
   rb-fsevent
   rb-inotify
+  recaptcha
   rspec-rails
   rubocop
   sass-rails (~> 4.0.5)
@@ -383,5 +386,8 @@ DEPENDENCIES
   turbolinks
   uglifier (>= 1.3.0)
 
+RUBY VERSION
+   ruby 2.3.0p0
+
 BUNDLED WITH
-   1.11.2
+   1.12.5

@@ -52,6 +52,8 @@ gem 'slim-rails'
 gem 'therubyracer', :platform=>:ruby
 gem 'bower-rails'
 
+gem "recaptcha", require: "recaptcha/rails"
+
 group :development do
   gem 'better_errors'
   gem 'guard-bundler'
