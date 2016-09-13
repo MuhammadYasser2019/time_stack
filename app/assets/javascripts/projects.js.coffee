@@ -6,9 +6,22 @@ jQuery ($) ->
     row_id = attr_val.split("_")[2]
     return row_id
   $(".add_comment").click ->
-    alert ("hello classes..." + $(this).attr('id')) 
     row_id = parse_row_id($(this).attr('id'))
-    alert("row id is " + row_id)
-    $("#comment_"+row_id).show()
+    $("#comment_text_"+row_id).show()
     return
-  return
+
+  $('.comment').change ->
+    if $(this).val().length >= 8
+      row_id = parse_row_id($(this).attr('id'))
+      $("#time_reject_" + row_id).show()
+    return
+
+  $('.reject_class').click ->
+    row_id = parse_row_id($(this).attr('id'))
+    cotent = $('#comment_text_' + row_id).val()
+    $.post '/time_reject',
+      id: $('#user_id_' + row_id).val(),
+      comments: cotent,
+      row_id: row_id
+
+    return

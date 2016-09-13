@@ -68,10 +68,11 @@ class ProjectsController < ApplicationController
 
   def approve
     @w = Week.find(params[:id])
-    # w.status_id = 3
+    @w.status_id = 3
+    @row_id = params[:row_id]
     @w.approved_date = Time.now.strftime('%Y-%m-%d')
     @w.approved_by = current_user.id
-    # w.save!
+    @w.save!
 
     manager = current_user
     ApprovalMailer.mail_to_user(@w, manager).deliver
@@ -80,19 +81,6 @@ class ProjectsController < ApplicationController
       format.js
     end
 
-  end
-
-  def reject
-    @w = Week.find(params[:id])
-    # w.status_id = 4
-    # w.save!
-    logger.debug("in the controller")
-    @user = current_user
-    ApprovalMailer.mail_to_user(@w, @user).deliver
-    respond_to do |format|
-      # format.html {flash[:notice] = "Reject"}
-      format.js
-    end
   end
 
   private

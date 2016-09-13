@@ -1,8 +1,17 @@
 // Place all the styles related to the projects controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
-.myclass {
+.comment {
   display: none;
   font-color: black;
 }
 
+.reject_class {
+  display: none;
+}
+
+.button {
+  padding: 0;
+  margin-top: 15px;
+  border-radius: 2px;
+}
