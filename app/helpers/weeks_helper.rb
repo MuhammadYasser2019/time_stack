@@ -43,5 +43,4 @@ module WeeksHelper
       return true
     end  
   end
-  
 end
