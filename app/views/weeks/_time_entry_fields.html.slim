@@ -20,14 +20,14 @@
      = f.select(:task_id, options_from_collection_for_select([], "id", "description", nil), {}, {:class =>'task_id'})
   td.hour
    - if f.object.sick || f.object.personal_day
-    = f.text_field :hours, :class =>'form-control input-sm', :disabled => "disabled"
+    = f.text_field :hours, :class =>'form-control input-sm hours-input', :disabled => "disabled"
    - else
-    = f.text_field :hours, :class =>'form-control input-sm'
-  td.comment
+    = f.text_field :hours, :class =>'form-control input-sm hours-input'
+  td.activity_log
    - if f.object.sick || f.object.personal_day
-    = f.text_area :comments, :class =>'form-control input-lg', :disabled => "disabled"
+    = f.text_area :activity_log, :class =>'form-control input-lg', :disabled => "disabled"
    - else
-    = f.text_area :comments, :class =>'form-control input-lg'
+    = f.text_area :activity_log, :class =>'form-control input-lg'
   td.exception
    div.check
   	span Sick Day?
