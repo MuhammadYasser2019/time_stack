@@ -23,13 +23,13 @@ div.report
     tbody
     - @time_entries.each do |t|
       tr
-        td.date = t.date_of_activity
+        td.date = t.date_of_activity.strftime('%Y-%m-%d')
         td.date = t.date_of_activity.strftime("%A") 
         td.project = t.project.name if !t.project.nil?
         td.task = t.task.description if !t.task.nil?
         td.hour 
           = t.hours
-        td.comment 
+        td.active_log
           = t.activity_log
         td.sick
          - if t.sick == true

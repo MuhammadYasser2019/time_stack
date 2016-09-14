@@ -24,6 +24,8 @@
         td Task
         td Hours
         td Description
+        td
+        td
     tbody
     = f.fields_for :time_entries do |cf|
       tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
