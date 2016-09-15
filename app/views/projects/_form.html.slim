@@ -48,7 +48,7 @@
           td
             at.label = at.end_date.strftime('%Y-%m-%d')
           td
-            at.label = TimeEntry.where(week_id: at.id).sum(:hours)
+            at.label = TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours)
           td = link_to "Approve","/projects/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
           /td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
           td
