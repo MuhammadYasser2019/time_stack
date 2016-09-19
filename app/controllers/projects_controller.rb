@@ -22,8 +22,7 @@ class ProjectsController < ApplicationController
   def edit
     @customers = Customer.all
     @project = Project.includes(:tasks).find(params[:id])
-    @applicaple_week = Week.joins(:time_entries).where("weeks.status_id = ? and time_entries.project_id= ?", "2",params[:id]).select(:id, :user_id, :start_date, :end_date , :comments).distinct
-
+    @applicable_week = Week.joins(:time_entries).where("weeks.status_id = ? and time_entries.project_id= ?", "2",params[:id]).select(:id, :user_id, :start_date, :end_date , :comments).distinct
   end
 
   # POST /projects
@@ -79,6 +78,13 @@ class ProjectsController < ApplicationController
     respond_to do |format|
       format.html {flash[:notice] = "Approved"}
       format.js
+    end
+
+  end
+
+  def show_project_reports
+    respond_to do |format|
+      format.html
     end
 
   end

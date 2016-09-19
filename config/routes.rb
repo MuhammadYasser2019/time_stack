@@ -15,6 +15,7 @@ Rails.application.routes.draw do
 
   get 'projects/approve/:id/:row_id' => 'projects#approve'
   get 'projects/reject/:id' => 'projects#reject'
+  get 'show_project_reports' => 'projects#show_project_reports'
   post 'time_reject' => 'weeks#time_reject'
 
   # Example of regular route:

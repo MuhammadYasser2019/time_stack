@@ -23,5 +23,10 @@ jQuery ($) ->
       id: $('#user_id_' + row_id).val(),
       comments: cotent,
       row_id: row_id
-
     return
+
+  $('.show-project-reports').click ->
+    console.log("button clicked")
+    path = "/show_project_reports"
+    console.log("after path")
+    $.get path,{ }

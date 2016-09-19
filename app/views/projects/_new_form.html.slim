@@ -1,0 +1,28 @@
+= form_for @project do |f|
+  - if @project.errors.any?
+    #error_explanation
+      h2 = "#{pluralize(@project.errors.count, "error")} prohibited this project from being saved:"
+      ul
+        - @project.errors.full_messages.each do |message|
+          li = message
+
+  .field
+    = f.label :name
+    = f.text_field :name
+  .field
+    = f.label :customer
+    = f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
+  fieldset class="form-inline"
+  table border="1" id="tasklist"
+    thead
+      tr
+        td Code
+        td Description
+    tbody
+    tr
+    = f.fields_for :task do |tf|
+      td.code
+        = tf.text_field :code, :class =>'form-control'
+      td.desc
+        = tf.text_field :description, :class =>'form-control'
+  .actions = f.submit

@@ -34,7 +34,7 @@
         td.task = cf.select :task_id, options_from_collection_for_select(@tasks, "id", "description", cf.object.task_id), :class =>'form-control', disabled: true 
         td.hour 
           = cf.text_field :hours, :class =>'form-control input-sm',  readonly: true
-        td.comment 
-          = cf.text_area :comments, :class =>'form-control input-sm', readonly: true
+        td.activity_log
+          = cf.text_area :activity_log, :class =>'form-control input-sm', readonly: true
   //.actions = f.submit
   = link_to "Back to index", :weeks

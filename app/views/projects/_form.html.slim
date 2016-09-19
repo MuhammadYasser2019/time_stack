@@ -27,6 +27,8 @@
         = tf.text_field :description, :class =>'form-control'
   .actions = f.submit
 
+  at = button_tag "Show Results", class: "secondary show-project-reports", type: "button"
+
   table
     thead
       tr
@@ -36,9 +38,11 @@
         th Hours
         th
         th
+        th
+        th
 
     tbody
-      - @applicaple_week.each_with_index do |at, i|
+      - @applicable_week.each_with_index do |at, i|
         tr id = "#{i}"
           td
             at.hidden = hidden_field_tag "user_id_#{i}", at.id, class: "check"
