@@ -20,13 +20,22 @@ jQuery ($) ->
     row_id = parse_row_id($(this).attr('id'))
     cotent = $('#comment_text_' + row_id).val()
     $.post '/time_reject',
-      id: $('#user_id_' + row_id).val(),
+      id: $('#week_id_' + row_id).val(),
       comments: cotent,
       row_id: row_id
     return
 
-  $('.show-project-reports').click ->
-    console.log("button clicked")
-    path = "/show_project_reports"
-    console.log("after path")
-    $.get path,{ }
+  parse_project_id = (attr_val) ->
+    project_id = attr_val.split("/")[4]
+    return project_id
+
+  $('.show-hours').click ->
+    row_id = parse_row_id($(this).attr('id'))
+    project_url=$(location).attr('href')
+    project_id = parse_project_id(project_url)
+    console.log(project_id)
+    $.post '/show_hours',
+      user_id: $('#user_id_' + row_id).val(),
+      project_id: project_id,
+      week_id: $('#week_id_' + row_id).val()
+    return

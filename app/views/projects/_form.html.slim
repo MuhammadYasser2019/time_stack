@@ -27,7 +27,8 @@
         = tf.text_field :description, :class =>'form-control'
   .actions = f.submit
 
-  at = button_tag "Show Results", class: "secondary show-project-reports", type: "button"
+  a = link_to "Show Reports", "/show_project_reports"
+
 
   table
     thead
@@ -45,24 +46,28 @@
       - @applicable_week.each_with_index do |at, i|
         tr id = "#{i}"
           td
-            at.hidden = hidden_field_tag "user_id_#{i}", at.id, class: "check"
-            at.label = User.find(at.user_id).email
+            = hidden_field_tag "week_id_#{i}", at.id
+            = hidden_field_tag "user_id_#{i}", at.user_id
+            = User.find(at.user_id).email
           td
-            at.label = at.start_date.strftime('%Y-%m-%d')
+            = at.start_date.strftime('%Y-%m-%d')
           td
-            at.label = at.end_date.strftime('%Y-%m-%d')
+            = at.end_date.strftime('%Y-%m-%d')
           td
-            at.label = TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours)
+            = button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny show-hours", type: "button", data: {reveal_id: "showHours"}
+
           td = link_to "Approve","/projects/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
           /td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
           td
-            at.button = button_tag "Reject", class: "reject_class tiny", id:"time_reject_#{i}" , type: "button", remote: true
+            = button_tag "Reject", class: "reject_class tiny", id:"time_reject_#{i}" , type: "button", remote: true
           td
-            at.button = button_tag "Add Comment to Reject", class: "add_comment tiny", id: "add_comment_#{i}", type: "button"
+            = button_tag "Add Comment to Reject", class: "add_comment tiny", id: "add_comment_#{i}", type: "button"
           td
-            at.text = text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
+            = text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
 
-  div class= "approval-class"
+  div class = "approval-class"
+div(id="showHours" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
+
 
 
 

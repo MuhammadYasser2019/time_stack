@@ -82,10 +82,17 @@ class ProjectsController < ApplicationController
 
   end
 
-  def show_project_reports
-    respond_to do |format|
-      format.html
-    end
+  def self.show_project_reports
+
+
+  end
+
+  def show_hours
+    @user_id = params[:user_id]
+    @project_id = params[:project_id]
+    @week_id = params[:week_id]
+
+    @applicable_hours = TimeEntry.where("week_id= ? and project_id= ?", @week_id ,@project_id)
 
   end
 
@@ -97,6 +104,7 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :customer_id)
+      params.require(:project).permit(:name, :customer_id,
+      task_attributes: [:code, :description ])
     end
 end

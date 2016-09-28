@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   get 'projects/reject/:id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
   post 'time_reject' => 'weeks#time_reject'
+  post 'show_hours' => 'projects#show_hours'
 
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
