@@ -133,6 +133,9 @@ class WeeksController < ApplicationController
     @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?
     @week = Week.find(params[:id])
     @projects = Project.all
+
+    @user_name = User.find(@week.user_id)
+
     logger.debug "PROJECT quotes: #{!params[:project] == ''}"
     logger.debug "PROJECT nil: #{!params[:project] == nil}"
     logger.debug "PROJECT 1: #{!params[:project] == '5'}"
