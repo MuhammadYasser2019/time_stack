@@ -48,11 +48,10 @@ div.report
            span No
     tr
       td
-      tdls
+      td
       td
       td Total Hours:
       td = @hours_sum
-      td
       td
       td
       td
@@ -66,3 +65,5 @@ div.report
 
   - if @week.status_id == 3
      div.approver "Approved by #{@approved_by.first_name} #{@approved_by.last_name} on #{@week.approved_date.strftime(('%Y-%m-%d'))}"
+
+

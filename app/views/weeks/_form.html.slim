@@ -29,9 +29,11 @@
     tbody
     = f.fields_for :time_entries do |cf|
       tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
-  .action = f.file_field :time_sheet
+  div
+    =f.label :upload_time_sheet
+    .action = f.file_field :time_sheet
   - if @week.time_sheet.present?
-    div = link_to "You have #{@week.time_sheet_identifier} attached", @week.time_sheet.url, :target => "_blank"
+    div = link_to "You have attached: #{@week.time_sheet_identifier} ", @week.time_sheet.url, :target => "_blank"
   .actions = f.submit "Save Timesheet"
 
 
