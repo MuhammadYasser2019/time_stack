@@ -92,15 +92,16 @@ class WeeksController < ApplicationController
       if t[1]["project_id"] == ""
        t[1]["project_id"] = nil
        t[1]["task_id"] = nil
-       unless TimeEntry.where(t[1]["id"]).nil?
+
+       unless TimeEntry.where(id: t[1]["id"]).empty?
         TimeEntry.find(t[1]["id"]).update(project_id: nil, task_id: nil)
        end
       end
       if t[0].to_i > 6
         logger.debug "t[1][project_id]: #{t[1]['project_id']}"
         logger.debug "t[1][task_id]: #{t[1]['task_id']}"
-        unless TimeEntry.where(id: t[1]["id"]).present?
-          TimeEntry.create(id: t[1]["id"], week_id: @week.id, project_id: t[1]["project_id"], task_id: t[1]["task_id"], hours: t[1]["hours"], user_id: current_user.id, comments: t[1]["comments"])
+        unless TimeEntry.where(id: t[1]["id"]).empty?
+          TimeEntry.create( week_id: @week.id, project_id: t[1]["project_id"], task_id: t[1]["task_id"], hours: t[1]["hours"], user_id: current_user.id, activity_log: t[1]["activity_log"], date_of_activity: t[1]["date_of_activity"])
         end
       end
     end
@@ -109,7 +110,7 @@ class WeeksController < ApplicationController
       if @week.update_attributes(week_params)
         week_params['time_entries_attributes'].each_with_index  do |t,i|
           logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
-          @week.time_entries.find(t[1]['id'].to_i).update(t[1])
+          @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
         end
         logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
         @week.save
@@ -128,6 +129,8 @@ class WeeksController < ApplicationController
   end
   
   def report
+    @print_report = "false"
+    @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?
     @week = Week.find(params[:id])
     @projects = Project.all
     logger.debug "PROJECT quotes: #{!params[:project] == ''}"
@@ -135,7 +138,7 @@ class WeeksController < ApplicationController
     logger.debug "PROJECT 1: #{!params[:project] == '5'}"
     logger.debug "PROJECT value: #{params[:project]}"
     logger.debug "commit: #{params[:commit]}"
-    if params[:commit] == "Change Project"
+    if !params[:project].blank?
       logger.debug "getting here?"
       @time_entries = TimeEntry.where(project_id: params[:project], week_id: @week.id, user_id: current_user.id)
     else
@@ -150,6 +153,10 @@ class WeeksController < ApplicationController
     if @week.status_id == 3
       @approved_by = User.find(@week.approved_by)
     end
+  end
+
+  def print_report
+
   end
 
   # DELETE /weeks/1
@@ -186,7 +193,7 @@ class WeeksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
-      params.require(:week).permit(:start_date, :end_date, :user_id, :status_id, :comments,
+      params.require(:week).permit(:start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
       time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :_destroy])
     end
 end

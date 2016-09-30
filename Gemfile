@@ -54,6 +54,9 @@ gem 'bower-rails'
 
 gem "recaptcha", require: "recaptcha/rails"
 
+#Following two gems are needed for uploading files functionality.
+gem 'carrierwave'
+
 group :development do
   gem 'better_errors'
   gem 'guard-bundler'
@@ -82,6 +85,7 @@ group :development, :test do
 end
 
 group :test do
+  gem 'cucumber-rails', require: false
   gem 'capybara'
   gem 'database_cleaner'
   gem 'launchy'

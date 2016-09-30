@@ -1,4 +1,4 @@
-= form_for @week do |f|
+= form_for @week, :html => {:multiparts => true} do |f|
   - if @week.errors.any?
     #error_explanation
       h2 = "#{pluralize(@week.errors.count, "error")} prohibited this week from being saved:"
@@ -29,5 +29,9 @@
     tbody
     = f.fields_for :time_entries do |cf|
       tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
+  .action = f.file_field :time_sheet
+  - if @week.time_sheet.present?
+    div = link_to "You have #{@week.time_sheet_identifier} attached", @week.time_sheet.url, :target => "_blank"
   .actions = f.submit "Save Timesheet"
+
 

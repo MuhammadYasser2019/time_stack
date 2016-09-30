@@ -43,7 +43,7 @@ jQuery ($) ->
     else
       count += 1
     console.log("VALUEEEEEE: " + value)
-    input = $('<input type="hidden" value="'+ value + '" id="" name="week[time_entries_attributes][' + count + '][id]" >')
+    input = $('<input type="hidden" id="week_time_entries_attributes_'+ count + '_id" name="week[time_entries_attributes][' + count + '][id]" >')
     console.log(input)
     date_value = copy.children(".date:first").children().text()
     date = $('<input type="hidden" value="' + date_value + '"  name="week[time_entries_attributes][' + count + '][date_of_activity]">')
@@ -87,6 +87,9 @@ jQuery ($) ->
       console.log("not checked")
       tr.find("input,button,textarea,select").removeAttr("disabled");
       tr.find("a").show()
-      
-    
   )
+
+  $('.print-report').click ->
+    $('#hidden_print_report').val("true")
+    after =$('#hidden_print_report').attr('value')
+    $('#report_form').submit()

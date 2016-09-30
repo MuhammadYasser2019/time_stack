@@ -14,7 +14,11 @@
   </head>
   
   <body>
-    <%= render "layouts/header" %>
+    <% if @print_report == "true" %>
+      <%= render "layouts/report_header" %>
+    <% else %>
+      <%= render "layouts/header" %>
+    <%end%>
     <%= yield %>
 
   </body>

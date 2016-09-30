@@ -1,14 +1,19 @@
 div.report
   h1 Report
   p Start Date:
-   #{@week.start_date}
+   #{@week.start_date.strftime('%Y-%m-%d')}
   p End Date:
-   #{@week.end_date}
+   #{@week.end_date.strftime('%Y-%m-%d')}
   p Status:
    #{Status.find(@week.status_id).status}
-  = form_tag(params, :method => :get) do
-	  = select_tag :project, options_from_collection_for_select(@projects, "id", "name"), :include_blank => true
-	  = submit_tag "Change Project"
+  = form_tag(params,id: "report_form", :method => :get) do
+      -if @print_report == "true"
+
+      -else
+        = select_tag :project, options_from_collection_for_select(@projects, "id", "name", params[:project]), :include_blank => true
+        = hidden_field_tag 'hidden_print_report', false
+        = submit_tag "Change Project"
+
   table border="1"
     thead
       tr
@@ -43,12 +48,19 @@ div.report
            span No
     tr
       td
-      td
+      tdls
       td
       td Total Hours:
       td = @hours_sum
       td
-      
+      td
+      td
+      td
+  -if @print_report == "false"
+    - if @week.time_sheet.present?
+      div = link_to "You have attached: #{@week.time_sheet_identifier}", @week.time_sheet.url, :target => "_blank"
+    = button_tag "Print", class: "print-report secondary tiny", type: "button"
+
   - if @week.status_id == 2
       div.sig Manager's Signature __________________________________________________
 

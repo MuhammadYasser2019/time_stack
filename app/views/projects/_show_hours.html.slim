@@ -8,10 +8,10 @@
       - @applicable_hours.each do |ah|
         tr
           td
-            at.label = ah.date_of_activity.strftime('%Y-%m-%d')
+            = ah.date_of_activity.strftime('%Y-%m-%d')
           td
-            at.label = ah.hours
+            = ah.hours
           td
-            at.label = ah.activity_log
+            = ah.activity_log
   a class="close-reveal-modal" aria-label="Close"
     | &#215;
