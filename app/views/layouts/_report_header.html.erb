@@ -1,0 +1,14 @@
+<table>
+	<tr>
+		<td>
+			<a href="/"><%= image_tag "RSILogo.jpg" %></a>
+		</td>
+		<td>
+		<% if !current_user.nil? %>
+			<%= current_user.email %>
+		<% else %>
+			<%= link_to "Sign In", "/users/sign_in" %>
+		<% end %>
+		</td>
+	</tr>
+</table>
