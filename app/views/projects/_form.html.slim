@@ -1,3 +1,4 @@
+div class= "display-text"
 = form_for @project do |f|
   - if @project.errors.any?
     #error_explanation
@@ -30,6 +31,35 @@
   a = link_to "Show Reports", "/show_project_reports"
 
 
+  | Users On The Project
+  table
+    thead
+      tr
+        th User
+        th Email
+        th Active
+    tbody
+      - @users_on_project.each_with_index do |uop|
+        -if uop.project_id == params[:id].to_i
+          tr
+            td
+              = link_to uop.first_name, "/projects/#{uop.project_id}/user_time_report?user_id=#{uop.id}", class: "user-time-report"
+
+            td
+              = uop.email
+            td
+              = check_box_tag "test", uop.id, true, class: "add-user-to-project"
+        -else
+          tr
+            td
+              = uop.first_name
+            td
+              = uop.email
+            td
+              = check_box_tag "test", uop.id, false,class: "add-user-to-project"
+
+
+  | Time Sheets Submitted for Approval
   table
     thead
       tr

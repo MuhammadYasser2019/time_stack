@@ -6,16 +6,12 @@ table
       th Name
       th Customer
       th
-      th
-      th
 
   tbody
     - @projects.each do |project|
       tr
-        td = project.name
-        td = project.customer.name if !project.customer.nil? 
-        td = link_to 'Show', project
-        td = link_to 'Edit', edit_project_path(project)
+        td = link_to "#{project.name}", edit_project_path(project)
+        td = project.customer.name if !project.customer.nil?
         td = link_to 'Destroy', project, data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br

@@ -24,8 +24,8 @@ class WeeksController < ApplicationController
 
   # GET /weeks/new
   def new
-    @projects =  Project.all
-    @tasks = Task.where(project_id: 1)
+    @projects =  Project.joins(:projects_users).where("projets_users.user_id=?", current_user.id )
+    @tasks = Task.where(project_id: @projects.first.id)
     @week = Week.new
     @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
     @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')
@@ -48,10 +48,9 @@ class WeeksController < ApplicationController
   # GET /weeks/1/edit
   def edit
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
-    @projects =  Project.all
+    @projects =  Project.joins(:projects_users).where("projects_users.user_id=?", current_user.id )
     @week = Week.joins(:time_entries).find(params[:id])
-    
-    status_ids = [1,2] 
+    status_ids = [1,2]
     @statuses = Status.find(status_ids)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
     logger.debug "weeks_controller - edit entered method"
@@ -133,9 +132,7 @@ class WeeksController < ApplicationController
     @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?
     @week = Week.find(params[:id])
     @projects = Project.all
-
     @user_name = User.find(@week.user_id)
-
     logger.debug "PROJECT quotes: #{!params[:project] == ''}"
     logger.debug "PROJECT nil: #{!params[:project] == nil}"
     logger.debug "PROJECT 1: #{!params[:project] == '5'}"

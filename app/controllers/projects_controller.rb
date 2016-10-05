@@ -23,6 +23,8 @@ class ProjectsController < ApplicationController
     @customers = Customer.all
     @project = Project.includes(:tasks).find(params[:id])
     @applicable_week = Week.joins(:time_entries).where("weeks.status_id = ? and time_entries.project_id= ?", "2",params[:id]).select(:id, :user_id, :start_date, :end_date , :comments).distinct
+    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+    @users = User.all
   end
 
   # POST /projects
@@ -93,6 +95,41 @@ class ProjectsController < ApplicationController
     @week_id = params[:week_id]
 
     @applicable_hours = TimeEntry.where("week_id= ? and project_id= ?", @week_id ,@project_id)
+
+  end
+
+
+  def add_user_to_project
+    # User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id").select("users.email, projects_users.project_id, projects_users.active").collect {|u| "#{u.email}, #{u.project_id}, Status #{u.active}"}
+    logger.debug(" add_user_to_project - #{params.inspect}")
+
+    pu = ProjectsUser.new
+    # @users_on_project = @project.users
+    # @users_on_project = params[:user_id]
+    # @project = Project.find(1)
+
+    user = User.find(params[:user_id])
+    project = Project.find(params[:project_id])
+    if project.users.include?(user)
+      project.users.delete(user)
+    else
+      project.users.push(user)
+    end
+    project.save
+
+    respond_to do |format|
+     format.js
+   end
+  end
+
+  def user_time_report
+    @user = User.find(params[:user_id])
+    logger.debug("user_time_report######## #{params.inspect}")
+     # user = User.find(params[:u_id])
+
+    @weeks  = Week.where("user_id = ?", @user.id).order(start_date: :desc).limit(10)
+
+
 
   end
 

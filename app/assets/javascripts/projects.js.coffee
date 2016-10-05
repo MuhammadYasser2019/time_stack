@@ -33,9 +33,33 @@ jQuery ($) ->
     row_id = parse_row_id($(this).attr('id'))
     project_url=$(location).attr('href')
     project_id = parse_project_id(project_url)
-    console.log(project_id)
     $.post '/show_hours',
       user_id: $('#user_id_' + row_id).val(),
       project_id: project_id,
       week_id: $('#week_id_' + row_id).val()
+    return
+
+#  $('.add-user-to-project-button').click ->
+#    $('.add-user-to-project').toggle()
+#
+#
+#  $('.add-users').click ->
+#    console.log("adduser click")
+#    $('#add_user_to_project').submit()
+#    console.log("submit click")
+#    $('.add-user-to-project').hide()
+
+  $('.add-user-to-project').click ->
+    console.log("check is clicked" +$(this).val())
+
+    tr = $(this).parent()
+    em = tr.find('.email-class').attr('value')
+
+    console.log("em " + em)
+    add_user_id = $(this).val()
+    project_url=$(location).attr('href')
+    project_id = parse_project_id(project_url)
+    $.get '/add_user_to_project',
+      user_id: add_user_id,
+      project_id: project_id
     return
