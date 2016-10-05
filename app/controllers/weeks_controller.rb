@@ -140,9 +140,9 @@ class WeeksController < ApplicationController
     logger.debug "commit: #{params[:commit]}"
     if !params[:project].blank?
       logger.debug "getting here?"
-      @time_entries = TimeEntry.where(project_id: params[:project], week_id: @week.id, user_id: current_user.id)
+      @time_entries = TimeEntry.where(project_id: params[:project], week_id: @week.id)
     else
-      @time_entries = TimeEntry.where(week_id: @week.id, user_id: current_user.id)
+      @time_entries = TimeEntry.where(week_id: @week.id)
     end
     @hours_sum = 0
     @time_entries.each do |t|

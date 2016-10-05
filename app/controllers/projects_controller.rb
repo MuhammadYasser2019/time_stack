@@ -125,7 +125,6 @@ class ProjectsController < ApplicationController
   def user_time_report
     @user = User.find(params[:user_id])
     logger.debug("user_time_report######## #{params.inspect}")
-     # user = User.find(params[:u_id])
 
     @weeks  = Week.where("user_id = ?", @user.id).order(start_date: :desc).limit(10)
 
