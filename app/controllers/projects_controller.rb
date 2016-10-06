@@ -23,7 +23,7 @@ class ProjectsController < ApplicationController
     @customers = Customer.all
     @project = Project.includes(:tasks).find(params[:id])
     @applicable_week = Week.joins(:time_entries).where("weeks.status_id = ? and time_entries.project_id= ?", "2",params[:id]).select(:id, :user_id, :start_date, :end_date , :comments).distinct
-    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @users = User.all
   end
 
