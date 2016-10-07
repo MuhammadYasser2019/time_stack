@@ -42,10 +42,12 @@ jQuery ($) ->
       count = $("tbody tr").length - 1
     else
       count += 1
-    console.log("VALUEEEEEE: " + value)
+    console.log("VALUEEEEEE: " + count)
     input = $('<input type="hidden" id="week_time_entries_attributes_'+ count + '_id" name="week[time_entries_attributes][' + count + '][id]" >')
+    inputdate = $('<input type="hidden" id="week_time_entries_attributes_'+ count + '_date_of_activity" value="'+ count + '"  name="week[time_entries_attributes][' + count + '][date_of_activity]" >')
     console.log(input)
     date_value = copy.children(".date:first").children().text()
+    console.log("this is a the date value" + date_value)
     date = $('<input type="hidden" value="' + date_value + '"  name="week[time_entries_attributes][' + count + '][date_of_activity]">')
     date.insertAfter(copy.children(".date:first").children())
     copy.children(".project").children().attr("name", "week[time_entries_attributes][" + count + "][project_id]")
@@ -54,8 +56,11 @@ jQuery ($) ->
     copy.children(".task").children().attr("id", "week_time_entries_attributes_" + count + "_task_id")
     copy.children(".hour").children().attr("name", "week[time_entries_attributes][" + count + "][hours]")
     copy.children(".hour").children().attr("id", "week_time_entries_attributes_" + count + "_hours")
-    copy.children(".comment").children().attr("name", "week[time_entries_attributes][" + count + "][comments]")
-    copy.children(".comment").children().attr("id", "week_time_entries_attributes_" + count + "_comment")
+    copy.children(".activity_log").children().attr("name", "week[time_entries_attributes][" + count + "][activity_log]")
+    copy.children(".activity_log").children().attr("id", "week_time_entries_attributes_" + count + "_activity_log")
+#    copy.children(".date1").children().attr("for", "week[time_entries_attributes][" + count + "][date_of_activity]")
+    copy.children(".date1").children().attr("for", "week_time_entries_attributes_" + count + "_date_of_activity")
+
     copy.insertAfter(i)
     input.insertAfter(i.next())
   )
