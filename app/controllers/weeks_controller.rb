@@ -69,6 +69,21 @@ class WeeksController < ApplicationController
   # POST /weeks.json
   def create
     @week = Week.new(week_params)
+    prev_date_of_activity =""
+    week_params["time_entries_attributes"].each do |t|
+      # store teh date of activity from previous row
+      if !t[1][:date_of_activity].nil?
+        prev_date_of_activity = t[1][:date_of_activity]
+      else
+        new_day = TimeEntry.new
+        new_day.date_of_activity = prev_date_of_activity
+        new_day.project_id = t[1][:project_id]
+        new_day.task_id = t[1][:task_id]
+        new_day.hours = t[1][:hours]
+        new_day.activity_log = t[1][:activity_log]
+        @week.time_entries.push(new_day)
+      end
+    end
 
     respond_to do |format|
       if @week.save
@@ -86,7 +101,20 @@ class WeeksController < ApplicationController
   def update
     logger.debug("week params: #{week_params}")
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
+    prev_date_of_activity =""
     week_params["time_entries_attributes"].each do |t|
+      # store teh date of activity from previous row
+      if !t[1][:date_of_activity].nil?
+        prev_date_of_activity = t[1][:date_of_activity]
+      else
+        new_day = TimeEntry.new
+        new_day.date_of_activity = prev_date_of_activity
+        new_day.project_id = t[1][:project_id]
+        new_day.task_id = t[1][:task_id]
+        new_day.hours = t[1][:hours]
+        new_day.activity_log = t[1][:activity_log]
+        @week.time_entries.push(new_day)
+      end
       logger.debug "#{t[0]}"
       if t[1]["project_id"] == ""
        t[1]["project_id"] = nil
@@ -96,13 +124,13 @@ class WeeksController < ApplicationController
         TimeEntry.find(t[1]["id"]).update(project_id: nil, task_id: nil)
        end
       end
-      if t[0].to_i > 6
-        logger.debug "t[1][project_id]: #{t[1]['project_id']}"
-        logger.debug "t[1][task_id]: #{t[1]['task_id']}"
-        unless TimeEntry.where(id: t[1]["id"]).empty?
-          TimeEntry.create( week_id: @week.id, project_id: t[1]["project_id"], task_id: t[1]["task_id"], hours: t[1]["hours"], user_id: current_user.id, activity_log: t[1]["activity_log"], date_of_activity: t[1]["date_of_activity"])
-        end
-      end
+      # if t[0].to_i > 6
+      #   logger.debug "t[1][project_id]: #{t[1]['project_id']}"
+      #   logger.debug "t[1][task_id]: #{t[1]['task_id']}"
+      #   unless TimeEntry.where(id: t[1]["id"]).empty?
+      #     TimeEntry.create( week_id: @week.id, project_id: t[1]["project_id"], task_id: t[1]["task_id"], hours: t[1]["hours"], user_id: current_user.id, activity_log: t[1]["activity_log"], date_of_activity: t[1]["date_of_activity"])
+      #   end
+      # end
     end
     logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
     respond_to do |format|
