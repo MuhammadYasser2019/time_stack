@@ -1,5 +1,5 @@
 class Week < ActiveRecord::Base
-  has_many :time_entries
+  has_many :time_entries, -> {order(:date_of_activity)}
   has_many :user_week_statuses
   accepts_nested_attributes_for :time_entries, allow_destroy: true, reject_if: proc { |time_entries| time_entries[:date_of_activity].blank? }
   mount_uploader :time_sheet, TimeSheetUploader
