@@ -53,16 +53,6 @@ class WeeksController < ApplicationController
     status_ids = [1,2]
     @statuses = Status.find(status_ids)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
-    logger.debug "weeks_controller - edit entered method"
-    @week.time_entries.each_with_index do |te, i|
-      logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
-      logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
-      logger.debug "i #{i}"
-      @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
-      @week.time_entries[i].user_id = current_user.id
-    end
-    @week.save!
-    
   end
 
   # POST /weeks
@@ -168,9 +158,9 @@ class WeeksController < ApplicationController
     logger.debug "commit: #{params[:commit]}"
     if !params[:project].blank?
       logger.debug "getting here?"
-      @time_entries = TimeEntry.where(project_id: params[:project], week_id: @week.id)
+      @time_entries = TimeEntry.where(project_id: params[:project], week_id: @week.id).order(:date_of_activity)
     else
-      @time_entries = TimeEntry.where(week_id: @week.id)
+      @time_entries = TimeEntry.where(week_id: @week.id).order(:date_of_activity)
     end
     @hours_sum = 0
     @time_entries.each do |t|
