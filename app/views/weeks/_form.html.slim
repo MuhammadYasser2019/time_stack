@@ -8,10 +8,10 @@
 
   .field
     = f.label :start_date
-    = f.text_field :start_date, class: :range_date_time_picker
+    = f.text_field :start_date, readonly: true,class: :range_date_time_picker
   .field
     = f.label :end_date
-    = f.text_field :end_date
+    = f.text_field :end_date, readonly: true
   .field
    = f.select :status_id, options_from_collection_for_select(@statuses, "id", "status", f.object.status_id), :class =>'form-control'
 
