@@ -63,6 +63,7 @@ jQuery ($) ->
     copy.children(".hour").children().attr("id", "week_time_entries_attributes_" + count + "_hours")
     copy.children(".activity_log").children().attr("name", "week[time_entries_attributes][" + count + "][activity_log]")
     copy.children(".activity_log").children().attr("id", "week_time_entries_attributes_" + count + "_activity_log")
+#    copy.children(".activity_log").children(".char_count")
 #    copy.children(".date1").children().attr("for", "week[time_entries_attributes][" + count + "][date_of_activity]")
     copy.children(".date1").children().attr("for", "week_time_entries_attributes_" + count + "_" + date_value)
     copy.children(".date2").next().attr("id", "week_time_entries_attributes_" + count + "_date_of_activity" )
@@ -101,19 +102,18 @@ jQuery ($) ->
       tr.find("a").show()
   )
 
+  text_max = 500
+  $('.char_count').html ' __ characters remaining'
+  $("tbody").on("keyup", ".input-lg", ->
+    text_length = $(this).val().length
+    text_remaining = text_max - text_length
+    $(this).next('.char_count').html text_remaining + ' characters remaining'
+
+  )
+
   $('.print-report').click ->
     $('#hidden_print_report').val("true")
     after =$('#hidden_print_report').attr('value')
     $('#report_form').submit()
 
-
-  $(document).ready ->
-  text_max = 500
-  $('.activity-log').html text_max + ' characters remaining'
-  $('.input-lg').keyup ->
-    text_length = $(this).val().length
-    text_remaining = text_max - text_length
-    $(this).next('.activity-log').html text_remaining + ' characters remaining'
-    return
-  return
 
