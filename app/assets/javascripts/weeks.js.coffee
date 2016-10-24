@@ -105,3 +105,15 @@ jQuery ($) ->
     $('#hidden_print_report').val("true")
     after =$('#hidden_print_report').attr('value')
     $('#report_form').submit()
+
+
+  $(document).ready ->
+  text_max = 500
+  $('.activity-log').html text_max + ' characters remaining'
+  $('.input-lg').keyup ->
+    text_length = $(this).val().length
+    text_remaining = text_max - text_length
+    $(this).next('.activity-log').html text_remaining + ' characters remaining'
+    return
+  return
+

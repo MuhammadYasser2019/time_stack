@@ -28,7 +28,8 @@ td.activity_log
  - if f.object.sick || f.object.personal_day
   = f.text_area :activity_log, :class =>'form-control input-lg', :disabled => "disabled"
  - else
-  = f.text_area :activity_log, :class =>'form-control input-lg'
+  = f.text_area :activity_log, :class =>'form-control input-lg', :maxlength => 500
+  div (class="activity-log")
 td.exception
  div.check
   span Sick Day?

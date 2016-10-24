@@ -7,7 +7,7 @@ defaults: &defaults
   host: localhost
 
 
-test:
+test: &test
   <<: *defaults
   database: timestack_test
 
@@ -15,3 +15,6 @@ development:
   <<: *defaults
   database: timestack_development
 
+
+cucumber:
+  <<: *test
