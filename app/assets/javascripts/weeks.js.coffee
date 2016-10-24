@@ -102,14 +102,12 @@ jQuery ($) ->
       tr.find("a").show()
   )
 
-  text_max = 500
-  $('.char_count').html ' __ characters remaining'
-  $("tbody").on("keyup", ".input-lg", ->
-    text_length = $(this).val().length
-    text_remaining = text_max - text_length
-    $(this).next('.char_count').html text_remaining + ' characters remaining'
 
+  $("tbody").on("keydown", ".input-lg", ->
+    text_length = $(this).val().length
+    $(this).next('.char_count').html text_length + '/500'
   )
+
 
   $('.print-report').click ->
     $('#hidden_print_report').val("true")
