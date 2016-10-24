@@ -50,6 +50,8 @@ class WeeksController < ApplicationController
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
     @projects =  Project.joins(:projects_users).where("projects_users.user_id=?", current_user.id )
     @week = Week.joins(:time_entries).find(params[:id])
+    @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
+    @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')
     status_ids = [1,2]
     @statuses = Status.find(status_ids)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
