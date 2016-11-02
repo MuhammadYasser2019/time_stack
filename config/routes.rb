@@ -5,7 +5,7 @@ Rails.application.routes.draw do
   resources :projects
   resources :customers
   resources :roles
-  devise_for :users, :controllers => { registrations: 'registrations' }
+  devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   post '/weeks/:id(.:format)' => 'weeks#update'

@@ -72,6 +72,7 @@ group :development do
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
+  gem "omniauth-google-oauth2"
 end
 
 group :development, :test do
