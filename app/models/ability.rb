@@ -4,25 +4,22 @@ class Ability
   def initialize(user)
     # Define abilities for the passed in user here. For example:
     #
-    roles = Array.new
-    user.roles.each do |r|
-      roles << r.id
-    end
-    if roles.include? 1
+    
+    if user.user
      can :create, TimeEntry
      can :user_account, :edit, :update, User
     end
-    if roles.include? 2
+    if user.pm
      can :manage, TimeEntry
      can :manage, Task
      can :read, :edit, :update, Project
     end
-    if roles.include? 3
+    if user.cm
       can :manage, TimeEntry
       can :manage, Project
       can :read, :edit, :update, Customer
     end
-    if roles.include? 4
+    if user.admin
      can :crud, :all
      can :admin, User
     end
