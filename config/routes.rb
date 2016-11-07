@@ -5,8 +5,13 @@ Rails.application.routes.draw do
   resources :projects
   resources :customers
   resources :roles
-  resources :users
   devise_for :users, :controllers => { registrations: 'registrations' }
+  devise_scope :user do
+    match "/users/sign_in", :to => 'devise/sessions#new', via: [:get, :post]
+    match "/users/sign_out", :to => 'devise/sessions#destroy', via: [:delete]
+  end
+  resources :users
+  
   
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
