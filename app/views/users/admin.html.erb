@@ -1,0 +1,33 @@
+<div class="container-fluid">
+	<div class="row">
+	  <%= form_tag users_path, method: :update do %>
+		<table>
+			<thead>
+				<th>Username</th>
+				<th>User?</th>
+				<th>PM?</th>
+				<th>CM?</th>
+				<th>Admin?</th>
+			</thead>
+			<tbody>
+			 
+				  <% @users.each do |u| %>
+				   <%= fields_for "users[]", u do |uu|%>
+					<tr>
+						<td> <%= u.first_name %> <%= u.last_name %> </td>
+						<td><%= uu.check_box :user %></td>
+						<td><%= uu.check_box :pm %></td>
+						<td><%= uu.check_box :cm %></td>
+						<td><%= uu.check_box :admin %></td>
+						
+				    </tr>
+				   <% end %>
+				  <% end %>
+				
+			  
+			</tbody>
+		</table>
+	   <%= submit_tag "Submit" %>
+      <% end %>
+	</div>
+</div>

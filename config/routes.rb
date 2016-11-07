@@ -5,7 +5,9 @@ Rails.application.routes.draw do
   resources :projects
   resources :customers
   resources :roles
+  resources :users
   devise_for :users, :controllers => { registrations: 'registrations' }
+  
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   post '/weeks/:id(.:format)' => 'weeks#update'
@@ -21,7 +23,8 @@ Rails.application.routes.draw do
 
   get 'add_user_to_project' => "projects#add_user_to_project"
   get '/projects/:id/user_time_report' => 'projects#user_time_report'
-
+  match 'user_account', :to => "users#user_account",  via: [:get, :post]
+  match 'admin', :to => "users#admin", via: [:get, :post]
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
