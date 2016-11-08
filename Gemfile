@@ -73,6 +73,7 @@ group :development do
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
   gem "omniauth-google-oauth2"
+  gem "letter_opener"
 end
 
 group :development, :test do
