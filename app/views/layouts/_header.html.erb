@@ -7,7 +7,7 @@
 		<% if !current_user.nil? %>
 			<%= current_user.email %><br/><%= button_to 'Logout', destroy_user_session_path, :method => :delete %>
 		<% else %>
-			<%= link_to "Sign In", user_google_oauth2_omniauth_authorize_path %>
+			<%= link_to "Sign In", new_user_session_path %>
 		<% end %>
 		</td>
 	</tr>
