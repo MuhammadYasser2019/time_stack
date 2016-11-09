@@ -74,6 +74,9 @@ group :development do
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
   gem 'binding_of_caller'
+
+  gem "omniauth-google-oauth2"
+
 end
 
 group :development, :test do

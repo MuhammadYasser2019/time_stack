@@ -7,13 +7,12 @@ Rails.application.routes.draw do
   resources :roles
   resources :users
   devise_for :users, :path => "account", :controllers => { registrations: 'registrations' }
+  # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
     match "/users/sign_in", :to => 'devise/sessions#new', via: [:get, :post]
     match "/users/sign_out", :to => 'devise/sessions#destroy', via: [:delete]
   end
-  
-  
-  
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   post '/weeks/:id(.:format)' => 'weeks#update'
