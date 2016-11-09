@@ -1,6 +1,6 @@
 class TimeEntriesController < ApplicationController
   before_action :set_time_entry, only: [:show, :edit, :update, :destroy]
-
+  load_and_authorize_resource
   # GET /time_entries
   # GET /time_entries.json
   def index

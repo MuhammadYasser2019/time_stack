@@ -12,7 +12,7 @@
 			<tbody>
 			 
 				  <% @users.each do |u| %>
-				   <%= fields_for "users[]", u do |uu|%>
+				   <%= fields_for "user[]", u do |uu|%>
 					<tr>
 						<td> <%= u.first_name %> <%= u.last_name %> </td>
 						<td><%= uu.check_box :user %></td>

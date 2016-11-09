@@ -1,6 +1,6 @@
 class WeeksController < ApplicationController
   before_action :set_week, only: [:show, :edit, :update, :destroy]
-
+  load_and_authorize_resource
   # GET /weeks
   # GET /weeks.json
   def index

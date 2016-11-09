@@ -1,5 +1,5 @@
 class UsersController < ApplicationController
-  
+  load_and_authorize_resource
   def user_account
     @user = current_user
   end
@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     logger.debug "PARAMS: #{params[:users]}"
     logger.debug "id is #{params[:id]}"
     if params[:id] == nil
-      params[:users].each do |p|
+      params[:user].each do |p|
         logger.debug "p is #{p}"
         User.find(p[0]).update(p[1].deep_symbolize_keys())
       end
