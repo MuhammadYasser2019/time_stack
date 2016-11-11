@@ -1,14 +1,29 @@
 class User < ActiveRecord::Base
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
+  # validates :password , presence: true, if: :not_google_account?
+  # validates :password_confirmation , presence: true, if: :not_google_account?
+
+
   devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable,
+         :recoverable, :rememberable, :trackable,
          :omniauthable, :omniauth_providers => [:google_oauth2]
   has_many :projects_users
   has_many :projects , :through => :projects_users
   has_many :roles, :through => :user_roles
   has_many :user_roles
 
+
+  def not_google_account?
+    logger.debug("################not google account")
+    if google_account == "1"
+      logger.debug("##################in the if of no google account")
+      return false
+    else
+      logger.debug("##################in the else of no google account")
+      return true
+    end
+  end
 
   def self.from_omniauth(access_token)
     data = access_token.info
