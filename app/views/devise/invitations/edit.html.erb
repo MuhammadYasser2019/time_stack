@@ -6,7 +6,7 @@
   <%= f.input :first_name %>
   <%= f.input :last_name %>
   <% if resource.email.include? "@gmail.com" %>
-      <%= f.check_box :google_account, :onclick => "$('#user_google_account').submit()" %> Sign in with Google <br>
+      <%= f.check_box :google_account %> Sign in with Google <br>
   <% end %>
   <%= f.input :password %>
   <%= f.input :password_confirmation %>

@@ -18,7 +18,7 @@ table class="border"
 		td = link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
 
     tr
-      td = link_to "Enter Time for Current Week", "/weeks/new" if current_week_available(current_user).blank?
+      td = link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
       td
       td
       td

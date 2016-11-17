@@ -30,7 +30,7 @@ class WeeksController < ApplicationController
     @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
     @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')
     @week.user_id = current_user.id
-    @week.status_id = 1
+    @week.status_id = Status.find_by_status("NEW").id
     @week.save!
     7.times {  @week.time_entries.build( user_id: current_user.id )}
       

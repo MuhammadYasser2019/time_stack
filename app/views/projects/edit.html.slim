@@ -10,7 +10,7 @@ table
     tr
       th
         = simple_form_for(User.new, url: user_invitation_path, html: {class: 'form-inline'}) do |f|
-          = f.input :email, placeholder: 'Email', label: false
+          = f.input :email, placeholder: 'Email', label: false, class: "invitation_email"
           = f.hidden_field :project_id, value: @project_id
           = f.hidden_field :invited_by_id, value:  @current_user_id
           = f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'

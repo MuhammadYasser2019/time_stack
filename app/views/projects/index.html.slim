@@ -10,7 +10,7 @@ table
   tbody
     - @projects.each do |project|
       tr
-        td = link_to "#{project.name}", edit_project_path(project)
+        td = link_to "#{project.name}", edit_project_path(project), class: "project_#{project.id}"
         td = project.customer.name if !project.customer.nil?
         td = link_to 'Destroy', project, data: {:confirm => 'Are you sure?'}, :method => :delete
 
