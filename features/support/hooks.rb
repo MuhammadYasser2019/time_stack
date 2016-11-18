@@ -7,7 +7,11 @@ Before do
     u.email = "test.user@test.com"
     u.password = "123456"
     u.encrypted_password
-    u.user
+    u.user = 1
+    # u.admin = 1
+    u.pm = 1
+    # u.cm = 1
+
     u.save!
     u
   end
