@@ -12,6 +12,7 @@
   .field
     = f.label :customer
     = f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
+    = f.hidden_field :user_id, value: current_user.id
   fieldset class="form-inline"
   table border="1" id="tasklist"
     thead
@@ -20,7 +21,7 @@
         td Description
     tbody
     tr
-    = f.fields_for :task do |tf|
+    = f.fields_for :tasks do |tf|
       td.code
         = tf.text_field :code, :class =>'form-control'
       td.desc
