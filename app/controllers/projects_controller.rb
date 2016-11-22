@@ -19,6 +19,7 @@ class ProjectsController < ApplicationController
   def new
     @customers = Customer.all
     @project = Project.new
+    @users_on_project = User.all
   end
 
   # GET /projects/1/edit
