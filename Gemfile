@@ -51,6 +51,7 @@ gem 'simple_form'
 gem 'slim-rails'
 gem 'therubyracer', :platform=>:ruby
 gem 'bower-rails'
+gem 'cancancan', '~> 1.10'
 
 gem "recaptcha", require: "recaptcha/rails"
 
@@ -72,6 +73,10 @@ group :development do
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
+  gem 'binding_of_caller'
+
+  gem "omniauth-google-oauth2"
+
 end
 
 group :development, :test do

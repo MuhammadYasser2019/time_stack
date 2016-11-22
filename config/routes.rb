@@ -5,7 +5,14 @@ Rails.application.routes.draw do
   resources :projects
   resources :customers
   resources :roles
-  devise_for :users, :controllers => { registrations: 'registrations' }
+  resources :users
+  devise_for :users, :path => "account", :controllers => { registrations: 'registrations' }
+  # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_scope :user do
+    match "/users/sign_in", :to => 'devise/sessions#new', via: [:get, :post]
+    match "/users/sign_out", :to => 'devise/sessions#destroy', via: [:delete]
+  end
+
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   post '/weeks/:id(.:format)' => 'weeks#update'
@@ -21,7 +28,8 @@ Rails.application.routes.draw do
 
   get 'add_user_to_project' => "projects#add_user_to_project"
   get '/projects/:id/user_time_report' => 'projects#user_time_report'
-
+  match 'user_account', :to => "users#user_account",  via: [:get, :post]
+  match 'admin', :to => "users#admin", via: [:get, :post]
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
 
