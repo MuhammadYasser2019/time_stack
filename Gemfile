@@ -39,10 +39,12 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
+# gem 'nokogiri', '1.6.8'
 
 gem 'administrate'
 gem 'devise'
 gem 'devise_invitable'
+gem 'cocoon'
 gem 'foundation-rails', '~> 5.5'
 gem 'high_voltage'
 gem 'mysql2', '~> 0.3.18'
@@ -87,6 +89,7 @@ group :development, :test do
   gem 'rspec-rails'
   gem 'rubocop'
   gem 'thin'
+  gem 'letter_opener'
 end
 
 group :test do
@@ -95,5 +98,7 @@ group :test do
   gem 'database_cleaner'
   gem 'launchy'
   gem 'selenium-webdriver'
+  gem 'email_spec'
+  gem 'capybara-email'
 end
 

@@ -24,4 +24,14 @@ class ApprovalMailer < ActionMailer::Base
     mail(to:@user  , subject:"Timesheet Approval" , from:@approver)
 
   end
+
+  def invitation_accepted(inviter,user)
+    @invited_by = User.find(inviter)
+    inviter_email = User.find(inviter).email
+    @user = user
+    user_email = user.email
+
+    mail(to:inviter_email, subject: "Invitation Accepted By #{user_email}", from: user_email)
+
+  end
 end

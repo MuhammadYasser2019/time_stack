@@ -10,21 +10,28 @@ class ProjectsController < ApplicationController
   # GET /projects/1
   # GET /projects/1.json
   def show
+    @customers = Customer.all
+    @project_id = params[:id]
+    @project = Project.includes(:tasks).find(params[:id])
   end
 
   # GET /projects/new
   def new
     @customers = Customer.all
     @project = Project.new
+    @users_on_project = User.all
   end
 
   # GET /projects/1/edit
   def edit
     @customers = Customer.all
+    @project_id = params[:id]
     @project = Project.includes(:tasks).find(params[:id])
     @applicable_week = Week.joins(:time_entries).where("weeks.status_id = ? and time_entries.project_id= ?", "2",params[:id]).select(:id, :user_id, :start_date, :end_date , :comments).distinct
     @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @users = User.all
+    @invited_users = User.where("invited_by_id = ?", current_user.id)
+
   end
 
   # POST /projects
@@ -46,9 +53,38 @@ class ProjectsController < ApplicationController
   # PATCH/PUT /projects/1
   # PATCH/PUT /projects/1.json
   def update
+    @customers = Customer.all
+    @project_id = params[:id]
+    @project = Project.includes(:tasks).find(params[:id])
+    @applicable_week = Week.joins(:time_entries).where("weeks.status_id = ? and time_entries.project_id= ?", "2",params[:id]).select(:id, :user_id, :start_date, :end_date , :comments).distinct
+    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+    @users = User.all
+    @invited_users = User.where("invited_by_id = ?", current_user.id)
+    task_attributes = params[:project][:tasks_attributes]
+    previous_codes = Project.previous_codes(@project)
+    task_code = Project.task_value(task_attributes, previous_codes)
+    task_attributes.each do |t|
+      logger.debug "CODE: #{t}"
+      logger.debug "id: #{t[1]["id"]}"
+      if t[1]["id"].blank?
+        logger.debug "ID IS NILLLLLLLL"
+        t[1]["id"] = Task.all.count + 1
+      end
+      if Task.where(id: t[1]["id"]).present?
+        @task = Task.find(t[1]["id"]).update(code: t[1]["code"], description: t[1]["description"])
+      else
+        @task = Task.create(id: t[1]["id"], code: t[1]["code"], description: t[1]["description"], project_id: @project.id)
+      end
+      # logger.debug("############################ the tasks code in projects CONTROLLER #{task.inspect}")
+    end
+
+    logger.debug("############################ the tasks code in projects CONTROLLER #{@task.inspect}")
+    logger.debug "PROJECT PARAMS: #{project_params.inspect}"
+    pp = project_params.delete("tasks_attributes")
+    logger.debug "PROJECT PARAMS AFTER: #{project_params.inspect}"
     respond_to do |format|
-      if @project.update(project_params)
-        format.html { redirect_to @project, notice: 'Project was successfully updated.' }
+      if @project.update(name: project_params["name"], customer_id: project_params["customer_id"])
+        format.html { redirect_to edit_project_path(@project), notice: 'Project was successfully updated.' }
         format.json { render :show, status: :ok, location: @project }
       else
         format.html { render :edit }
@@ -140,7 +176,7 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :customer_id,
-      task_attributes: [:code, :description ])
+      params.require(:project).permit(:name, :customer_id, :user_id, 
+      tasks_attributes: [:id, :code, :description, :project_id ])
     end
 end
