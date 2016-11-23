@@ -39,6 +39,8 @@ Rails.application.routes.draw do
   get 'available_tasks/:id' => 'tasks#available_tasks'
 
   post 'customers/report' => 'customers#report'
+  
+  get 'permission_denied' => 'projects#permission_denied'
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

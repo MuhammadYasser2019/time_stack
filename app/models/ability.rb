@@ -12,19 +12,22 @@ class Ability
     end
     if user.cm && user.user
       can :manage, TimeEntry
-      can :manage, Project
+      can [:manage, :permission_denied], Project
       can [:read, :edit, :update], Customer
     end
     if user.pm && user.user
      can :manage, TimeEntry
      can :manage, Task
-     can [:read, :edit, :update], Project
+     can [:read, :edit, :update, :permission_denied], Project
      can [:new, :create, :edit], :update, Week
     end
     if user.user
      can [:new, :create, :update], TimeEntry
      can [:user_account, :edit], :update, User
+     can :permission_denied, Project
      can :read, Week
+    else
+      can :permission_denied, Project
     end
     
     
