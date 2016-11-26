@@ -84,9 +84,11 @@ class ProjectsController < ApplicationController
 
   end
 
-  def self.show_project_reports
-
-
+  def show_project_reports
+    @project_id = params[:id]
+    p = Project.find(@project_id)
+    @dates_array = p.find_dates_to_print(Project.convert_date_format(params[:proj_report_start_date]), Project.convert_date_format(params[:proj_report_end_date]))
+    @consultant_hash = p.build_consultant_hash(@project_id, @dates_array, Project.convert_date_format(params[:proj_report_start_date]), Project.convert_date_format(params[:proj_report_end_date]))
   end
 
   def show_hours

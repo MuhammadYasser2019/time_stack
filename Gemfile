@@ -44,6 +44,7 @@ gem 'administrate'
 gem 'devise'
 gem 'devise_invitable'
 gem 'foundation-rails', '~> 5.5'
+gem 'foundation-datetimepicker-rails'
 gem 'high_voltage'
 gem 'mysql2', '~> 0.3.18'
 gem 'pundit'
@@ -52,6 +53,7 @@ gem 'slim-rails'
 gem 'therubyracer', :platform=>:ruby
 gem 'bower-rails'
 gem 'cancancan', '~> 1.10'
+gem 'jquery-datatables-rails', '~> 3.4.0'
 
 gem "recaptcha", require: "recaptcha/rails"
 
