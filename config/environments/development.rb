@@ -32,7 +32,8 @@
   # Raises helpful error messages.
   config.assets.raise_runtime_errors = true
 
-  config.action_mailer.default_url_options = { :host => "http://192.168.239.178:3000/" }
+  config.action_mailer.default_url_options = { :host => "localhost",
+                                                :port => 3000 }
 
   # Raises error for missing translations
   # config.action_view.raise_on_missing_translations = true
@@ -40,9 +41,10 @@
   # require 'tlsmail'
   #Net::SMTP.enable_tls(OpenSSL::SSL::VERIFY_NONE)
 
+
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
-  
+
   config.action_mailer.smtp_settings = {
   #address:              'smtp.w14d.comcast.net',
   address:              'smtp.gmail.com',

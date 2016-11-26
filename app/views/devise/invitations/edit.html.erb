@@ -3,9 +3,16 @@
 <%= simple_form_for resource, as: resource_name, url: invitation_path(resource_name), html: { method: :put } do |f| %>
   <%= devise_error_messages! %>
   <%= f.hidden_field :invitation_token %>
-  <%= f.input :name %>
+  <%= f.input :first_name %>
+  <%= f.input :last_name %>
+  <% if resource.email.include? "@gmail.com" %>
+      <%= f.check_box :google_account %> Sign in with Google <br>
+  <% end %>
   <%= f.input :password %>
   <%= f.input :password_confirmation %>
+  <%= f.hidden_field :email %>
+
+
 
   <%= f.button :submit, "Create Account", class: 'btn-primary' %>
 <% end %>

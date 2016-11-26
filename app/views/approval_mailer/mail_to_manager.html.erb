@@ -1,3 +1,14 @@
-<%= @manager %>,
-
-<%= @sender %> has sent you the timesheet
+<% mgr = User.find_by_email(@manager) %>
+<% usr = User.find_by_email(@sender) %>
+<%= "#{mgr.first_name}, #{mgr.last_name}" %>,<br/>
+<%= usr.first_name %> has submitted timesheet for Week of <%= @week.start_date.strftime('%Y-%m-%d') %> to <%= @week.end_date.strftime('%Y-%m-%d') %><br/>
+<table border='1'>
+<tr><th>Date of Activity</th><th>Hours</th><th>Description</th></tr>
+<% @week.time_entries.each do |t| %>
+  <tr>
+    <td><%= t.date_of_activity.strftime("%Y-%m-%d") %>  </td>
+    <td><%= t.hours %>  </td>
+    <td><%= t.activity_log %>  </td>
+  </tr>
+<% end %>
+</table>
