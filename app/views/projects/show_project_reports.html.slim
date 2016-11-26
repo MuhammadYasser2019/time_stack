@@ -20,6 +20,7 @@ table id='show_report'
       - @dates_array.each do |d|
         th #{d}
       end
+      th Total
   tbody
     - @consultant_hash.keys.each do |c|
       tr
@@ -31,5 +32,6 @@ table id='show_report'
             td = "0"
           
         end 
+        td = @consultant_hash[c][:total_hours]
     end  
 br

@@ -60,13 +60,27 @@ class Project < ActiveRecord::Base
       logger.debug "consultant is #{c}"
       employee_time_hash = Hash.new
       total_hours = 0
+      daily_hours = 0
       time_entries.each do |t|
+        if !employee_time_hash[t.date_of_activity.strftime('%m/%d')].blank?
+          if employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours].blank?
+            daily_hours = t.hours if !t.hours.blank?
+            daily_hours = 0 if t.hours.blank?
+          else
+            daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] + t.hours if !t.hours.blank?
+            daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] if t.hours.blank?
+          end
+        else 
+          daily_hours = !t.hours.blank? ? t.hours : 0
+        end
+        
         total_hours = total_hours + t.hours if !t.hours.blank?
-        employee_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: t.hours, activity_log: t.activity_log }
+        employee_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: daily_hours, activity_log: t.activity_log }
       end
       u = User.find(c)
       hash_report_data[c] = { daily_hash: employee_time_hash, total_hours: total_hours }
     end
+    logger.debug "build_consultant_hash - hash_report_data is #{hash_report_data.inspect}"
     return hash_report_data
   end
   
