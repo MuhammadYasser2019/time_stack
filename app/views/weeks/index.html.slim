@@ -23,12 +23,12 @@ table class="border"
       td
       td
     tr
-      td = link_to "Manage Customers", "customers" if user_represents_customers(current_user)
+      td = link_to "Manage Customers", "customers" if user_represents_customers(current_user) && (can? :manage, Customer)
       td
       td
       td
     tr
-      td = link_to "Manage Projects", "projects" if user_represents_projects(current_user)
+      td = link_to "Manage Projects", "projects" if (user_represents_projects(current_user)) && (can? :manage, Project)
       td
       td
       td  		
