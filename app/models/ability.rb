@@ -7,8 +7,8 @@ class Ability
     if user.user
       can [:new, :create, :update], TimeEntry
       can [:user_account, :edit], :update, User
-      can :read, Task
-      can [:read, :edit, :create, :update, :new], Week
+      can [:read, :available_tasks], Task
+      can [:read, :edit, :create, :update, :new, :report], Week
       can [:read, :permission_denied], Project
       
       if user.admin
