@@ -28,7 +28,7 @@ table class="border"
       td
       td
     tr
-      td = link_to "Manage Projects", "projects" if (user_represents_projects(current_user)) && (can? :manage, Project)
+      td = link_to "Manage Projects", "projects" if (user_represents_projects(current_user)) && (can? :update, Project)
       td
       td
       td  		

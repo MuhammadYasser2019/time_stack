@@ -26,7 +26,7 @@ class Ability
       if user.pm
        can :manage, TimeEntry
        can :manage, Task
-       can [:read, :edit, :update, :permission_denied], Project
+       can [:read, :edit, :update,:show_hours, :permission_denied], Project
        can [:new, :create, :edit], :update, Week
       end
      

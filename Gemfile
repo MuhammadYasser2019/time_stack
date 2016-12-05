@@ -39,7 +39,7 @@ gem 'spring',        group: :development
 # Use debugger
 # gem 'debugger', group: [:development, :test]
 
-# gem 'nokogiri', '1.6.8'
+gem 'nokogiri', '1.6.8'
 
 gem 'administrate'
 gem 'devise'
@@ -55,7 +55,7 @@ gem 'therubyracer', :platform=>:ruby
 gem 'bower-rails'
 gem 'cancancan', '~> 1.10'
 
-gem "recaptcha", require: "recaptcha/rails"
+gem "recaptcha", '3.4.0', require: "recaptcha/rails"
 
 #Following two gems are needed for uploading files functionality.
 gem 'carrierwave'
@@ -75,7 +75,7 @@ group :development do
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
-  gem 'binding_of_caller'
+  # gem 'binding_of_caller'
 
   gem "omniauth-google-oauth2"
 

@@ -1,17 +1,17 @@
-  table
-    tr
-      td Date
-      td hours
-      td Description
+table
+  tr
+    td Date
+    td hours
+    td Description
 
-    tbody
-      - @applicable_hours.each do |ah|
-        tr
-          td
-            = ah.date_of_activity.strftime('%Y-%m-%d')
-          td
-            = ah.hours
-          td
-            = ah.activity_log
+  tbody
+    - @applicable_hours.each do |ah|
+      tr
+        td
+          = ah.date_of_activity.strftime('%Y-%m-%d')
+        td
+          = ah.hours
+        td
+          = ah.activity_log
   a class="close-reveal-modal" aria-label="Close"
     | &#215;

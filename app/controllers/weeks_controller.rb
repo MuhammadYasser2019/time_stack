@@ -25,7 +25,10 @@ class WeeksController < ApplicationController
   # GET /weeks/new
   def new
     @projects =  Project.joins(:projects_users).where("projects_users.user_id=?", current_user.id )
-    @tasks = Task.where(project_id: @projects.first.id)
+    logger.debug("these are the projects#{@projects}")
+    if !@projects.first.nil?
+      @tasks = Task.where(project_id: @projects.first.id)
+    end
     @week = Week.new
     @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
     @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')

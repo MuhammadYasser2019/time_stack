@@ -2,6 +2,7 @@
 #  see email and password fields.
 #
 #  Scenario: Viewing the sign-in page
+#    Given I am a normal user
 #    Given I am on the sign in page
 #    Then I should see "Log in"
 #    Then I should not see "My page"
