@@ -63,7 +63,7 @@ class ProjectsController < ApplicationController
     task_attributes = params[:project][:tasks_attributes]
     previous_codes = Project.previous_codes(@project)
     task_code = Project.task_value(task_attributes, previous_codes)
-    task_attributes.each do |t|
+    task_attributes.permit!.to_h.each do |t|
       logger.debug "CODE: #{t}"
       logger.debug "id: #{t[1]["id"]}"
       if t[1]["id"].blank?
@@ -96,6 +96,7 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
+    @project.tasks.destroy_all
     @project.destroy
     respond_to do |format|
       format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
@@ -120,9 +121,11 @@ class ProjectsController < ApplicationController
 
   end
 
-  def self.show_project_reports
-
-
+  def show_project_reports
+    @project_id = params[:id]
+    p = Project.find(@project_id)
+    @dates_array = p.find_dates_to_print(Project.convert_date_format(params[:proj_report_start_date]), Project.convert_date_format(params[:proj_report_end_date]))
+    @consultant_hash = p.build_consultant_hash(@project_id, @dates_array, Project.convert_date_format(params[:proj_report_start_date]), Project.convert_date_format(params[:proj_report_end_date]))
   end
 
   def show_hours
@@ -181,6 +184,6 @@ class ProjectsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
       params.require(:project).permit(:name, :customer_id, :user_id, 
-      tasks_attributes: [:id, :code, :description, :project_id ])
+      tasks_attributes: [:id, :code, :description, :project_id, :delete])
     end
 end

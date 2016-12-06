@@ -20,7 +20,7 @@ class UsersController < ApplicationController
     logger.debug "PARAMS: #{params[:users]}"
     logger.debug "id is #{params[:id]}"
     if params[:id] == nil
-      params[:user].each do |p|
+      params[:user].permit!.to_h.each do |p|
         logger.debug "p is #{p}"
         User.find(p[0]).update(p[1].deep_symbolize_keys())
       end

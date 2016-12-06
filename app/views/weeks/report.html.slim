@@ -6,7 +6,7 @@ div.report
    #{@week.end_date.strftime('%Y-%m-%d')}
   p Status:
    #{Status.find(@week.status_id).status}
-  = form_tag(params,id: "report_form", :method => :get) do
+  = form_tag(params.permit!,id: "report_form", :method => :get) do
       -if @print_report == "true"
 
       -else
