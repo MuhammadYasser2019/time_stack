@@ -63,7 +63,7 @@ class ProjectsController < ApplicationController
     task_attributes = params[:project][:tasks_attributes]
     previous_codes = Project.previous_codes(@project)
     task_code = Project.task_value(task_attributes, previous_codes)
-    task_attributes.each do |t|
+    task_attributes.permit!.to_h.each do |t|
       logger.debug "CODE: #{t}"
       logger.debug "id: #{t[1]["id"]}"
       if t[1]["id"].blank?
@@ -96,6 +96,7 @@ class ProjectsController < ApplicationController
   # DELETE /projects/1
   # DELETE /projects/1.json
   def destroy
+    @project.tasks.destroy_all
     @project.destroy
     respond_to do |format|
       format.html { redirect_to projects_url, notice: 'Project was successfully destroyed.' }
@@ -183,6 +184,6 @@ class ProjectsController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
       params.require(:project).permit(:name, :customer_id, :user_id, 
-      tasks_attributes: [:id, :code, :description, :project_id ])
+      tasks_attributes: [:id, :code, :description, :project_id, :delete])
     end
 end

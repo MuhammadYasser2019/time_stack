@@ -1,4 +1,4 @@
-class Project < ActiveRecord::Base
+class Project < ApplicationRecord
   belongs_to :customer
   has_many :tasks
   has_many :time_entries
@@ -9,7 +9,7 @@ class Project < ActiveRecord::Base
   def self.task_value(task_attributes, previous_codes)
     logger.debug("Checking the tasks in projects model")
     task_value = Array.new
-    task_attributes.each do |t|
+    task_attributes.permit!.to_h.each do |t|
       logger.debug("#############333 #{t[1]["code"].inspect}")
       code = t[1]["code"]
       task_value << code

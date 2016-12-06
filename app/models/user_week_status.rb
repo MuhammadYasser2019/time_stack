@@ -1,4 +1,4 @@
-class UserWeekStatus < ActiveRecord::Base
+class UserWeekStatus < ApplicationRecord
   belongs_to :week
   
   def self.first_for_user(current_user_id, week_id)
