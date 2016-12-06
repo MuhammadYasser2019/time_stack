@@ -1,14 +1,50 @@
 module TestDataSetupHelper
 
-  def create_project_manager
+
+  def create_customer_manager
     u = User.new
     u.id = 1
-    u.email = "test.user@test.com"
+    u.email = "cm.user@test.com"
     u.password = "123456"
     u.encrypted_password
     u.user = 1
     u.pm = 1
+    u.save!
 
+    t = Task.new
+    t.id = 1
+    t.code = "007"
+    t.description = "Test Description"
+    # t.project_id = 1
+    t.save!
+
+    w = Week.new
+    w.id = 1
+    w.status_id = 2
+    w.save
+
+    s = Status.new
+    s.id = 2
+    s.status = "SUBMITTED"
+    s.save
+
+    p = Project.new
+    p.id = 1
+    p.name = "Time Entries"
+    p.user_id = 1
+    p.save
+
+  end
+
+
+  def create_project_manager
+    u = User.new
+    u.id = 1
+    u.email = "pm.user@test.com"
+    u.password = "123456"
+    u.encrypted_password
+    u.user = 1
+    u.pm = 1
     u.save!
 
 
@@ -21,12 +57,14 @@ module TestDataSetupHelper
 
     w = Week.new
     w.id = 1
+    w.status_id = 2
     w.save
 
     s = Status.new
-    s.id = 1
-    s.status = "NEW"
+    s.id = 2
+    s.status = "SUBMITTED"
     s.save
+
 
     p = Project.new
     p.id = 1
@@ -58,10 +96,7 @@ module TestDataSetupHelper
     w.id = 1
     w.save
 
-    s = Status.new
-    s.id = 1
-    s.status = "NEW"
-    s.save
+    status
 
     # p = Project.new
     # p.id = 1
@@ -71,7 +106,16 @@ module TestDataSetupHelper
 
   end
 
+  def status
+    s = Status.new
+    if s.id == 1
+      s.status = "NEW"
+    elsif s.id == 2
+      s.status = "SUBMITTED"
+    end
 
+    s.save
+  end
 end
 
 World(TestDataSetupHelper)

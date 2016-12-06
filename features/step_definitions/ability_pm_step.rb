@@ -1,12 +1,12 @@
 
-Given(/^I am a project manager with a project$/) do
+Given(/^I am a project manager$/) do
   create_project_manager
 end
 
 Given(/^PM logs in with "([^"]*)" and "([^"]*)"$/) do |email, password|
   # save_and_open_page
   visit (user_session_path)
-  page.fill_in "Email", :with => "test.user@test.com"
+  page.fill_in "Email", :with => "pm.user@test.com"
   page.fill_in "Password", :with => "123456"
   page.click_button "Log in"
 end
@@ -40,5 +40,24 @@ Then(/^click the project link$/) do
 end
 
 Then(/^Text "([^"]*)" should be present$/) do |editing_project|
+  # save_and_open_page
   page.should have_content(editing_project)
+end
+
+
+
+Then(/^Should be abel to visit tasks page$/) do
+  visit (tasks_path)
+end
+
+Then(/^Click on the "([^"]*)" button for a particular task$/) do |edit_link|
+  # save_and_open_page
+  expect(page).to have_link(edit_link, href: '/tasks/1/edit')
+  page.click_link edit_link
+end
+
+Then(/^Should see "([^"]*)" and "([^"]*)"$/) do |task_edit_heading, task_description|
+  # save_and_open_page
+  page.should have_content(task_edit_heading)
+  expect(find_field('Description').value).to eq task_description
 end
