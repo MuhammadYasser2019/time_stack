@@ -94,7 +94,7 @@ class WeeksController < ApplicationController
     logger.debug("week params: #{week_params}")
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
     prev_date_of_activity =""
-    week_params["time_entries_attributes"].each do |t|
+    week_params["time_entries_attributes"].permit!.to_h.each do |t|
       # store teh date of activity from previous row
       if !t[1][:date_of_activity].nil?
         prev_date_of_activity = t[1][:date_of_activity]
