@@ -4,28 +4,32 @@ class Ability
   def initialize(user)
     # Define abilities for the passed in user here. For example:
     #
-    if user.admin && user.user
-     can :crud, :all
-     can :read, :all
-     can :manage, User
-     can :manage, Week
-    end
-    if user.cm && user.user
-      can :manage, TimeEntry
-      can [:manage, :permission_denied], Project
-      can [:read, :edit, :update], Customer
-    end
-    if user.pm && user.user
-     can :manage, TimeEntry
-     can :manage, Task
-     can [:read, :edit, :update, :permission_denied], Project
-     can [:new, :create, :edit], :update, Week
-    end
     if user.user
-     can [:new, :create, :update], TimeEntry
-     can [:user_account, :edit], :update, User
-     can :permission_denied, Project
-     can :read, Week
+      can [:new, :create, :update], TimeEntry
+      can [:user_account, :edit], :update, User
+      can [:read, :available_tasks], Task
+      can [:read, :edit, :create, :update, :new, :report], Week
+      can [:read, :permission_denied], Project
+      
+      if user.admin
+       can :crud, :all
+       can :read, :all
+       can :manage, User
+       can :manage, Week
+      end
+      if user.cm
+        can :manage, TimeEntry
+        can :read, Task
+        can [:manage, :permission_denied], Project
+        can [:read, :edit, :update], Customer
+      end
+      if user.pm
+       can :manage, TimeEntry
+       can :manage, Task
+       can [:read, :edit, :update, :permission_denied], Project
+       can [:new, :create, :edit], :update, Week
+      end
+     
     else
       can :permission_denied, Project
     end
