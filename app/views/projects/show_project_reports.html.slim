@@ -1,1 +1,37 @@
-p you are in reports if you are seeing this then this page has not been completed yet.
+h1 Reports for Project #{Project.find(@project_id).name}
+= form_tag "/show_project_reports", method: :get
+table
+  thead
+    tr
+      th Period Start Date
+      th Period End Date
+      th
+
+  tbody
+    tr
+      td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date]
+      = hidden_field_tag 'id', @project_id
+      td = text_field_tag 'proj_report_end_date', params[:proj_report_end_date]
+      td = button_tag "Show Report" 
+table id='show_report'
+  thead
+    tr
+      th Consultant Name
+      - @dates_array.each do |d|
+        th #{d}
+      end
+      th Total
+  tbody
+    - @consultant_hash.keys.each do |c|
+      tr
+        td = consultant_name(User.find(c).first_name, User.find(c).last_name)
+        - @dates_array.each do |d|
+          - if !@consultant_hash[c][:daily_hash][d].nil?
+            td = @consultant_hash[c][:daily_hash][d][:hours]
+          - else
+            td = "0"
+          
+        end 
+        td = @consultant_hash[c][:total_hours]
+    end  
+br
