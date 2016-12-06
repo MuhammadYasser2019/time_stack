@@ -64,3 +64,19 @@ jQuery ($) ->
       user_id: add_user_id,
       project_id: project_id
     return
+  $('#proj_report_start_date').fdatetimepicker
+    initialDate: '11-12-2016'
+    format: 'mm-dd-yyyy'
+    disableDblClickSelection: true
+    leftArrow: '<<'
+    rightArrow: '>>'
+    closeIcon: 'X'
+    closeButton: true
+  $('#proj_report_end_date').fdatetimepicker
+    initialDate: '11-12-2016'
+    format: 'mm-dd-yyyy'
+    disableDblClickSelection: true
+    leftArrow: '<<'
+    rightArrow: '>>'
+    closeIcon: 'X'
+    closeButton: true
