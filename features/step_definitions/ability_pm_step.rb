@@ -21,6 +21,15 @@ Then(/^I should see link to "([^"]*)" and "([^"]*)"$/) do |arg1, arg2|
   expect(page).to have_link(arg2, href: 'projects')
 end
 
+Then(/^when user goes to projects reports page$/) do
+  visit ('/show_project_reports?id=1')
+end
+
+Then(/^he should see "([^"]*)"$/) do |project_report_heading|
+  # save_and_open_page
+  expect(page).to have_content(project_report_heading)
+end
+
 Given(/^User is on Weeks index$/) do
   visit (weeks_path)
 end
@@ -34,6 +43,16 @@ Then(/^Should see "([^"]*)" and link to the project$/) do |listing_projects|
   page.should have_content(listing_projects)
   expect(page).to have_link('Time Entries', href: '/projects/1/edit')
 end
+
+Then(/^User should see "([^"]*)"$/) do |not_allowed|
+  expect(page).to have_content(not_allowed)
+end
+
+Then(/^User clicks on "([^"]*)" link$/) do |destroy_link|
+  visit (projects_path)
+  page.click_link destroy_link
+end
+
 
 Then(/^click the project link$/) do
   page.click_link('Time Entries')

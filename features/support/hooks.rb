@@ -8,7 +8,7 @@ module TestDataSetupHelper
     u.password = "123456"
     u.encrypted_password
     u.user = 1
-    u.pm = 1
+    u.cm = 1
     u.save!
 
     t = Task.new
@@ -34,6 +34,13 @@ module TestDataSetupHelper
     p.user_id = 1
     p.save
 
+    c = Customer.new
+    c.id = 1
+    c.name = "Test"
+    c.address = "Test"
+    c.city = "Herndon"
+    c.zipcode = "20170"
+    c.save
   end
 
 
@@ -72,6 +79,13 @@ module TestDataSetupHelper
     p.user_id = 1
     p.save
 
+    c = Customer.new
+    c.id = 1
+    c.name = "Test"
+    c.address = "Test"
+    c.city = "Herndon"
+    c.zipcode = "20170"
+    c.save
   end
 
   def create_user
