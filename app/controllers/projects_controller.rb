@@ -31,6 +31,7 @@ class ProjectsController < ApplicationController
     @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @users = User.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
+    @proxies = User.where(proxy: true)
 
   end
 
@@ -60,6 +61,7 @@ class ProjectsController < ApplicationController
     @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @users = User.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
+    
     task_attributes = params[:project][:tasks_attributes]
     previous_codes = Project.previous_codes(@project)
     task_code = Project.task_value(task_attributes, previous_codes)
@@ -82,8 +84,9 @@ class ProjectsController < ApplicationController
     logger.debug "PROJECT PARAMS: #{project_params.inspect}"
     pp = project_params.delete("tasks_attributes")
     logger.debug "PROJECT PARAMS AFTER: #{project_params.inspect}"
+    logger.debug "PROXY BABY: #{params["proxy"]}"
     respond_to do |format|
-      if @project.update(name: project_params["name"], customer_id: project_params["customer_id"])
+      if @project.update(name: project_params["name"], customer_id: project_params["customer_id"], proxy: params["proxy"])
         format.html { redirect_to edit_project_path(@project), notice: 'Project was successfully updated.' }
         format.json { render :show, status: :ok, location: @project }
       else
@@ -183,7 +186,7 @@ class ProjectsController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :customer_id, :user_id, 
+      params.require(:project).permit(:name, :customer_id, :user_id, :proxy,
       tasks_attributes: [:id, :code, :description, :project_id, :delete])
     end
 end

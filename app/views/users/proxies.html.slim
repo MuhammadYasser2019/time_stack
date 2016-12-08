@@ -1,0 +1,5 @@
+- if params[:id] == current_user.id
+ - @proxies.each do |p|
+  = link_to p.name, "/users/#{@user.id}/proxies/#{p.id}"
+- else
+ h1 You are not allowed to access this page.

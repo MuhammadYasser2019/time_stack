@@ -147,6 +147,13 @@ class WeeksController < ApplicationController
     end
   end
   
+  def proxy_week
+    @user = User.find(params[:id])
+    @proxy = Project.find(params[:proxy_id])
+    @proxy_user = User.find(params[:proxy_user])
+    @weeks = Week.where("user_id = ?", params[:proxy_user]).order(start_date: :desc).limit(10)
+  end
+  
   def report
     @print_report = "false"
     @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?

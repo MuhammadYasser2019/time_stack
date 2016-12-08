@@ -42,6 +42,11 @@ Rails.application.routes.draw do
   
   get 'permission_denied' => 'projects#permission_denied'
 
+  get "/users/:id/proxies/" => "users#proxies"
+  
+  get "/users/:id/proxies/:proxy_id" => "users#proxy_users"
+  
+  get "/users/:id/proxies/:proxy_id/proxy_users/:proxy_user" => "weeks#proxy_week"
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 
