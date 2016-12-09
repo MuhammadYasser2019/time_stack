@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161208030132) do
+ActiveRecord::Schema.define(version: 20161209205200) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
@@ -21,6 +21,20 @@ ActiveRecord::Schema.define(version: 20161208030132) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "user_id"
+  end
+
+  create_table "customers_holidays", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer "customer_id"
+    t.integer "holiday_id"
+    t.index ["customer_id", "holiday_id"], name: "index_customers_holidays_on_customer_id_and_holiday_id", using: :btree
+    t.index ["holiday_id", "customer_id"], name: "index_customers_holidays_on_holiday_id_and_customer_id", using: :btree
+  end
+
+  create_table "holidays", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string   "name"
+    t.boolean  "global"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
   create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -76,6 +90,7 @@ ActiveRecord::Schema.define(version: 20161208030132) do
     t.integer  "project_id"
     t.boolean  "sick"
     t.boolean  "personal_day"
+    t.integer  "updated_by"
     t.index ["task_id"], name: "index_time_entries_on_task_id", using: :btree
     t.index ["user_id"], name: "index_time_entries_on_user_id", using: :btree
     t.index ["week_id"], name: "index_time_entries_on_week_id", using: :btree

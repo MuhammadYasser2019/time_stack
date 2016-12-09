@@ -73,6 +73,7 @@ class WeeksController < ApplicationController
         new_day.task_id = t[1][:task_id]
         new_day.hours = t[1][:hours]
         new_day.activity_log = t[1][:activity_log]
+        new_day.updated_by = t[1][:updated_by]
         @week.time_entries.push(new_day)
       end
     end
@@ -105,6 +106,7 @@ class WeeksController < ApplicationController
         new_day.task_id = t[1][:task_id]
         new_day.hours = t[1][:hours]
         new_day.activity_log = t[1][:activity_log]
+        new_day.updated_by = t[1][:updated_by]
         @week.time_entries.push(new_day)
       end
       logger.debug "#{t[0]}"
@@ -221,6 +223,6 @@ class WeeksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
       params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
-      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :_destroy])
+      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy])
     end
 end
