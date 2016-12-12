@@ -108,7 +108,7 @@ class ProjectsController < ApplicationController
   end
 
   def approve
-    @w = Week.find(params[:id])
+    @w = Week.find(params[:weel_id])
     @w.status_id = 3
     @row_id = params[:row_id]
     @w.approved_date = Time.now.strftime('%Y-%m-%d')
