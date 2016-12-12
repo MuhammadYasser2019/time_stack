@@ -80,3 +80,16 @@ Then(/^Should see "([^"]*)" and "([^"]*)"$/) do |task_edit_heading, task_descrip
   page.should have_content(task_edit_heading)
   expect(find_field('Description').value).to eq task_description
 end
+
+Then(/^Click on link "([^"]*)"$/) do |arg1|
+  # save_and_open_page
+  expect(page).to have_link("Add Task")
+  find('#tasklist').find('a[href$="#"]').click
+  sleep 5
+end
+
+Then(/^Fill the code and description of the task$/) do
+  # save_and_open_page
+  # page.click_link("Add Task")
+  # expect(page).to have_css('task-code')
+end

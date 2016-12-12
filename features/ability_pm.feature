@@ -42,14 +42,16 @@ Feature: Testing abilities of a User with PM role
     And Click on the "Edit" button for a particular task
     And Should see "Editing task" and "Test Description"
 
-#  Scenario: 10) With PM roles user should be able to Add Tasks
-#    Given I am a project manager with a project
-#    Given PM logs in with "Email" and "Password"
-#    And click on the "Manage Projects"
-#    Then Should see "Listing projects" and link to the project
-#    And click the project link
-#    And Text "Editing project" should be present
-#    And Click on link "Add Task"
+  Scenario: 10) With PM roles user should be able to Add Tasks
+    Given I am a project manager
+    Given PM logs in with "Email" and "Password"
+    And click on the "Manage Projects"
+    Then Should see "Listing projects" and link to the project
+    And click the project link
+    And Text "Editing project" should be present
+    And Click on link "Add Task"
+    And Fill the code and description of the task
+
 
   Scenario: 12) 15) With PM roles user should not be able to Edit a Customer
     Given I am a project manager

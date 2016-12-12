@@ -1,6 +1,22 @@
 module TestDataSetupHelper
 
 
+  def create_task
+    t = Task.new
+    t.id = 1
+    t.code = "007"
+    t.description = "Test Description"
+    # t.project_id = 1
+    t.save!
+  end
+
+  def create_week
+    w = Week.new
+    w.id = 1
+    w.status_id = 2
+    w.save
+  end
+
   def create_customer_manager
     u = User.new
     u.id = 1
@@ -11,17 +27,8 @@ module TestDataSetupHelper
     u.cm = 1
     u.save!
 
-    t = Task.new
-    t.id = 1
-    t.code = "007"
-    t.description = "Test Description"
-    # t.project_id = 1
-    t.save!
-
-    w = Week.new
-    w.id = 1
-    w.status_id = 2
-    w.save
+    create_task
+    create_week
 
     s = Status.new
     s.id = 2
