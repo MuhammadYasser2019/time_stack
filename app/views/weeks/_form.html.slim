@@ -12,8 +12,6 @@
   .field
     = f.label :end_date
     = f.text_field :end_date, readonly: true
-  .field
-   = f.select :status_id, options_from_collection_for_select(@statuses, "id", "status", f.object.status_id), :class =>'form-control'
 
   table border="1" id="mytable"
     thead
@@ -29,11 +27,13 @@
     tbody
     = f.fields_for :time_entries do |cf|
       tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
-  div
-    =f.label :upload_time_sheet
-    .action = f.file_field :time_sheet
+  div.upload_text
+    = f.label(:time_sheet, "Upload Timesheet", class: "action", for: "file-upload")
+    = f.file_field(:time_sheet, id: "file-upload")
   - if @week.time_sheet.present?
     div = link_to "You have attached: #{@week.time_sheet_identifier} ", @week.time_sheet.url, :target => "_blank"
-  .actions = f.submit "Save Timesheet"
+  .actions
+   = f.submit "Save Timesheet"
+   = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"}
 
 

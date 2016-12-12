@@ -49,3 +49,4 @@ td.add
  - if f.object.sick || f.object.personal_day
  -else
   = link_to "Add Row", "javascript:void(0)", class: "add_row", date_stamp: f.object.date_of_activity, day_value: f.object.date_of_activity.strftime("%A")
+= f.hidden_field :updated_by, value: current_user.id

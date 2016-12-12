@@ -1,0 +1,7 @@
+
+- if @proxy.proxy == @user.id
+ - @proxy_users.each do |u|
+	= link_to u.first_name, "/users/#{@user.id}/proxies/#{@proxy.id}/proxy_users/#{u.id}"
+	br
+- else
+ h1 You are not allowed to access this page.

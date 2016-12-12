@@ -76,6 +76,7 @@ class WeeksController < ApplicationController
         new_day.task_id = t[1][:task_id]
         new_day.hours = t[1][:hours]
         new_day.activity_log = t[1][:activity_log]
+        new_day.updated_by = t[1][:updated_by]
         @week.time_entries.push(new_day)
       end
     end
@@ -97,7 +98,7 @@ class WeeksController < ApplicationController
     logger.debug("week params: #{week_params}")
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
     prev_date_of_activity =""
-    week_params["time_entries_attributes"].each do |t|
+    week_params["time_entries_attributes"].permit!.to_h.each do |t|
       # store teh date of activity from previous row
       if !t[1][:date_of_activity].nil?
         prev_date_of_activity = t[1][:date_of_activity]
@@ -108,8 +109,10 @@ class WeeksController < ApplicationController
         new_day.task_id = t[1][:task_id]
         new_day.hours = t[1][:hours]
         new_day.activity_log = t[1][:activity_log]
+        new_day.updated_by = t[1][:updated_by]
         @week.time_entries.push(new_day)
       end
+      
       logger.debug "#{t[0]}"
       if t[1]["project_id"] == ""
        t[1]["project_id"] = nil
@@ -127,6 +130,12 @@ class WeeksController < ApplicationController
       #   end
       # end
     end
+    if params[:commit] == "Save Timesheet"
+        @week.status_id = 1
+    elsif params[:commit] == "Submit Timesheet"
+        @week.status_id = 2
+    end
+    logger.debug "STATUS ID IS #{week_params[:status_id]}"
     logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
     respond_to do |format|
       if @week.update_attributes(week_params)
@@ -148,6 +157,13 @@ class WeeksController < ApplicationController
         format.json { render json: @week.errors, status: :unprocessable_entity }
       end
     end
+  end
+  
+  def proxy_week
+    @user = User.find(params[:id])
+    @proxy = Project.find(params[:proxy_id])
+    @proxy_user = User.find(params[:proxy_user])
+    @weeks = Week.where("user_id = ?", params[:proxy_user]).order(start_date: :desc).limit(10)
   end
   
   def report
@@ -216,7 +232,7 @@ class WeeksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
-      params.require(:week).permit(:start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
-      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :_destroy])
+      params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
+      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy])
     end
 end

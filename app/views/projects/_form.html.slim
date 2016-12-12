@@ -53,6 +53,10 @@ div class= "display-text"
               = uop.email
             td
               = check_box_tag "test", uop.id, false,class: "add-user-to-project"
+              
+  h1 Proxy Users
+  
+  = select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true)
 
 
   h1 Time Sheets Submitted for Approval

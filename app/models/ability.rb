@@ -6,7 +6,7 @@ class Ability
     #
     if user.user
       can [:new, :create, :update], TimeEntry
-      can [:user_account, :edit], :update, User
+      can [:user_account, :edit, :update], User
       can [:read, :available_tasks], Task
       can [:read, :edit, :create, :update, :new, :report], Week
       can [:read, :permission_denied], Project
@@ -22,13 +22,14 @@ class Ability
         can :manage, TimeEntry
         can [:read,:edit,:update], Task
         can [:manage, :permission_denied, :show_project_reports], Project
-        can [:read, :edit, :update], Customer
+        can :manage, Customer
+
       end
       if user.pm
        can :manage, TimeEntry
        can :manage, Task
        can [:read, :edit, :update,:show_hours, :permission_denied, :show_project_reports], Project
-       can [:new, :create, :edit], :update, Week
+       can [:new, :create, :edit, :update], :update, Week
       end
      
     else

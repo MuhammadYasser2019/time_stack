@@ -50,7 +50,6 @@ class TimeEntriesController < ApplicationController
   # POST /time_entries.json
   def create
     @time_entry = TimeEntry.new(time_entry_params)
-
     respond_to do |format|
       if @time_entry.save
         format.html { redirect_to @time_entry, notice: 'Time entry was successfully created.' }
@@ -94,6 +93,7 @@ class TimeEntriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def time_entry_params
-      params.require(:time_entry).permit(:date, :hours, :activity_log, :task_id, :week_id, :user_id, :sick, :personal_day)
+      params.require(:time_entry).permit(:date, :hours, :activity_log, :task_id, :week_id, :user_id, :sick, :personal_day,
+                                  :updated_by)
     end
 end

@@ -1,4 +1,3 @@
-# encoding: UTF-8
 # This file is auto-generated from the current state of the database. Instead
 # of editing this file, please use the migrations feature of Active Record to
 # incrementally modify your database, and then regenerate this schema definition.
@@ -11,150 +10,160 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161109205906) do
+ActiveRecord::Schema.define(version: 20161209205200) do
 
-  create_table "customers", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.string   "address",    limit: 255
-    t.string   "city",       limit: 255
-    t.string   "state",      limit: 255
-    t.string   "zipcode",    limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
-    t.integer  "user_id",    limit: 4
+  create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string   "name"
+    t.string   "address"
+    t.string   "city"
+    t.string   "state"
+    t.string   "zipcode"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer  "user_id"
   end
 
-  create_table "projects", force: :cascade do |t|
-    t.string   "name",        limit: 255
-    t.integer  "customer_id", limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
-    t.integer  "user_id",     limit: 4
+  create_table "customers_holidays", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer "customer_id"
+    t.integer "holiday_id"
+    t.index ["customer_id", "holiday_id"], name: "index_customers_holidays_on_customer_id_and_holiday_id", using: :btree
+    t.index ["holiday_id", "customer_id"], name: "index_customers_holidays_on_holiday_id_and_customer_id", using: :btree
   end
 
-  add_index "projects", ["customer_id"], name: "index_projects_on_customer_id", using: :btree
+  create_table "holidays", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string   "name"
+    t.boolean  "global"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
-  create_table "projects_users", force: :cascade do |t|
-    t.integer  "project_id", limit: 4
-    t.integer  "user_id",    limit: 4
+  create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string   "name"
+    t.integer  "customer_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "user_id"
+    t.integer  "proxy"
+    t.index ["customer_id"], name: "index_projects_on_customer_id", using: :btree
+  end
+
+  create_table "projects_users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer  "project_id"
+    t.integer  "user_id"
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean  "active"
+    t.index ["project_id"], name: "index_projects_users_on_project_id", using: :btree
+    t.index ["user_id"], name: "index_projects_users_on_user_id", using: :btree
   end
 
-  add_index "projects_users", ["project_id"], name: "index_projects_users_on_project_id", using: :btree
-  add_index "projects_users", ["user_id"], name: "index_projects_users_on_user_id", using: :btree
-
-  create_table "roles", force: :cascade do |t|
-    t.string   "name",       limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+  create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "statuses", force: :cascade do |t|
-    t.string   "status",     limit: 255
-    t.datetime "created_at",             null: false
-    t.datetime "updated_at",             null: false
+  create_table "statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string   "status"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
   end
 
-  create_table "tasks", force: :cascade do |t|
-    t.string   "code",        limit: 255
-    t.string   "description", limit: 255
-    t.integer  "project_id",  limit: 4
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+  create_table "tasks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string   "code"
+    t.string   "description"
+    t.integer  "project_id"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.index ["project_id"], name: "index_tasks_on_project_id", using: :btree
   end
 
-  add_index "tasks", ["project_id"], name: "index_tasks_on_project_id", using: :btree
-
-  create_table "time_entries", force: :cascade do |t|
+  create_table "time_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.datetime "date_of_activity"
-    t.integer  "hours",            limit: 4
+    t.integer  "hours"
     t.string   "activity_log",     limit: 500
-    t.integer  "task_id",          limit: 4
-    t.integer  "week_id",          limit: 4
-    t.integer  "user_id",          limit: 4
+    t.integer  "task_id"
+    t.integer  "week_id"
+    t.integer  "user_id"
     t.datetime "created_at",                   null: false
     t.datetime "updated_at",                   null: false
-    t.integer  "project_id",       limit: 4
+    t.integer  "project_id"
     t.boolean  "sick"
     t.boolean  "personal_day"
+    t.integer  "updated_by"
+    t.index ["task_id"], name: "index_time_entries_on_task_id", using: :btree
+    t.index ["user_id"], name: "index_time_entries_on_user_id", using: :btree
+    t.index ["week_id"], name: "index_time_entries_on_week_id", using: :btree
   end
 
-  add_index "time_entries", ["task_id"], name: "index_time_entries_on_task_id", using: :btree
-  add_index "time_entries", ["user_id"], name: "index_time_entries_on_user_id", using: :btree
-  add_index "time_entries", ["week_id"], name: "index_time_entries_on_week_id", using: :btree
-
-  create_table "user_roles", id: false, force: :cascade do |t|
-    t.integer "user_id", limit: 4, null: false
-    t.integer "role_id", limit: 4, null: false
+  create_table "user_roles", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer "user_id", null: false
+    t.integer "role_id", null: false
+    t.index ["user_id", "role_id"], name: "index_user_roles_on_user_id_and_role_id", using: :btree
   end
 
-  add_index "user_roles", ["user_id", "role_id"], name: "index_user_roles_on_user_id_and_role_id", using: :btree
-
-  create_table "user_week_statuses", force: :cascade do |t|
-    t.integer  "status_id",  limit: 4
-    t.integer  "week_id",    limit: 4
-    t.integer  "user_id",    limit: 4
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+  create_table "user_week_statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer  "status_id"
+    t.integer  "week_id"
+    t.integer  "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["user_id"], name: "index_user_week_statuses_on_user_id", using: :btree
+    t.index ["week_id"], name: "index_user_week_statuses_on_week_id", using: :btree
   end
 
-  add_index "user_week_statuses", ["user_id"], name: "index_user_week_statuses_on_user_id", using: :btree
-  add_index "user_week_statuses", ["week_id"], name: "index_user_week_statuses_on_week_id", using: :btree
-
-  create_table "users", force: :cascade do |t|
-    t.string   "email",                  limit: 255, default: "", null: false
-    t.string   "encrypted_password",     limit: 255, default: "", null: false
-    t.string   "reset_password_token",   limit: 255
+  create_table "users", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.string   "email",                  default: "", null: false
+    t.string   "encrypted_password",     default: "", null: false
+    t.string   "reset_password_token"
     t.datetime "reset_password_sent_at"
     t.datetime "remember_created_at"
-    t.integer  "sign_in_count",          limit: 4,   default: 0,  null: false
+    t.integer  "sign_in_count",          default: 0,  null: false
     t.datetime "current_sign_in_at"
     t.datetime "last_sign_in_at"
-    t.string   "current_sign_in_ip",     limit: 255
-    t.string   "last_sign_in_ip",        limit: 255
-    t.datetime "created_at",                                      null: false
-    t.datetime "updated_at",                                      null: false
-    t.string   "first_name",             limit: 255
-    t.string   "last_name",              limit: 255
+    t.string   "current_sign_in_ip"
+    t.string   "last_sign_in_ip"
+    t.datetime "created_at",                          null: false
+    t.datetime "updated_at",                          null: false
+    t.string   "first_name"
+    t.string   "last_name"
+    t.datetime "oauth_expires_at"
+    t.string   "provider"
+    t.string   "uid"
+    t.string   "name"
+    t.string   "oauth_token"
+    t.string   "invitation_token"
+    t.datetime "invitation_created_at"
+    t.datetime "invitation_sent_at"
+    t.datetime "invitation_accepted_at"
+    t.integer  "invitation_limit"
+    t.integer  "invited_by_id"
+    t.string   "invited_by_type"
+    t.integer  "invitations_count",      default: 0
     t.boolean  "pm"
     t.boolean  "cm"
     t.boolean  "admin"
     t.boolean  "user"
-    t.string   "provider",               limit: 255
-    t.string   "uid",                    limit: 255
-    t.datetime "oauth_expires_at"
-    t.string   "name",                   limit: 255
-    t.string   "oauth_token",            limit: 255
-    t.string   "invitation_token",       limit: 255
-    t.datetime "invitation_created_at"
-    t.datetime "invitation_sent_at"
-    t.datetime "invitation_accepted_at"
-    t.integer  "invitation_limit",       limit: 4
-    t.integer  "invited_by_id",          limit: 4
-    t.string   "invited_by_type",        limit: 255
-    t.integer  "invitations_count",      limit: 4,   default: 0
     t.boolean  "google_account"
+    t.boolean  "proxy"
+    t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
+    t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
+    t.index ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
+    t.index ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
+    t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  add_index "users", ["email"], name: "index_users_on_email", unique: true, using: :btree
-  add_index "users", ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
-  add_index "users", ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
-  add_index "users", ["invited_by_id"], name: "index_users_on_invited_by_id", using: :btree
-  add_index "users", ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
-
-  create_table "weeks", force: :cascade do |t|
+  create_table "weeks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.integer  "user_id",       limit: 4
-    t.integer  "status_id",     limit: 4
+    t.integer  "user_id"
+    t.integer  "status_id"
     t.datetime "approved_date"
-    t.integer  "approved_by",   limit: 4
+    t.integer  "approved_by"
     t.text     "comments",      limit: 65535
-    t.string   "time_sheet",    limit: 255
+    t.string   "time_sheet"
   end
 
   add_foreign_key "projects", "customers"
