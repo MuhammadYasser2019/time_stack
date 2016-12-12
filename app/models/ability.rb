@@ -22,13 +22,13 @@ class Ability
         can :manage, TimeEntry
         can [:read,:edit,:update], Task
         can [:manage, :permission_denied, :show_project_reports], Project
-        can :manage, Customer
+        can [:read,:edit,:update], Customer
 
       end
       if user.pm
        can :manage, TimeEntry
        can :manage, Task
-       can [:read, :edit, :update,:show_hours, :permission_denied, :show_project_reports], Project
+       can [:read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve], Project
        can [:new, :create, :edit, :update], :update, Week
       end
      

@@ -13,8 +13,33 @@ module TestDataSetupHelper
   def create_week
     w = Week.new
     w.id = 1
-    w.status_id = 2
+    w.status_id = 1
     w.save
+  end
+
+  def create_status
+    s = Status.new
+    s.id = 1
+    s.status = "NEW"
+    s.save
+  end
+
+  def create_project
+    p = Project.new
+    p.id = 1
+    p.name = "Time Entries"
+    p.user_id = 1
+    p.save
+  end
+
+  def create_customers
+    c = Customer.new
+    c.id = 1
+    c.name = "Test"
+    c.address = "Test"
+    c.city = "Herndon"
+    c.zipcode = "20170"
+    c.save
   end
 
   def create_customer_manager
@@ -29,25 +54,10 @@ module TestDataSetupHelper
 
     create_task
     create_week
+    create_status
+    create_project
+    create_customers
 
-    s = Status.new
-    s.id = 2
-    s.status = "SUBMITTED"
-    s.save
-
-    p = Project.new
-    p.id = 1
-    p.name = "Time Entries"
-    p.user_id = 1
-    p.save
-
-    c = Customer.new
-    c.id = 1
-    c.name = "Test"
-    c.address = "Test"
-    c.city = "Herndon"
-    c.zipcode = "20170"
-    c.save
   end
 
 
@@ -61,38 +71,11 @@ module TestDataSetupHelper
     u.pm = 1
     u.save!
 
-
-    t = Task.new
-    t.id = 1
-    t.code = "007"
-    t.description = "Test Description"
-    # t.project_id = 1
-    t.save!
-
-    w = Week.new
-    w.id = 1
-    w.status_id = 2
-    w.save
-
-    s = Status.new
-    s.id = 2
-    s.status = "SUBMITTED"
-    s.save
-
-
-    p = Project.new
-    p.id = 1
-    p.name = "Time Entries"
-    p.user_id = 1
-    p.save
-
-    c = Customer.new
-    c.id = 1
-    c.name = "Test"
-    c.address = "Test"
-    c.city = "Herndon"
-    c.zipcode = "20170"
-    c.save
+    create_task
+    create_week
+    create_status
+    create_project
+    create_customers
   end
 
   def create_user
@@ -106,18 +89,19 @@ module TestDataSetupHelper
 
     u.save!
 
+    create_task
+    create_week
+    # t = Task.new
+    # t.code = "007"
+    # t.description = "Test Description"
+    # # t.project_id = 1
+    # t.save!
 
-    t = Task.new
-    t.code = "007"
-    t.description = "Test Description"
-    # t.project_id = 1
-    t.save!
+    # w = Week.new
+    # w.id = 1
+    # w.save
 
-    w = Week.new
-    w.id = 1
-    w.save
-
-    status
+    create_status
 
     # p = Project.new
     # p.id = 1
