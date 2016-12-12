@@ -109,6 +109,7 @@ class WeeksController < ApplicationController
         new_day.updated_by = t[1][:updated_by]
         @week.time_entries.push(new_day)
       end
+      
       logger.debug "#{t[0]}"
       if t[1]["project_id"] == ""
        t[1]["project_id"] = nil
@@ -126,6 +127,12 @@ class WeeksController < ApplicationController
       #   end
       # end
     end
+    if params[:commit] == "Save Timesheet"
+        @week.status_id = 1
+    elsif params[:commit] == "Submit Timesheet"
+        @week.status_id = 2
+    end
+    logger.debug "STATUS ID IS #{week_params[:status_id]}"
     logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
     respond_to do |format|
       if @week.update_attributes(week_params)

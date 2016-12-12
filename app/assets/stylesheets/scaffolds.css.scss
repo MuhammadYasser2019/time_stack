@@ -69,3 +69,48 @@ div {
     list-style: square;
   }
 }
+
+.actions{
+  text-align:center;
+  input{
+    padding: 9px;
+    border-radius: 3px;
+    margin: 15px;
+    background-color: #0089ff;
+    color: white;
+    box-shadow: none;
+    border: none;
+  }
+}
+  input[type="file"] {
+    display:none;
+  }
+.action{
+  display: inline-block;
+  border: gray 1px solid;
+  border-radius: 5px;
+  padding: 6px 6px;
+  cursor: pointer;
+
+}
+
+.upload_text{
+  text-align:center;
+}
+
+#week_time_sheet{
+  margin: 0 43%;
+}
+
+.google-button{
+  border: 1px solid #ccc;
+  border-radius: 2px;
+  box-shadow: 2px 2px 2px #808080;
+  padding: 10px 10px 10px 0px;
+  margin: 10px 0 10px 0;
+}
+
+.google-button:hover{
+  background-color: white;
+  color: black;
+}
