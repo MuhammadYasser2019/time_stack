@@ -127,13 +127,9 @@ ActiveRecord::Schema.define(version: 20161209205200) do
     t.datetime "updated_at",                          null: false
     t.string   "first_name"
     t.string   "last_name"
-    t.boolean  "pm"
-    t.boolean  "cm"
-    t.boolean  "admin"
-    t.boolean  "user"
+    t.datetime "oauth_expires_at"
     t.string   "provider"
     t.string   "uid"
-    t.datetime "oauth_expires_at"
     t.string   "name"
     t.string   "oauth_token"
     t.string   "invitation_token"
@@ -144,6 +140,10 @@ ActiveRecord::Schema.define(version: 20161209205200) do
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
     t.integer  "invitations_count",      default: 0
+    t.boolean  "pm"
+    t.boolean  "cm"
+    t.boolean  "admin"
+    t.boolean  "user"
     t.boolean  "google_account"
     t.boolean  "proxy"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree

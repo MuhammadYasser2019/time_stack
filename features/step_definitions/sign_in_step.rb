@@ -23,3 +23,7 @@
 # Then(/^I should find "([^"]*)"$/) do |ent|
 #   page.should have_no_content ent
 # end
+
+# Given(/^I am a normal user$/) do
+#   create_user
+# end

@@ -16,18 +16,19 @@ class Ability
        can :read, :all
        can :manage, User
        can :manage, Week
+       can :manage, Customer
       end
       if user.cm
         can :manage, TimeEntry
-        can :read, Task
-        can [:manage, :permission_denied,:approve], Project
-        can :manage, Customer
+        can [:read,:edit,:update], Task
+        can [:manage, :permission_denied, :show_project_reports,:approve], Project
+        can [:read,:edit,:update], Customer
       end
       if user.pm
        can :manage, TimeEntry
        can :manage, Task
-       can [:read, :edit, :update, :permission_denied,:approve], Project
-       can [:new, :create, :edit, :update], Week
+       can [:read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve], Project
+       can [:new, :create, :edit, :update], :update, Week
       end
      
     else
