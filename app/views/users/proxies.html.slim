@@ -1,4 +1,4 @@
-- if params[:id] == current_user.id
+- if params[:id].to_i == current_user.id.to_i
  - @proxies.each do |p|
   = link_to p.name, "/users/#{@user.id}/proxies/#{p.id}"
 - else
