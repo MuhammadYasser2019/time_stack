@@ -30,6 +30,10 @@ class Ability
        can [:read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve], Project
        can [:new, :create, :edit, :update], :update, Week
       end
+      if user.proxy
+        can [:proxies, :proxy_user], User
+        can :proxy_week, Week
+      end
      
     else
       can :permission_denied, Project
