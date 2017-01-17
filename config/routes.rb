@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  resources :holiday_exceptions
   resources :time_entries
   resources :weeks
   resources :tasks
@@ -6,6 +7,8 @@ Rails.application.routes.draw do
   resources :customers
   resources :roles
   resources :users
+  resources :holidays
+  resources :customers_holidays
   devise_for :users, :path => "account", :controllers => { registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
@@ -37,6 +40,8 @@ Rails.application.routes.draw do
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
   get 'available_tasks/:id' => 'tasks#available_tasks'
+  
+  get 'check_holidays/:id' => "holidays#check_holidays"
 
   post 'customers/report' => 'customers#report'
   
@@ -47,6 +52,10 @@ Rails.application.routes.draw do
   get "/users/:id/proxies/:proxy_id" => "users#proxy_users"
   
   get "/users/:id/proxies/:proxy_id/proxy_users/:proxy_user" => "weeks#proxy_week"
+  
+  post "/users/invite_customer" => "users#invite_customer"
+  
+  post "/customers/invite_to_project" => "customers#invite_to_project"
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 

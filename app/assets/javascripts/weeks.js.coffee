@@ -8,6 +8,8 @@ jQuery ($) ->
     console.log "token  sequence is  " + tokens[4]
     task_select_id = "week_time_entries_attributes_" + tokens[4] + "_task_id"
     build_tasks(task_select_id, $(this).val())
+    date = $(this).parent().siblings(".date1").children("label").text()
+    check_holidays($(this).val(), date)
   )
     
   build_tasks = (field_id, project_id) ->
@@ -25,6 +27,23 @@ jQuery ($) ->
         console.log "data is "+item.code + "  "  + item.description
         $('#'+field_id).append($("<option></option>").attr("value",item.id).text(item.description))
       #task_id = $('#'+field_id+' :selected').val()
+  
+  check_holidays = (customer_id, date) ->
+    url = "/check_holidays/" + customer_id
+    
+    console.log "date array: " + date
+    $.ajax url,
+    data: {}
+    type: "GET"
+    dataType: "json"
+    success: (data) ->
+        if data["holidays"][date] && $.inArray(date, data["holiday_exceptions"]) == -1
+           console.log "exceptions: " + $.inArray(data["holidays"][date], data["holiday_exceptions"])
+           console.log "iteration: " + date
+           console.log "show me the data " + JSON.stringify(data["holidays"][date])
+           dateclass = ".date-" + date
+           $(dateclass).parent().parent("tr").find("textarea").text(data["holidays"][date])
+           $(dateclass).parent().parent("tr").find("input,button,textarea").attr("disabled", "disabled");
       
   value = 0
   count = 0

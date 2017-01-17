@@ -32,7 +32,11 @@ class ProjectsController < ApplicationController
     @users = User.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
     @proxies = User.where(proxy: true)
-
+    @customer = Customer.find(@project.customer_id)
+    customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
+    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+    @holiday_exception = HolidayException.new
+    @holiday_exceptions = @project.holiday_exceptions
   end
 
   # POST /projects
@@ -139,7 +143,6 @@ class ProjectsController < ApplicationController
     @applicable_hours = TimeEntry.where("week_id= ? and project_id= ?", @week_id ,@project_id)
 
   end
-
 
   def add_user_to_project
     # User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id").select("users.email, projects_users.project_id, projects_users.active").collect {|u| "#{u.email}, #{u.project_id}, Status #{u.active}"}

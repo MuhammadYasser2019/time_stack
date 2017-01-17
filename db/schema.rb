@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20161209205200) do
+ActiveRecord::Schema.define(version: 20170111115525) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
@@ -30,11 +30,21 @@ ActiveRecord::Schema.define(version: 20161209205200) do
     t.index ["holiday_id", "customer_id"], name: "index_customers_holidays_on_holiday_id_and_customer_id", using: :btree
   end
 
+  create_table "holiday_exceptions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer  "user_id"
+    t.integer  "project_id"
+    t.integer  "customer_id"
+    t.text     "holiday_ids", limit: 65535
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
+  end
+
   create_table "holidays", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
     t.boolean  "global"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.datetime "date"
   end
 
   create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -127,22 +137,22 @@ ActiveRecord::Schema.define(version: 20161209205200) do
     t.datetime "updated_at",                          null: false
     t.string   "first_name"
     t.string   "last_name"
+    t.boolean  "pm"
+    t.boolean  "cm"
+    t.boolean  "admin"
+    t.boolean  "user"
     t.string   "provider"
     t.string   "uid"
     t.datetime "oauth_expires_at"
     t.string   "name"
     t.string   "oauth_token"
-    t.boolean  "pm"
-    t.boolean  "cm"
-    t.boolean  "admin"
-    t.boolean  "user"
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer  "invitation_limit"
-    t.string   "invited_by_type"
     t.integer  "invited_by_id"
+    t.string   "invited_by_type"
     t.integer  "invitations_count",      default: 0
     t.boolean  "google_account"
     t.boolean  "proxy"

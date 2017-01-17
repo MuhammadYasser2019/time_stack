@@ -4,7 +4,7 @@ class CustomersController < ApplicationController
   # GET /customers
   # GET /customers.json
   def index
-    @customers = Customer.all
+    @customers = Customer.where(user_id: current_user.id)
   end
 
   # GET /customers/1
@@ -19,6 +19,11 @@ class CustomersController < ApplicationController
 
   # GET /customers/1/edit
   def edit
+    customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
+    @projects = @customer.projects
+    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+    @customer_holiday = CustomersHoliday.new
+    @invited_users = User.where("invited_by_id = ?", current_user.id)
   end
 
   # POST /customers
@@ -69,6 +74,27 @@ class CustomersController < ApplicationController
     end 
   end
   
+  def invite_to_project
+    logger.debug "INVITED BY #{params[:invited_by_id]}"
+    @user = User.invite!(email: params[:email], invited_by_id: params[:invited_by_id].to_i, pm: params[:project_manager])
+    @user.update(invited_by_id: params[:invited_by_id])
+    pu = ProjectsUser.new
+    # @users_on_project = @project.users
+    # @users_on_project = params[:user_id]
+    # @project = Project.find(1)
+
+    user = User.find(@user.id)
+    project = Project.find(params[:project_id])
+    if project.users.include?(user)
+      
+    else
+      project.users.push(user)
+    end
+    project.save
+
+    redirect_to edit_customer_path(params[:customer_id])
+  end
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_customer
@@ -77,6 +103,6 @@ class CustomersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def customer_params
-      params.require(:customer).permit(:name, :address, :city, :state, :zipcode)
+      params.require(:customer).permit(:name, :address, :city, :state, :zipcode, holiday_ids: [])
     end
 end

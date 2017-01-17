@@ -5,9 +5,19 @@ class InvitationsController < Devise::InvitationsController
     User.invite!({:email => params[:email]},current_user)
     redirect_to projects_path
   end
+  
+  def create
+    logger.debug "HELLO NURSE"
+    if params[:user][:customer_id]
+      logger.debug "HELLO CUSTOMER ID"
+    else
+      super
+    end
+  end
 
   def update
     user_params = params[:user]
+    logger.debug "IS THIS HAPPENING"
     user_google_account = user_params[:google_account]
     logger.debug("#####################33 user_google_account  #{user_google_account} ")
     user = User.find_by_email(user_params[:email])

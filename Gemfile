@@ -62,6 +62,8 @@ gem "recaptcha", '3.4.0', require: "recaptcha/rails"
 #Following two gems are needed for uploading files functionality.
 gem 'carrierwave'
 
+gem 'whenever', :require => false
+
 group :development do
   gem 'better_errors'
   gem 'guard-bundler'

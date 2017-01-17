@@ -12,7 +12,7 @@ class User < ApplicationRecord
   has_many :projects , :through => :projects_users
   has_many :roles, :through => :user_roles
   has_many :user_roles
-
+  has_many :holiday_exceptions
 
   def not_google_account?
     logger.debug("################not google account")

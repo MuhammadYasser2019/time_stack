@@ -1,0 +1,18 @@
+p#notice = notice
+
+p
+  strong User:
+  = @holiday_exception.user_id
+p
+  strong Project:
+  = @holiday_exception.project_id
+p
+  strong Customer:
+  = @holiday_exception.customer_id
+p
+  strong Holiday:
+  = @holiday_exception.holiday_ids
+
+= link_to 'Edit', edit_holiday_exception_path(@holiday_exception)
+'|
+= link_to 'Back', holiday_exceptions_path

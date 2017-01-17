@@ -1,5 +1,5 @@
 td.date1
-  = f.label f.object.date_of_activity.strftime('%Y-%m-%d'), :class =>'form-control'
+  = f.label f.object.date_of_activity.strftime('%Y-%m-%d'), :class =>"form-control date-#{f.object.date_of_activity.strftime('%Y-%m-%d')}"
 td.date2 = f.label f.object.date_of_activity.strftime("%A"), :class =>'form-control'
 =f.hidden_field :id
 =f.hidden_field :date_of_activity

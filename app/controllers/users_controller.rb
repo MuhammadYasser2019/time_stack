@@ -10,6 +10,9 @@ class UsersController < ApplicationController
   
   def admin
     @users = User.all
+    @holidays = Holiday.where(global: true)
+    @customers = Customer.where(user_id: nil)
+    @invited_users = User.where("invited_by_id = ?", current_user.id)
   end
   
   def new
@@ -63,10 +66,16 @@ class UsersController < ApplicationController
     @proxy_users = @proxy.users
   end
   
+  def invite_customer
+    @user = User.invite!(email: params[:email], invited_by_id: params[:invited_by_id])
+    Customer.find(params[:customer_id]).update(user_id: @user.id)
+    redirect_to admin_path
+  end
+  
   private
   
     def user_params
-      params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy)
+      params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id)
     end
   
 end
