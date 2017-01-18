@@ -3,6 +3,11 @@ class HolidaysController < ApplicationController
   
   def new
     @holiday = Holiday.new
+    if Customer.where(user_id: current_user.id).present?
+      @customer = true
+    else
+      @customer = false
+    end
   end
   
   def create
@@ -22,7 +27,11 @@ class HolidaysController < ApplicationController
   end
   
   def edit
-    
+    if Customer.where(user_id: current_user.id).present?
+      @customer = true
+    else
+      @customer = false
+    end
   end
   
   def update
@@ -47,10 +56,10 @@ class HolidaysController < ApplicationController
   end
   
   def check_holidays
-    customer_id = params[:id]
+    project_id = params[:id]
     @holidays_ruby = {}
     @exceptions = []
-    @holiday_prestrf = Customer.find(customer_id).holidays
+    @holiday_prestrf = Project.find(project_id).customer.holidays
     exceptions = User.find(current_user.id).holiday_exceptions.pluck(:holiday_ids).flatten
     exceptions.each do |e|
       @exceptions << Holiday.find(e).date.strftime("%Y-%m-%d")

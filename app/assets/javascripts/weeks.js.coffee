@@ -28,8 +28,8 @@ jQuery ($) ->
         $('#'+field_id).append($("<option></option>").attr("value",item.id).text(item.description))
       #task_id = $('#'+field_id+' :selected').val()
   
-  check_holidays = (customer_id, date) ->
-    url = "/check_holidays/" + customer_id
+  check_holidays = (project_id, date) ->
+    url = "/check_holidays/" + project_id
     
     console.log "date array: " + date
     $.ajax url,
@@ -44,7 +44,12 @@ jQuery ($) ->
            dateclass = ".date-" + date
            $(dateclass).parent().parent("tr").find("textarea").text(data["holidays"][date])
            $(dateclass).parent().parent("tr").find("input,button,textarea").attr("disabled", "disabled");
-      
+           console.log "AFTER DISABLED"
+        else
+           console.log "ELSE ELSE ELSE ELSE ELSE ELSE"
+           dateclass = ".date-" + date
+           $(dateclass).parent().parent("tr").find("input,button,textarea").removeAttr("disabled");
+      	   
   value = 0
   count = 0
 
