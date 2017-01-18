@@ -99,10 +99,12 @@ class WeeksController < ApplicationController
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
     prev_date_of_activity =""
     week_params["time_entries_attributes"].permit!.to_h.each do |t|
-      # store teh date of activity from previous row
+      # store the date of activity from previous row
       if !t[1][:date_of_activity].nil?
+        logger.debug "DATE OF ACTIVITY IS NOT NIL"
         prev_date_of_activity = t[1][:date_of_activity]
       else
+        logger.debug "DATE OF ACTIVITY IS ACTUALLY NIL MAN"
         new_day = TimeEntry.new
         new_day.date_of_activity = prev_date_of_activity
         new_day.project_id = t[1][:project_id]

@@ -2,14 +2,18 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ($) ->
+  
+    
   $("tbody").on("change", ".project_id", ->
     console.log "Inside project change" + $(this).attr('id') +  " the value selected is " + $(this).val()
     tokens = $(this).attr('id').split('_')
     console.log "token  sequence is  " + tokens[4]
     task_select_id = "week_time_entries_attributes_" + tokens[4] + "_task_id"
+    tr = $(this).parent().parent("tr")
+    console.log("tr: " + tr)
     build_tasks(task_select_id, $(this).val())
     date = $(this).parent().siblings(".date1").children("label").text()
-    check_holidays($(this).val(), date)
+    check_holidays($(this).val(), date, tr)
   )
     
   build_tasks = (field_id, project_id) ->
@@ -28,9 +32,10 @@ jQuery ($) ->
         $('#'+field_id).append($("<option></option>").attr("value",item.id).text(item.description))
       #task_id = $('#'+field_id+' :selected').val()
   
-  check_holidays = (project_id, date) ->
+  check_holidays = (project_id, date, tr) ->
     url = "/check_holidays/" + project_id
-    
+    console.log(tr)
+    console.log "Are there checks? " + tr.find(".exception-check").is(":checked")
     console.log "date array: " + date
     $.ajax url,
     data: {}
@@ -43,12 +48,13 @@ jQuery ($) ->
            console.log "show me the data " + JSON.stringify(data["holidays"][date])
            dateclass = ".date-" + date
            $(dateclass).parent().parent("tr").find("textarea").text(data["holidays"][date])
-           $(dateclass).parent().parent("tr").find("input,button,textarea").attr("disabled", "disabled");
+           $(dateclass).parent().parent("tr").find(".hours-input,button,textarea").attr("disabled", "disabled");
+           $(dateclass).parent().parent("tr").find(".hours-input").val(0)
            console.log "AFTER DISABLED"
-        else
+        else if !tr.find(".exception-check").is(":checked")
            console.log "ELSE ELSE ELSE ELSE ELSE ELSE"
            dateclass = ".date-" + date
-           $(dateclass).parent().parent("tr").find("input,button,textarea").removeAttr("disabled");
+           $(dateclass).parent().parent("tr").find(".hours-input,button,textarea").removeAttr("disabled");
       	   
   value = 0
   count = 0
@@ -111,7 +117,8 @@ jQuery ($) ->
       console.log("date: " + date)
       result = confirm("This will remove any added rows to from this day. Proceed?");
    	  if result
-   	   tr.find("input,button,textarea,select").attr("disabled", "disabled");
+   	   tr.find(".hours-input,button,textarea,select").attr("disabled", "disabled");
+   	   tr.find(".hours-input").val(0)
    	   tr.find("a").hide()
    	   tr.siblings().each ->
    	    console.log("sibling")
@@ -122,7 +129,7 @@ jQuery ($) ->
       orig.removeAttr("disabled")
     else
       console.log("not checked")
-      tr.find("input,button,textarea,select").removeAttr("disabled");
+      tr.find(".hours-input,button,textarea,select").removeAttr("disabled");
       tr.find("a").show()
   )
 
@@ -137,5 +144,14 @@ jQuery ($) ->
     $('#hidden_print_report').val("true")
     after =$('#hidden_print_report').attr('value')
     $('#report_form').submit()
+    
+  $(".project_id").each ->
+    console.log "each"
+    console.log "VALUE: " + $(this).val()
+    tr = $(this).parent().parent("tr")
+    console.log("tr: " + tr)
+    unless $(this).val() == ""
+	    date = $(this).parent().siblings(".date1").children("label").text()
+	    check_holidays($(this).val(), date, tr)
 
 
