@@ -1,7 +1,7 @@
 h1 class="row" Enter and Manage Time
 
-table class="border"
-  thead
+table(class="border" style="border: solid 3px orange;")
+  thead(style="background: rgba(255, 165, 0, 0.38);border: 3px solid orange;")
     tr
       th Start date
       th End date
@@ -34,4 +34,7 @@ table class="border"
       td
     tr
       td = link_to "Manage Proxy Projects", "/users/#{current_user.id}/proxies" if current_user.proxy
+      td
+      td
+      td
 br

@@ -21,7 +21,6 @@ div.tabs-content
 	  .field
 	    = f.label :customer
 	    = f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
-	  fieldset class="form-inline"
 	  table border="1" id="tasklist"
 	    thead
 	      tr 
@@ -133,7 +132,7 @@ div.tabs-content
 			  	  .small-3.columns
 		  		= f.hidden_field :customer_id, value: @customer.id
 		  		= f.hidden_field :project_id, value: @project.id
-		  		= f.submit
+		  		.actions = f.submit
 
 
 

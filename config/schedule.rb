@@ -23,7 +23,7 @@ set :environment, "development"
 # end
 
 # Learn more: http://github.com/javan/whenever
-every 1.day, :at => "6:01 pm" do
+every :sunday, :at => "12:01 am" do
   Rails.logger.debug "SUNDAY SUNDAY SUNDAY"
   runner "Week.weekly_weeks"
 end

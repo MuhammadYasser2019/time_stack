@@ -7,15 +7,19 @@ table
       th Customer
       th
       th
+      -if current_user.admin || current_user.cm
+      	th
 
   tbody
     - @projects.each do |project|
       tr
-        td = link_to "#{project.name}", edit_project_path(project), class: "project_#{project.id}"
+        td = project.name
         td = project.customer.name if !project.customer.nil?
-        td = link_to 'Destroy', project, data: {:confirm => 'Are you sure?'}, :method => :delete
+        td = link_to 'Edit', edit_project_path(project)
         td = link_to 'Report', "/show_project_reports?id=#{project.id}", :method => :get
+        -if current_user.admin || current_user.cm
+        	td = link_to 'Destroy', project, data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br
-
-= link_to 'New Project', new_project_path
+.row
+	= link_to 'New Project', new_project_path, class:"orange-button"

@@ -20,8 +20,8 @@ table
         td = customer.city
         td = customer.state
         td = customer.zipcode
-        td = link_to 'Report', "/customers/#{customer.id}/report", id: 'show_report'
         td = link_to 'Edit', edit_customer_path(customer)
+        td = link_to 'Report', "/customers/#{customer.id}/report", id: 'show_report'
         td = link_to 'Destroy', customer, data: {:confirm => 'Are you sure?'}, :method => :delete
 
 br

@@ -5,7 +5,7 @@ table
   thead
     tr
       th
-        h2 Invite Users
+        h4.center Invite Users
   tbody
     tr
       th
@@ -14,10 +14,11 @@ table
           = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name)
           = hidden_field_tag :invited_by_id, current_user.id
           = hidden_field_tag :customer_id, @customer.id
-          .row
+          .row(style="margin-top: 10px;")
 	          .small-10.columns(style="padding-left: 0;") = label_tag "Project Manager?"
 	          .small-2.columns = check_box_tag :project_manager
-          = submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
+	      .actions
+          	= submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
 
 h1 Pending Users
 table
@@ -37,8 +38,7 @@ table
           td
             = user.invitation_sent_at
           td
-            = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
-= link_to 'Show', @customer
-'|
-= link_to 'Back', customers_path
+            .actions = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
+
+= link_to 'Back to Customer List', customers_path, class: "orange-button"
 

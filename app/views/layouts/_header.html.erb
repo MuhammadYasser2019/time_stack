@@ -1,11 +1,16 @@
-<table>
+<table style="    border: solid 3px #ffedda;
+    /*outline: solid 4px gray;
+    box-shadow: 0 0 0 6px hsl(0, 0%, 0%);
+    margin-top: 8px;*/
+    border-collapse: separate;
+   width: 66%;">
 	<tr>
 		<td>
 			<a href="/"><%= image_tag "RSILogo.jpg" %></a>
 		</td>
 		<td>
 		<% if !current_user.nil? %>
-			<%= current_user.email %><br/><%= button_to 'Logout', destroy_user_session_path, :method => :delete %>
+			<span style="float:left;margin-top:5px;"><%= current_user.email %></span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %>
 		<% else %>
 			<%= link_to "Sign In", new_user_session_path %>
 		<% end %>
