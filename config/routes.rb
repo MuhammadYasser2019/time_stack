@@ -51,7 +51,7 @@ Rails.application.routes.draw do
   
   get "/users/:id/proxies/:proxy_id" => "users#proxy_users"
   
-  get "/users/:id/proxies/:proxy_id/proxy_users/:proxy_user" => "weeks#proxy_week"
+  get "/users/:user_id/proxies/:proxy_id/proxy_users/:proxy_user" => "weeks#proxy_week"
   
   post "/users/invite_customer" => "users#invite_customer"
   

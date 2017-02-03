@@ -162,7 +162,7 @@ class WeeksController < ApplicationController
   end
   
   def proxy_week
-    @user = User.find(params[:id])
+    @user = User.find(params[:user_id])
     logger.debug "@user #{@user.inspect}"
     @proxy = Project.find(params[:proxy_id])
     logger.debug "@proxy #{@proxy.inspect}"
