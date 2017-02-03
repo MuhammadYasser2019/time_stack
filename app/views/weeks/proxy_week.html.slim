@@ -1,27 +1,28 @@
 - if @proxy.proxy == @user.id
- h1 class="row" Enter and Manage Time
-
- table class="border"
-  thead
-    tr
-      th Start date
-      th End date
-      th Status
-      th Report
-
-      
-  tbody
-    - @weeks.each do |week|
-      tr
-        td = week.start_date.strftime('%Y-%m-%d')
-        td = week.end_date.strftime('%Y-%m-%d')
-        td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
-		td = link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
-
-    tr
-      td = link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
-      td
-      td
-      td
+ .white-background
+	 h1 Enter and Manage Time
+	
+	 table class="border"
+	  thead
+	    tr
+	      th Start date
+	      th End date
+	      th Status
+	      th Report
+	
+	      
+	  tbody
+	    - @weeks.each do |week|
+	      tr
+	        td = week.start_date.strftime('%Y-%m-%d')
+	        td = week.end_date.strftime('%Y-%m-%d')
+	        td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
+			td = link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
+	
+	    tr
+	      td = link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
+	      td
+	      td
+	      td
 - else
  h1 You are not allowed to access this page.

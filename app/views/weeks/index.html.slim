@@ -1,40 +1,41 @@
-h1 class="row" Enter and Manage Time
-
-table(class="border" style="border: solid 3px orange;")
-  thead(style="background: rgba(255, 165, 0, 0.38);border: 3px solid orange;")
-    tr
-      th Start date
-      th End date
-      th Status
-      th Report
-
-      
-  tbody
-    - @weeks.each do |week|
-      tr
-        td = week.start_date.strftime('%Y-%m-%d')
-        td = week.end_date.strftime('%Y-%m-%d')
-        td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
-		td = link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
-
-    tr
-      td = link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
-      td
-      td
-      td
-    tr
-      td = link_to "Manage Customers", "customers" if user_represents_customers(current_user) || (can? :manage, Customer)
-      td
-      td
-      td
-    tr
-      td = link_to "Manage Projects", "projects" if (user_represents_projects(current_user)) || (can? :manage, Project)
-      td
-      td
-      td
-    tr
-      td = link_to "Manage Proxy Projects", "/users/#{current_user.id}/proxies" if current_user.proxy
-      td
-      td
-      td
-br
+.white-background
+	h1 Enter and Manage Time
+	
+	table(class="border" style="border: solid 3px orange;")
+	  thead(style="background: rgba(255, 165, 0, 0.38);border: 3px solid orange;")
+	    tr
+	      th Start date
+	      th End date
+	      th Status
+	      th Report
+	
+	      
+	  tbody
+	    - @weeks.each do |week|
+	      tr
+	        td = week.start_date.strftime('%Y-%m-%d')
+	        td = week.end_date.strftime('%Y-%m-%d')
+	        td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
+			td = link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
+	
+	    tr
+	      td = link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
+	      td
+	      td
+	      td
+	    tr
+	      td = link_to "Manage Customers", "customers" if user_represents_customers(current_user) || (can? :manage, Customer)
+	      td
+	      td
+	      td
+	    tr
+	      td = link_to "Manage Projects", "projects" if (user_represents_projects(current_user)) || (can? :manage, Project)
+	      td
+	      td
+	      td
+	    tr
+	      td = link_to "Manage Proxy Projects", "/users/#{current_user.id}/proxies" if current_user.proxy
+	      td
+	      td
+	      td
+	br

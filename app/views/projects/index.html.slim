@@ -1,25 +1,26 @@
-h1 Listing projects
-
-table
-  thead
-    tr
-      th Name
-      th Customer
-      th
-      th
-      -if current_user.admin || current_user.cm
-      	th
-
-  tbody
-    - @projects.each do |project|
-      tr
-        td = project.name
-        td = project.customer.name if !project.customer.nil?
-        td = link_to 'Edit', edit_project_path(project)
-        td = link_to 'Report', "/show_project_reports?id=#{project.id}", :method => :get
-        -if current_user.admin || current_user.cm
-        	td = link_to 'Destroy', project, data: {:confirm => 'Are you sure?'}, :method => :delete
-
-br
-.row
-	= link_to 'New Project', new_project_path, class:"orange-button"
+.white-background
+	h1 Listing projects
+	
+	table
+	  thead
+	    tr
+	      th Name
+	      th Customer
+	      th
+	      th
+	      -if current_user.admin || current_user.cm
+	      	th
+	
+	  tbody
+	    - @projects.each do |project|
+	      tr
+	        td = project.name
+	        td = project.customer.name if !project.customer.nil?
+	        td = link_to 'Edit', edit_project_path(project)
+	        td = link_to 'Report', "/show_project_reports?id=#{project.id}", :method => :get
+	        -if current_user.admin || current_user.cm
+	        	td = link_to 'Destroy', project, data: {:confirm => 'Are you sure?'}, :method => :delete
+	
+	br
+	.row
+		= link_to 'New Project', new_project_path, class:"orange-button"

@@ -6,7 +6,8 @@ ul(class="tabs" data-tab style="margin: 0 0 0 35%;")
   	a href="#holidays" Holidays
 
 div.tabs-content
-  div class="content active" id="information"
+  div.white-background class="content active" id="information"
+    h1 Editing customer
 	= form_for @customer do |f|
 	  - if @customer.errors.any?
 	    #error_explanation
@@ -41,8 +42,8 @@ div.tabs-content
 		  - if @holidays.any?
 		   .row
 		    h4.small-1.columns
-		    h4.small-5.columns.text-center.underline style="text-decoration:underline;"  Name
-		    h4.small-3.columns.text-center.underline style="text-decoration:underline;"  Date
+		    h4.small-5.columns.text-center.underline.no-background style="text-decoration:underline;"  Name
+		    h4.small-3.columns.text-center.underline.no-background style="text-decoration:underline;"  Date
 		    h4.small-3.columns.text-center
 		   = form_for @customer do |f|
 			    = f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name) do |h|

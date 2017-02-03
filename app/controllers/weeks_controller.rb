@@ -163,9 +163,13 @@ class WeeksController < ApplicationController
   
   def proxy_week
     @user = User.find(params[:id])
+    logger.debug "@user #{@user.inspect}"
     @proxy = Project.find(params[:proxy_id])
+    logger.debug "@proxy #{@proxy.inspect}"
     @proxy_user = User.find(params[:proxy_user])
+    logger.debug "@proxy_user #{@proxy_user.inspect}"
     @weeks = Week.where("user_id = ?", params[:proxy_user]).order(start_date: :desc).limit(10)
+    logger.debug "@weeks #{@weeks.inspect}"
   end
   
   def report

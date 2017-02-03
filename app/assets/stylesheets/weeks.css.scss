@@ -6,15 +6,37 @@ body{
 }
 
 h1,h2,h3,h4,h5{
+  background-color: #ffdd9e;
+  border-radius: 5px;
   font-weight: bold;
+  max-width: 50%;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+.header{
+  border: solid 3px #ffedda;
+ /*outline: solid 4px gray;
+   box-shadow: 0 0 0 6px hsl(0, 0%, 0%);
+   margin-top: 8px;*/
+   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+   border-collapse: separate;
+   width: 66%;
+}
+
+.no-background{
+  background-color: transparent;
 }
 
 table{
   margin-left: auto;
   margin-right: auto;
-  border-color: #ffedda !important;
+  border-color: white !important;
   border-width: 3px !important;
   border-collapse: separate;
+  /*box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);*/
+  margin-left: auto;
+  margin-right: auto;
 }
 
 h1.row{
@@ -88,6 +110,10 @@ table thead tr th, table tfoot tr th, table tfoot tr td, table tbody tr th, tabl
  border: solid 3px white;
 }
 
+.tabs-content{
+  margin-top: 10px;
+}
+
 .tab-title:first-of-type{
   border-left: 3px solid white;
   border-top: 3px solid white;
@@ -102,6 +128,7 @@ table thead tr th, table tfoot tr th, table tfoot tr td, table tbody tr th, tabl
   border-bottom: 3px solid white;
   border-right: 1.5px solid white;
   border-collapse:collapse;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 .tab-title:last-of-type{
   border-left: 1.5px solid white;
@@ -166,6 +193,7 @@ input[type="submit"]{
           border-color: #ffedda !important;
           border-width: 3px !important;
           border-collapse: separate;
+          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
            h3{
              background-color:#ffdd9e;
              border-radius: 5px;
@@ -178,4 +206,17 @@ input[type="submit"]{
            }
         }
      }
+}
+
+.white-background{
+  margin-left: auto;
+  margin-right: auto;
+  margin-top: 10px;
+  margin-bottom: 10px;
+  text-align: center;
+  background-color:white;
+  border-radius: 5px;
+  padding:10px;
+  max-width: 70%;
+  box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }

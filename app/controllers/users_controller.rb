@@ -57,7 +57,9 @@ class UsersController < ApplicationController
   
   def proxies
     @user = User.find(params[:id])
+    logger.debug "@user #{@user.inspect}"
     @proxies = Project.where(proxy: @user.id)
+    logger.debug "@project #{@proxies.inspect}"
   end
   
   def proxy_users
