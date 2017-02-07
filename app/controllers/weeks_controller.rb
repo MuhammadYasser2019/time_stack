@@ -51,8 +51,12 @@ class WeeksController < ApplicationController
   # GET /weeks/1/edit
   def edit
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
-    @projects =  Project.joins(:projects_users).where("projects_users.user_id=?", current_user.id )
     @week = Week.joins(:time_entries).find(params[:id])
+    if current_user == @week.user_id
+      @projects =  Project.joins(:projects_users).where("projects_users.user_id=?", current_user.id )
+    else
+      @projects =  Project.joins(:projects_users).where("projects_users.user_id=?", @week.user_id )
+    end
     @week.start_date = Week.find(params[:id]).start_date.strftime('%Y-%m-%d')
     @week.end_date = Week.find(params[:id]).end_date.strftime('%Y-%m-%d')
     status_ids = [1,2]
@@ -149,7 +153,7 @@ class WeeksController < ApplicationController
         @week.save
 
         if @week.status_id == 2
-          ApprovalMailer.mail_to_manager(@week, current_user).deliver
+          ApprovalMailer.mail_to_manager(@week, Week.find(@week.user_id)).deliver
         end
 
         format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
