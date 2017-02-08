@@ -153,7 +153,7 @@ class WeeksController < ApplicationController
         @week.save
 
         if @week.status_id == 2
-          ApprovalMailer.mail_to_manager(@week, @week.user_id).deliver
+          ApprovalMailer.mail_to_manager(@week, User.find(@week.user_id)).deliver
         end
 
         format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
