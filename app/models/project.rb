@@ -40,7 +40,7 @@ class Project < ApplicationRecord
     if proj_report_end_date.nil?
       last_day = start_day.end_of_week
     else
-      last_day = Date.parse(proj_report_end_date)
+      last_day = Date.parse(proj_report_end_date).end_of_day
     end
     dates_array = []
     this_day = start_day
@@ -49,7 +49,7 @@ class Project < ApplicationRecord
       this_day = this_day.tomorrow
       
     end
-    
+    logger.debug "DATE ARRAAAAAAAAAAAAAAAAY: #{dates_array}"
     return dates_array
   end
   
@@ -86,6 +86,7 @@ class Project < ApplicationRecord
   end
   
   def self.convert_date_format(date_str)
+    logger.debug "DATE_STR #{date_str}"
     if date_str.nil?
       date_str = Time.now.strftime('%m-%d-%Y')
     end

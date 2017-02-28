@@ -42,6 +42,14 @@ class ProjectsController < ApplicationController
   # POST /projects
   # POST /projects.json
   def create
+    logger.debug "ID YO #{params[:project][:tasks_attributes].inspect}"
+    params[:project][:tasks_attributes].each do |t, k|
+      logger.debug "T1: #{params[:project][:tasks_attributes][t][:code]}"
+
+      if params[:project][:tasks_attributes][t][:code] == ""
+        params[:project][:tasks_attributes].delete t
+      end
+    end
     @project = Project.new(project_params)
 
     respond_to do |format|
@@ -131,8 +139,8 @@ class ProjectsController < ApplicationController
   def show_project_reports
     @project_id = params[:id]
     p = Project.find(@project_id)
-    @dates_array = p.find_dates_to_print(Project.convert_date_format(params[:proj_report_start_date]), Project.convert_date_format(params[:proj_report_end_date]))
-    @consultant_hash = p.build_consultant_hash(@project_id, @dates_array, Project.convert_date_format(params[:proj_report_start_date]), Project.convert_date_format(params[:proj_report_end_date]))
+    @dates_array = p.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
+    @consultant_hash = p.build_consultant_hash(@project_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date])
   end
 
   def show_hours
@@ -179,6 +187,18 @@ class ProjectsController < ApplicationController
   
   def permission_denied
     
+  end
+
+  def deactivate_project
+    @project = Project.find(params[:id])
+    @project.update(inactive: 1)
+    redirect_to projects_path
+  end
+
+  def reactivate_project
+    @project = Project.find(params[:id])
+    @project.update(inactive: 0)
+    redirect_to projects_path
   end
 
   private

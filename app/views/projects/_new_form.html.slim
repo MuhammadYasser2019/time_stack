@@ -11,7 +11,7 @@
     = f.text_field :name
   .field
     = f.label :customer
-    = f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
+    = f.select :customer_id, options_from_collection_for_select(@customers, "id", "name")
     = f.hidden_field :user_id, value: current_user.id
   fieldset class="form-inline"
   table border="1" id="tasklist"
@@ -24,4 +24,4 @@
         == render 'task_fields', f: tf
 	tr 
           td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
-  .actions = f.submit
+  .actions#new-project-actions = f.submit

@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   get 'projects/approve/:week_id/:row_id' => 'projects#approve'
   get 'projects/reject/:id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
+  post 'projects/:id/deactivate_project' => 'projects#deactivate_project'
+  post 'projects/:id/reactivate_project' => 'projects#reactivate_project'
   post 'time_reject' => 'weeks#time_reject'
   post 'show_hours' => 'projects#show_hours'
 

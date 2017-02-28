@@ -4,7 +4,7 @@ module ProjectsHelper
     if fname.nil? || lname.nil?
       
     else
-      consultant_name = "#{fname}, #{lname}"
+      consultant_name = "#{fname} #{lname}"
     end
     return consultant_name
   end

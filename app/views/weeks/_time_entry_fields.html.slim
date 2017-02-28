@@ -4,28 +4,28 @@ td.date2 = f.label f.object.date_of_activity.strftime("%A"), :class =>'form-cont
 =f.hidden_field :id
 =f.hidden_field :date_of_activity
 td.project
- -if f.object.sick || f.object.personal_day
+ -if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
   = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id", disabled: "disabled"})
  -else
   = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id"})
 td.task
  - if !f.object.task_id.nil?
-  - if f.object.sick || f.object.personal_day
+  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
    = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: f.object.project_id), "id", "description", f.object.task), {}, {:class =>'task_id', disabled: "disabled"})
   - else
    = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: f.object.project_id), "id", "description", f.object.task), {}, {:class =>'task_id'})
  - else
-  - if f.object.sick || f.object.personal_day
+  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
    = f.select(:task_id, options_from_collection_for_select([], "id", "description", nil), {}, {:class =>'task_id', disabled: "disabled"})
   - else
    = f.select(:task_id, options_from_collection_for_select([], "id", "description", nil), {}, {:class =>'task_id'})
 td.hour
- - if f.object.sick || f.object.personal_day
+ - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
   = f.text_field :hours, :class =>'form-control input-sm hours-input', :disabled => "disabled"
  - else
   = f.text_field :hours, :class =>'form-control input-sm hours-input'
 td.activity_log
- - if f.object.sick || f.object.personal_day
+ - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
   = f.text_area :activity_log, :class =>'form-control input-lg', :disabled => "disabled"
  - else
   = f.text_area :activity_log, :class =>'form-control input-lg', :maxlength => 500
@@ -34,19 +34,19 @@ td.exception
  div.check
   span Sick Day?
   br
-   - if f.object.personal_day
+   - if f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
     = f.check_box :sick, :class => 'exception-check', :disabled => "disabled"
    - else
     = f.check_box :sick, :class => 'exception-check'
 
   span Personal Day?
   br
-   - if f.object.sick
+   - if f.object.sick || f.object.week.status_id == 2 || f.object.week.status_id == 3
     = f.check_box :personal_day, :class => 'exception-check', :disabled => "disabled"
    -else
     = f.check_box :personal_day, :class => 'exception-check'
 td.add
- - if f.object.sick || f.object.personal_day
+ - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
  -else
   = link_to "Add Row", "javascript:void(0)", class: "add_row", date_stamp: f.object.date_of_activity, day_value: f.object.date_of_activity.strftime("%A")
 = f.hidden_field :updated_by, value: current_user.id

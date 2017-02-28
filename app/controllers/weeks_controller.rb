@@ -24,7 +24,7 @@ class WeeksController < ApplicationController
 
   # GET /weeks/new
   def new
-    @projects =  Project.joins(:projects_users).where("projects_users.user_id=?", current_user.id )
+    @projects =  Project.joins(:projects_users).where("projects_users.user_id=? AND inactive=?", current_user.id, false )
     logger.debug("these are the projects#{@projects}")
     if !@projects.first.nil?
       @tasks = Task.where(project_id: @projects.first.id)
@@ -53,9 +53,9 @@ class WeeksController < ApplicationController
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
     @week = Week.joins(:time_entries).find(params[:id])
     if current_user == @week.user_id
-      @projects =  Project.joins(:projects_users).where("projects_users.user_id=?", current_user.id )
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", current_user.id )
     else
-      @projects =  Project.joins(:projects_users).where("projects_users.user_id=?", @week.user_id )
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id )
     end
     @week.start_date = Week.find(params[:id]).start_date.strftime('%Y-%m-%d')
     @week.end_date = Week.find(params[:id]).end_date.strftime('%Y-%m-%d')

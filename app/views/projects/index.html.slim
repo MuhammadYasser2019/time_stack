@@ -6,6 +6,7 @@
 	    tr
 	      th Name
 	      th Customer
+	      th Inactive?
 	      th
 	      th
 	      -if current_user.admin || current_user.cm
@@ -16,10 +17,19 @@
 	      tr
 	        td = project.name
 	        td = project.customer.name if !project.customer.nil?
-	        td = link_to 'Edit', edit_project_path(project)
+            td
+              - if project.inactive == true
+                span Yes
+              - elsif project.inactive == false || project.inactive == nil
+                span No
+	        td = link_to 'Manage', edit_project_path(project)
 	        td = link_to 'Report', "/show_project_reports?id=#{project.id}", :method => :get
 	        -if current_user.admin || current_user.cm
-	        	td = link_to 'Destroy', project, data: {:confirm => 'Are you sure?'}, :method => :delete
+	        	td
+                  - if project.inactive == false || project.inactive == nil
+                   = link_to 'Deactivate', "/projects/#{project.id}/deactivate_project", :method => :post
+                  - elsif project.inactive == true
+                   = link_to 'Reactivate', "/projects/#{project.id}/reactivate_project", :method => :post
 	
 	br
 	.row

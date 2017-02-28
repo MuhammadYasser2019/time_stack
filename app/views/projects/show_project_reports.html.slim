@@ -9,9 +9,9 @@ table
 
   tbody
     tr
-      td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date]
+      td = date_field_tag 'proj_report_start_date', params[:proj_report_start_date]
       = hidden_field_tag 'id', @project_id
-      td = text_field_tag 'proj_report_end_date', params[:proj_report_end_date]
+      td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date]
       td = button_tag "Show Report" 
 table id='show_report'
   thead
