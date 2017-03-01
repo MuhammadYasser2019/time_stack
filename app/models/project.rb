@@ -53,9 +53,9 @@ class Project < ApplicationRecord
     return dates_array
   end
   
-  def build_consultant_hash(project_id, dates_array, start_date, end_date)
+  def build_consultant_hash(project_id, dates_array, start_date, end_date, users)
     hash_report_data = Hash.new
-    consultant_ids = Project.find(project_id).users.collect {|c| c.id}.flatten
+    consultant_ids = users
     consultant_ids.each do |c|
       time_entries = TimeEntry.where(user_id: c, project_id: project_id, date_of_activity: start_date..end_date).order(:date_of_activity)
       logger.debug "consultant is #{c}"
@@ -74,7 +74,7 @@ class Project < ApplicationRecord
         else 
           daily_hours = !t.hours.blank? ? t.hours : 0
         end
-        
+
         total_hours = total_hours + t.hours if !t.hours.blank?
         employee_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: daily_hours, activity_log: t.activity_log }
       end

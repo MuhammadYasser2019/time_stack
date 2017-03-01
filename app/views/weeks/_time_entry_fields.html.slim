@@ -21,12 +21,12 @@ td.task
    = f.select(:task_id, options_from_collection_for_select([], "id", "description", nil), {}, {:class =>'task_id'})
 td.hour
  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
-  = f.text_field :hours, :class =>'form-control input-sm hours-input', :disabled => "disabled"
+  = f.text_field :hours, {:class =>'form-control input-sm hours-input', :readonly => true}
  - else
   = f.text_field :hours, :class =>'form-control input-sm hours-input'
 td.activity_log
  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
-  = f.text_area :activity_log, :class =>'form-control input-lg', :disabled => "disabled"
+  = f.text_area :activity_log, :class =>'form-control input-lg', :readonly => true
  - else
   = f.text_area :activity_log, :class =>'form-control input-lg', :maxlength => 500
   div (class="char_count")

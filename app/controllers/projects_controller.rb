@@ -43,11 +43,13 @@ class ProjectsController < ApplicationController
   # POST /projects.json
   def create
     logger.debug "ID YO #{params[:project][:tasks_attributes].inspect}"
-    params[:project][:tasks_attributes].each do |t, k|
-      logger.debug "T1: #{params[:project][:tasks_attributes][t][:code]}"
+    if params[:project][:tasks_attributes]
+      params[:project][:tasks_attributes].each do |t, k|
+        logger.debug "T1: #{params[:project][:tasks_attributes][t][:code]}"
 
-      if params[:project][:tasks_attributes][t][:code] == ""
-        params[:project][:tasks_attributes].delete t
+        if params[:project][:tasks_attributes][t][:code] == ""
+          params[:project][:tasks_attributes].delete t
+        end
       end
     end
     @project = Project.new(project_params)
@@ -139,8 +141,15 @@ class ProjectsController < ApplicationController
   def show_project_reports
     @project_id = params[:id]
     p = Project.find(@project_id)
+    @users = p.users
+    @user_array = @users.pluck(:id)
     @dates_array = p.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
-    @consultant_hash = p.build_consultant_hash(@project_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date])
+    if params[:user] == "" || params[:user] == nil
+      @consultant_hash = p.build_consultant_hash(@project_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @user_array)
+    else
+      @consultant_hash = p.build_consultant_hash(@project_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]])
+    end
+
   end
 
   def show_hours
