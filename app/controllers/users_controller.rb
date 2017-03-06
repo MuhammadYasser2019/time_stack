@@ -74,6 +74,38 @@ class UsersController < ApplicationController
     redirect_to admin_path
   end
   
+
+  def show_user_reports
+    if params[:user].blank?
+      @user = current_user
+    else
+      @user = User.find(params[:user])
+    end
+    user_id = @user.id
+    @users = User.all
+    @user_projects = @user.projects
+    # projects_array = @user_projects.pluck(:id)
+    # @user_report_date_array = @user.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
+    # @project_hash = @user.build_project_hash(user_id,@user_report_date_array, @user_projects,params[:proj_report_start_date], params[:proj_report_end_date])
+    time_period = params[:proj_report_start_date]..params[:proj_report_end_date]
+    if !params[:project].blank?
+      logger.debug "getting here?"
+      @time_entries = TimeEntry.where(project_id: params[:project],user_id: @user, date_of_activity: time_period).order(:date_of_activity)
+    else
+      @time_entries = TimeEntry.where(user_id: @user,date_of_activity: time_period).order(:date_of_activity)
+    end
+    @hours_sum = 0
+    @time_entries.each do |t|
+      if !t.hours.nil?
+        @hours_sum += t.hours
+      end
+    end
+
+
+  end
+
+
+
   private
   
     def user_params
