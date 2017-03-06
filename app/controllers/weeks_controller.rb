@@ -51,7 +51,13 @@ class WeeksController < ApplicationController
   # GET /weeks/1/edit
   def edit
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
-    @week = Week.joins(:time_entries).find(params[:id])
+    @week = Week.find(params[:id])
+    if @week.status_id == 4
+      logger.debug "THE STATUS IS FOOOOOOOOUOUOUOUOUOUOUOUOUOUOUOUOUUOUOUOUOOUOUOUR"
+      @time_entries = @week.time_entries.where(status_id: 4)
+    else
+      @time_entries = @week.time_entries.where.not(status_id: [3,4])
+    end
     if current_user == @week.user_id
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", current_user.id )
     else
@@ -138,8 +144,14 @@ class WeeksController < ApplicationController
     end
     if params[:commit] == "Save Timesheet"
         @week.status_id = 1
+        @week.time_entries.where(status_id: [nil, 4]).each do |t|
+          t.update(status_id: 1)
+        end
     elsif params[:commit] == "Submit Timesheet"
         @week.status_id = 2
+        @week.time_entries.where(status_id: [1,4]).each do |t|
+          t.update(status_id: 2)
+        end
     end
     logger.debug "STATUS ID IS #{week_params[:status_id]}"
     logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
@@ -222,6 +234,9 @@ class WeeksController < ApplicationController
     logger.debug "time_reject - entering #{params.inspect}"
     @week = Week.find(params[:id])
     @week.status_id = 4
+    @week.time_entries.where(project_id: params[:project_id]).each do |t|
+      t.update(status_id: 4)
+    end
     @week.comments = params[:comments]
     @row_id = params[:row_id]
     @week.save!
