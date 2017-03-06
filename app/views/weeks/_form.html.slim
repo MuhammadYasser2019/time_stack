@@ -25,7 +25,7 @@
         td
         td 
     tbody
-    = f.fields_for :time_entries do |cf|
+    = f.fields_for :time_entries, @time_entries do |cf|
       tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
   
   - if f.object.status_id == 2 || f.object.status_id == 3

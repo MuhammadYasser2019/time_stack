@@ -27,7 +27,7 @@ class ProjectsController < ApplicationController
     @customers = Customer.all
     @project_id = params[:id]
     @project = Project.includes(:tasks).find(params[:id])
-    @applicable_week = Week.joins(:time_entries).where("weeks.status_id = ? and time_entries.project_id= ?", "2",params[:id]).select(:id, :user_id, :start_date, :end_date , :comments).distinct
+    @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",params[:id],"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
     @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @users = User.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
@@ -123,10 +123,15 @@ class ProjectsController < ApplicationController
 
   def approve
     @w = Week.find(params[:week_id])
-    @w.status_id = 3
+    @w.time_entries.where(project_id: params[:id]).each do |t|
+      t.update(status_id: 3, approved_date: Time.now.strftime('%Y-%m-%d'), approved_by: current_user.id)
+    end
     @row_id = params[:row_id]
     @w.approved_date = Time.now.strftime('%Y-%m-%d')
     @w.approved_by = current_user.id
+    if @w.time_entries.where.not(hours:nil).count == @w.time_entries.where(status_id: 3).count
+      @w.status_id = 3
+    end
     @w.save!
 
     manager = current_user

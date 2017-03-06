@@ -19,8 +19,11 @@ jQuery ($) ->
   $('.reject_class').click ->
     row_id = parse_row_id($(this).attr('id'))
     cotent = $('#comment_text_' + row_id).val()
+    project_url=$(location).attr('href')
+    project_id = parse_project_id(project_url)
     $.post '/time_reject',
       id: $('#week_id_' + row_id).val(),
+      project_id: project_id,
       comments: cotent,
       row_id: row_id
     return
