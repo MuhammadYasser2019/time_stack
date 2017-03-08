@@ -34,6 +34,7 @@ div.report
         td Description
         td Sick
         td Personal
+        td Approved By
     tbody
     - @time_entries.each do |t|
       tr
@@ -55,6 +56,9 @@ div.report
            span Yes
          - else
            span No
+        td.approved_by
+         - if t.approved_by?
+          span = "#{User.find(t.approved_by).first_name} #{User.find(t.approved_by).last_name}"
     tr
       td
       td
