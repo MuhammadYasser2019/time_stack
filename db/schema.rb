@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170225001916) do
+ActiveRecord::Schema.define(version: 20170302220352) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
@@ -102,6 +102,9 @@ ActiveRecord::Schema.define(version: 20170225001916) do
     t.boolean  "sick"
     t.boolean  "personal_day"
     t.integer  "updated_by"
+    t.integer  "status_id"
+    t.integer  "approved_by"
+    t.datetime "approved_date"
     t.index ["task_id"], name: "index_time_entries_on_task_id", using: :btree
     t.index ["user_id"], name: "index_time_entries_on_user_id", using: :btree
     t.index ["week_id"], name: "index_time_entries_on_week_id", using: :btree

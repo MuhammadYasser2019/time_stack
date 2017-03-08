@@ -24,8 +24,8 @@ Rails.application.routes.draw do
   root 'weeks#index'
   get 'weeks/:id/report' => 'weeks#report'
 
-  get 'projects/approve/:week_id/:row_id' => 'projects#approve'
-  get 'projects/reject/:id' => 'projects#reject'
+  get 'projects/:id/approve/:week_id/:row_id' => 'projects#approve'
+  get 'projects/:id/reject/:week_id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
   post 'projects/:id/deactivate_project' => 'projects#deactivate_project'
   post 'projects/:id/reactivate_project' => 'projects#reactivate_project'
