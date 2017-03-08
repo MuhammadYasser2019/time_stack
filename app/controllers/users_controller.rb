@@ -74,10 +74,43 @@ class UsersController < ApplicationController
     redirect_to admin_path
   end
   
+
+  def show_user_reports
+    logger.debug("IN THE SHOW USER REPORT*******: #{params.inspect}")
+    @print_report = "false"
+    logger.debug("******CHECKING hidden_print_report: #{params[:hidden_print_report].inspect}")
+    @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?
+    if params[:id].blank?
+      @user = current_user
+    else
+      @user = User.find(params[:id])
+    end
+    user_id = @user.id
+    @users = User.all
+    @user_projects = @user.projects
+    @current_user_id = current_user.id
+    time_period = params[:proj_report_start_date]..params[:proj_report_end_date]
+    if !params[:project].blank?
+      logger.debug "getting here?"
+      @time_entries = TimeEntry.where(project_id: params[:project],user_id: @user, date_of_activity: time_period).order(:date_of_activity)
+    else
+      @time_entries = TimeEntry.where(user_id: @user,date_of_activity: time_period).order(:date_of_activity)
+    end
+    @hours_sum = 0
+    @time_entries.each do |t|
+      if !t.hours.nil?
+        @hours_sum += t.hours
+      end
+    end
+
+
+  end
+
+
+
   private
   
     def user_params
       params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id)
     end
-  
 end

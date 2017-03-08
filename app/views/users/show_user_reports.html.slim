@@ -1,0 +1,72 @@
+div.report
+  h1 Reports for Users #{consultant_name(@user.first_name, @user.last_name)}
+  = form_tag "/show_user_reports",id: "user_report_form", method: :get
+  table
+    -if @print_report == "true"
+      p Start Date:
+        #{params[:proj_report_start_date]}
+      p End Date:
+        #{params[:proj_report_end_date]}
+    -else
+      thead
+        tr
+          th User
+          th Period Start Date
+          th Period End Date
+          th
+
+      tbody
+        tr
+          td = select_tag :project, options_from_collection_for_select(@user_projects, "id", "name", params[:project]), :include_blank => true
+          = hidden_field_tag 'hidden_print_report', false
+          td = date_field_tag 'proj_report_start_date', params[:proj_report_start_date], {required: "required"}
+          /= hidden_field_tag 'id', @user.id
+          td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
+          td = button_tag "Show User Report"
+  table border="1"
+    thead
+      tr
+        td Date 
+        td Day
+        td Project 
+        td Task
+        td Hours
+        td Description
+        td Sick
+        td Personal
+        td Approved By
+    tbody
+    - @time_entries.each do |t|
+      tr
+        td.date = t.date_of_activity.strftime('%Y-%m-%d')
+        td.date = t.date_of_activity.strftime("%A") 
+        td.project = t.project.name if !t.project.nil?
+        td.task = t.task.description if !t.task.nil?
+        td.hour 
+          = t.hours
+        td.active_log
+          = t.activity_log
+        td.sick
+         - if t.sick == true
+           span Yes
+         - else
+           span No
+        td.personal
+         - if t.personal_day == true
+           span Yes
+         - else
+           span No
+        td.approved_by
+         - if t.approved_by?
+          span = "#{User.find(t.approved_by).first_name} #{User.find(t.approved_by).last_name}"
+    tr
+      td
+      td
+      td
+      td Total Hours:
+      td = @hours_sum
+      td
+      td
+      td
+  -if @print_report == "false"
+    = button_tag "Print", class: "print-user-report secondary tiny", type: "button"

@@ -42,7 +42,6 @@ jQuery ($) ->
       week_id: $('#week_id_' + row_id).val()
     return
 
-
   $('.add-user-to-project').click ->
     console.log("check is clicked" +$(this).val())
 
