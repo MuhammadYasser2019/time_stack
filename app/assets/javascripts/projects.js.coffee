@@ -39,6 +39,17 @@ jQuery ($) ->
       week_id: $('#week_id_' + row_id).val()
     return
 
+  $('.project_show_user_reports').click ->
+    user = $(this).attr('id')
+    report_start_date = $('#proj_report_start_date').attr('value')
+    console.log("START: " + report_start_date )
+    report_end_date = $('#proj_report_end_date').attr('value')
+    console.log("END: " + report_end_date )
+    console.log("the user id is: "+ user)
+    $.post '/show_user_reports',
+      user: user
+    #return
+
 
   $('.add-user-to-project').click ->
     console.log("check is clicked" +$(this).val())

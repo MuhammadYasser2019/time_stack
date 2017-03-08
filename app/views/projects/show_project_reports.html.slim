@@ -26,7 +26,7 @@ table id='show_report'
   tbody
     - @consultant_hash.keys.each do |c|
       tr
-        td = consultant_name(User.find(c).first_name, User.find(c).last_name)
+        td = link_to "#{consultant_name(User.find(c).first_name, User.find(c).last_name)}","#", id: "#{c}", class: "project_show_user_reports", type: "button"
         - @dates_array.each do |d|
           - if !@consultant_hash[c][:daily_hash][d].nil?
             td = @consultant_hash[c][:daily_hash][d][:hours]

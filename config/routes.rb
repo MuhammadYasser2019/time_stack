@@ -32,8 +32,9 @@ Rails.application.routes.draw do
   post 'time_reject' => 'weeks#time_reject'
   post 'show_hours' => 'projects#show_hours'
 
-  get 'show_user_reports' => 'users#show_user_reports'
-
+  get '/show_user_reports' => 'users#show_user_reports'
+  post '/show_user_reports' => 'users#show_user_reports'
+  
   get 'add_user_to_project' => "projects#add_user_to_project"
   get '/projects/:id/user_time_report' => 'projects#user_time_report'
   match 'user_account', :to => "users#user_account",  via: [:get, :post]

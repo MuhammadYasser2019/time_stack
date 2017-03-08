@@ -76,6 +76,10 @@ class UsersController < ApplicationController
   
 
   def show_user_reports
+    logger.debug("IN THE SHOW USER REPORT*******: #{params.inspect}")
+    @print_report = "false"
+    logger.debug("******CHECKING hidden_print_report: #{params[:hidden_print_report].inspect}")
+    @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?
     if params[:user].blank?
       @user = current_user
     else
@@ -84,6 +88,7 @@ class UsersController < ApplicationController
     user_id = @user.id
     @users = User.all
     @user_projects = @user.projects
+    @current_user_id = current_user.id
     # projects_array = @user_projects.pluck(:id)
     # @user_report_date_array = @user.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
     # @project_hash = @user.build_project_hash(user_id,@user_report_date_array, @user_projects,params[:proj_report_start_date], params[:proj_report_end_date])
@@ -111,5 +116,4 @@ class UsersController < ApplicationController
     def user_params
       params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id)
     end
-  
 end
