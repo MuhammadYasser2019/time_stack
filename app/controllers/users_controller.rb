@@ -80,18 +80,15 @@ class UsersController < ApplicationController
     @print_report = "false"
     logger.debug("******CHECKING hidden_print_report: #{params[:hidden_print_report].inspect}")
     @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?
-    if params[:user].blank?
+    if params[:id].blank?
       @user = current_user
     else
-      @user = User.find(params[:user])
+      @user = User.find(params[:id])
     end
     user_id = @user.id
     @users = User.all
     @user_projects = @user.projects
     @current_user_id = current_user.id
-    # projects_array = @user_projects.pluck(:id)
-    # @user_report_date_array = @user.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
-    # @project_hash = @user.build_project_hash(user_id,@user_report_date_array, @user_projects,params[:proj_report_start_date], params[:proj_report_end_date])
     time_period = params[:proj_report_start_date]..params[:proj_report_end_date]
     if !params[:project].blank?
       logger.debug "getting here?"

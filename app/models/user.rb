@@ -60,39 +60,5 @@ class User < ApplicationRecord
     end
     logger.debug "DATE ARRAY FOR USER: #{dates_array}"
     return dates_array
-  end
-
-
-  def build_project_hash(user,user_report_date_array, user_projects,start_date, end_date)
-    # hash_user_report_data = Hash.new
-    # project_ids = user_projects
-    # project_ids.each do |p|
-    #   time_entries = TimeEntry.where(user_id: user, project_id: p, date_of_activity: start_date..end_date).order(:date_of_activity)
-    #   logger.debug ("Project is: #{p.name}")
-    #   project_time_hash = Hash.new
-    #   total_hours = 0
-    #   daily_hours = 0
-    #   time_entries.each do |t|
-    #     if !project_time_hash[t.date_of_activity.strftime('%m/%d')].blank?
-    #       if project_time_hash[t.date_of_activity.strftime('%m/%d')][:hours].blank?
-    #         daily_hours = t.hours if !t.hours.blank?
-    #         daily_hours = 0 if t.hours.blank?
-    #       else
-    #         daily_hours = project_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] + t.hours if !t.hours.blank?
-    #         daily_hours = project_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] if t.hours.blank?
-    #       end
-    #     else
-    #       daily_hours = !t.hours.blank? ? t.hours : 0
-    #     end
-    #     total_hours = total_hours + t.hours if !t.hours.blank?
-    #     project_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: daily_hours, activity_log: t.activity_log }
-    #   end
-
-    #   proj = Project.find(p)
-    #   hash_user_report_data[p] = { daily_hash: project_time_hash, total_hours: total_hours }
-    # end
-    # logger.debug "build_project_hash - hash_user_report_data is #{hash_user_report_data.inspect}"
-    # return hash_user_report_data
-  end
-  
+  end  
 end
