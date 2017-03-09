@@ -94,6 +94,24 @@ class CustomersController < ApplicationController
 
     redirect_to edit_customer_path(params[:customer_id])
   end
+
+  def customer_reports
+    @customer_id = params[:id]
+    c = Customer.find(@customer_id)
+    @users = Array.new
+    c.projects.each do |p|
+      @users << p.users
+    end
+    @users = @users.flatten.uniq
+    @users_array = @users.pluck(:id)
+    @dates_array = c.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
+    if params[:user] == "" || params[:user] == nil
+      @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array)
+    else
+      @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]])
+    end
+
+  end
   
   private
     # Use callbacks to share common setup or constraints between actions.
