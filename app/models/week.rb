@@ -26,8 +26,8 @@ class Week < ApplicationRecord
   
   def self.weekly_weeks
     User.all.each do |u|
-      user_week_start_date = Week.where(user_id: u.id, end_date: "#{Date.today.end_of_week.strftime('%Y-%m-%d')}")
-      if user_week_start_date.blank?
+      user_week_end_date = Week.where(user_id: u.id, end_date: "#{Date.today.end_of_week.strftime('%Y-%m-%d')}")
+      if user_week_end_date.blank?
         @week = Week.new
         @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
         @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')
