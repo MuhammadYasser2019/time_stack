@@ -26,22 +26,25 @@ class Week < ApplicationRecord
   
   def self.weekly_weeks
     User.all.each do |u|
-      @week = Week.new
-      @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
-      @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')
-      @week.user_id = u.id
-      @week.status_id = Status.find_by_status("NEW").id
-      @week.save!
-      7.times {  @week.time_entries.build( user_id: u.id )}
-        
-      @week.time_entries.each_with_index do |te, i|
-        logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
-        logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
-        logger.debug "i #{i}"
-        @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
-        @week.time_entries[i].user_id = u.id
+      user_week_start_date = Week.where(user_id: u.id, end_date: "#{Date.today.end_of_week.strftime('%Y-%m-%d')}")
+      if user_week_start_date.blank?
+        @week = Week.new
+        @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
+        @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')
+        @week.user_id = u.id
+        @week.status_id = Status.find_by_status("NEW").id
+        @week.save!
+        7.times {  @week.time_entries.build( user_id: u.id )}
+          
+        @week.time_entries.each_with_index do |te, i|
+          logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
+          logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
+          logger.debug "i #{i}"
+          @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
+          @week.time_entries[i].user_id = u.id
+        end
+        @week.save!
       end
-      @week.save!
     end
   end
 end
