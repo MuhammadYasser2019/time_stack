@@ -7,6 +7,8 @@ div.report
         #{params[:proj_report_start_date]}
       p End Date:
         #{params[:proj_report_end_date]}
+      p Project:
+        #{Project.find(params[:project]).name}
     -else
       thead
         tr
@@ -19,9 +21,9 @@ div.report
         tr
           td = select_tag :project, options_from_collection_for_select(@user_projects, "id", "name", params[:project]), :include_blank => true
           = hidden_field_tag 'hidden_print_report', false
-          td = date_field_tag ('proj_report_start_date',params[:proj_report_start_date], {required: "required"}) #{params[:proj_report_start_date]}
+          td = date_field_tag 'proj_report_start_date', params[:proj_report_start_date], {required: "required"}
           /= hidden_field_tag 'id', @user.id
-          td = date_field_tag ('proj_report_end_date', params[:proj_report_end_date], {required: "required"}) #{params[:proj_report_end_date]}
+          td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
           td = button_tag "Show User Report"
   table border="1"
     thead
