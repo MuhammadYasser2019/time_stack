@@ -11,6 +11,7 @@ jQuery ($) ->
     return
 
   $('.comment').change ->
+    console.log("In the comment")
     if $(this).val().length >= 8
       row_id = parse_row_id($(this).attr('id'))
       $("#time_reject_" + row_id).show()
@@ -41,6 +42,19 @@ jQuery ($) ->
       project_id: project_id,
       week_id: $('#week_id_' + row_id).val()
     return
+
+  $('#proj_report_end_date').change ->
+    console.log("I am in proj_report_change")
+    #project_report_start_date = ('#proj_report_start_date').html
+    #project_report_end_date = ('#proj_report_end_date').html
+    #console.log("you got text" + project_report_end_date )
+    $.post '/show_project_reports',
+      id: 1,
+      proj_report_start_date: "03/02/2017",
+      proj_report_end_date: "03/07/2017",
+    return
+
+
 
   $('.add-user-to-project').click ->
     console.log("check is clicked" +$(this).val())
