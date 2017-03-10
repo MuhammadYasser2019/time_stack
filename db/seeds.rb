@@ -39,7 +39,7 @@ weeks_with_no_status.each do |w_id|
     TimeEntry.where(week_id: w_id).each do |te|
       te.status_id = Week.find(w_id).status_id
       te.approved_by = Week.find(w_id).approved_by
-      te.approved_by = Week.find(w_id).approved_date
+      te.approved_date = Week.find(w_id).approved_date
       te.save!
     end
   end
