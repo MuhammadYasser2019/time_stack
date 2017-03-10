@@ -8,7 +8,7 @@ div.report
       p End Date:
         #{params[:proj_report_end_date]}
       p Project:
-        #{Project.find(params[:project]).name}
+        #{Project.find(params[:project]).name if !params[:project].blank? }
     -else
       thead
         tr
