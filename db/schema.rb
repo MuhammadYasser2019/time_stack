@@ -74,6 +74,12 @@ ActiveRecord::Schema.define(version: 20170302220352) do
     t.datetime "updated_at", null: false
   end
 
+  create_table "roles_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer "user_id", null: false
+    t.integer "role_id", null: false
+    t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id", using: :btree
+  end
+
   create_table "statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "status"
     t.datetime "created_at", null: false
@@ -141,15 +147,15 @@ ActiveRecord::Schema.define(version: 20170302220352) do
     t.datetime "updated_at",                          null: false
     t.string   "first_name"
     t.string   "last_name"
-    t.boolean  "pm"
-    t.boolean  "cm"
-    t.boolean  "admin"
-    t.boolean  "user"
     t.string   "provider"
     t.string   "uid"
     t.datetime "oauth_expires_at"
     t.string   "name"
     t.string   "oauth_token"
+    t.boolean  "pm"
+    t.boolean  "cm"
+    t.boolean  "admin"
+    t.boolean  "user"
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
