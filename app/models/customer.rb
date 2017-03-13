@@ -3,13 +3,19 @@ class Customer < ApplicationRecord
   has_and_belongs_to_many :holidays, join_table: :customers_holidays
   accepts_nested_attributes_for :projects, allow_destroy: true, reject_if: proc { |projects| projects[:name].blank? }
 
-  def build_consultant_hash(customer_id, dates_array, start_date, end_date, users)
+  def build_consultant_hash(customer_id, dates_array, start_date, end_date, users, projects)
     hash_report_data = Hash.new
     consultant_ids = users
     customer = Customer.find(customer_id)
     logger.debug "consultant_ids: #{consultant_ids}"
+    if (projects.is_a? Integer) || (projects.is_a? String)
+      project_list = Project.where(id: projects)
+    else
+      project_list = projects
+    end
+
     consultant_ids.each do |c|
-     customer.projects.each do |p|
+     project_list.each do |p|
       time_entries = TimeEntry.where(user_id: c, project_id: p.id, date_of_activity: start_date..end_date).order(:date_of_activity)
       logger.debug "consultant is #{c}"
       employee_time_hash = Hash.new

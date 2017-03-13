@@ -171,6 +171,7 @@ GEM
       ruby_parser
     hashie (3.4.6)
     high_voltage (3.0.0)
+    highline (1.7.8)
     html2haml (2.0.0)
       erubis (~> 2.7.0)
       haml (~> 4.0.0)
@@ -479,4 +480,4 @@ RUBY VERSION
    ruby 2.3.0p0
 
 BUNDLED WITH
-   1.12.5
+   1.14.3
