@@ -16,20 +16,20 @@
   table border="1" id="mytable"
     thead
       tr
-        td Date 
+        td Date
         td Day
-        td Project 
+        td Project
         td Task
         td Hours
         td Description
         td
-        td 
+        td
     tbody
     = f.fields_for :time_entries, @time_entries do |cf|
       tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
-  
+
   - if f.object.status_id == 2 || f.object.status_id == 3
-    
+
   - else
     div.upload_text
       = f.label(:time_sheet, "Upload Timesheet", class: "action", for: "file-upload")

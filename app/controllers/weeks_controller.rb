@@ -55,8 +55,10 @@ class WeeksController < ApplicationController
     if @week.status_id == 4
       logger.debug "THE STATUS IS FOOOOOOOOUOUOUOUOUOUOUOUOUOUOUOUOUUOUOUOUOOUOUOUR"
       @time_entries = @week.time_entries.where(status_id: 4)
-    else
-      @time_entries = @week.time_entries.where.not(status_id: [3,4])
+    elsif @week.status_id == nil || @week.status_id == 1
+      @time_entries = @week.time_entries.where(status_id: [nil, 1])
+    elsif @week.status_id == 2 || @week.status_id == 3
+      @time_entries = @week.time_entries.where(status_id: @week.status_id)
     end
     if current_user == @week.user_id
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", current_user.id )
@@ -149,7 +151,7 @@ class WeeksController < ApplicationController
         end
     elsif params[:commit] == "Submit Timesheet"
         @week.status_id = 2
-        @week.time_entries.where(status_id: [1,4]).each do |t|
+        @week.time_entries.where(status_id: [nil, 1,4]).each do |t|
           t.update(status_id: 2)
         end
     end
