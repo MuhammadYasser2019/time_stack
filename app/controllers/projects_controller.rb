@@ -155,6 +155,11 @@ class ProjectsController < ApplicationController
       @consultant_hash = p.build_consultant_hash(@project_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]])
     end
 
+    respond_to do |format|
+      format.js
+      format.html{}
+     
+    end
   end
 
   def show_hours

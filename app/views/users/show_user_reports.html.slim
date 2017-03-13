@@ -1,16 +1,18 @@
 div.report
   h1 Reports for Users #{consultant_name(@user.first_name, @user.last_name)}
-  = form_tag "/show_user_reports",id: "user_report_form", method: :get
+  = form_tag "/show_user_reports/#{params[:id]}",id: "user_report_form", method: :get
   table
     -if @print_report == "true"
       p Start Date:
         #{params[:proj_report_start_date]}
       p End Date:
         #{params[:proj_report_end_date]}
+      p Project:
+        #{Project.find(params[:project]).name if !params[:project].blank? }
     -else
       thead
         tr
-          th User
+          th Project
           th Period Start Date
           th Period End Date
           th

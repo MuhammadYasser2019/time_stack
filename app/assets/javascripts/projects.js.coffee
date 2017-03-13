@@ -11,6 +11,7 @@ jQuery ($) ->
     return
 
   $('.comment').change ->
+    console.log("In the comment")
     if $(this).val().length >= 8
       row_id = parse_row_id($(this).attr('id'))
       $("#time_reject_" + row_id).show()

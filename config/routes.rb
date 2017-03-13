@@ -27,13 +27,14 @@ Rails.application.routes.draw do
   get 'projects/:id/approve/:week_id/:row_id' => 'projects#approve'
   get 'projects/:id/reject/:week_id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
+  post 'show_project_reports' => 'projects#show_project_reports'
   post 'projects/:id/deactivate_project' => 'projects#deactivate_project'
   post 'projects/:id/reactivate_project' => 'projects#reactivate_project'
   post 'time_reject' => 'weeks#time_reject'
   post 'show_hours' => 'projects#show_hours'
 
-  get '/show_user_reports' => 'users#show_user_reports'
-  post '/show_user_reports' => 'users#show_user_reports'
+  get '/show_user_reports/:id' => 'users#show_user_reports'
+  post '/show_user_reports/:id' => 'users#show_user_reports'
   
   get 'add_user_to_project' => "projects#add_user_to_project"
   get '/projects/:id/user_time_report' => 'projects#user_time_report'
