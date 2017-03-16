@@ -24,6 +24,11 @@ class CustomersController < ApplicationController
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
     @customer_holiday = CustomersHoliday.new
     @invited_users = User.where("invited_by_id = ?", current_user.id)
+    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:id])
+    # @users= User.all
+    logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
+    @vacation_requests = User.where("vacation_start_date != ? and customer_id= ?", "NULL", params[:id])
+    logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
   end
 
   # POST /customers
@@ -93,6 +98,78 @@ class CustomersController < ApplicationController
     project.save
 
     redirect_to edit_customer_path(params[:customer_id])
+  end
+
+  def add_user_to_customer
+    customer_id = params[:customer_id]
+    user = User.find(params[:user_id])
+    logger.debug("CUSTOMER ID: #{customer_id}***********AND USER CUSTOMER ID: #{user.customer_id}")
+    logger.debug("COMPARE:    #{user.customer_id.to_i == customer_id.to_i}")
+    if !customer_id.blank? && !user.blank?
+      if user.customer_id.to_i == customer_id.to_i
+        user.customer_id = nil
+        user.save
+        logger.debug("REMOVING THE USER*******")
+        @verb = "Removed"
+      else
+        user.customer_id = customer_id
+        user.save
+        logger.debug("Adding THE USER*******")
+        @verb = "Added"
+      end
+    end
+    respond_to do |format|
+     format.js
+   end
+  end
+
+  def vacation_request
+    @user = current_user
+    user_customer = @user.customer_id 
+    sick_leave = params[:sick_leave]
+    personal_leave = params[:personal_leave]
+    logger.debug("sick_leave: #{sick_leave}******personal_leave: #{personal_leave} ")
+    customer_manager = Customer.find(user_customer).user_id
+    logger.debug("customer manager id IS : #{customer_manager}")
+    vacation_start_date = params[:vacation_start_date]
+    vacetion_end_date = params[:vacation_end_date]
+    @user.vacation_start_date = vacation_start_date
+    @user.vacation_end_date = vacetion_end_date
+    @user.save
+
+    VacationMailer.mail_to_customer_owner(@user, customer_manager,vacation_start_date,vacetion_end_date ).deliver
+    
+    
+  end
+
+  def approve_vacation
+    @user = User.find(params[:user_id])
+    logger.debug("888888888888888888 : #{@user.inspect}")
+    @row_id = params[:row_id]
+    customer_manager = current_user
+    VacationMailer.mail_to_vacation_requestor(@user, customer_manager ).deliver
+    @user.vacation_start_date = "NULL"
+    @user.vacation_end_date = "NULL"
+    @user.save
+    respond_to do |format|
+      format.html {flash[:notice] = "Approved"}
+      format.js
+    end
+  end
+
+  def reject_vacation
+    @user = User.find(params[:user_id])
+    logger.debug("888888888888888888 : #{@user.inspect}")
+    @row_id = params[:row_id]
+    customer_manager = current_user
+    VacationMailer.rejection_mail_to_vacation_requestor(@user, customer_manager ).deliver
+    @user.vacation_start_date = "NULL"
+    @user.vacation_end_date = "NULL"
+    @user.save
+    respond_to do |format|
+      format.html {flash[:notice] = "Rejected"}
+      format.js
+    end
   end
   
   private

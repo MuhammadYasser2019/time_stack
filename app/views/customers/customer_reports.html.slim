@@ -1,0 +1,39 @@
+h1 Reports for Project #{Customer.find(@customer_id).name}
+= form_tag "/customers/#{params[:id]}/customer_reports", method: :get
+table
+  thead
+    tr
+      th User
+      th Period Start Date
+      th Period End Date
+      th
+
+  tbody
+    tr
+      td = select_tag('user', options_for_select(@users.collect{ |u| [consultant_name(u.first_name, u.last_name), u.id]}, params[:user]), include_blank: true)
+      td = date_field_tag 'proj_report_start_date', params[:proj_report_start_date], {required: "required"}
+      = hidden_field_tag 'id', @customer_id
+      td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
+      td = button_tag "Show Report"
+table id='show_report'
+  thead
+    tr
+      th Consultant Name
+      - @dates_array.each do |d|
+        th #{d}
+      end
+      th Total
+  tbody
+    - @consultant_hash.keys.each do |c|
+      tr
+        td = link_to "#{consultant_name(User.find(c).first_name, User.find(c).last_name)}","/show_user_reports/#{c}?&proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", type: "button", target: :_blank
+        - @dates_array.each do |d|
+          - if !@consultant_hash[c][:daily_hash][d].nil?
+            td = @consultant_hash[c][:daily_hash][d][:hours]
+          - else
+            td = "0"
+
+        end
+        td = @consultant_hash[c][:total_hours]
+    end
+br

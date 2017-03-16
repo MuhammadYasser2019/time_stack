@@ -3,3 +3,16 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ($) ->
   $('#report').hide()
+
+  parse_customer_id = (attr_val) ->
+    customer_id = attr_val.split("/")[4]
+    return customer_id
+
+  $('.add-user-to-customer').click ->
+    add_user_id = $(this).val()
+    customer_url=$(location).attr('href')
+    customer_id = parse_customer_id(customer_url)
+    $.get "/add_user_to_customer",
+  	  user_id: add_user_id,
+  	  customer_id: customer_id
+  	return

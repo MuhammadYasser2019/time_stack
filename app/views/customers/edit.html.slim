@@ -1,6 +1,44 @@
 	
 	
 	== render 'form'
+	div class = "disp-message"
+	h1 Customer Employees
+	table
+		thead
+			tr
+				th User
+				th Email
+		tbody
+			-@users.each do |uop|
+				-if uop.customer_id == params[:id].to_i
+					tr 
+						td = uop.first_name
+						td = uop.email
+						td = check_box_tag "customer", uop.id, true, class: "add-user-to-customer"
+				-else
+					tr
+						td = uop.first_name
+						td = uop.email
+						td = check_box_tag "customer", uop.id, false, class: "add-user-to-customer"
+
+	h1 Vacation Request
+	table
+		thead
+			tr
+				th Employee
+				th Vacation Start Date
+				th Vacation End Date
+				th 
+				th
+		tbody
+			- @vacation_requests.each_with_index do |vu, i|
+				tr id = "#{i}"
+					td = vu.email
+					td = vu.vacation_start_date.strftime('%Y-%m-%d')
+					td = vu.vacation_end_date.strftime('%Y-%m-%d')
+					td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true
+					td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
+
 	table(style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);")
 	  thead
 	    tr
