@@ -27,7 +27,7 @@ class CustomersController < ApplicationController
     @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:id])
     # @users= User.all
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
-    @vacation_requests = User.where("vacation_start_date != ? and customer_id= ?", "NULL", params[:id])
+    @vacation_requests = VacationRequest.where("customer_id= ? and status IS ?", params[:id], nil)
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
   end
 
@@ -124,33 +124,79 @@ class CustomersController < ApplicationController
   end
 
   def vacation_request
+    logger.debug("THE PARAMETERS ARE:  #{params.inspect}")
     @user = current_user
+    @users_vacations = VacationRequest.where("user_id = ?",@user.id)
     user_customer = @user.customer_id 
     sick_leave = params[:sick_leave]
     personal_leave = params[:personal_leave]
+    vacation_start_date = params[:vacation_start_date]
+    vacetion_end_date = params[:vacation_end_date]
+    reason_for_vacation = params[:vacation_comment]
+    if !vacation_start_date.blank?
+      new_vr = VacationRequest.new
+      new_vr.vacation_start_date = params[:vacation_start_date]
+      new_vr.vacation_end_date = params[:vacation_end_date]
+      new_vr.user_id = @user.id
+      new_vr.customer_id = @user.customer_id
+      new_vr.comment = reason_for_vacation
+      new_vr.status = "Requested"
+    
+      if !sick_leave.blank?
+        new_vr.sick = true
+      end
+      if !personal_leave.blank?
+        new_vr.personal = true
+      end
+      new_vr.save
+    end
     logger.debug("sick_leave: #{sick_leave}******personal_leave: #{personal_leave} ")
     customer_manager = Customer.find(user_customer).user_id
     logger.debug("customer manager id IS : #{customer_manager}")
-    vacation_start_date = params[:vacation_start_date]
-    vacetion_end_date = params[:vacation_end_date]
-    @user.vacation_start_date = vacation_start_date
-    @user.vacation_end_date = vacetion_end_date
-    @user.save
 
-    VacationMailer.mail_to_customer_owner(@user, customer_manager,vacation_start_date,vacetion_end_date ).deliver
+    if !vacation_start_date.blank?
+      VacationMailer.mail_to_customer_owner(@user, customer_manager,vacation_start_date,vacetion_end_date ).deliver
+      respond_to do |format|
+        format.html { redirect_to "/", notice: 'Vacation request sent successfully.' }
+      end
+    end
+  end
+
+  def resend_vacation_request
+    logger.debug("RESEND VACATION REQUEST PARAMS: #{params.inspect}")
+    user = current_user
+    vacation_request = VacationRequest.find(params[:vacation_request_id])
+    user_customer = user.customer_id
+    customer_manager = Customer.find(user_customer).user_id
+    modified_vacation_start_date = params[:vacation_start]
+    modified_vacation_end_date = params[:vacation_end]
+    vacation_request.vacation_start_date = modified_vacation_start_date
+    vacation_request.vacation_end_date = modified_vacation_end_date
+    vacation_request.status = "Requested"
+    vacation_request.save
     
-    
+    # VacationMailer.mail_to_customer_owner(user, customer_manager,modified_vacation_start_date,modified_vacation_end_date ).deliver
+    respond_to do |format|
+      format.js
+    end
   end
 
   def approve_vacation
-    @user = User.find(params[:user_id])
-    logger.debug("888888888888888888 : #{@user.inspect}")
+    @vr = params[:vr_id]
+    logger.debug("888888888888888888 : #{@vr.inspect}")
     @row_id = params[:row_id]
     customer_manager = current_user
-    VacationMailer.mail_to_vacation_requestor(@user, customer_manager ).deliver
-    @user.vacation_start_date = "NULL"
-    @user.vacation_end_date = "NULL"
-    @user.save
+    vacation_request = VacationRequest.find(@vr)
+    vacation_request.status = "Approved"
+    vacation_request.save
+    VacationMailer.mail_to_vacation_requestor(@vr, customer_manager ).deliver
+    # @user.vacation_start_date = "NULL"
+    # @user.vacation_end_date = "NULL"
+    # @user.save
+    # @dates_array = @user.find_dates_to_print(params[:vacation_start_date], params[:vacation_end_date])
+
+     
+
     respond_to do |format|
       format.html {flash[:notice] = "Approved"}
       format.js
@@ -158,17 +204,47 @@ class CustomersController < ApplicationController
   end
 
   def reject_vacation
-    @user = User.find(params[:user_id])
-    logger.debug("888888888888888888 : #{@user.inspect}")
+    @vr = params[:vr_id]
+    logger.debug("888888888888888888 : #{@vr.inspect}")
     @row_id = params[:row_id]
     customer_manager = current_user
-    VacationMailer.rejection_mail_to_vacation_requestor(@user, customer_manager ).deliver
-    @user.vacation_start_date = "NULL"
-    @user.vacation_end_date = "NULL"
-    @user.save
+    vacation_request = VacationRequest.find(@vr)
+    vacation_request.status = "Rejected"
+    vacation_request.save
+    VacationMailer.rejection_mail_to_vacation_requestor(@vr, customer_manager ).deliver
+    # @user.vacation_start_date = "NULL"
+    # @user.vacation_end_date = "NULL"
+    # @user.save
     respond_to do |format|
       format.html {flash[:notice] = "Rejected"}
       format.js
+    end
+  end
+
+  def customer_reports
+    @customer_id = params[:id]
+    c = Customer.find(@customer_id)
+    @users = Array.new
+    c.projects.each do |p|
+      @users << p.users
+    end
+    @users = @users.flatten.uniq
+    @users_array = @users.pluck(:id)
+    @projects = c.projects
+    @dates_array = c.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
+    if params[:user] == "" || params[:user] == nil
+      if params[:project] == "" || params[:project] == nil
+        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, @projects)
+      else
+        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, params[:project])
+      end
+    else
+      if params[:project] == "" || params[:project] == nil
+        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], @projects)
+      else
+        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], params[:project])
+      end
+
     end
   end
   

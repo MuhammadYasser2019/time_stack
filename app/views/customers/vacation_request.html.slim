@@ -8,6 +8,7 @@ div.report
         th Vacation End Date
         th Sick Leave
         th Personal Vacation
+        th Description
         th
 
     tbody
@@ -18,4 +19,22 @@ div.report
         td = date_field_tag 'vacation_end_date', params[:vacation_end_date], {required: "required"}
         td = check_box_tag "sick_leave", params[:sick_leave]
         td = check_box_tag "personal_leave", params[:personal_leave]
+        td = text_area_tag "vacation_comment",nil, {required: "required"}
         td = button_tag "Request Vacation"
+  div class = "vacation_resend_msg"
+  h1 Your Vacation Requests
+  table
+    thead
+      tr
+        th Vacation Start Date
+        th Vacation End Date
+        th Description
+        th Status
+    tbody
+      -@users_vacations.each_with_index do |usv,i|
+        tr id = "#{usv.id}"
+          td = date_field_tag 'vacation_start', usv.vacation_start_date.strftime("%Y-%m-%d"),id: "vacation_start_#{i}",class: "vacation_start_#{i}"
+          td = date_field_tag 'vacation_end', usv.vacation_end_date.strftime("%Y-%m-%d"), id: "vacation_end_#{i}",class: "vacation_end_#{i}"
+          td = text_area_tag "comment", usv.comment, id: "vacation_comment_#{i}"
+          td = usv.status
+          td = button_tag "Resend Request",class: "resend_vacation_request", id:"resend_vacation_request_#{usv.id}_#{i}" , type: "button", remote: true

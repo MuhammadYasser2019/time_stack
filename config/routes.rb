@@ -24,14 +24,18 @@ Rails.application.routes.draw do
   root 'weeks#index'
   get 'weeks/:id/report' => 'weeks#report'
 
-  get 'projects/approve/:week_id/:row_id' => 'projects#approve'
-  get 'projects/reject/:id' => 'projects#reject'
+  get 'projects/:id/approve/:week_id/:row_id' => 'projects#approve'
+  get 'projects/:id/reject/:week_id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
+  post 'show_project_reports' => 'projects#show_project_reports'
   post 'projects/:id/deactivate_project' => 'projects#deactivate_project'
   post 'projects/:id/reactivate_project' => 'projects#reactivate_project'
   post 'time_reject' => 'weeks#time_reject'
   post 'show_hours' => 'projects#show_hours'
 
+  get '/show_user_reports/:id' => 'users#show_user_reports'
+  post '/show_user_reports/:id' => 'users#show_user_reports'
+  
   get 'add_user_to_project' => "projects#add_user_to_project"
   get '/projects/:id/user_time_report' => 'projects#user_time_report'
   match 'user_account', :to => "users#user_account",  via: [:get, :post]
@@ -40,8 +44,9 @@ Rails.application.routes.draw do
   #   get 'products/:id' => 'catalog#view'
   get 'add_user_to_customer' => "customers#add_user_to_customer"
   get 'vacation_request' => "customers#vacation_request"
-  get 'customers/approve_vacation/:user_id/:row_id' => 'customers#approve_vacation'
-  get 'customers/reject_vacation/:user_id/:row_id' => 'customers#reject_vacation'
+  get 'customers/approve_vacation/:vr_id/:row_id' => 'customers#approve_vacation'
+  get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
+  get 'resend_vacation_request' => 'customers#resend_vacation_request'
 
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
@@ -49,7 +54,7 @@ Rails.application.routes.draw do
   
   get 'check_holidays/:id' => "holidays#check_holidays"
 
-  post 'customers/report' => 'customers#report'
+  get 'customers/:id/customer_reports' => 'customers#customer_reports'
   
   get 'permission_denied' => 'projects#permission_denied'
 

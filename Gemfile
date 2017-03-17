@@ -64,6 +64,9 @@ gem 'carrierwave'
 
 gem 'whenever', :require => false
 
+gem 'capistrano'
+
+
 group :development do
   gem 'better_errors'
   gem 'guard-bundler'

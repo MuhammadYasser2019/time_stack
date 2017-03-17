@@ -4,9 +4,42 @@
 jQuery ($) ->
   $('#report').hide()
 
+  parse_row_id = (attr_val) ->
+    row_id = attr_val.split("_")[4]
+    return row_id
+
+  parse_vacation_request_id = (attr_val) ->
+    row_id = attr_val.split("_")[3]
+    return row_id
+
   parse_customer_id = (attr_val) ->
     customer_id = attr_val.split("/")[4]
     return customer_id
+
+  $('.vacation_start_0').change ->
+    console.log("hello" + $(this).inspect)
+    $(this).val
+
+
+  $('.resend_vacation_request').click ->
+    console.log("REQUEST")
+    vacation_request_row_id = parse_row_id($(this).attr('id'))
+    console.log("VR ROW ID: " + vacation_request_row_id)
+    vacation_request_id = parse_vacation_request_id($(this).attr('id'))
+    console.log(vacation_request_id)
+
+    start = $('#vacation_start_' + vacation_request_row_id).attr('value')
+    end = $('#vacation_end_' + vacation_request_row_id).attr('value')
+    $('#vacation_comment_' + vacation_request_row_id).text("hi")
+    #$('#vacation_comment_' + vacation_request_row_id).trigger
+    c = $('#vacation_comment_' + vacation_request_row_id).text()
+
+    console.log("START :" + start + "END :" + end + "COMMENT" + c)
+    $.get "/resend_vacation_request",
+      vacation_request_id: vacation_request_id,
+      vacation_start: start,
+      vacation_end: end
+    return
 
   $('.add-user-to-customer').click ->
     add_user_id = $(this).val()

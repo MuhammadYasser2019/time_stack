@@ -13,6 +13,7 @@ class User < ApplicationRecord
   has_many :roles, :through => :user_roles
   has_many :user_roles
   has_many :holiday_exceptions
+  has_many :vacation_requests
 
   def not_google_account?
     logger.debug("################not google account")
@@ -38,4 +39,27 @@ class User < ApplicationRecord
     # end
     user
   end
+
+  def find_dates_to_print(proj_report_start_date = nil, proj_report_end_date = nil)
+    if proj_report_start_date.nil?
+      start_day = Time.now.beginning_of_week
+    else
+      start_day = Date.parse(proj_report_start_date)
+    end
+    
+    if proj_report_end_date.nil?
+      last_day = start_day.end_of_week
+    else
+      last_day = Date.parse(proj_report_end_date).end_of_day
+    end
+    dates_array = []
+    this_day = start_day
+    while this_day < last_day
+      dates_array << this_day.strftime('%m/%d')
+      this_day = this_day.tomorrow
+      
+    end
+    logger.debug "DATE ARRAY FOR USER: #{dates_array}"
+    return dates_array
+  end  
 end

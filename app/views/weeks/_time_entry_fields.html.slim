@@ -5,28 +5,31 @@ td.date2 = f.label f.object.date_of_activity.strftime("%A"), :class =>'form-cont
 =f.hidden_field :date_of_activity
 td.project
  -if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
-  = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id", disabled: "disabled"})
+  - if f.object.project_id != nil
+    = Project.find(f.object.project_id).name
  -else
   = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id"})
 td.task
  - if !f.object.task_id.nil?
   - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
-   = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: f.object.project_id), "id", "description", f.object.task), {}, {:class =>'task_id', disabled: "disabled"})
+    - if f.object.task_id != nil
+      = Task.find(f.object.task_id).description
   - else
    = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: f.object.project_id), "id", "description", f.object.task), {}, {:class =>'task_id'})
  - else
   - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
-   = f.select(:task_id, options_from_collection_for_select([], "id", "description", nil), {}, {:class =>'task_id', disabled: "disabled"})
+    - if f.object.task_id != nil
+      = Task.find(f.object.task_id).description
   - else
    = f.select(:task_id, options_from_collection_for_select([], "id", "description", nil), {}, {:class =>'task_id'})
 td.hour
  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
-  = f.text_field :hours, {:class =>'form-control input-sm hours-input', :readonly => true}
+  = f.object.hours
  - else
   = f.text_field :hours, :class =>'form-control input-sm hours-input'
 td.activity_log
  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
-  = f.text_area :activity_log, :class =>'form-control input-lg', :readonly => true
+  = f.object.activity_log
  - else
   = f.text_area :activity_log, :class =>'form-control input-lg', :maxlength => 500
   div (class="char_count")

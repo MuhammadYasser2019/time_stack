@@ -33,7 +33,7 @@
 		tbody
 			- @vacation_requests.each_with_index do |vu, i|
 				tr id = "#{i}"
-					td = vu.email
+					td = User.find(VacationRequest.find(vu).user_id).email
 					td = vu.vacation_start_date.strftime('%Y-%m-%d')
 					td = vu.vacation_end_date.strftime('%Y-%m-%d')
 					td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true

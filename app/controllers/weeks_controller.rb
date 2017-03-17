@@ -35,6 +35,7 @@ class WeeksController < ApplicationController
     @week.user_id = current_user.id
     @week.status_id = Status.find_by_status("NEW").id
     @week.save!
+
     7.times {  @week.time_entries.build( user_id: current_user.id )}
       
     @week.time_entries.each_with_index do |te, i|
@@ -45,13 +46,21 @@ class WeeksController < ApplicationController
       @week.time_entries[i].user_id = current_user.id
     end
     @week.save!
-    
+    vacation(@week.start_date)
   end
 
   # GET /weeks/1/edit
   def edit
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
-    @week = Week.joins(:time_entries).find(params[:id])
+    @week = Week.find(params[:id])
+    if @week.status_id == 4
+      logger.debug "THE STATUS IS FOOOOOOOOUOUOUOUOUOUOUOUOUOUOUOUOUUOUOUOUOOUOUOUR"
+      @time_entries = @week.time_entries.where(status_id: 4)
+    elsif @week.status_id == nil || @week.status_id == 1
+      @time_entries = @week.time_entries.where(status_id: [nil, 1])
+    elsif @week.status_id == 2 || @week.status_id == 3
+      @time_entries = @week.time_entries.where(status_id: @week.status_id)
+    end
     if current_user == @week.user_id
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", current_user.id )
     else
@@ -62,7 +71,32 @@ class WeeksController < ApplicationController
     status_ids = [1,2]
     @statuses = Status.find(status_ids)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
+    
+    vacation(@week)
+    # vr.where("status = ? && vacation_start_date >= ?", "Approved", @week.start_date)
   end
+
+  def vacation(week)
+    @user_vacation_requests = VacationRequest.where("status = ? and vacation_start_date >= ? and user_id = ?", "Approved", week.start_date, current_user.id)
+    logger.debug("@@@@@@@@@@@@user_vacation_requests: #{@user_vacation_requests.inspect}")
+    week.time_entries.each do |wtime|
+      @user_vacation_requests.each do |v|
+        if wtime.date_of_activity >= v.vacation_start_date && wtime.date_of_activity <= v.vacation_end_date 
+          if v.sick == 1
+            wtime.sick = true
+            wtime.activity_log = v.comment 
+            wtime.save
+          end
+          if v.personal == 1
+            wtime.personal_day = true
+            wtime.activity_log = v.comment
+            wtime.save
+          end
+        end
+      end
+    end
+  end
+
 
   # POST /weeks
   # POST /weeks.json
@@ -138,8 +172,14 @@ class WeeksController < ApplicationController
     end
     if params[:commit] == "Save Timesheet"
         @week.status_id = 1
+        @week.time_entries.where(status_id: [nil, 4]).each do |t|
+          t.update(status_id: 1)
+        end
     elsif params[:commit] == "Submit Timesheet"
         @week.status_id = 2
+        @week.time_entries.where(status_id: [nil, 1,4]).each do |t|
+          t.update(status_id: 2)
+        end
     end
     logger.debug "STATUS ID IS #{week_params[:status_id]}"
     logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
@@ -222,6 +262,9 @@ class WeeksController < ApplicationController
     logger.debug "time_reject - entering #{params.inspect}"
     @week = Week.find(params[:id])
     @week.status_id = 4
+    @week.time_entries.where(project_id: params[:project_id]).each do |t|
+      t.update(status_id: 4)
+    end
     @week.comments = params[:comments]
     @row_id = params[:row_id]
     @week.save!

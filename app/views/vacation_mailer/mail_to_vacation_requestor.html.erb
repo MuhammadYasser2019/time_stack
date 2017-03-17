@@ -3,4 +3,4 @@
 
 <%= user.first_name%>
 
-<%= approver.first_name%> <%= approver.last_name%> has approved your vacation request from <%= user.vacation_start_date.strftime('%Y-%m-%d')%> to <%= user.vacation_end_date.strftime('%Y-%m-%d')%>
+<%= approver.first_name%> <%= approver.last_name%> has approved your vacation request from <%= @vacation_start_date.strftime('%Y-%m-%d')%> to <%= @vacation_end_date.strftime('%Y-%m-%d')%>
