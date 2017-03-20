@@ -1,0 +1,7 @@
+div.report
+	h4 User Details
+	div 
+		p User First Name: #{@user.first_name}
+		p User Last Name: #{@user.last_name} 
+		p User Employer: #{Customer.find(@user.customer_id).name}
+		= link_to "Change Password", edit_user_registration_path

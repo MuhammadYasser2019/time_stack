@@ -13,7 +13,7 @@ test: &test
 
 development:
   <<: *defaults
-  database: timestack_development
+  database: timestack_development_2
 
 
 cucumber:
