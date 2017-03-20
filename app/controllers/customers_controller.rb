@@ -27,7 +27,7 @@ class CustomersController < ApplicationController
     @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:id])
     # @users= User.all
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
-    @vacation_requests = VacationRequest.where("customer_id= ? and status IS ?", params[:id], nil)
+    @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:id], "Requested")
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
   end
 

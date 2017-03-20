@@ -5,7 +5,7 @@
 		</td>
 		<td>
 		<% if !current_user.nil? %>
-			<span style="float:left;margin-top:5px;"><%= current_user.email %></span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %>
+			<span style="float:left;margin-top:5px;"><%= link_to current_user.email, "/user_profile" %></span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %>
 		<% else %>
 			<%= link_to "Sign In", new_user_session_path %>
 		<% end %>

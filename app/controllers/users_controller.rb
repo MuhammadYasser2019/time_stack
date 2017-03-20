@@ -102,10 +102,11 @@ class UsersController < ApplicationController
         @hours_sum += t.hours
       end
     end
-
-
   end
 
+  def user_profile
+    @user = current_user
+  end
 
 
   private

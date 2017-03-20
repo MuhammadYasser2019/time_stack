@@ -30,6 +30,9 @@ div.report
         th Vacation End Date
         th Description
         th Status
+        th Sick Leave
+        th Personal Vacation
+
     tbody
       -@users_vacations.each_with_index do |usv,i|
         tr id = "#{usv.id}"
@@ -37,4 +40,13 @@ div.report
           td = date_field_tag 'vacation_end', usv.vacation_end_date.strftime("%Y-%m-%d"), id: "vacation_end_#{i}",class: "vacation_end_#{i}"
           td = text_area_tag "comment", usv.comment, id: "vacation_comment_#{i}"
           td = usv.status
-          td = button_tag "Resend Request",class: "resend_vacation_request", id:"resend_vacation_request_#{usv.id}_#{i}" , type: "button", remote: true
+          -if usv.sick == 1
+            td = check_box_tag "sick", 1, true
+          -else
+            td = check_box_tag "sick", false
+          -if usv.personal == 1
+            td = td = check_box_tag "personal",1, true
+          -else
+            td = td = check_box_tag "pers", false
+          /td = button_tag "Resend Request",class: "resend_vacation_request", id:"resend_vacation_request_#{usv.id}_#{i}" , type: "button", remote: true
+

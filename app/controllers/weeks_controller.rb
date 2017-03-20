@@ -46,7 +46,8 @@ class WeeksController < ApplicationController
       @week.time_entries[i].user_id = current_user.id
     end
     @week.save!
-    vacation(@week.start_date)
+    vacation(@week)
+
   end
 
   # GET /weeks/1/edit

@@ -16,11 +16,6 @@ jQuery ($) ->
     customer_id = attr_val.split("/")[4]
     return customer_id
 
-  $('.vacation_start_0').change ->
-    console.log("hello" + $(this).inspect)
-    $(this).val
-
-
   $('.resend_vacation_request').click ->
     console.log("REQUEST")
     vacation_request_row_id = parse_row_id($(this).attr('id'))
