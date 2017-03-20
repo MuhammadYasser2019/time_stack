@@ -10,7 +10,8 @@ class Ability
       can [:read, :available_tasks], Task
       can [:read, :edit, :create, :update, :new, :report], Week
       can [:read, :permission_denied], Project
-      
+      can [:vacation_request], Customer
+
       if user.admin
        can :crud, :all
        can :read, :all

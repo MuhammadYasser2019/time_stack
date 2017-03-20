@@ -24,6 +24,11 @@ class CustomersController < ApplicationController
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
     @customer_holiday = CustomersHoliday.new
     @invited_users = User.where("invited_by_id = ?", current_user.id)
+    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:id])
+    # @users= User.all
+    logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
+    @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:id], "Requested")
+    logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
   end
 
   # POST /customers
@@ -95,6 +100,127 @@ class CustomersController < ApplicationController
     redirect_to edit_customer_path(params[:customer_id])
   end
 
+  def add_user_to_customer
+    customer_id = params[:customer_id]
+    user = User.find(params[:user_id])
+    logger.debug("CUSTOMER ID: #{customer_id}***********AND USER CUSTOMER ID: #{user.customer_id}")
+    logger.debug("COMPARE:    #{user.customer_id.to_i == customer_id.to_i}")
+    if !customer_id.blank? && !user.blank?
+      if user.customer_id.to_i == customer_id.to_i
+        user.customer_id = nil
+        user.save
+        logger.debug("REMOVING THE USER*******")
+        @verb = "Removed"
+      else
+        user.customer_id = customer_id
+        user.save
+        logger.debug("Adding THE USER*******")
+        @verb = "Added"
+      end
+    end
+    respond_to do |format|
+     format.js
+   end
+  end
+
+  def vacation_request
+    logger.debug("THE PARAMETERS ARE:  #{params.inspect}")
+    @user = current_user
+    @users_vacations = VacationRequest.where("user_id = ?",@user.id)
+    user_customer = @user.customer_id 
+    sick_leave = params[:sick_leave]
+    personal_leave = params[:personal_leave]
+    vacation_start_date = params[:vacation_start_date]
+    vacetion_end_date = params[:vacation_end_date]
+    reason_for_vacation = params[:vacation_comment]
+    if !vacation_start_date.blank?
+      new_vr = VacationRequest.new
+      new_vr.vacation_start_date = params[:vacation_start_date]
+      new_vr.vacation_end_date = params[:vacation_end_date]
+      new_vr.user_id = @user.id
+      new_vr.customer_id = @user.customer_id
+      new_vr.comment = reason_for_vacation
+      new_vr.status = "Requested"
+    
+      if !sick_leave.blank?
+        new_vr.sick = true
+      end
+      if !personal_leave.blank?
+        new_vr.personal = true
+      end
+      new_vr.save
+    end
+    logger.debug("sick_leave: #{sick_leave}******personal_leave: #{personal_leave} ")
+    customer_manager = Customer.find(user_customer).user_id
+    logger.debug("customer manager id IS : #{customer_manager}")
+
+    if !vacation_start_date.blank?
+      VacationMailer.mail_to_customer_owner(@user, customer_manager,vacation_start_date,vacetion_end_date ).deliver
+      respond_to do |format|
+        format.html { redirect_to "/", notice: 'Vacation request sent successfully.' }
+      end
+    end
+  end
+
+  def resend_vacation_request
+    logger.debug("RESEND VACATION REQUEST PARAMS: #{params.inspect}")
+    user = current_user
+    vacation_request = VacationRequest.find(params[:vacation_request_id])
+    user_customer = user.customer_id
+    customer_manager = Customer.find(user_customer).user_id
+    modified_vacation_start_date = params[:vacation_start]
+    modified_vacation_end_date = params[:vacation_end]
+    vacation_request.vacation_start_date = modified_vacation_start_date
+    vacation_request.vacation_end_date = modified_vacation_end_date
+    vacation_request.status = "Requested"
+    vacation_request.save
+    
+    # VacationMailer.mail_to_customer_owner(user, customer_manager,modified_vacation_start_date,modified_vacation_end_date ).deliver
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def approve_vacation
+    @vr = params[:vr_id]
+    logger.debug("888888888888888888 : #{@vr.inspect}")
+    @row_id = params[:row_id]
+    customer_manager = current_user
+    vacation_request = VacationRequest.find(@vr)
+    vacation_request.status = "Approved"
+    vacation_request.save
+    VacationMailer.mail_to_vacation_requestor(@vr, customer_manager ).deliver
+    # @user.vacation_start_date = "NULL"
+    # @user.vacation_end_date = "NULL"
+    # @user.save
+    # @dates_array = @user.find_dates_to_print(params[:vacation_start_date], params[:vacation_end_date])
+
+     
+
+    respond_to do |format|
+      format.html {flash[:notice] = "Approved"}
+      format.js
+    end
+  end
+
+  def reject_vacation
+    @vr = params[:vr_id]
+    logger.debug("888888888888888888 : #{@vr.inspect}")
+    @row_id = params[:row_id]
+    customer_manager = current_user
+    vacation_request = VacationRequest.find(@vr)
+    vacation_request.status = "Rejected"
+    vacation_request.save
+    VacationMailer.rejection_mail_to_vacation_requestor(@vr, customer_manager ).deliver
+    # @user.vacation_start_date = "NULL"
+    # @user.vacation_end_date = "NULL"
+    # @user.save
+    respond_to do |format|
+      format.html {flash[:notice] = "Rejected"}
+      format.js
+    end
+  end
+
   def customer_reports
     @customer_id = params[:id]
     c = Customer.find(@customer_id)
@@ -120,7 +246,6 @@ class CustomersController < ApplicationController
       end
 
     end
-
   end
   
   private
