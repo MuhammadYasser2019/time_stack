@@ -1,0 +1,42 @@
+h1,h2,h3,h4,h5{
+  background-color: #ffdd9e;
+}
+
+.tabs dd.active a, .tabs .tab-title.active a {
+  background-color: #ffe6c0;
+}
+
+input, select, textarea{
+  border-color: #ffedda !important;
+}
+
+input[type="submit"]{
+  background-color: #ffd079 !important;
+}
+
+.orange-button{
+  background-color: #ffd079 !important;
+}
+
+#holidays {
+  
+     .row{
+        .small-8{
+          border-color: #ffedda !important;
+          box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+           h3{
+             background-color:#ffdd9e;
+           }
+        }
+     }
+}
+
+thead{
+  background: rgba(255, 165, 0, 0.38) !important;
+  border: 3px solid orange;
+
+}
+
+table tr:nth-of-type(even) {
+      background: rgba(255, 176, 57, 0.19);
+}

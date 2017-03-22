@@ -6,7 +6,7 @@ body{
 }
 
 h1,h2,h3,h4,h5{
-  background-color: #ffdd9e;
+  
   border-radius: 5px;
   font-weight: bold;
   max-width: 50%;
@@ -80,13 +80,7 @@ h1{
   text-align:center;
 }
 
-table tr:nth-of-type(even) {
-      background: rgba(255, 176, 57, 0.19);
-}
-
 thead{
-  background: rgba(255, 165, 0, 0.38) !important;
-  border: 3px solid orange;
   border-radius: 10px;
   padding: 0px;
 }
@@ -139,7 +133,7 @@ table thead tr th, table tfoot tr th, table tfoot tr td, table tbody tr th, tabl
 }
 
 .tabs dd.active a, .tabs .tab-title.active a {
-  background-color: #ffe6c0;
+  
 }
 
 .tabs dd > a, .tabs .tab-title > a {
@@ -147,14 +141,14 @@ table thead tr th, table tfoot tr th, table tfoot tr td, table tbody tr th, tabl
 }
 
 input, select, textarea{
-  border-color: #ffedda !important;
+  
   border-width: 3px !important;
   border-radius: 2px;
   background-color: #FAFAFA !important;
 }
 
 input[type="submit"]{
-  background-color: #ffd079 !important;
+  
   padding: 9px;
   border-radius: 3px;
     /* margin: 15px; */
@@ -165,7 +159,7 @@ input[type="submit"]{
 }
 
 .orange-button{
-  background-color: #ffd079 !important;
+  
   padding: 9px;
   border-radius: 3px;
     /* margin: 15px; */
@@ -190,12 +184,12 @@ input[type="submit"]{
           background-color:white;
           border-radius: 5px;
           padding: 5px 20px 20px 20px;
-          border-color: #ffedda !important;
+          
           border-width: 3px !important;
           border-collapse: separate;
           box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
            h3{
-             background-color:#ffdd9e;
+             
              border-radius: 5px;
              font-weight: bold;
            }
@@ -219,4 +213,8 @@ input[type="submit"]{
   padding:10px;
   max-width: 70%;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header_logo:hover{
+  background-color: transparent;
 }

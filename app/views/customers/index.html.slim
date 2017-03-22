@@ -21,10 +21,10 @@
 	        td = customer.city
 	        td = customer.state
 	        td = customer.zipcode
-	        td = link_to 'Edit', edit_customer_path(customer)
+	        td = link_to 'Manage', edit_customer_path(customer)
 	        td = link_to 'Report', "/customers/#{customer.id}/customer_reports", id: 'show_report'
 	        td = link_to 'Destroy', customer, data: {:confirm => 'Are you sure?'}, :method => :delete
-	
+					
 	br
 	
 	= link_to 'New Customer', new_customer_path, class: "orange-button"

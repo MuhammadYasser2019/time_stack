@@ -29,6 +29,8 @@ class CustomersController < ApplicationController
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:id], "Requested")
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
+    @customer = Customer.find(params[:id])
+    logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
   end
 
   # POST /customers
@@ -36,6 +38,7 @@ class CustomersController < ApplicationController
   def create
     @customer = Customer.new(customer_params)
 
+    @customer.theme = "Orange" 
     respond_to do |format|
       if @customer.save
         format.html { redirect_to customers_path, notice: 'Customer was successfully created.' }
@@ -50,6 +53,9 @@ class CustomersController < ApplicationController
   # PATCH/PUT /customers/1
   # PATCH/PUT /customers/1.json
   def update
+
+    logger.debug("THIS IS THE CUSTOMER UPDATE METHOD")
+    @customer.save
     respond_to do |format|
       if @customer.update(customer_params)
         format.html { redirect_to edit_customer_path(@customer), notice: 'Customer was successfully updated.' }
@@ -221,6 +227,17 @@ class CustomersController < ApplicationController
     end
   end
 
+  def set_theme
+    logger.debug("PARAMETERS FOR THEMES ARE: #{params.inspect}")
+    user = current_user
+    customer= Customer.find(params[:id])
+    theme_selected = params[:theme]
+    if !theme_selected.blank?
+      customer.theme = theme_selected
+      customer.save
+    end
+  end
+
   def customer_reports
     @customer_id = params[:id]
     c = Customer.find(@customer_id)
@@ -256,6 +273,6 @@ class CustomersController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def customer_params
-      params.require(:customer).permit(:name, :address, :city, :state, :zipcode, holiday_ids: [])
+      params.require(:customer).permit(:name, :address, :city, :state, :zipcode, :logo, holiday_ids: [])
     end
 end

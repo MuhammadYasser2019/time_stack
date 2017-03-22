@@ -3,6 +3,8 @@ class Customer < ApplicationRecord
   has_and_belongs_to_many :holidays, join_table: :customers_holidays
   accepts_nested_attributes_for :projects, allow_destroy: true, reject_if: proc { |projects| projects[:name].blank? }
   has_many :vacation_requests
+  mount_uploader :logo, LogoUploader
+
   def build_consultant_hash(customer_id, dates_array, start_date, end_date, users, projects)
     hash_report_data = Hash.new
     consultant_ids = users

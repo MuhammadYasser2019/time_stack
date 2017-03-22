@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   get 'customers/approve_vacation/:vr_id/:row_id' => 'customers#approve_vacation'
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
+  get 'customers/:id/theme' => 'customers#set_theme'
 
   get 'user_profile' => "users#user_profile"
   # Example of named route that can be invoked with purchase_url(id: product.id)

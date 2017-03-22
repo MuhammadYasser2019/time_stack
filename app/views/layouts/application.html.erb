@@ -7,6 +7,20 @@
     <title><%= content_for?(:title) ? yield(:title) : "RSI - Time Tracking System" %></title>
 
     <%= stylesheet_link_tag "application" %>
+    <% if current_user.nil?%>
+      <%= stylesheet_link_tag "orange"%>
+    <% else %>  
+      <% if !current_user.customer_id.nil?%>
+        <% customer = Customer.find(current_user.customer_id)%>
+        <% if customer.theme == "Orange"%>
+          <%= stylesheet_link_tag "orange"%>
+        <% elsif customer.theme == "Blue" %>
+          <%= stylesheet_link_tag "blue"%>
+        <% end %>
+      <% else%>  
+        <%= stylesheet_link_tag "orange"%>
+      <% end%> 
+    <% end %>
     <%= javascript_include_tag "application" %>
     <%= javascript_include_tag "vendor/modernizr" %>
     <%= javascript_include_tag "application" 'data-turbolinks-track' => true %>

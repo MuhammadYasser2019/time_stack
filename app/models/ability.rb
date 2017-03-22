@@ -23,7 +23,7 @@ class Ability
         can :manage, TimeEntry
         can [:read,:edit,:update], Task
         can [:manage, :permission_denied, :show_project_reports,:approve], Project
-        can [:read,:edit,:update], Customer
+        can [:read,:edit,:update, :add_user_to_customer, :set_theme], Customer
       end
       if user.pm
        can :manage, TimeEntry

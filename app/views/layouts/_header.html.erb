@@ -1,7 +1,22 @@
 <table class="header">
 	<tr>
 		<td>
-			<a href="/"><%= image_tag "RSILogo.jpg" %></a>
+		
+			<% if current_user.nil?%>
+	      <a href="/", class ="header_logo" ><%= image_tag "RSILogo.png" %></a>
+	    <% else %> 
+	    	<% if !current_user.customer_id.nil? %>
+
+		    	<% customer = Customer.find(current_user.customer_id)%>
+		      <% if !customer.logo.blank?%>
+		        <a href="/", class="header_logo"><%= image_tag "#{customer.logo}" %></a>
+		      <% else %>
+		      	<a href="/", class="header_logo"><%= image_tag "RSILogo.png" %></a>
+		      <% end %>
+		    <% else %>
+		    	  <a href="/", class="header_logo"><%= image_tag "RSILogo.png" %></a>
+	    	<% end %>
+	    <% end %>
 		</td>
 		<td>
 		<% if !current_user.nil? %>

@@ -1,7 +1,9 @@
 div.report
 	h4 User Details
 	div 
-		p User First Name: #{@user.first_name}
-		p User Last Name: #{@user.last_name} 
-		p User Employer: #{Customer.find(@user.customer_id).name}
+		p <b>First Name:</b> #{@user.first_name} <b>Last Name:</b> #{@user.last_name} 
+		-if !@user.customer_id.nil?
+			p <b>User Employer:</b> #{Customer.find(@user.customer_id).name}
+		else
+		p <b>Projects:</b> #{@user.projects.collect {|n| n.name}.join(",")}
 		= link_to "Change Password", edit_user_registration_path
