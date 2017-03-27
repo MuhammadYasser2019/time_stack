@@ -77,15 +77,6 @@
 		            = user.invitation_sent_at
 		          td
 		            .actions = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
-	div.upload_logo
-	h1 Upload Logo
-	= form_for @customer, html: { multipart: true } do |f|
-		=f.label(:logo, "Upload Logo", class: "center", for: "logo-upload" )
-		=f.file_field(:logo , id: "logo-upload")
-		= f.submit "Save Logo"
-	- if !@customer.logo.blank?
-	  div = link_to "You have attached: #{@customer.logo_identifier} ", @customer.logo.url, :target => "_blank"
-
 	= link_to 'Set Theme', "/customers/#{params[:id]}/theme", class: "orange-button"
 	br
 	= link_to 'Back to Customer List', customers_path, class: "orange-button"

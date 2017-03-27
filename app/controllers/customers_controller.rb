@@ -29,7 +29,6 @@ class CustomersController < ApplicationController
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:id], "Requested")
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
-    @customer = Customer.find(params[:id])
     logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
   end
 
@@ -53,13 +52,16 @@ class CustomersController < ApplicationController
   # PATCH/PUT /customers/1
   # PATCH/PUT /customers/1.json
   def update
+    if params[:customer].blank?
+      params[:customer] =params
+    end
 
     logger.debug("THIS IS THE CUSTOMER UPDATE METHOD")
     @customer.save
     respond_to do |format|
       if @customer.update(customer_params)
         format.html { redirect_to edit_customer_path(@customer), notice: 'Customer was successfully updated.' }
-        format.json { render :show, status: :ok, location: @customer }
+        format.json { redirect_to "/customers/#{params[:id]}/theme" }
       else
         format.html { render :edit }
         format.json { render json: @customer.errors, status: :unprocessable_entity }
@@ -230,12 +232,15 @@ class CustomersController < ApplicationController
   def set_theme
     logger.debug("PARAMETERS FOR THEMES ARE: #{params.inspect}")
     user = current_user
-    customer= Customer.find(params[:id])
+    @customer= Customer.find(params[:id])
+    logger.debug("THIS IS THE THEME: #{@customer.theme}") 
     theme_selected = params[:theme]
     if !theme_selected.blank?
-      customer.theme = theme_selected
-      customer.save
+      @customer.theme = theme_selected
+      @customer.save
     end
+    @customer_theme = @customer.theme
+
   end
 
   def customer_reports

@@ -1,12 +1,20 @@
 div.report
 	h1 Set Theme
-	= form_tag "/customers/#{params[:id]}/theme", method: :get
-	table
-		thead
-			tr 
-				th Themes For Selection
-				th
-		tbody
-			tr
-				td = select_tag "theme", options_for_select(["Orange", "Blue"], params[:theme])
-				td = button_tag "Set Theme", class: "tiny"
+	= form_tag "/customers/#{params[:id]}/theme", method: :get do
+		table
+			thead
+				tr 
+					th Themes For Selection
+					th
+			tbody
+				tr
+					td = select_tag "theme", options_for_select(["Orange", "Blue","Neutral"], @customer_theme)
+					td = button_tag "Set Theme", class: "tiny orange-button"
+
+	h1 Upload Logo
+	= form_tag "/customers/#{params[:id]}.json", :multipart => true, method: :put do
+		=label_tag(:logo, "Upload Logo", class: "center", for: "logo-upload" )
+		=file_field_tag(:logo , id: "logo-upload")
+		= button_tag "Save Logo", class: "tiny orange-button"
+	= image_tag @customer.logo.url
+
