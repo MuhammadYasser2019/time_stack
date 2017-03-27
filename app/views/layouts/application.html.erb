@@ -16,6 +16,11 @@
           <%= stylesheet_link_tag "orange"%>
         <% elsif customer.theme == "Blue" %>
           <%= stylesheet_link_tag "blue"%>
+        <% elsif customer.theme == "Neutral" %>
+          <%= stylesheet_link_tag "neutral"%>
+        <% elsif customer.theme == "NULL" %>
+          <%= stylesheet_link_tag "neutral"%>
+
         <% end %>
       <% else%>  
         <%= stylesheet_link_tag "orange"%>
