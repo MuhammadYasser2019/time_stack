@@ -16,5 +16,5 @@ div.report
 		=label_tag(:logo, "Upload Logo", class: "center", for: "logo-upload" )
 		=file_field_tag(:logo , id: "logo-upload")
 		= button_tag "Save Logo", class: "tiny orange-button"
-	= image_tag @customer.logo.url
+	= image_tag @customer.logo.url if !@customer.logo.blank?
 
