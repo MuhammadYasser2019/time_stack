@@ -2,7 +2,7 @@
 <ul class="tabs" data-tab style="margin: 0 0 0 28%;">
   <li class="tab-title active"><a href="#user_permissions">User Permissions</a></li>
   <li class="tab-title"><a href="#holidays">Holidays</a></li>
-  <li class="tab-title"><a href="#panel3">Tab 3</a></li>
+  <li class="tab-title"><a href="#panel3">Report Logo</a></li>
   <li class="tab-title"><a href="#panel4">Tab 4</a></li>
  </ul>
 <div class="tabs-content">
@@ -105,7 +105,68 @@
 			<%= link_to "Create Global Holiday", new_holiday_path, class: "button small", style: "margin-top:30px;"%>
 		</div>
 	</div>
-	<div class="content" id="panel3">
+	<div class="report-log-tab" id="panel3">
+	<h1>Create Report Logo</h1>
+	<%= form_tag report_logos_path, :multipart => true, method: :post do%>
+	<table>
+		<thead>
+			<th>Name</th>
+			<th></th>
+			<th></th>
+			<th></th>
+
+		</thead>
+		<tbody>
+			<tr>
+				<td><%= text_field_tag :name, nil, placeholder: "Logo Name", class: "report_logo",required: "required" %></td>
+				<td><%= label_tag(:report_logo, "Upload Logo", for: "report-logo-upload")%></td>
+				<td><%= file_field_tag(:report_logo, id: "report-logo-upload") %></td>
+				<td><%= button_tag "Save Logo", class: "tiny orange-buton"%></td>
+			</tr>
+		</tbody>>
+	</table>
+	<% end %>
+
+
+	<h1>Assign Reoprt Logo To User</h1>
+	<%= form_tag "/assign_report_logo_to_user", :multipart => true, method: :get do  %>
+	<table>
+		<thead>
+			<th>Report Logos</th>
+			<th>Users</th>
+			<th></th>
+		</thead>
+		<tbody>
+			<tr>
+				<td><%= select_tag :report_logo, options_from_collection_for_select(@all_report_logos, "id", "name", params[:report_logo]), :include_blank => true%></td>
+				<td><%= select_tag :user, options_from_collection_for_select(@users, "id", "email", params[:user]), :include_blank => true %></td>
+				<td><%= button_tag "Assign Logo", class: "tiny orange-buton" %></td>
+				<td><%= %></td>
+			</tr>
+		</tbody>>
+	</table>
+	<% end %>
+
+	<h1>Users With Logo</h1>
+	<table>
+		<thead>
+			<th>User</th>
+			<th>Logo Name</th>
+			<th>Logo</th>
+		</thead>
+		<tbody>
+			<% @users_with_logo.each do |users_with_logo| %>
+			<% user_logo_id = users_with_logo.report_logo %>
+			<tr>
+				<td><%= users_with_logo.email%></td>
+				<td><%= ReportLogo.find(user_logo_id).name%></td>
+				<td><%= image_tag ReportLogo.find(user_logo_id).report_logo.url%></td>
+			</tr>
+			<% end %>
+		</tbody>
+	</table>
+
+
 	</div>
 	<div class="content" id="panel4">
 	</div>

@@ -54,6 +54,7 @@ class WeeksController < ApplicationController
   def edit
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
     @week = Week.find(params[:id])
+    @user_id = current_user.id
     if @week.status_id == 4
       logger.debug "THE STATUS IS FOOOOOOOOUOUOUOUOUOUOUOUOUOUOUOUOUUOUOUOUOOUOUOUR"
       @time_entries = @week.time_entries.where(status_id: 4)
@@ -134,8 +135,12 @@ class WeeksController < ApplicationController
   # PATCH/PUT /weeks/1
   # PATCH/PUT /weeks/1.json
   def update
-    logger.debug("week params: #{week_params}")
+    logger.debug("week params: #{params.inspect}")
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
+    week = Week.find(params[:id])
+    week_user = week.user_id
+    logger.debug("THE USER ON THE WEEK IS: #{week_user}")
+
     prev_date_of_activity =""
     week_params["time_entries_attributes"].permit!.to_h.each do |t|
       # store the date of activity from previous row
@@ -151,6 +156,8 @@ class WeeksController < ApplicationController
         new_day.hours = t[1][:hours]
         new_day.activity_log = t[1][:activity_log]
         new_day.updated_by = t[1][:updated_by]
+        new_day.user_id = week_user
+        
         @week.time_entries.push(new_day)
       end
       
@@ -192,7 +199,10 @@ class WeeksController < ApplicationController
         end
         logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
         @week.save
-
+        @week.time_entries.where(user_id: nil).each do |we|
+          we.update(user_id: week_user)  
+          logger.debug("USER IS UPDATED ***************")
+        end
         if @week.status_id == 2
           ApprovalMailer.mail_to_manager(@week, User.find(@week.user_id)).deliver
         end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170317151249) do
+ActiveRecord::Schema.define(version: 20170331150845) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
@@ -21,6 +21,8 @@ ActiveRecord::Schema.define(version: 20170317151249) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer  "user_id"
+    t.string   "theme"
+    t.string   "logo"
   end
 
   create_table "customers_holidays", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -30,7 +32,7 @@ ActiveRecord::Schema.define(version: 20170317151249) do
     t.index ["holiday_id", "customer_id"], name: "index_customers_holidays_on_holiday_id_and_customer_id", using: :btree
   end
 
-  create_table "holiday_exceptions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "holiday_exceptions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.integer  "user_id"
     t.integer  "project_id"
     t.integer  "customer_id"
@@ -68,10 +70,23 @@ ActiveRecord::Schema.define(version: 20170317151249) do
     t.index ["user_id"], name: "index_projects_users_on_user_id", using: :btree
   end
 
+  create_table "report_logos", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.string   "report_logo"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+  end
+
   create_table "roles", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "roles_users", id: false, force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
+    t.integer "user_id", null: false
+    t.integer "role_id", null: false
+    t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id", using: :btree
   end
 
   create_table "statuses", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -141,11 +156,15 @@ ActiveRecord::Schema.define(version: 20170317151249) do
     t.datetime "updated_at",                          null: false
     t.string   "first_name"
     t.string   "last_name"
-    t.datetime "oauth_expires_at"
     t.string   "provider"
     t.string   "uid"
+    t.datetime "oauth_expires_at"
     t.string   "name"
     t.string   "oauth_token"
+    t.boolean  "pm"
+    t.boolean  "cm"
+    t.boolean  "admin"
+    t.boolean  "user"
     t.string   "invitation_token"
     t.datetime "invitation_created_at"
     t.datetime "invitation_sent_at"
@@ -154,15 +173,12 @@ ActiveRecord::Schema.define(version: 20170317151249) do
     t.integer  "invited_by_id"
     t.string   "invited_by_type"
     t.integer  "invitations_count",      default: 0
-    t.boolean  "pm"
-    t.boolean  "cm"
-    t.boolean  "admin"
-    t.boolean  "user"
     t.boolean  "google_account"
     t.boolean  "proxy"
     t.integer  "customer_id"
     t.datetime "vacation_start_date"
     t.datetime "vacation_end_date"
+    t.integer  "report_logo"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
     t.index ["invitations_count"], name: "index_users_on_invitations_count", using: :btree
@@ -170,7 +186,7 @@ ActiveRecord::Schema.define(version: 20170317151249) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  create_table "vacation_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1" do |t|
+  create_table "vacation_requests", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.integer  "customer_id"
     t.integer  "user_id"
     t.datetime "created_at",                        null: false

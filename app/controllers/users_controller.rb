@@ -13,6 +13,9 @@ class UsersController < ApplicationController
     @holidays = Holiday.where(global: true)
     @customers = Customer.where(user_id: nil)
     @invited_users = User.where("invited_by_id = ?", current_user.id)
+    @all_report_logos = ReportLogo.all
+    @users_with_logo= User.where("report_logo IS NOT ? ", nil)
+
   end
   
   def new
@@ -96,17 +99,64 @@ class UsersController < ApplicationController
     else
       @time_entries = TimeEntry.where(user_id: @user,date_of_activity: time_period).order(:date_of_activity)
     end
+    @dates_array = @user.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
+    @daily_totals = Array.new
+    full_date_array = @user.full_date_array(params[:proj_report_start_date], params[:proj_report_end_date])
+    full_date_array.each do |d|
+      hours_today = TimeEntry.where(user_id: @user.id, date_of_activity: d).sum(:hours)
+      logger.debug "HOURS TODAY: #{hours_today}"
+      @daily_totals << hours_today
+    end
+    @days_of_week  = @user.days_of_week(params[:proj_report_start_date], params[:proj_report_end_date])
+    @consultant_hash = @user.user_times(params[:proj_report_start_date], params[:proj_report_end_date], @user)
+    if params[:proj_report_start_date]
+      start_split = params[:proj_report_start_date].split("-")
+      @start_date = start_split[1] + "/" + start_split[2] + "/" + start_split[0]
+    end
+    if params[:proj_report_end_date]
+      end_split = params[:proj_report_end_date].split("-")
+      @end_date = end_split[1] + "/" +end_split[2] + "/" + end_split[0]
+    end
     @hours_sum = 0
     @time_entries.each do |t|
       if !t.hours.nil?
         @hours_sum += t.hours
       end
     end
+    split_url = request.original_url.split("/")
+    period_url = split_url[4].split("?")
+    logger.debug "PERIOD DEBUG #{period_url}"
+    logger.debug "SPLIT: #{split_url[0]} and #{split_url[2]} and #{split_url[3]} and #{split_url[4]}"
+    if period_url[1].nil?
+      @url = split_url[0] + "//" + split_url[2] + "/" + split_url[3] + "/" + period_url[0] + ".xlsx"
+    else
+      @url = split_url[0] + "//" + split_url[2] + "/" + split_url[3] + "/" + period_url[0] + ".xlsx" + "?" + period_url[1]
+    end
+    logger.debug "URLLLLLLL: #{@url}"
+    respond_to do |format|
+      format.xlsx
+      format.html{}
+
+    end
   end
 
   def user_profile
     @user = current_user
   end
+
+  def assign_report_logo_to_user
+    logger.debug("the PARAMETERS for assigning RL: #{params.inspect}")
+    user = User.find(params[:user])
+    report_logo_id = params[:report_logo]
+    user.report_logo = report_logo_id
+    user.save
+    logger.debug("The use email is : #{user.email}")
+
+    respond_to do |format|
+        format.html { redirect_to "/admin", notice: 'Logo assigned to User' }
+    end
+  end
+
 
 
   private

@@ -9,6 +9,7 @@ Rails.application.routes.draw do
   resources :users
   resources :holidays
   resources :customers_holidays
+  resources :report_logos
   devise_for :users, :path => "account", :controllers => { registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
@@ -48,6 +49,8 @@ Rails.application.routes.draw do
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
   get 'customers/:id/theme' => 'customers#set_theme'
+
+  get 'assign_report_logo_to_user' => "users#assign_report_logo_to_user"
 
   get 'user_profile' => "users#user_profile"
   # Example of named route that can be invoked with purchase_url(id: product.id)

@@ -17,6 +17,7 @@
 /config/schedule.rb
 /config/database.yml
 Gemfile.lock
+/public/uploads
 
 
 # minimal Rails specific artifacts

@@ -1,4 +1,5 @@
 div.report
+
   h1 Reports for User #{consultant_name(@user.first_name, @user.last_name)}
   = form_tag "/show_user_reports/#{params[:id]}",id: "user_report_form", method: :get
   table
@@ -25,6 +26,8 @@ div.report
           /= hidden_field_tag 'id', @user.id
           td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
           td = button_tag "Show User Report"
+  .row
+    a(href="#{@url}") Convert to Excel Document
   table border="1"
     thead
       tr

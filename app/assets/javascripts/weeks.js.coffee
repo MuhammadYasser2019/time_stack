@@ -65,7 +65,6 @@ jQuery ($) ->
     copy = t.clone()
     r= copy.children(".date2").next()
     console.log(r)
-
     hidden_field= r.remove()
 
     console.log(i.is("input"))
@@ -97,7 +96,7 @@ jQuery ($) ->
 #    copy.children(".date1").children().attr("for", "week[time_entries_attributes][" + count + "][date_of_activity]")
     copy.children(".date1").children().attr("for", "week_time_entries_attributes_" + count + "_" + date_value)
     copy.children(".date2").next().attr("id", "week_time_entries_attributes_" + count + "_date_of_activity" )
-    copy.children(".date2").next().attr("name", "week[tiem_entries_attributes][" + count + "][date_of_activity]" )
+    copy.children(".date2").next().attr("name", "week[time_entries_attributes][" + count + "][date_of_activity]" )
 
     copy.insertAfter(t)
 #    input.insertAfter(i.next())

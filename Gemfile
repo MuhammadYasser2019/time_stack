@@ -67,6 +67,11 @@ gem 'whenever', :require => false
 
 gem 'capistrano'
 
+#For Excel Exporting
+gem 'axlsx', '2.1.0.pre'
+gem 'axlsx_rails'
+gem 'fastimage'
+gem 'axlsx_styler'
 
 group :development do
   gem 'better_errors'
