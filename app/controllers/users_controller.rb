@@ -108,6 +108,14 @@ class UsersController < ApplicationController
       @daily_totals << hours_today
     end
     @days_of_week  = @user.days_of_week(params[:proj_report_start_date], params[:proj_report_end_date])
+    @weekend_days = Array.new
+    count = 0
+    @days_of_week.each do |d|
+      count += 1
+      if d == "Sun" || d == "Sat"
+        @weekend_days << count
+      end
+    end
     @consultant_hash = @user.user_times(params[:proj_report_start_date], params[:proj_report_end_date], @user)
     if params[:proj_report_start_date]
       start_split = params[:proj_report_start_date].split("-")
