@@ -5,8 +5,8 @@ class ApplicationController < ActionController::Base
 
   include CanCan::ControllerAdditions
   
-  before_filter :authenticate_user!, :set_mailer_host
-  before_filter :configure_permitted_parameters, if: :devise_controller?
+  before_action :authenticate_user!, :set_mailer_host
+  before_action :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to "/permission_denied", :alert => exception.message
@@ -20,6 +20,7 @@ class ApplicationController < ActionController::Base
 
     # The Parameter Sanitizer API has changed for Devise 4,please comment this line if you are using lower version of devise
     devise_parameter_sanitizer.permit(:accept_invitation, keys: [:name])
+    devise_parameter_sanitizer.permit(:sign_up, keys: [:email, :project_id, :invited_by_id])
   end
 
   private

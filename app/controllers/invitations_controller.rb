@@ -7,11 +7,17 @@ class InvitationsController < Devise::InvitationsController
   end
   
   def create
-    logger.debug "HELLO NURSE"
+    logger.debug "HELLO NURSE #{params[:user][:project_id]}"
+
     if params[:user][:customer_id]
       logger.debug "HELLO CUSTOMER ID"
+    elsif params[:user][:project_id] != nil
+        user = User.invite!({:email => params[:user][:email]},current_user)
+        ProjectsUser.create(user_id: user.id, project_id: params[:user][:project_id])
+        redirect_to projects_path
     else
       super
+
     end
   end
 
