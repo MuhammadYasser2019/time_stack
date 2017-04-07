@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170331150845) do
+ActiveRecord::Schema.define(version: 20170407185947) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
@@ -106,7 +106,7 @@ ActiveRecord::Schema.define(version: 20170331150845) do
 
   create_table "time_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.datetime "date_of_activity"
-    t.integer  "hours"
+    t.float    "hours",            limit: 24
     t.string   "activity_log",     limit: 500
     t.integer  "task_id"
     t.integer  "week_id"
