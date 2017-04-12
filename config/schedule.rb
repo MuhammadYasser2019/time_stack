@@ -27,3 +27,8 @@ every :sunday, :at => "12:01 am" do
   Rails.logger.debug "SUNDAY SUNDAY SUNDAY"
   runner "Week.weekly_weeks"
 end
+
+every :sunday, :at => "12:10 am" do
+  Rails.logger.debug "SUNDAY SUNDAY SUNDAY PART 2"
+  runner "User.adhocs"
+end

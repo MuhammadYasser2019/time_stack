@@ -163,4 +163,13 @@ class User < ApplicationRecord
      end
     return hash_report_data
   end
+
+  def adhocs
+    User.where("start_date <= ? AND end_date > ?", Time.now, Time.now).each do |u|
+      u.update(apm: true)
+    end
+    User.where("start_date < ? AND end_date < ?", Time.now, Time.now).each do |u|
+      u.update(apm: false, start_apm: nil, end_apm: nil, project_apm: nil)
+    end
+  end
 end

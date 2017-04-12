@@ -48,7 +48,7 @@ class CustomersController < ApplicationController
 
   def make_user_apm
     user = User.find(params[:user_apm])
-    user.update(apm: true, start_apm: params[:start_apm], end_apm: params[:end_apm], project_apm: params[:project_apm])
+    user.update(start_apm: params[:start_apm], end_apm: params[:end_apm], project_apm: params[:project_apm])
     redirect_to edit_customer_path(params[:id])
   end
 
