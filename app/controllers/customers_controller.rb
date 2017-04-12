@@ -21,6 +21,7 @@ class CustomersController < ApplicationController
   def edit
     customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
     @projects = @customer.projects
+    @customer_users = User.where(customer_id: @customer.id)
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
     @customer_holiday = CustomersHoliday.new
     @invited_users = User.where("invited_by_id = ?", current_user.id)
@@ -30,6 +31,25 @@ class CustomersController < ApplicationController
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:id], "Requested")
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
     logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
+  end
+
+  def make_user_pm
+    user = User.find(params[:user_cm])
+    project = Project.find(params[:project_cm])
+    unless project.user_id == params[:user_cm]
+      unless project.user_id == nil
+        User.find(project.user_id).update(pm: false)
+      end
+      project.update(user_id: user.id)
+    end
+    user.update(pm:true)
+    redirect_to edit_customer_path(params[:id])
+  end
+
+  def make_user_apm
+    user = User.find(params[:user_apm])
+    user.update(apm: true, start_apm: params[:start_apm], end_apm: params[:end_apm], project_apm: params[:project_apm])
+    redirect_to edit_customer_path(params[:id])
   end
 
   # POST /customers

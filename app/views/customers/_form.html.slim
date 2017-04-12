@@ -3,6 +3,8 @@ ul(class="tabs" data-tab style="margin: 0 0 0 35%;")
   li class="tab-title active"
   	a href="#information" Customer Information
   li class="tab-title"
+    a href="#projects" Projects
+  li class="tab-title"
   	a href="#holidays" Holidays
 
 div.tabs-content
@@ -33,7 +35,41 @@ div.tabs-content
 	    = f.text_field :zipcode
 	  
 	  .actions = f.submit
-
+  div class="content" id="projects"
+    br
+    = link_to "Create New Project", new_project_path, class: "orange-button"
+    br
+    br
+    h3 class="center" Add Project Manager to Project
+    = form_tag "make_user_pm" do
+      table
+        thead
+          tr
+            th Users
+            th Projects
+            th
+        tbody
+          tr
+            td = select_tag :user_cm, options_from_collection_for_select(@customer_users, "id", "first_name", params[:user_cm]), :include_blank => true, required: "required"
+            td = select_tag :project_cm, options_from_collection_for_select(@projects, "id", "name", params[:project_cm]), :include_blank => true, required: "required"
+            td = submit_tag
+    h3 class="center" Add Adhoc Project Manager to Project
+    = form_tag "make_user_apm" do
+          table
+            thead
+              tr
+                th Users
+                th Projects
+                th Start Date
+                th End Date
+                th
+            tbody
+              tr
+                td = select_tag :user_apm, options_from_collection_for_select(@customer_users, "id", "first_name", params[:user_cm]), :include_blank => true, required: "required"
+                td = select_tag :project_apm, options_from_collection_for_select(@projects, "id", "name", params[:project_cm]), :include_blank => true, required: "required"
+                td = date_field_tag :apm_start, params[:apm_start], {required: "required"}
+                td = date_field_tag :apm_end, params[:apm_end], {required: "required"}
+                td = submit_tag
   div class="content" id="holidays"
    - unless current_page?(action: 'new')
     div.row

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20170407185947) do
+ActiveRecord::Schema.define(version: 20170411234125) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
@@ -179,6 +179,10 @@ ActiveRecord::Schema.define(version: 20170407185947) do
     t.datetime "vacation_start_date"
     t.datetime "vacation_end_date"
     t.integer  "report_logo"
+    t.boolean  "apm"
+    t.datetime "start_apm"
+    t.datetime "end_apm"
+    t.integer  "project_apm"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
     t.index ["invitations_count"], name: "index_users_on_invitations_count", using: :btree

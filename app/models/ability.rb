@@ -25,7 +25,7 @@ class Ability
         can [:manage, :permission_denied, :show_project_reports,:approve], Project
         can [:read,:edit,:update, :add_user_to_customer, :set_theme], Customer
       end
-      if user.pm
+      if user.pm || user.apm
        can :manage, TimeEntry
        can :manage, Task
        can [:read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve], Project

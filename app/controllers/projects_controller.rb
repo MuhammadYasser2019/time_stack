@@ -221,6 +221,12 @@ class ProjectsController < ApplicationController
     redirect_to projects_path
   end
 
+  def make_user_apm
+    user = User.find(params[:user_apm])
+    user.update(apm: true, start_apm: params[:start_apm], end_apm: params[:end_apm], project_apm: params[:project_apm])
+    redirect_to edit_project_path(params[:id])
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_project

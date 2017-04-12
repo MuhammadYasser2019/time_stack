@@ -45,6 +45,7 @@ Rails.application.routes.draw do
   #   get 'products/:id' => 'catalog#view'
   get 'add_user_to_customer' => "customers#add_user_to_customer"
   get 'vacation_request' => "customers#vacation_request"
+  post 'customers/:id/make_user_pm' => 'customers#make_user_pm'
   get 'customers/approve_vacation/:vr_id/:row_id' => 'customers#approve_vacation'
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
