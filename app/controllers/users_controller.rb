@@ -150,6 +150,24 @@ class UsersController < ApplicationController
 
   def user_profile
     @user = current_user
+    @default_project = @user.default_project
+    @default_task = @user.default_task
+    @project_tasks = Task.where(project_id: @default_project)
+    logger.debug("the project tasks are: #{@project_tasks.inspect}")
+  end
+
+  def set_default_project
+    logger.debug("THE PARAMETERS ARE: #{params.inspect}")
+    default_project_id = params[:default_project_id]
+    default_task_id = params[:default_task_id]
+    user = current_user
+    user.default_project = default_project_id
+    user.default_task = default_task_id
+    user.save
+
+    respond_to do |format|
+        format.html { redirect_to "/user_profile", notice: 'Defaul project set' }
+    end
   end
 
   def assign_report_logo_to_user

@@ -34,6 +34,7 @@ wb.styles do |s|
   border_top = s.add_style :border_top => {:style => :thick, :color => "000000"}
   orange = s.add_style :bg_color => "ffcc99", :border => { :style => :thin, :color =>"000000" }
   gray =  s.add_style :bg_color => "e4d3ab", :border => { :style => :thin, :color =>"000000" }
+
   wb.add_worksheet(name: "#{@user.first_name} #{@user.last_name[0]} Timesheet") do |sheet|
     sheet.sheet_view.show_grid_lines = false
     sheet.add_row []
@@ -71,13 +72,16 @@ ensure prompt processing. "], :style => [nil,nil,nil,nil,nil,bold_right,nil],:he
       total += @consultant_hash[c][:total_hours]
       sheet.add_row array.unshift("Client Billable Hours - #{Customer.find(c).name}"), :style => gridstyle_border
       logger.debug "COUNT #{sheet.rows.count}"
+
       @weekend_days.each do |d|
         sheet.rows.last.cells[d].style = gray
       end
+
       sheet.rows.last.cells[-1].style = orange
     end
       sheet.add_row ["Additional Billable Hours (exempt only", empty_array, ""].flatten, :style => gridstyle_border
     sheet.rows.last.cells[-1].style = orange
+
     @weekend_days.each do |d|
       sheet.rows.last.cells[d].style = gray
     end
@@ -106,14 +110,17 @@ ensure prompt processing. "], :style => [nil,nil,nil,nil,nil,bold_right,nil],:he
     @weekend_days.each do |d|
       sheet.rows.last.cells[d].style = gray
     end
+
       sheet.add_row [], :style => gridstyle_border
       sheet.add_row [], :style => gridstyle_border
 
       sheet.add_row ["Daily Total", @daily_totals, @daily_totals.sum].flatten, :style => gridstyle_bolder
     sheet.rows.last.cells[-1].style = orange
+
     @weekend_days.each do |d|
       sheet.rows.last.cells[d].style = gray
     end
+
     sheet.add_row []
     sheet.add_row []
     sheet.add_row []
@@ -123,7 +130,9 @@ ensure prompt processing. "], :style => [nil,nil,nil,nil,nil,bold_right,nil],:he
     sheet.add_row ["Approval Signature:" "________________________________________________", "Date", "_______/_________/__________"]
     sheet.add_row []
     sheet.add_row []
+
     sheet.column_widths *[50, 10, 10, nil, nil, 10, 10].flatten
+
     logger.debug "#{sheet.rows.last}"
   end
 end

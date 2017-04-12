@@ -8,20 +8,26 @@ td.project
   - if f.object.project_id != nil
     = Project.find(f.object.project_id).name
  -else
-  = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id"})
+  -if !get_project_id(f.object.project_id).nil?
+    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id"})
+  -else
+    -if !@week_user.default_project.nil?
+      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name",@week_user.default_project ), {include_blank: true}, {class: "project_id"})
+    -else
+      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id"})
 td.task
  - if !f.object.task_id.nil?
   - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
     - if f.object.task_id != nil
       = Task.find(f.object.task_id).description
   - else
-   = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: f.object.project_id), "id", "description", f.object.task), {}, {:class =>'task_id'})
+   = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: f.object.project_id), "id", "description", f.object.task_id), {}, {:class =>'task_id'})
  - else
   - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
     - if f.object.task_id != nil
       = Task.find(f.object.task_id).description
   - else
-   = f.select(:task_id, options_from_collection_for_select([], "id", "description", nil), {}, {:class =>'task_id'})
+   = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: @week_user.default_project), "id", "description", @week_user.default_task ), {}, {:class =>'task_id'})
 td.hour
  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
   = f.object.hours

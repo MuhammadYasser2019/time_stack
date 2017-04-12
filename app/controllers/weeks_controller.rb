@@ -24,17 +24,25 @@ class WeeksController < ApplicationController
 
   # GET /weeks/new
   def new
-    @projects =  Project.joins(:projects_users).where("projects_users.user_id=? AND inactive=?", current_user.id, false )
-    logger.debug("these are the projects#{@projects}")
-    if !@projects.first.nil?
-      @tasks = Task.where(project_id: @projects.first.id)
-    end
+    #@projects =  Project.joins(:projects_users).where("projects_users.user_id=? AND inactive=?", current_user.id, false )
+
     @week = Week.new
     @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
     @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')
     @week.user_id = current_user.id
     @week.status_id = Status.find_by_status("NEW").id
     @week.save!
+
+    if current_user.id == @week.user_id
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", current_user.id )
+    else
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id )
+    end
+    logger.debug("these are the projects#{@projects.inspect}")
+    if !@projects.first.nil?
+      @tasks = Task.where(project_id: @projects.first.id)
+    end
+
 
     7.times {  @week.time_entries.build( user_id: current_user.id )}
       
@@ -46,6 +54,8 @@ class WeeksController < ApplicationController
       @week.time_entries[i].user_id = current_user.id
     end
     @week.save!
+
+    @week_user = User.find(@week.user_id)
     vacation(@week)
 
   end
@@ -55,6 +65,9 @@ class WeeksController < ApplicationController
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
     @week = Week.find(params[:id])
     @user_id = current_user.id
+
+    @week_user = User.find(@week.user_id)
+    logger.debug("WEEK USER IS: #{@week_user.inspect}")
     if @week.status_id == 4
       logger.debug "THE STATUS IS FOOOOOOOOUOUOUOUOUOUOUOUOUOUOUOUOUUOUOUOUOOUOUOUR"
       @time_entries = @week.time_entries.where(status_id: 4)
