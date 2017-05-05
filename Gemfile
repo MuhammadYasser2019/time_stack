@@ -66,13 +66,14 @@ gem 'rmagick'
 gem 'whenever', :require => false
 
 gem 'capistrano'
+gem 'doorkeeper'
 
 #For Excel Exporting
 gem 'axlsx', '2.1.0.pre'
 gem 'axlsx_rails'
 gem 'fastimage'
 gem 'axlsx_styler'
-
+gem 'omniauth-oauth2'
 group :development do
   gem 'better_errors'
   gem 'guard-bundler'
@@ -91,7 +92,7 @@ group :development do
   # gem 'binding_of_caller'
 
   gem "omniauth-google-oauth2"
-
+  
 end
 
 group :development, :test do

@@ -1,5 +1,6 @@
 class UsersController < ApplicationController
   load_and_authorize_resource
+  skip_load_and_authorize_resource  :only => [:new, :create, :activate]
   def user_account
     @user = current_user
   end

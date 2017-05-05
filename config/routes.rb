@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  use_doorkeeper
   resources :holiday_exceptions
   resources :time_entries
   resources :weeks
@@ -16,6 +17,11 @@ Rails.application.routes.draw do
     match "/users/sign_in", :to => 'devise/sessions#new', via: [:get, :post]
     match "/users/sign_out", :to => 'devise/sessions#destroy', via: [:delete]
     match '/invitation/resend_invite' => 'invitations#resend_invite', via: [:post]
+  end
+
+  namespace :api do
+    get 'users', to: 'users#index'
+    get 'project_tasks', to: 'users#project_tasks'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.
