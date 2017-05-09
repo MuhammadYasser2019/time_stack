@@ -22,6 +22,7 @@ Rails.application.routes.draw do
   namespace :api do
     get 'users', to: 'users#index'
     get 'project_tasks', to: 'users#project_tasks'
+    post 'user_updates', to: 'users#user_updates'
   end
 
   # The priority is based upon order of creation: first created -> highest priority.

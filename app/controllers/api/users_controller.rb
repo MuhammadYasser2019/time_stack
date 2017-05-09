@@ -24,6 +24,26 @@ module Api
 	  	end
 	  end
 
+	  def user_updates
+	  	project = Project.find_by_name(params[:project_name])
+	  	time_entry = TimeEntry.find(params[:time_entry_id])
+	  	hours = params[:hours]
+	  	activity_log = params[:description]
+	  	personal = params[:personal].nil? ? false : params[:personal]
+	  	sick = params[:sick].nil? ? false : params[:sick]
+	  	task = Task.find_by_description(params[:task])
+
+	  	logger.debug("**project: #{project.inspect}****hours: #{hours}***activity_log: #{activity_log}****personal: #{personal} **sick: #{sick}** time_entry: #{time_entry.inspect} ")
+	  	time_entry.project_id = project.id if !project.nil?
+	  	time_entry.task_id = task.id if !task.nil?
+	  	time_entry.hours = hours
+	  	time_entry.activity_log = activity_log
+	  	time_entry.personal_day = personal
+	  	time_entry.sick = sick
+	  	time_entry.save
+
+	  end
+
 	  def doorkeeper_unauthorized_render_options(error: nil)
     	{ json: { error: "Not authorized" } }
   	end
