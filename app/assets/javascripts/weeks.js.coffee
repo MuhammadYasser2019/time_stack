@@ -67,6 +67,7 @@ jQuery ($) ->
     console.log(r)
     hidden_field= r.remove()
 
+    remove_add_row = copy.children(".add").remove()
     console.log(i.is("input"))
     if value == 0
       value = parseInt($("table input:last").attr("value")) + 1
