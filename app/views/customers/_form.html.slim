@@ -4,6 +4,8 @@ ul(class="tabs" data-tab style="margin: 0 0 0 35%;")
   	a href="#information" Customer Information
   li class="tab-title"
   	a href="#holidays" Holidays
+  li class="tab-title"
+  	a href="#employment_types" Employment Types
 
 div.tabs-content
   div.white-background class="content active" id="information"
@@ -31,9 +33,12 @@ div.tabs-content
 	  .field
 	    = f.label :zipcode
 	    = f.text_field :zipcode
+	  .field
+	    = f.label :customer_manager
+	    = f.select(:user_id, options_from_collection_for_select(@users_eligible_to_be_manager, "id", "email", @customer.user_id))
 	  
 	  .actions = f.submit
-
+	  
   div class="content" id="holidays"
    - unless current_page?(action: 'new')
     div.row
@@ -61,3 +66,15 @@ div.tabs-content
 		  
 		  = link_to "Create New Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"
 		      
+  div class="content" id="employment_types"
+		div.row
+			.small-8.small-offset-2
+			  h3.text-center Employment Type
+			  - if !@employment_type.blank?
+			  	- @employment_type.each do |et|
+			  		.row 
+			  			.small-1.columns.text-cente = link_to et.name, "/employment_types/#{et.id}/edit"
+			  			.small-3.columns.text-center = link_to "Delete", "/employment_types/#{et.id}", method: :delete , data: {confirm: 'Are you sure?'}, style: "color:#842929"
+			  - else
+			  	h3 No Employment Types
+			  = link_to "Create New Employment Type", new_employment_type_path(:customer_id => @customer.id ),id: "#{@customer.id}", class: "orange-button", style: "margin-top:30px;"

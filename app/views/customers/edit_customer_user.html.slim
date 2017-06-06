@@ -1,0 +1,15 @@
+h1 Edit Customer User
+= form_tag("/update_user_employment", :method => 'get') do
+	table
+		thead
+			tr
+				td Email
+				td Employment Type
+				td 
+		tbody
+			tr					 
+				td
+					= @user.email
+					= hidden_field_tag "user_id", @user.id	
+				td = select_tag :employment_type, options_from_collection_for_select(@employment_types, :id, :name, @user.employment_type)
+				td = submit_tag "Submit"

@@ -10,9 +10,11 @@ table(style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);")
     tr
       th
         = simple_form_for(User.new, url: user_invitation_path, html: {class: 'form-inline'}) do |f|
-          = f.input :email, placeholder: 'Email', label: false, class: "invitation_email"
+          = f.input :email, placeholder: 'Email', label: "Email", class: "invitation_email"
           = f.hidden_field :project_id, value: @project_id
           = f.hidden_field :invited_by_id, value:  @current_user_id
+          = f.label :body, label: 'Employment Type' 
+          = f.select :employment_type, options_from_collection_for_select(EmploymentType.all, :id, :name)
           .actions = f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'
 .white-background
 	h1 Pending Users

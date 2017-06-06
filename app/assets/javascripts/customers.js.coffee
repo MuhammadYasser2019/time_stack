@@ -8,6 +8,14 @@ jQuery ($) ->
     row_id = attr_val.split("_")[4]
     return row_id
 
+  parse_customer_row_id = (attr_val) ->
+    row_id = attr_val.split("_")[0]
+    return row_id
+
+  parse_user_id = (attr_val) ->
+    user_id = attr_val.split("_")[1]
+    return user_id
+
   parse_vacation_request_id = (attr_val) ->
     row_id = attr_val.split("_")[3]
     return row_id
@@ -36,11 +44,16 @@ jQuery ($) ->
       vacation_end: end
     return
 
-  $('.add-user-to-customer').click ->
-    add_user_id = $(this).val()
+  $('.remove-user-from-customer').click ->
+    console.log("customers.js- romove customer")
+    user_id = parse_user_id($(this).attr('id'))
+    console.log("customer.js- remove form customer "+"user_id: "+ $(this).attr('id'))
+    row = parse_customer_row_id($(this).attr('id'))
+    console.log("customer.js- remove from customer "+"row_id: "+ row )
     customer_url=$(location).attr('href')
     customer_id = parse_customer_id(customer_url)
-    $.get "/add_user_to_customer",
-  	  user_id: add_user_id,
-  	  customer_id: customer_id
+    $.get "/remove_user_from_customer",
+  	  user_id: user_id,
+  	  customer_id: customer_id,
+      row: row
   	return

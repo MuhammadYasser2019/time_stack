@@ -28,11 +28,17 @@ td.task
       = Task.find(f.object.task_id).description
   - else
    = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: @week_user.default_project), "id", "description", @week_user.default_task ), {}, {:class =>'task_id'})
-td.hour
- - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
-  = f.object.hours
- - else
-  = f.text_field :hours, :class =>'form-control input-sm hours-input'
+td(class="hour")
+  div(class="toggle")
+   - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
+    = f.object.hours
+   - else
+    = f.text_field :hours, :class =>'form-control input-sm hours-input'
+  div(class="toggle enter_time")
+    Strong(class="thisisit") In:
+    = f.time_select(:time_in, ampm: true,ignore_date: true, include_blank: true,:default => {:hour => '', :minute => ''}, class: "time-in-move" )
+    strong(class="thisisit") Out:
+    = f.time_select(:time_out, ampm: true,ignore_date: true, include_blank: true,:default => {:hour => '', :minute => ''})
 td.activity_log
  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
   = f.object.activity_log
@@ -58,4 +64,6 @@ td.add
  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
  -else
   = link_to "Add Row", "javascript:void(0)", class: "add_row", date_stamp: f.object.date_of_activity, day_value: f.object.date_of_activity.strftime("%A")
+ br
+ = f.button "Enter Time", id: "add_time", class: "tiny secondary add-time", type: "button"
 = f.hidden_field :updated_by, value: current_user.id

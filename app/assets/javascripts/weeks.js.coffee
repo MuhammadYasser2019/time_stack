@@ -2,8 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ($) ->
-  
-    
+
   $("tbody").on("change", ".project_id", ->
     console.log "Inside project change" + $(this).attr('id') +  " the value selected is " + $(this).val()
     tokens = $(this).attr('id').split('_')
@@ -64,10 +63,11 @@ jQuery ($) ->
     i = $(this).parent().parent("tr").next()
     copy = t.clone()
     r= copy.children(".date2").next()
-    console.log(r)
+    console.log("the value of r = " +r.attr('value'))
     hidden_field= r.remove()
 
-    remove_add_row = copy.children(".add").remove()
+    remove_add_row = copy.children(".add").children(".add_row").remove()
+
     console.log(i.is("input"))
     if value == 0
       value = parseInt($("table input:last").attr("value")) + 1
@@ -139,7 +139,6 @@ jQuery ($) ->
     $(this).next('.char_count').html text_length + '/500'
   )
 
-
   $('.print-report').click ->
     $('#hidden_print_report').val("true")
     after =$('#hidden_print_report').attr('value')
@@ -153,5 +152,16 @@ jQuery ($) ->
     unless $(this).val() == ""
 	    date = $(this).parent().siblings(".date1").children("label").text()
 	    check_holidays($(this).val(), date, tr)
+
+  $("tbody").on("click", ".add-time", ->
+    console.log("weeks.coffee add time")
+    row = $(this).parent().parent("tr")
+    hour_field = row.children(".hour").children('.toggle')
+    console.log("the row is " + hour_field)
+    hour_field.toggle()
+    $(this).html if $(this).text() == 'Enter Time' then 'Enter Hours' else 'Enter Time'
+    return
+    )
+
 
 

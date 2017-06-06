@@ -218,3 +218,23 @@ input[type="submit"]{
 .header_logo:hover{
   background-color: transparent;
 }
+
+.enter_time {
+  display: none;
+}
+
+.hours-input {
+  width: 160px !important;
+}
+.thisisit{
+  width: 20%;
+  float: left;
+}
+
+.enter_time select:nth-child(2), .enter_time select:nth-child(5) { 
+  width: 43%; 
+}
+
+.enter_time select:nth-child(3), .enter_time select:nth-child(6) { 
+  width: 26%;
+}

@@ -1,0 +1,5 @@
+=form_for @employment_type do |f|
+	= f.label :name
+	= f.text_field :name
+	= f.hidden_field :customer_id, value: @customer_id
+	= f.submit "Create Employment Type"

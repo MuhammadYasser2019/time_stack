@@ -12,8 +12,11 @@ class InvitationsController < Devise::InvitationsController
     if params[:user][:customer_id]
       logger.debug "HELLO CUSTOMER ID"
     elsif params[:user][:project_id] != nil
-        user = User.invite!({:email => params[:user][:email]},current_user)
+        project_customer_id = Project.find(params[:user][:project_id]).customer_id
+        user = User.invite!({:email => params[:user][:email],:customer_id => project_customer_id,:employment_type => params[:user][:employment_type]},current_user)
         ProjectsUser.create(user_id: user.id, project_id: params[:user][:project_id])
+        project_customer_id = Project.find(params[:user][:project_id])
+        logger.debug("invitation controller- create- project_customer_id: #{project_customer_id} ")
         redirect_to projects_path
     else
       super

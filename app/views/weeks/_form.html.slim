@@ -20,7 +20,7 @@
         td Day
         td Project
         td Task
-        td Hours
+        td Hours/Time Enter
         td Description
         td
         td
@@ -39,5 +39,3 @@
     .actions
      = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3)
      = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"}
-
-

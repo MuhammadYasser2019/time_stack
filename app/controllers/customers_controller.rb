@@ -25,6 +25,10 @@ class CustomersController < ApplicationController
     @customer_holiday = CustomersHoliday.new
     @invited_users = User.where("invited_by_id = ?", current_user.id)
     @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:id])
+    @employment_type = EmploymentType.where(customer_id: @customer.id)
+    @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
+    logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
+
     # @users= User.all
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:id], "Requested")
@@ -36,7 +40,7 @@ class CustomersController < ApplicationController
   # POST /customers.json
   def create
     @customer = Customer.new(customer_params)
-
+    @customer.user_id = current_user.id
     @customer.theme = "Orange" 
     respond_to do |format|
       if @customer.save
@@ -55,7 +59,7 @@ class CustomersController < ApplicationController
     if params[:customer].blank?
       params[:customer] =params
     end
-
+    @customer.user_id = params[:customer][:user_id]
     logger.debug("THIS IS THE CUSTOMER UPDATE METHOD")
     @customer.save
     respond_to do |format|
@@ -108,27 +112,39 @@ class CustomersController < ApplicationController
     redirect_to edit_customer_path(params[:customer_id])
   end
 
-  def add_user_to_customer
+  def remove_user_from_customer
     customer_id = params[:customer_id]
     user = User.find(params[:user_id])
     logger.debug("CUSTOMER ID: #{customer_id}***********AND USER CUSTOMER ID: #{user.customer_id}")
-    logger.debug("COMPARE:    #{user.customer_id.to_i == customer_id.to_i}")
     if !customer_id.blank? && !user.blank?
-      if user.customer_id.to_i == customer_id.to_i
-        user.customer_id = nil
-        user.save
-        logger.debug("REMOVING THE USER*******")
-        @verb = "Removed"
-      else
-        user.customer_id = customer_id
-        user.save
-        logger.debug("Adding THE USER*******")
-        @verb = "Added"
-      end
+      user.customer_id = nil
+      user.save
+      logger.debug("REMOVING THE USER*******")
+      @verb = "Removed" 
     end
     respond_to do |format|
      format.js
    end
+  end
+
+  def edit_customer_user
+    logger.debug("customer_controller- edit_customer_user ")
+    @user = User.find(params[:user_id])
+    user_customer_id = @user.customer_id
+    @employment_types = EmploymentType.where(customer_id: user_customer_id )
+    respond_to do |format|
+      format.html
+    end
+  end
+
+  def update_user_employment
+    logger.debug("customer.controller - update_user_employment ")
+    user = User.find(params[:user_id])
+    user.employment_type = params[:employment_type]
+    user.save
+    respond_to do |format|
+      format.html { redirect_to "/customers/#{user.customer_id}/edit"}
+    end
   end
 
   def vacation_request

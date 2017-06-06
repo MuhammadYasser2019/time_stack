@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+
   resources :holiday_exceptions
   resources :time_entries
   resources :weeks
@@ -8,6 +9,7 @@ Rails.application.routes.draw do
   resources :roles
   resources :users
   resources :holidays
+  resources :employment_types
   resources :customers_holidays
   resources :report_logos
   devise_for :users, :path => "account", :controllers => { registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
@@ -45,7 +47,9 @@ Rails.application.routes.draw do
   match 'admin', :to => "users#admin", via: [:get, :post]
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
-  get 'add_user_to_customer' => "customers#add_user_to_customer"
+  get 'remove_user_from_customer' => "customers#remove_user_from_customer"
+  get 'edit_customer_user/:user_id' => "customers#edit_customer_user"
+  get '/update_user_employment' => "customers#update_user_employment"
   get 'vacation_request' => "customers#vacation_request"
   get 'customers/approve_vacation/:vr_id/:row_id' => 'customers#approve_vacation'
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'

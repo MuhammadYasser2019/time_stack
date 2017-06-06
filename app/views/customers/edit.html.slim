@@ -9,17 +9,12 @@
 				th User
 				th Email
 		tbody
-			-@users.each do |uop|
+			-@users.each_with_index do |uop, i|
 				-if uop.customer_id == params[:id].to_i
-					tr 
+					tr(id = "#{i}") 
 						td = uop.first_name
-						td = uop.email
-						td = check_box_tag "customer", uop.id, true, class: "add-user-to-customer"
-				-else
-					tr
-						td = uop.first_name
-						td = uop.email
-						td = check_box_tag "customer", uop.id, false, class: "add-user-to-customer"
+						td = link_to uop.email, "/edit_customer_user/#{uop.id}"
+						td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
 
 	h1 Vacation Request
 	table
