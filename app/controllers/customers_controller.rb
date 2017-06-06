@@ -15,6 +15,7 @@ class CustomersController < ApplicationController
   # GET /customers/new
   def new
     @customer = Customer.new
+    @users_eligible_to_be_manager = User.where("admin = ?", 1)
   end
 
   # GET /customers/1/edit

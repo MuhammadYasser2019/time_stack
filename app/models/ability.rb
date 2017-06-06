@@ -6,7 +6,7 @@ class Ability
     #
     if user.user
       can [:new, :create, :update], TimeEntry
-      can [:user_account, :edit, :update, :show_user_reports, :user_profile], User
+      can [:user_account, :edit, :update, :show_user_reports, :user_profile,:set_default_project], User
       can [:read, :available_tasks], Task
       can [:read, :edit, :create, :update, :new, :report], Week
       can [:read, :permission_denied], Project
