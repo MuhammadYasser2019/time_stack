@@ -29,7 +29,8 @@ td.task
   - else
    = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: @week_user.default_project), "id", "description", @week_user.default_task ), {}, {:class =>'task_id'})
 td(class="hour")
-  div(class="toggle")
+
+  div(class="toggle hours-field")
    - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
     = f.object.hours
    - else

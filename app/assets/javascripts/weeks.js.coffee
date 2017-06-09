@@ -66,6 +66,11 @@ jQuery ($) ->
     console.log("the value of r = " +r.attr('value'))
     hidden_field= r.remove()
 
+    copy.children(".hour").children(".hours-field").remove()
+    
+    toggle_text = $(this).parent().children(".add-time").text()
+    console.log("ADD ROW- Check toggle-text: " + toggle_text)
+
     remove_add_row = copy.children(".add").children(".add_row").remove()
 
     console.log(i.is("input"))
@@ -89,8 +94,28 @@ jQuery ($) ->
     copy.children(".project").children().attr("id", "week_time_entries_attributes_" + count + "_project_id")
     copy.children(".task").children().attr("name", "week[time_entries_attributes][" + count + "][task_id]")
     copy.children(".task").children().attr("id", "week_time_entries_attributes_" + count + "_task_id")
-    copy.children(".hour").children().attr("name", "week[time_entries_attributes][" + count + "][hours]")
-    copy.children(".hour").children().attr("id", "week_time_entries_attributes_" + count + "_hours")
+
+    #copy.children(".hour").children(".hours-field").children().attr("name", "week[time_entries_attributes][" + count + "][hours]")
+    #copy.children(".hour").children(".hours-field").children().attr("id", "week_time_entries_attributes_" + count + "_hours")
+
+    if toggle_text == "Enter Hours"
+      copy.children(".hour").append('<div class="toggle hours-field" style="display: none"><input class="form-control input-sm hours-input" type="text" name="week[time_entries_attributes][' + count + '][hours]" id="week_time_entries_attributes_' + count + '_hours"></div>')
+    else
+      copy.children(".hour").append('<div class="toggle hours-field" style="display: block"><input class="form-control input-sm hours-input" type="text" name="week[time_entries_attributes][' + count + '][hours]" id="week_time_entries_attributes_' + count + '_hours"></div>')
+
+    copy.children(".hour").children(".enter_time").children("select:first").attr("name", "week[time_entries_attributes][" + count + "][time_in(4i)]")
+    copy.children(".hour").children(".enter_time").children("select:first").attr("id", "week_time_entries_attributes_" + count + "_time_in_4i")
+
+    copy.children(".hour").children(".enter_time").children("select:nth-child(3)").attr("name", "week[time_entries_attributes][" + count + "][time_in(5i)]")
+    copy.children(".hour").children(".enter_time").children("select:nth-child(3)").attr("id", "week_time_entries_attributes_" + count + "_time_in_5i")
+
+    copy.children(".hour").children(".enter_time").children("select:nth-child(5)").attr("name", "week[time_entries_attributes][" + count + "][time_out(4i)]")
+    copy.children(".hour").children(".enter_time").children("select:nth-child(5)").attr("id", "week_time_entries_attributes_" + count + "_time_out_4i")
+
+    copy.children(".hour").children(".enter_time").children("select:nth-child(6)").attr("name", "week[time_entries_attributes][" + count + "][time_out(5i)]")
+    copy.children(".hour").children(".enter_time").children("select:nth-child(6)").attr("id", "week_time_entries_attributes_" + count + "_time_out_5i")
+
+
     copy.children(".activity_log").children().attr("name", "week[time_entries_attributes][" + count + "][activity_log]")
     copy.children(".activity_log").children().attr("id", "week_time_entries_attributes_" + count + "_activity_log")
 #    copy.children(".activity_log").children(".char_count")
