@@ -118,7 +118,8 @@ jQuery ($) ->
 
 
     copy.children(".activity_log").children().attr("name", "week[time_entries_attributes][" + count + "][activity_log]")
-    copy.children(".activity_log").children().attr("id", "week_time_entries_attributes_" + count + "_activity_log")
+    copy.children(".activity_log").children().attr("id", "week_time_entries_attributes_" + count + "_activity_log").val("")
+    copy.children(".activity_log").children(".char_count").attr("id", "week_time_entries_attributes_" + count + "_char_count").text("")
 #    copy.children(".activity_log").children(".char_count")
 #    copy.children(".date1").children().attr("for", "week[time_entries_attributes][" + count + "][date_of_activity]")
     copy.children(".date1").children().attr("for", "week_time_entries_attributes_" + count + "_" + date_value)
