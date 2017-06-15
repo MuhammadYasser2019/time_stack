@@ -1,4 +1,7 @@
+require 'active_pdftk'
+# require 'pdf_forms'
 class UsersController < ApplicationController
+
   load_and_authorize_resource
   def user_account
     @user = current_user
@@ -183,7 +186,31 @@ class UsersController < ApplicationController
     end
   end
 
+  def pdf_check
+    logger.debug("users controller- pdf_check START")
+    bic = ActivePdftk::Wrapper.new
+    # data_fill = bic.send('first_name', 'SomeString')
+    bic.fill_form('/home/harsh/Practice/time_stack/app/assets/images/test_form.pdf', '/home/harsh/Practice/form.fdf' , :output => '/home/harsh/Practice/data_fields.pdf')
+    
+    # bic.save('some_thing.pdf')
 
+
+    # @pdftk = ActivePdftk::Wrapper.new
+    # @pdftk.dump_data_fields('/home/harsh/Practice/time_stack/app/assets/images/test_form.pdf', :output => '/home/harsh/Practice/data_fields.txt')
+    logger.debug("users controller- pdf_check END")
+  end
+
+
+  def display_pdf_name
+    # logger.debug("user_controller- display_pdf_name - #{params.inspect} ")
+
+    # @pdftk = ActivePdftk::Wrapper.new
+    # @pdftk.dump_data_fields('/home/harsh/Practice/some_thing.pdf', :output => '/home/harsh/Practice/data_fields.txt')
+    # logger.debug("users controller- display_pdf_name END")
+  
+  end
+
+  end
 
   private
   
@@ -191,3 +218,12 @@ class UsersController < ApplicationController
       params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id)
     end
 end
+
+
+
+
+
+
+
+
+

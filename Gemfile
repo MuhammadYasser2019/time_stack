@@ -73,6 +73,7 @@ gem 'axlsx_rails'
 gem 'fastimage'
 gem 'axlsx_styler'
 
+
 group :development do
   gem 'better_errors'
   gem 'guard-bundler'
@@ -91,6 +92,8 @@ group :development do
   # gem 'binding_of_caller'
 
   gem "omniauth-google-oauth2"
+
+  gem 'active_pdftk', git: "https://github.com/tcocca/active_pdftk.git"
 
 end
 

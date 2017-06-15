@@ -20,6 +20,8 @@ Rails.application.routes.draw do
     match '/invitation/resend_invite' => 'invitations#resend_invite', via: [:post]
   end
 
+  get "display_pdf_name" => "users#display_pdf_name"
+  get "pdf_check" => 'users#pdf_check'
   # The priority is based upon order of creation: first created -> highest priority.
   # See how all your routes lay out with "rake routes".
   post '/weeks/:id(.:format)' => 'weeks#update'

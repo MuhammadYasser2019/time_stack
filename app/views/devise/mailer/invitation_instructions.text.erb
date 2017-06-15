@@ -2,7 +2,8 @@
 
 <%= t("devise.mailer.invitation_instructions.someone_invited_you", url: root_url) %>
 
-<%= accept_invitation_url(@resource, :invitation_token => @token) %>
+<!-- <%= accept_invitation_url(@resource, :invitation_token => @token) %> -->
+<%= "http://192.168.239.134:3000/users/sign_in" %>
 
 <% if @resource.invitation_due_at %>
   <%= t("devise.mailer.invitation_instructions.accept_until", due_date: l(@resource.invitation_due_at, format: :'devise.mailer.invitation_instructions.accept_until_format')) %>
