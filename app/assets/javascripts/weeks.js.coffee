@@ -73,6 +73,7 @@ jQuery ($) ->
 
     remove_add_row = copy.children(".add").children(".add_row").remove()
 
+
     console.log(i.is("input"))
     if value == 0
       value = parseInt($("table input:last").attr("value")) + 1
@@ -91,9 +92,9 @@ jQuery ($) ->
     date = $('<input type="hidden" value="' + date_value + '"  name="week[time_entries_attributes][' + count + '][date_of_activity]">')
     date.insertAfter(copy.children(".date:first").children())
     copy.children(".project").children().attr("name", "week[time_entries_attributes][" + count + "][project_id]")
-    copy.children(".project").children().attr("id", "week_time_entries_attributes_" + count + "_project_id")
+    copy.children(".project").children().attr("id", "week_time_entries_attributes_" + count + "_project_id").val("")
     copy.children(".task").children().attr("name", "week[time_entries_attributes][" + count + "][task_id]")
-    copy.children(".task").children().attr("id", "week_time_entries_attributes_" + count + "_task_id")
+    copy.children(".task").children().attr("id", "week_time_entries_attributes_" + count + "_task_id").val("")
 
     #copy.children(".hour").children(".hours-field").children().attr("name", "week[time_entries_attributes][" + count + "][hours]")
     #copy.children(".hour").children(".hours-field").children().attr("id", "week_time_entries_attributes_" + count + "_hours")
@@ -117,7 +118,8 @@ jQuery ($) ->
 
 
     copy.children(".activity_log").children().attr("name", "week[time_entries_attributes][" + count + "][activity_log]")
-    copy.children(".activity_log").children().attr("id", "week_time_entries_attributes_" + count + "_activity_log")
+    copy.children(".activity_log").children().attr("id", "week_time_entries_attributes_" + count + "_activity_log").val("")
+    copy.children(".activity_log").children(".char_count").attr("id", "week_time_entries_attributes_" + count + "_char_count").text("")
 #    copy.children(".activity_log").children(".char_count")
 #    copy.children(".date1").children().attr("for", "week[time_entries_attributes][" + count + "][date_of_activity]")
     copy.children(".date1").children().attr("for", "week_time_entries_attributes_" + count + "_" + date_value)
