@@ -6,7 +6,7 @@ ul(class="tabs" data-tab style="margin: 0 0 0 28%;")
   	a href="#holidays" Holiday Exceptions
 div.tabs-content
  div class="content active" id="information"
-  .white-background
+  
     
 	div class= "display-text"
 	= form_for @project do |f|
@@ -16,56 +16,53 @@ div.tabs-content
 	      ul
 	        - @project.errors.full_messages.each do |message|
 	          li = message
-	  h1 Editing project
-	  .field
-	    = f.label :name
-	    = f.text_field :name
+	  h1 #{@project.name}
 	  .field
 	    = f.label :customer
 	    = f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
-	  table border="1" id="tasklist"
-	    thead
-	      tr 
-	        td Code
-	        td Description
-	    tbody
-	      = f.fields_for :tasks do |tf|
-	        == render 'task_fields', f: tf
-		tr 
-	          td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
+	  .row class="white-background"
+
+		  table class="tasks-on-project " border="1" id="tasklist"
+		    thead
+		      tr 
+		        td Code
+		        td Description
+		    tbody
+		      = f.fields_for :tasks do |tf|
+		        == render 'task_fields', f: tf
+			tr 
+		          td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
 	  
 	
-	
-	  h1 Users On The Project
-	  table
-	    thead
-	      tr
-	        th User
-	        th Email
-	        th Active
-	    tbody
-	      - @users_on_project.each_with_index do |uop|
-	        -if uop.project_id == params[:id].to_i
-	          tr
-	            td
-	              = link_to uop.first_name, "/projects/#{uop.project_id}/user_time_report?user_id=#{uop.id}", class: "user-time-report"
-	
-	            td
-	              = uop.email
-	            td
-	              = check_box_tag "test", uop.id, true, class: "add-user-to-project"
-	        -else
-	          tr
-	            td
-	              = uop.first_name
-	            td
-	              = uop.email
-	            td
-	              = check_box_tag "test", uop.id, false,class: "add-user-to-project"
-	              
-	  h1 Proxy Users
-	  
-	  = select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
+		  h1 class="users-on-project" Users On The Project
+		  table class="users-on-project"
+		    thead
+		      tr
+		        th User
+		        th Email
+		        th Active
+		    tbody
+		      - @users_on_project.each_with_index do |uop,i|
+		        -if uop.project_id == @project_id.to_i
+		          tr
+		
+		            td
+		              = link_to uop.first_name, "/projects/#{uop.project_id}/user_time_report?user_id=#{uop.id}", class: "user-time-report"
+		
+		            td
+		              = uop.email
+		            td
+		              = check_box_tag "test", uop.id, true, class: "add-user-to-project"
+		              = hidden_field_tag "add_user_#{i}", @project.id
+		        -else
+		          tr
+		            td
+		              = uop.first_name
+		            td
+		              = uop.email
+		            td
+		              = check_box_tag "test", uop.id, false,class: "add-user-to-project"
+		              = hidden_field_tag "add_user_#{i}", @project.id
 	
 	
 	  h1 Time Sheets Submitted for Approval
@@ -93,6 +90,7 @@ div.tabs-content
 	          td
 	            = at.end_date.strftime('%Y-%m-%d')
 	          td
+	          	= hidden_field_tag "project_id_#{i}", @project.id
 	            = button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {reveal_id: "showHours"}
 	
 	          td = link_to "Approve","/projects/#{@project.id}/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
@@ -138,8 +136,50 @@ div.tabs-content
 			  		.actions = f.submit
 
 
+table 
+		thead
+			tr
+				th
+					h1  Proxy Users
+		tbody
+			tr
+				th
+					= select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
 
+.(class="row white-background")
+	table class="users-on-project"
+	  thead
+	    tr
+	      th
+	        h4.center Invite Users
+	  tbody
+	    tr
+	      th
+	        = simple_form_for(User.new, url: user_invitation_path, html: {class: 'form-inline'}) do |f|
+	          = f.input :email, placeholder: 'Email', label: "Email", class: "invitation_email"
+	          = f.hidden_field :project_id, value: @project_id
+	          = f.hidden_field :invited_by_id, value:  @current_user_id
+	          = f.label :body, label: 'Employment Type' 
+	          = f.select :employment_type, options_from_collection_for_select(EmploymentType.all, :id, :name)
+	          .actions = f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'
 
+	h1 class="tasks-on-project" Pending Users 
+	table class="tasks-on-project"
+	  thead
+	    tr
+	      th User Email
+	      th Invitation Sent At
+	      th
+	
+	
+	  tbody
+	    - @invited_users.each do |user|
+	      - if user.invitation_accepted_at.nil?
+	        tr
+	          td
+	            = user.email
+	          td
+	            = user.invitation_sent_at
+	          td
+	            .actions = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 
-
-  

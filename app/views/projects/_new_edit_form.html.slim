@@ -1,0 +1,14 @@
+
+
+== render 'form'
+
+= link_to 'Back', projects_path
+br
+= link_to 'Report', "/show_project_reports?id=#{@project.id}", :method => :get,class: "center"
+br
+- if @project.inactive == false || @project.inactive == nil
+	= button_to 'Deactivate', "/projects/#{@project.id}/deactivate_project", :method => :post, class: "center"
+- elsif @project.inactive == true
+  = button_to 'Reactivate', "/projects/#{@project.id}/reactivate_project", :method => :post, class: "center"
+br
+= link_to "Manage Customers", "customers" if user_represents_customers(current_user) || (can? :manage, Customer)

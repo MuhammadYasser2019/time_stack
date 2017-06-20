@@ -1,36 +1,53 @@
 .white-background
-	h1 Listing projects
-	
-	table
-	  thead
-	    tr
-	      th Name
-	      th Customer
-	      th Inactive?
-	      th
-	      th
-	      -if current_user.admin || current_user.cm
-	      	th
-	
-	  tbody
-	    - @projects.each do |project|
-	      tr
-	        td = project.name
-	        td = project.customer.name if !project.customer.nil?
-            td
-              - if project.inactive == true
-                span Yes
-              - elsif project.inactive == false || project.inactive == nil
-                span No
-	        td = link_to 'Manage', edit_project_path(project)
-	        td = link_to 'Report', "/show_project_reports?id=#{project.id}", :method => :get
-	        -if current_user.admin || current_user.cm
-	        	td
-                  - if project.inactive == false || project.inactive == nil
-                   = link_to 'Deactivate', "/projects/#{project.id}/deactivate_project", :method => :post
-                  - elsif project.inactive == true
-                   = link_to 'Reactivate', "/projects/#{project.id}/reactivate_project", :method => :post
-	
+	.row
+		h1 Listing projects
+		
+		table class="users-on-project"
+		  thead
+		    tr
+		      th Name
+		      th Customer
+		      th Inactive?
+		      th
+		      -if current_user.admin || current_user.cm
+		      	th
+		
+		  tbody
+		    - @projects.each_with_index do |project,i|
+		      tr
+		        td = project.name
+		        td = project.customer.name if !project.customer.nil?
+	            td
+	              - if project.inactive == true
+	                span Yes
+	              - elsif project.inactive == false || project.inactive == nil
+	                span No
+		        - if "#{i}" == "0"
+		        	td = radio_button_tag("project",project.id, true, class:"select-project")
+		        - else
+		        	td = radio_button_tag("project",project.id, false,class:"select-project")
+		        td = link_to 'Manage', edit_project_path(project)
+		h1 class="tasks-on-project" Enter And Manage Time
+		table
+		  thead
+		    tr
+		      th Start date
+		      th End date
+		      th Status
+		      th Report
+		
+		      
+		  tbody
+		    - @weeks.each do |week|
+		      tr
+		        td = week.start_date.strftime('%Y-%m-%d')
+		        td = week.end_date.strftime('%Y-%m-%d')
+		        td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
+				td = link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
 	br
 	.row
-		= link_to 'New Project', new_project_path, class:"orange-button"
+		= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_project_path)
+
+.(id="dynamic_projects")
+	== render 'new_edit_form'
+
