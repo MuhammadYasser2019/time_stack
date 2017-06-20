@@ -2,7 +2,7 @@
 	.row
 		h1 Listing projects
 		
-		table class="users-on-project"
+		table class="left-row"
 		  thead
 		    tr
 		      th Name
@@ -27,7 +27,7 @@
 		        - else
 		        	td = radio_button_tag("project",project.id, false,class:"select-project")
 		        td = link_to 'Manage', edit_project_path(project)
-		h1 class="tasks-on-project" Enter And Manage Time
+		h1 class="right-row" Enter And Manage Time
 		table
 		  thead
 		    tr
