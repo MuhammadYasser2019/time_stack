@@ -44,4 +44,12 @@ module WeeksHelper
       return true
     end  
   end
+
+	def user_have_adhoc_permission(current_user)
+		if Project.where(adhoc_pm_id: current_user.id).count > 0
+			return true
+		else
+			return false
+		end
+	end
 end
