@@ -28,7 +28,7 @@ class Ability
       if user.pm
        can :manage, TimeEntry
        can :manage, Task
-       can [:read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve], Project
+       can [:read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve, :add_adhoc_pm], Project
        can [:new, :create, :edit, :update], :update, Week
       end
       if user.proxy
