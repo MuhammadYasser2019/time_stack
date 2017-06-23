@@ -27,6 +27,8 @@ Rails.application.routes.draw do
   root 'weeks#index'
   get 'weeks/:id/report' => 'weeks#report'
 
+  get '/dynamic_project_update' => 'projects#dynamic_project_update'
+
   get 'projects/:id/approve/:week_id/:row_id' => 'projects#approve'
   get 'projects/:id/reject/:week_id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
