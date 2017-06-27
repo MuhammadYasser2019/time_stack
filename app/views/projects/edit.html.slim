@@ -75,8 +75,8 @@
 			      td
 							= @adhoc_pm.email
 			      td 
-							= @project.adhoc_start_date
+							= @project.adhoc_start_date.to_date
 			      td
-							= @project.adhoc_end_date
+							= @project.adhoc_end_date.to_date
 
 	= link_to 'Back', projects_path
