@@ -7,6 +7,14 @@ class WeeksController < ApplicationController
     @projects =  Project.all
     #@weeks = Week.includes("user_week_statuses").where("user_week_statuses.user_id =  ?", current_user.id)
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(10)
+    @projects.each do |p|
+      if p.adhoc_pm_id.present? && p.adhoc_end_date.to_s(:db) < Time.now.to_s(:db)
+				p.adhoc_pm_id = nil
+				p.adhoc_start_date = nil
+				p.adhoc_end_date = nil
+				p.save
+      end
+    end
   end
 
   # GET /weeks/1
