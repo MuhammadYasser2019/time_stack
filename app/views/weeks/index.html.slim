@@ -28,11 +28,13 @@
 	      td
 	      td
 	      td
+	    tr 
+	      td = link_to "Manage Projects", "projects" if user_represents_projects(current_user) || (can? :manage, Project)
+	      td
+	      td
+	      td
 	    tr
-        - if (user_represents_projects(current_user)) || (can? :manage, Project)
-          td = link_to "Manage Projects", "projects"
-        - elsif user_have_adhoc_permission(current_user)
-          td = link_to "Adhoc PM", "projects"
+	      td = link_to "Adhoc PM", "projects" if (current_user.pm || current_user.cm) && user_have_adhoc_permission(current_user)
 	      td
 	      td
 	      td
