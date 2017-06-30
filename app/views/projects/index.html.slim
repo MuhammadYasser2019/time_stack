@@ -1,6 +1,6 @@
 .white-background
 	h1 Listing projects
-	- if user_have_adhoc_permission(current_user)
+	- if params["adhoc"] == "true" && user_have_adhoc_permission(current_user)
 	  table
 	    thead
 	      tr

@@ -34,7 +34,7 @@
 	      td
 	      td
 	    tr
-	      td = link_to "Adhoc PM", "projects" if user_have_adhoc_permission(current_user)
+	      td = link_to "Adhoc PM", projects_path(adhoc: true) if user_have_adhoc_permission(current_user)
 	      td
 	      td
 	      td
