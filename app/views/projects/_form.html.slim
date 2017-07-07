@@ -69,14 +69,14 @@ ul(class="tabs" data-tab style="margin: 0 0 0 28%;")
 					= f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
 				table border="1" id="tasklist"
 					thead
-					  tr 
-					    td Code
-					    td Description
+						tr 
+							td Code
+							td Description
 					tbody
-					  = f.fields_for :tasks do |tf|
-					    == render 'task_fields', f: tf
-				tr 
-					      td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
+						= f.fields_for :tasks do |tf|
+							== render 'task_fields', f: tf
+						tr
+							td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
 			
 	
 	
