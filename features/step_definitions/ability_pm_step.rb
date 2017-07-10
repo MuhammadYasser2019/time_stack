@@ -41,7 +41,7 @@ end
 
 Then(/^Should see "([^"]*)" and link to the project$/) do |listing_projects|
   page.should have_content(listing_projects)
-  expect(page).to have_link('Time Entries', href: '/projects/1/edit')
+  expect(page).to have_link('Manage', href: '/projects/1/edit')
 end
 
 Then(/^User should see "([^"]*)"$/) do |not_allowed|
@@ -55,7 +55,7 @@ end
 
 
 Then(/^click the project link$/) do
-  page.click_link('Time Entries')
+  page.click_link('Manage')
 end
 
 Then(/^Text "([^"]*)" should be present$/) do |editing_project|
@@ -93,3 +93,9 @@ Then(/^Fill the code and description of the task$/) do
   # page.click_link("Add Task")
   # expect(page).to have_css('task-code')
 end
+
+
+Then(/^User should see label "([^"]*)"$/) do |arg1|
+  page.should have_content(arg1) # Write code here that turns the phrase above into concrete actions
+end
+
