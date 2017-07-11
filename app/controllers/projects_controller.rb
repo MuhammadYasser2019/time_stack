@@ -5,6 +5,7 @@ class ProjectsController < ApplicationController
   # GET /projects.json
   def index
     @projects = Project.where(user_id: current_user.id)
+    @adhoc_pm_project = Project.where(adhoc_pm_id: current_user.id)
   end
 
   # GET /projects/1
@@ -37,6 +38,7 @@ class ProjectsController < ApplicationController
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
     @holiday_exception = HolidayException.new
     @holiday_exceptions = @project.holiday_exceptions
+    @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
   end
 
   # POST /projects
@@ -219,6 +221,23 @@ class ProjectsController < ApplicationController
     @project = Project.find(params[:id])
     @project.update(inactive: 0)
     redirect_to projects_path
+  end
+  
+  def add_adhoc_pm
+		@project = Project.find(params[:id])
+		@adhoc_pm = @project.adhoc_pm_id
+		@user = User.find(params[:adhoc_pm_id])
+		if @adhoc_pm.present? && @adhoc_pm != @user.id
+			@project.adhoc_pm_id = nil
+			@project.adhoc_start_date = nil
+			@project.adhoc_end_date = nil
+			@project.save
+		end
+		@project.adhoc_pm_id = params[:adhoc_pm_id]
+		@project.adhoc_start_date = params[:adhoc_start_date]
+		@project.adhoc_end_date = params[:adhoc_end_date]
+		@project.save
+		redirect_to projects_path
   end
 
   private

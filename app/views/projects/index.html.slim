@@ -1,36 +1,57 @@
 .white-background
 	h1 Listing projects
-	
-	table
-	  thead
-	    tr
-	      th Name
-	      th Customer
-	      th Inactive?
-	      th
-	      th
-	      -if current_user.admin || current_user.cm
-	      	th
-	
-	  tbody
-	    - @projects.each do |project|
+	- if params["adhoc"] == "true" && user_have_adhoc_permission(current_user)
+	  table
+	    thead
 	      tr
-	        td = project.name
-	        td = project.customer.name if !project.customer.nil?
-            td
-              - if project.inactive == true
-                span Yes
-              - elsif project.inactive == false || project.inactive == nil
-                span No
-	        td = link_to 'Manage', edit_project_path(project)
-	        td = link_to 'Report', "/show_project_reports?id=#{project.id}", :method => :get
-	        -if current_user.admin || current_user.cm
-	        	td
-                  - if project.inactive == false || project.inactive == nil
-                   = link_to 'Deactivate', "/projects/#{project.id}/deactivate_project", :method => :post
-                  - elsif project.inactive == true
-                   = link_to 'Reactivate', "/projects/#{project.id}/reactivate_project", :method => :post
-	
-	br
-	.row
-		= link_to 'New Project', new_project_path, class:"orange-button"
+	        th Name
+	        th Customer
+	        th Inactive?
+	        th
+	      
+	    tbody
+	    - @adhoc_pm_project.each do |project|
+	      tr
+	      	td = project.name
+	      	td = project.customer.name if !project.customer.nil?
+        	td
+						- if project.inactive == true
+							span Yes
+						- elsif project.inactive == false || project.inactive == nil
+							span No
+						td = link_to 'Manage', edit_project_path(project)
+	        
+  	- else
+		table
+			thead
+			  tr
+			    th Name
+			    th Customer
+			    th Inactive?
+			    th
+			    th
+			    -if current_user.admin || current_user.cm
+			    	th
+
+			tbody
+			  - @projects.each do |project|
+			    tr
+						td = project.name
+						td = project.customer.name if !project.customer.nil?
+							td
+								- if project.inactive == true
+									span Yes
+								- elsif project.inactive == false || project.inactive == nil
+									span No
+						td = link_to 'Manage', edit_project_path(project)
+						td = link_to 'Report', "/show_project_reports?id=#{project.id}", :method => :get
+						-if current_user.admin || current_user.cm
+							td
+									  - if project.inactive == false || project.inactive == nil
+									   = link_to 'Deactivate', "/projects/#{project.id}/deactivate_project", :method => :post
+									  - elsif project.inactive == true
+									   = link_to 'Reactivate', "/projects/#{project.id}/reactivate_project", :method => :post
+
+		br
+		.row
+			= link_to 'New Project', new_project_path, class:"orange-button"

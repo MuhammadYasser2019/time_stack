@@ -1,141 +1,185 @@
 ul(class="tabs" data-tab style="margin: 0 0 0 28%;")
- - unless current_page?(action: 'new')
-  li class="tab-title active"
-  	a href="#information" Project Information
-  li class="tab-title"
-  	a href="#holidays" Holiday Exceptions
-div.tabs-content
- div class="content active" id="information"
-  .white-background
-    
-	div class= "display-text"
-	= form_for @project do |f|
-	  - if @project.errors.any?
-	    #error_explanation
-	      h2 = "#{pluralize(@project.errors.count, "error")} prohibited this project from being saved:"
-	      ul
-	        - @project.errors.full_messages.each do |message|
-	          li = message
-	  h1 Editing project
-	  .field
-	    = f.label :name
-	    = f.text_field :name
-	  .field
-	    = f.label :customer
-	    = f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
-	  table border="1" id="tasklist"
-	    thead
-	      tr 
-	        td Code
-	        td Description
-	    tbody
-	      = f.fields_for :tasks do |tf|
-	        == render 'task_fields', f: tf
-		tr 
-	          td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
-	  
-	
-	
-	  h1 Users On The Project
-	  table
-	    thead
-	      tr
-	        th User
-	        th Email
-	        th Active
-	    tbody
-	      - @users_on_project.each_with_index do |uop|
-	        -if uop.project_id == params[:id].to_i
-	          tr
-	            td
-	              = link_to uop.first_name, "/projects/#{uop.project_id}/user_time_report?user_id=#{uop.id}", class: "user-time-report"
-	
-	            td
-	              = uop.email
-	            td
-	              = check_box_tag "test", uop.id, true, class: "add-user-to-project"
-	        -else
-	          tr
-	            td
-	              = uop.first_name
-	            td
-	              = uop.email
-	            td
-	              = check_box_tag "test", uop.id, false,class: "add-user-to-project"
-	              
-	  h1 Proxy Users
-	  
-	  = select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
-	
-	
-	  h1 Time Sheets Submitted for Approval
-	  table
-	    thead
-	      tr
-	        th Employee
-	        th Start date
-	        th End date
-	        th Hours
-	        th
-	        th
-	        th
-	        th
-	
-	    tbody
-	      - @applicable_week.each_with_index do |at, i|
-	        tr id = "#{i}"
-	          td
-	            = hidden_field_tag "week_id_#{i}", at.id
-	            = hidden_field_tag "user_id_#{i}", at.user_id
-	            = User.find(at.user_id).email
-	          td
-	            = at.start_date.strftime('%Y-%m-%d')
-	          td
-	            = at.end_date.strftime('%Y-%m-%d')
-	          td
-	            = button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {reveal_id: "showHours"}
-	
-	          td = link_to "Approve","/projects/#{@project.id}/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
-	          /td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
-	          td
-	            = button_tag "Reject", class: "reject_class alert tiny", id:"time_reject_#{i}" , type: "button", remote: true
-	          td
-	            = button_tag "Add Comment to Reject", class: "add_comment secondary tiny", id: "add_comment_#{i}", type: "button"
-	          td
-	            = text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
-	
-	  div class = "approval-class"
-	   div(id="showHours" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
-	  .actions = f.submit
- div class="content" id="holidays"
+ - if !user_have_adhoc_permission(current_user)
   - unless current_page?(action: 'new')
-   div.row
-		  h2.text-center(Holidays Setup)
-		  br
-		  br
-		  - if @holidays.any?
-		   
-		    - @holiday_exceptions.each do |h|
-		     .white-background
-			     h4.text-center Holiday Exceptions
-			     .row
-			  		  .small-3.columns.text-center =("#{User.find(h.user_id).first_name} #{User.find(h.user_id).last_name}")
-				  	  .small-6.columns.text-center = h.holiday_ids.count
-				  	  .small-2.columns.text-center = link_to "Edit", edit_holiday_exception_path(h)
-				  	  .small-1.columns
-			.white-background 	  
-				h4.text-center New Holiday Exception
-	            = form_for @holiday_exception do |f|
-			  		= f.select :user_id, @users_on_project.collect { |m| [ m.first_name, m.id ] }, include_blank: true
-			  		= f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name, include_hidden: false) do |h|
-			  		 .row
-			  		  .small-3.columns.text-center = h.check_box
-				  	  .small-3.columns.text-center = h.object.name
-				  	  .small-3.columns.text-center = h.object.date.strftime("%m-%d-%y")
-				  	  .small-3.columns
-			  		= f.hidden_field :customer_id, value: @customer.id
-			  		= f.hidden_field :project_id, value: @project.id
-			  		.actions = f.submit
+   li class="tab-title active"
+  	 a href="#information" Project Information
+   li class="tab-title"
+  	 a href="#holidays" Holiday Exceptions
+- if user_have_adhoc_permission(current_user)
+ div.tabs-content
+	 div class="content active" id="information"
+		.white-background
+	
+	 		h1 Time Sheets Submitted for Approval
+			table
+				thead
+					tr
+						th Employee
+						th Start date
+						th End date
+						th Hours
+						th
+						th
+						th
+						th
+
+				tbody
+					- @applicable_week.each_with_index do |at, i|
+						tr id = "#{i}"
+							td
+								= hidden_field_tag "week_id_#{i}", at.id
+								= hidden_field_tag "user_id_#{i}", at.user_id
+								= User.find(at.user_id).email
+							td
+								= at.start_date.strftime('%Y-%m-%d')
+							td
+								= at.end_date.strftime('%Y-%m-%d')
+							td
+								= button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {reveal_id: "showHours"}
+
+							td = link_to "Approve","/projects/#{@project.id}/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
+							/td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
+							td
+								= button_tag "Reject", class: "reject_class alert tiny", id:"time_reject_#{i}" , type: "button", remote: true
+							td
+								= button_tag "Add Comment to Reject", class: "add_comment secondary tiny", id: "add_comment_#{i}", type: "button"
+							td
+								= text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
+
+
+- else
+ div.tabs-content
+	 div class="content active" id="information"
+		.white-background
+		  
+			div class= "display-text"
+			= form_for @project do |f|
+				- if @project.errors.any?
+					#error_explanation
+					  h2 = "#{pluralize(@project.errors.count, "error")} prohibited this project from being saved:"
+					  ul
+					    - @project.errors.full_messages.each do |message|
+					      li = message
+				h1 Editing project
+				.field
+					= f.label :name
+					= f.text_field :name
+				.field
+					= f.label :customer
+					= f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
+				table border="1" id="tasklist"
+					thead
+						tr 
+							td Code
+							td Description
+					tbody
+						= f.fields_for :tasks do |tf|
+							== render 'task_fields', f: tf
+						tr
+							td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
+			
+	
+	
+				h1 Users On The Project
+				table
+					thead
+					  tr
+					    th User
+					    th Email
+					    th Active
+					tbody
+					  - @users_on_project.each_with_index do |uop|
+					    -if uop.project_id == params[:id].to_i
+					      tr
+					        td
+					          = link_to uop.first_name, "/projects/#{uop.project_id}/user_time_report?user_id=#{uop.id}", class: "user-time-report"
+	
+					        td
+					          = uop.email
+					        td
+					          = check_box_tag "test", uop.id, true, class: "add-user-to-project"
+					    -else
+					      tr
+					        td
+					          = uop.first_name
+					        td
+					          = uop.email
+					        td
+					          = check_box_tag "test", uop.id, false,class: "add-user-to-project"
+					          
+				h1 Proxy Users
+			
+				= select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
+	
+	
+				h1 Time Sheets Submitted for Approval
+				table
+					thead
+					  tr
+					    th Employee
+					    th Start date
+					    th End date
+					    th Hours
+					    th
+					    th
+					    th
+					    th
+	
+					tbody
+					  - @applicable_week.each_with_index do |at, i|
+					    tr id = "#{i}"
+					      td
+					        = hidden_field_tag "week_id_#{i}", at.id
+					        = hidden_field_tag "user_id_#{i}", at.user_id
+					        = User.find(at.user_id).email
+					      td
+					        = at.start_date.strftime('%Y-%m-%d')
+					      td
+					        = at.end_date.strftime('%Y-%m-%d')
+					      td
+					        = button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {reveal_id: "showHours"}
+	
+					      td = link_to "Approve","/projects/#{@project.id}/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
+					      /td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
+					      td
+					        = button_tag "Reject", class: "reject_class alert tiny", id:"time_reject_#{i}" , type: "button", remote: true
+					      td
+					        = button_tag "Add Comment to Reject", class: "add_comment secondary tiny", id: "add_comment_#{i}", type: "button"
+					      td
+					        = text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
+	
+				div class = "approval-class"
+				 div(id="showHours" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
+				.actions = f.submit
+	 div class="content" id="holidays"
+		- unless current_page?(action: 'new')
+		 div.row
+				h2.text-center(Holidays Setup)
+				br
+				br
+				- if @holidays.any?
+				 
+				  - @holiday_exceptions.each do |h|
+				   .white-background
+					   h4.text-center Holiday Exceptions
+					   .row
+							  .small-3.columns.text-center =("#{User.find(h.user_id).first_name} #{User.find(h.user_id).last_name}")
+							  .small-6.columns.text-center = h.holiday_ids.count
+							  .small-2.columns.text-center = link_to "Edit", edit_holiday_exception_path(h)
+							  .small-1.columns
+				  .white-background 	  
+						h4.text-center New Holiday Exception
+					        = form_for @holiday_exception do |f|
+								= f.select :user_id, @users_on_project.collect { |m| [ m.first_name, m.id ] }, include_blank: true
+								= f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name, include_hidden: false) do |h|
+								 .row
+									.small-3.columns.text-center = h.check_box
+									.small-3.columns.text-center = h.object.name
+									.small-3.columns.text-center = h.object.date.strftime("%m-%d-%y")
+									.small-3.columns
+								= f.hidden_field :customer_id, value: @customer.id
+								= f.hidden_field :project_id, value: @project.id
+								.actions = f.submit
 
 
 

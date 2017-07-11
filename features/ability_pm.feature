@@ -26,8 +26,8 @@ Feature: Testing abilities of a User with PM role
     Then User should see link to "New Project"
     Then User clicks on New Project link
     Then User should see "You are not allowed to access this page."
-    Then User clicks on "Destroy" link
-    Then User should see "You are not allowed to access this page."
+    #Then User clicks on "Deactivate" link
+    #Then User should see "You are not allowed to access this page."
 
 
   Scenario: 13) 14) 4) With PM roles user should be able to Edit Projects and Edit Tasks #####and Approve/Reject timesheets.
@@ -58,3 +58,15 @@ Feature: Testing abilities of a User with PM role
     Given PM logs in with "Email" and "Password"
     Then Go to customers page
     Then User should see "You are not allowed to access this page."
+
+
+  Scenario: With Pm roles user should be able to assign adhoc PM
+    Given I am a project manager
+    Given PM logs in with "Email" and "Password"
+    And click on the "Manage Projects"
+    Then Should see "Listing projects" and link to the project
+    And click the project link
+    And Text "Editing project" should be present
+    Then User should see label "Adhoc Project Manager"
+   
+

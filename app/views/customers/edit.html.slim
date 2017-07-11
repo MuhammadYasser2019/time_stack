@@ -72,6 +72,52 @@
 		            = user.invitation_sent_at
 		          td
 		            .actions = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
+
+	.white-background
+		h1 Adhoc Project Manager
+		= form_tag add_adhoc_pm_by_cm_path,id: "adhoc_pm_form", method: :post
+			table
+				thead
+					tr
+						th Project
+						th User Email
+						th Start Date
+						th End Date
+						th
+
+
+				tbody
+					tr
+						td
+							= select_tag :pm_project_id, options_from_collection_for_select(Project.all, "id", "name"), include_blank: true, class: "pm_project_id"
+						td
+							= select_tag :adhoc_pm_id, options_from_collection_for_select(ProjectsUser.where(project_id: params[:id]), "id", "name"), :include_blank => true
+							
+						td
+							= date_field_tag 'adhoc_start_date', params[:adhoc_start_date], {required: "required"}
+						td
+							= date_field_tag 'adhoc_end_date', params[:adhoc_end_date], {required: "required"}
+						td
+							= submit_tag 'Assign PM'
+
+	.white-background
+		h1 Assigned Adhoc PM
+		table
+		  thead
+		    tr
+					th Project
+					th User Email
+					th Start Date
+					th End Date
+			tbody
+				- @adhoc_projects.each do |p|
+					tr
+						td = p.name
+						td = User.where(id: p.adhoc_pm_id).first.email
+						td = p.adhoc_start_date
+						td = p.adhoc_end_date	
+
+			
 	= link_to 'Set Theme', "/customers/#{params[:id]}/theme", class: "orange-button"
 	br
 	= link_to 'Back to Customer List', customers_path, class: "orange-button"
