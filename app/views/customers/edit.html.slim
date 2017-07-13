@@ -91,7 +91,7 @@
 						td
 							= select_tag :pm_project_id, options_from_collection_for_select(Project.all, "id", "name"), include_blank: true, class: "pm_project_id"
 						td
-							= select_tag :adhoc_pm_id, options_from_collection_for_select(ProjectsUser.where(project_id: params[:id]), "id", "name"), :include_blank => true
+							= select_tag :adhoc_pm_id, "", :include_blank => true,required: "required"
 							
 						td
 							= date_field_tag 'adhoc_start_date', params[:adhoc_start_date], {required: "required"}
