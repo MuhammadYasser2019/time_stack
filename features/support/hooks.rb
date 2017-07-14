@@ -27,6 +27,7 @@ module TestDataSetupHelper
   def create_project
     p = Project.new
     p.id = 1
+    p.customer_id = 1
     p.name = "Time Entries"
     p.user_id = 1
     p.save
@@ -47,6 +48,7 @@ module TestDataSetupHelper
   def create_customers
     c = Customer.new
     c.id = 1
+    c.user_id =1
     c.name = "Test"
     c.address = "Test"
     c.city = "Herndon"
@@ -67,9 +69,8 @@ module TestDataSetupHelper
     create_task
     create_week
     create_status
-    create_project
     create_customers
-
+    create_project
   end
 
 
@@ -86,8 +87,9 @@ module TestDataSetupHelper
     create_task
     create_week
     create_status
-    create_project
     create_customers
+    create_project
+    
   end
 
   def create_user

@@ -40,7 +40,7 @@ Feature: Testing abilities of a User with CM role
     Given I am a customer manager
     Given CM logs in with "Email" and "Password"
     Then Go to customers page
-    Then Shoud see "Listing customers" and "Edit" link for customer
+    Then Shoud see "Listing customers" and "Manage" link for customer
     Then Click on the edit link to edit the customer
     Then You should see "Editing customer"
     And Go to customers page
@@ -55,6 +55,6 @@ Feature: Testing abilities of a User with CM role
     Given CM logs in with "Email" and "Password"
     Given User is on Weeks index
     And click on the "Manage Projects"
-    Then Should see link to "Time Entries"
-    Then User clicks on "Destroy" link
-    Then User should not see link to "Time Entries"
+    Then Should see link to "Manage"
+    Then User clicks on "Deactivate" link
+    Then User should see "Reactivate" link

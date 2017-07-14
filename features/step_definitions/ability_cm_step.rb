@@ -27,17 +27,17 @@ end
 
 Then(/^Shoud see "([^"]*)" and "([^"]*)" link for customer$/) do |customer_heading, edit_customer_link|
   expect(page).to have_content(customer_heading)
-  expect(page).to have_link(edit_customer_link)
+  expect(page).to have_link(edit_customer_link, href: '/customers/1/edit')
 end
 
 Then(/^Click on the edit link to edit the customer$/) do
-  page.click_link("Edit" , href: "/customers/1/edit" )
+  page.click_link("Manage" , href: "/customers/1/edit" )
 end
 
 Then(/^You should see "([^"]*)"$/) do |customer_editing_heading|
   expect(page).to have_content(customer_editing_heading)
   expect(find_field('Name').value).to eq ("Test")
-end
+end																																			
 
 Then(/^click on "([^"]*)" for a customer$/) do |destroy_customer_link|
   page.click_link(destroy_customer_link, href: "/customers/1")
@@ -51,8 +51,8 @@ end
 Then(/^Should see link to "([^"]*)"$/) do |project_name|
   expect(page).to have_content(project_name)
   expect(page).to have_link(project_name, href: "/projects/1/edit")
-end
+end																																																																																																																																																																																																																																																																															
 
-Then(/^User should not see link to "([^"]*)"$/) do |project_name|
-  expect(page).to have_no_link(project_name)
+Then(/^User should see "([^"]*)" link$/) do |project_name|
+  expect(page).to have_link(project_name, href: "/projects/1/reactivate_project")
 end
