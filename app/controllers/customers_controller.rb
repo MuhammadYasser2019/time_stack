@@ -33,6 +33,7 @@ class CustomersController < ApplicationController
     # @users= User.all
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:id], "Requested")
+    @adhoc_projects = Project.where("adhoc_pm_id is not null")
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
     logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
   end
@@ -286,7 +287,35 @@ class CustomersController < ApplicationController
 
     end
   end
-  
+
+  def add_adhoc_pm_by_cm
+	@customer = Customer.find(params[:id])
+	@project = Project.find(params[:pm_project_id])
+	@adhoc_pm = @project.adhoc_pm_id
+	@user = User.find(params[:adhoc_pm_id])
+	if @adhoc_pm.present? && @adhoc_pm != @user.id
+		@project.adhoc_pm_id = nil
+		@project.adhoc_start_date = nil
+		@project.adhoc_end_date = nil
+		@project.save
+	end
+	@project.adhoc_pm_id = params[:adhoc_pm_id]
+	@project.adhoc_start_date = params[:adhoc_start_date]
+	@project.adhoc_end_date = params[:adhoc_end_date]
+	@project.save
+	redirect_to customers_path
+  end
+
+  def available_users
+    logger.debug "available_users - starting to process, params passed  are #{params[:id]}"
+    project_id  = params[:id]
+    project = Project.find params[:id]	
+    
+    @users = project.users
+    logger.debug "available_users - leaving  @users is #{@users}"
+    
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_customer

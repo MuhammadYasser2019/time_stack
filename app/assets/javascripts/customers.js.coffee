@@ -2,6 +2,29 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ($) ->
+	$("tbody").on("change", ".pm_project_id", ->
+		console.log "Inside project change" + $(this).attr('id') +  " the value selected is " + $(this).val()    
+		user_select_id = "adhoc_pm_id"
+		tr = $(this).parent().parent("tr")
+		console.log("tr: " + tr)
+		build_users(user_select_id, $(this).val())
+	)
+    
+	build_users = (user_id, project_id) ->
+		$('#'+user_id).find('option').remove()
+		console.log "Inside  build_tasks  " +  user_id +  "  " + project_id
+		my_url = '/available_users/'+project_id
+		$.ajax my_url,
+		data: {}
+		type: 'GET'
+		dataType: 'json'
+		success: (data, textStatus, jqXHR) ->
+			$my_data = data
+			console.log "data is  " + data.length + " my_data is  " + $my_data.length
+			for item in $my_data
+				console.log "data is "+item.code + "  "  + item.description
+				$('#'+user_id).append($("<option></option>").attr("value",item.id).text(item.email))
+
   $('#report').hide()
 
   parse_row_id = (attr_val) ->

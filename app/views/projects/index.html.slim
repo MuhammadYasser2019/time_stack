@@ -1,53 +1,77 @@
 .white-background
 	.row
-		h1 Listing projects
-		
-		table class="left-row"
-		  thead
-		    tr
-		      th Name
-		      th Customer
-		      th Inactive?
-		      th
-		      -if current_user.admin || current_user.cm
-		      	th
-		
-		  tbody
-		    - @projects.each_with_index do |project,i|
-		      tr
-		        td = project.name
-		        td = project.customer.name if !project.customer.nil?
-	            td
-	              - if project.inactive == true
-	                span Yes
-	              - elsif project.inactive == false || project.inactive == nil
-	                span No
-		        - if "#{i}" == "0"
-		        	td = radio_button_tag("project",project.id, true, class:"select-project")
-		        - else
-		        	td = radio_button_tag("project",project.id, false,class:"select-project")
-		        td = link_to 'Manage', edit_project_path(project)
-		h1 class="right-row" Enter And Manage Time
-		table
-		  thead
-		    tr
-		      th Start date
-		      th End date
-		      th Status
-		      th Report
-		
-		      
-		  tbody
-		    - @weeks.each do |week|
-		      tr
-		        td = week.start_date.strftime('%Y-%m-%d')
-		        td = week.end_date.strftime('%Y-%m-%d')
-		        td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
-				td = link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
+		- if params["adhoc"] == "true" && user_have_adhoc_permission(current_user)
+			.left-row
+				h1 Listing projects				
+				table
+					thead
+						tr
+						  th Name
+						  th Customer
+						  th Inactive?
+						  th
+						
+					tbody
+					- @adhoc_pm_project.each do |project|
+						tr
+							td = project.name
+							td = project.customer.name if !project.customer.nil?
+					  	td
+								- if project.inactive == true
+									span Yes
+								- elsif project.inactive == false || project.inactive == nil
+									span No
+								td = link_to 'Manage', edit_project_path(project)
+			      
+		- else
+			.left-row
+				h1 Listing projects
+				table
+					thead
+						tr
+							th Name
+							th Customer
+							th Inactive?
+							th
+							-if current_user.admin || current_user.cm
+								th
+
+					tbody
+						- @projects.each_with_index do |project,i|
+							tr
+								td = project.name
+								td = project.customer.name if !project.customer.nil?
+									td
+										- if project.inactive == true
+										  span Yes
+										- elsif project.inactive == false || project.inactive == nil
+										  span No
+								- if "#{i}" == "0"
+									td = radio_button_tag("project",project.id, true, class:"select-project")
+								- else
+									td = radio_button_tag("project",project.id, false,class:"select-project")
+								td = link_to 'Manage', edit_project_path(project)
+			.right-row		
+				h1 Enter And Manage Time
+				table
+					thead
+						tr
+							th Start date
+							th End date
+							th Status
+							th Report		
+					tbody
+					- @weeks.each do |week|
+						tr
+							td = week.start_date.strftime('%Y-%m-%d')
+							td = week.end_date.strftime('%Y-%m-%d')
+							td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
+							td= link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
+							
 	br
 	.row
 		= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_project_path)
 
 .(id="dynamic_projects")
-	== render 'new_edit_form'
+== render 'new_edit_form'
 

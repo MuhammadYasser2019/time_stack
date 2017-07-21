@@ -32,6 +32,18 @@ module TestDataSetupHelper
     p.save
   end
 
+  def create_adhoc_pm
+    p = Project.new
+    p.id = 1
+    p.name = "Time Entries"
+    p.user_id = 1
+    p.adhoc_pm_id = 1
+    p.adhoc_start_date = Time.now.to_s
+    p.adhoc_end_date = (Time.now+1.day).to_s
+    p.save
+
+  end
+
   def create_customers
     c = Customer.new
     c.id = 1

@@ -1,14 +1,56 @@
 h1 #{@project.name}
-ul(class="tabs center" data-tab style="margin: 0 0 0 40%;")
- - unless current_page?(action: 'new')
-  li class="tab-title active"
-  	a href="#information" Project Information
-  li class="tab-title"
-  	a href="#holidays" Holiday Exceptions
+ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
+ - if !user_have_adhoc_permission(current_user)
+  - unless current_page?(action: 'new')
+   li class="tab-title active"
+  	 a href="#information" Project Information
+   li class="tab-title"
+  	 a href="#holidays" Holiday Exceptions
+- if user_have_adhoc_permission(current_user)
+ div.tabs-content
+	 div class="content active" id="information"
+		.white-background
+	
+	 		h1 Time Sheets Submitted for Approval
+			table
+				thead
+					tr
+						th Employee
+						th Start date
+						th End date
+						th Hours
+						th
+						th
+						th
+						th
+
+				tbody
+					- @applicable_week.each_with_index do |at, i|
+						tr id = "#{i}"
+							td
+								= hidden_field_tag "week_id_#{i}", at.id
+								= hidden_field_tag "user_id_#{i}", at.user_id
+								= User.find(at.user_id).email
+							td
+								= at.start_date.strftime('%Y-%m-%d')
+							td
+								= at.end_date.strftime('%Y-%m-%d')
+							td
+								= button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {reveal_id: "showHours"}
+
+							td = link_to "Approve","/projects/#{@project.id}/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
+							/td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
+							td
+								= button_tag "Reject", class: "reject_class alert tiny", id:"time_reject_#{i}" , type: "button", remote: true
+							td
+								= button_tag "Add Comment to Reject", class: "add_comment secondary tiny", id: "add_comment_#{i}", type: "button"
+							td
+								= text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
+
+- else
 div.tabs-content
  div class="content active" id="information"
-  
-    
+   
 	div class= "display-text"
 	= form_for @project do |f|
 	  - if @project.errors.any?
@@ -22,6 +64,7 @@ div.tabs-content
 	    = f.label :customer
 	    = f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
 	  .row class="white-background"
+
 		  table class="right-row " border="1" id="tasklist"
 		    thead
 		      tr 
@@ -34,7 +77,7 @@ div.tabs-content
 		          td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
 	  
 	
-		  h1 class="left-row" Users On The Project
+		  h1 class="users-left-row" Users On The Project
 		  table class="left-row"
 		    thead
 		      tr
@@ -147,11 +190,9 @@ table
 					= select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
 
 .(class="row white-background")
+  	h1.left_row Invite Users
 	table class="left-row"
 	  thead
-	    tr
-	      th
-	        h4.center Invite Users
 	  tbody
 	    tr
 	      th
@@ -163,7 +204,7 @@ table
 	          = f.select :employment_type, options_from_collection_for_select(EmploymentType.all, :id, :name)
 	          .actions = f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'
 
-	h1 class="right-row" Pending Users 
+	h1.pending-right-row Pending Users 
 	table class="right-row"
 	  thead
 	    tr
