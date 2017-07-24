@@ -9,20 +9,17 @@
 						  th Name
 						  th Customer
 						  th Inactive?
-						  th
-						
+						  
 					tbody
-					- @adhoc_pm_project.each do |project|
-						tr
-							td = project.name
-							td = project.customer.name if !project.customer.nil?
-					  	td
-								- if project.inactive == true
-									span Yes
-								- elsif project.inactive == false || project.inactive == nil
-									span No
-								td = link_to 'Manage', edit_project_path(project)
-			      
+					- @adhoc_pm_project.each_with_index do |project, i|
+							tr
+								td = project.name
+								td = project.customer.name if !project.customer.nil?
+								- if "#{i}" == "0"
+									td = radio_button_tag("project",project.id, true, class:"select-project")
+								- else
+									td = radio_button_tag("project",project.id, false,class:"select-project")
+								
 		- else
 			.left-row
 				h1 Listing projects

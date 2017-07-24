@@ -18,7 +18,7 @@
 
 #tasklist{
   width: 45%;
-  margin-top: 90px;
+  margin-top: 0px;
 }
 
 .users-left-row {
@@ -27,6 +27,7 @@
   max-width: 52%;
   margin-left: 5px;
 }
+
 .left-row {
 	float: left;
 	#margin: 30px !important;
@@ -57,6 +58,36 @@
 .left-row h1 {
 	max-width: 77%;
 	margin-left: 45px;}
+
+.left-row-adhoc {
+	float: left;
+	#margin: 30px !important;
+	width: 50%;
+}
+.left-row-adhoc h1 {
+	max-width: 85%;
+	margin-left: 45px;
+	
+}
+
+.right-row-adhoc {
+	float: right;
+	#margin: 30px !important;
+	width: 50%;
+	margin-top: 20px;
+}
+
+.right-row-adhoc h1 {
+	margin-left: 80px;
+	max-width: 70%;
+	margin-top: 0px;}
+
+
+.right-row-adhoc table {
+	width: 100%;
+	margin-left: 0px;}
+
+
 .left_row, h1 {
   margin-left:20px;
   max-width:40%;
@@ -67,5 +98,10 @@
    max-width: 38%;
 }
 
+.task-right-row{
+  margin-top: -63px;
+  margin-left:58%;
+   max-width: 38%;
+}
 
 

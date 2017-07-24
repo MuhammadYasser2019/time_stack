@@ -9,12 +9,13 @@ class ProjectsController < ApplicationController
       @project_id = params[:project_id]
     else
       @project_id = "1"
+			params[:project_id] = 1
     end
 
     logger.debug("project-index- @project_id #{@project_id}")
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     @projects = Project.where(user_id: current_user.id)
-    @project_id = @projects.first.id
+    @project_id = @projects.first.id if @projects.present?
     @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
      @tasks_on_project = Task.where(project_id: @project_id)
     # @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4","1","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
@@ -34,13 +35,15 @@ class ProjectsController < ApplicationController
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
     @holiday_exception = HolidayException.new
     @holiday_exceptions = @project.holiday_exceptions
+		@adhoc_pm_project = Project.where(adhoc_pm_id: current_user.id)
+		@adhoc_pm = User.where(id: @project.adhoc_pm_id).first
     respond_to do |format|
       
       format.html{}
 
     end
 
-    @adhoc_pm_project = Project.where(adhoc_pm_id: current_user.id)
+    
   end
 
   # GET /projects/1
@@ -259,7 +262,7 @@ class ProjectsController < ApplicationController
   end
   
   def add_adhoc_pm
-		@project = Project.find(params[:id])
+		@project = Project.find(params[:project_id])
 		@adhoc_pm = @project.adhoc_pm_id
 		@user = User.find(params[:adhoc_pm_id])
 		if @adhoc_pm.present? && @adhoc_pm != @user.id
@@ -302,6 +305,7 @@ class ProjectsController < ApplicationController
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
     @holiday_exception = HolidayException.new
     @holiday_exceptions = @project.holiday_exceptions
+		@adhoc_pm = User.where(id: @project.adhoc_pm_id).first
     respond_to do |format|  
       format.js
     end
