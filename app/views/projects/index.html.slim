@@ -9,12 +9,18 @@
 						  th Name
 						  th Customer
 						  th Inactive?
+						  th
 						  
 					tbody
 					- @adhoc_pm_project.each_with_index do |project, i|
 							tr
 								td = project.name
 								td = project.customer.name if !project.customer.nil?
+								td
+									- if project.inactive == true
+										span Yes
+									- elsif project.inactive == false || project.inactive == nil
+										span No
 								- if "#{i}" == "0"
 									td = radio_button_tag("project",project.id, true, class:"select-project")
 								- else
@@ -30,24 +36,22 @@
 							th Customer
 							th Inactive?
 							th
-							-if current_user.admin || current_user.cm
-								th
-
+							
 					tbody
 						- @projects.each_with_index do |project,i|
 							tr
 								td = project.name
 								td = project.customer.name if !project.customer.nil?
-									td
-										- if project.inactive == true
-										  span Yes
-										- elsif project.inactive == false || project.inactive == nil
-										  span No
+								td
+									- if project.inactive == true
+										span Yes
+									- elsif project.inactive == false || project.inactive == nil
+										span No
 								- if "#{i}" == "0"
 									td = radio_button_tag("project",project.id, true, class:"select-project")
 								- else
 									td = radio_button_tag("project",project.id, false,class:"select-project")
-								td = link_to 'Manage', edit_project_path(project)
+								
 			.right-row		
 				h1 Enter And Manage Time
 				table
@@ -70,5 +74,5 @@
 		= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_project_path)
 
 .(id="dynamic_projects")
-== render 'new_edit_form'
+	== render 'new_edit_form'
 
