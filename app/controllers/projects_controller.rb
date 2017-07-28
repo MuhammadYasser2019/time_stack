@@ -141,10 +141,10 @@ class ProjectsController < ApplicationController
     logger.debug "PROXY BABY: #{params["proxy"]}"
     respond_to do |format|
       if @project.update(name: project_params["name"], customer_id: project_params["customer_id"], proxy: params["proxy"])
-        format.html { redirect_to edit_project_path(@project), notice: 'Project was successfully updated.' }
+        format.html { redirect_to project_path(@project), notice: 'Project was successfully updated.' }
         format.json { render :show, status: :ok, location: @project }
       else
-        format.html { render :edit }
+        format.html { render :index }
         format.json { render json: @project.errors, status: :unprocessable_entity }
       end
     end

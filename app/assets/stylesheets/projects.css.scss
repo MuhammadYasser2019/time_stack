@@ -24,8 +24,12 @@
 .users-left-row {
   margin-top: 23px;
   text-align: center;
-  max-width: 52%;
+  max-width: 42%;
   margin-left: 5px;
+}
+
+.users-left-row table{
+	width: 52% !important;
 }
 
 .left-row {
@@ -63,6 +67,14 @@
 	float: left;
 	#margin: 30px !important;
 	width: 50%;
+}
+
+.left-row-adhoc {
+	table{
+    th {
+  		width:14%;
+}
+}
 }
 .left-row-adhoc h1 {
 	max-width: 85%;

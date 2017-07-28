@@ -47,6 +47,14 @@ jQuery ($) ->
     customer_id = attr_val.split("/")[4]
     return customer_id
 
+	$('.select-customer').click ->
+    c_id = $(this).val()
+    console.log("click select-customer- Your customer id is:" + c_id)
+    $.get '/dynamic_customer_update',
+      customer_id: c_id
+    return
+
+
   $('.resend_vacation_request').click ->
     console.log("REQUEST")
     vacation_request_row_id = parse_row_id($(this).attr('id'))

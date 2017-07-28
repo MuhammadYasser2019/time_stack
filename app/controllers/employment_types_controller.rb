@@ -11,9 +11,9 @@ class EmploymentTypesController < ApplicationController
     # customer_id = current_user.customer_id
     # @employment_type.customer_id = customer_id
     if @employment_type.save
-      redirect_to "/customers/#{Customer.find(params[:employment_type][:customer_id]).id}/edit"
+      redirect_to customers_path
     else
-      redirect_to "/customers/#{Customer.find_by_user_id(current_user.id).id}/edit"
+      redirect_to customers_path
     end
   end
 

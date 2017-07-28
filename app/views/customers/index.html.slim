@@ -11,20 +11,26 @@
 	      th Zipcode
 	      th
 	      th
-	      th
-	
+	      
 	  tbody
-	    - @customers.each do |customer|
+	    - @customers.each_with_index do |customer, i|
 	      tr
 	        td = customer.name
 	        td = customer.address
 	        td = customer.city
 	        td = customer.state
-	        td = customer.zipcode
+	        td = customer.zipcode	
 	        td = link_to 'Manage', edit_customer_path(customer)
-	        td = link_to 'Report', "/customers/#{customer.id}/customer_reports", id: 'show_report'
-	        td = link_to 'Destroy', customer, data: {:confirm => 'Are you sure?'}, :method => :delete
-					
+	        
+	        - if "#{i}" == "0"
+	          td = radio_button_tag("customer",customer.id, true, class:"select-customer")
+	        - else
+	          td = radio_button_tag("customer",customer.id, false,class:"select-customer")
+		
 	br
-	
-	= link_to 'New Customer', new_customer_path, class: "orange-button"
+	.row
+		= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_customer_path)
+-if @customers.present?
+	.(id="dynamic_customers")
+		== render 'new_edit_form'
+

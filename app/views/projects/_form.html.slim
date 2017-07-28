@@ -50,7 +50,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 - else
 		div.tabs-content
 		 div class="content active" id="information"
-			 
+	 
 			div class= "display-text"
 			= form_for @project do |f|
 				- if @project.errors.any?
@@ -65,8 +65,6 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 					= f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
 				.row class="white-background"
 				
-			
-	
 					h1 class="users-left-row" Users On The Project
 					table class="left-row"
 						thead
@@ -106,8 +104,8 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 						tbody
 						  = f.fields_for :tasks do |tf|
 						    == render 'task_fields', f: tf
-					tr 
-						      td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"	
+						tr 
+					     td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"	
 
 				h1 Time Sheets Submitted for Approval
 				table
@@ -167,7 +165,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 									.small-1.columns
 					.white-background 	  
 						h4.text-center New Holiday Exception
-					        = form_for @holiday_exception do |f|
+					    = form_for @holiday_exception do |f|
 								= f.select :user_id, @users_on_project.collect { |m| [ m.first_name, m.id ] }, include_blank: true
 								= f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name, include_hidden: false) do |h|
 								 .row
@@ -223,7 +221,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 							    td
 							      = user.invitation_sent_at
 							    td
-							      .actions = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
+							      = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 		
 		.(class="row white-background")
 			.left-row-adhoc
