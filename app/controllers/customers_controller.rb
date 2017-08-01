@@ -7,7 +7,7 @@ class CustomersController < ApplicationController
     
     @customers = Customer.where(user_id: current_user.id)
     if @customers.present?
-    params[:customer_id] = @customers.first unless params[:customer_id].present?
+    params[:customer_id] = @customers.first.id unless params[:customer_id].present?
     @customer = @customers.first
     customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
     @projects = @customer.projects
@@ -166,7 +166,7 @@ class CustomersController < ApplicationController
     user.employment_type = params[:employment_type]
     user.save
     respond_to do |format|
-      format.html { redirect_to "/customers/#{user.customer_id}/edit"}
+      format.html { redirect_to customers_path}
     end
   end
 

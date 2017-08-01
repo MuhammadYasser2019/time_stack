@@ -80,37 +80,40 @@ div.tabs-content
 			  = link_to "Create New Employment Type", new_employment_type_path(:customer_id => @customer.id ),id: "#{@customer.id}", class: "orange-button", style: "margin-top:30px;"
 
 div class = "disp-message"
-	h1 Customer Employees
-	table
-		thead
-			tr
-				th User
-				th Email
-		tbody
-			-@users.each_with_index do |uop, i|
-				-if uop.customer_id == params[:id].to_i
-					tr(id = "#{i}") 
-						td = uop.first_name
-						td = link_to uop.email, "/edit_customer_user/#{uop.id}"
-						td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
-
-	h1 Vacation Request
-	table
-		thead
-			tr
-				th Employee
-				th Vacation Start Date
-				th Vacation End Date
-				th 
-				th
-		tbody
-			- @vacation_requests.each_with_index do |vu, i|
-				tr id = "#{i}"
-					td = User.find(VacationRequest.find(vu).user_id).email
-					td = vu.vacation_start_date.strftime('%Y-%m-%d')
-					td = vu.vacation_end_date.strftime('%Y-%m-%d')
-					td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true
-					td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
+	.(class="row white-background")
+		div class="vacation-left-row"
+			h1 Customer Employees
+			table
+				thead
+					tr
+						th User
+						th Email
+						th
+				tbody
+					-@users.each_with_index do |uop, i|
+						-if uop.customer_id == params[:customer_id].to_i
+							tr(id = "#{i}") 
+								td = uop.first_name
+								td = link_to uop.email, "/edit_customer_user/#{uop.id}"
+								td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
+		div class="right-row"
+			h1 Vacation Request
+			table
+				thead
+					tr
+						th Employee
+						th Vacation Start Date
+						th Vacation End Date
+						th 
+						th
+				tbody
+					- @vacation_requests.each_with_index do |vu, i|
+						tr id = "#{i}"
+							td = User.find(VacationRequest.find(vu).user_id).email
+							td = vu.vacation_start_date.strftime('%Y-%m-%d')
+							td = vu.vacation_end_date.strftime('%Y-%m-%d')
+							td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true
+							td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
 
 	.(class="row white-background")
 		h1.left_row Invite Users	
