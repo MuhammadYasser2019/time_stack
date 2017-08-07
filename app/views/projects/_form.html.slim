@@ -52,7 +52,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 		 div class="content active" id="information"
 	 
 			div class= "display-text"
-			= form_for @project do |f|
+			= form_for @project, remote: true do |f|
 				- if @project.errors.any?
 					#error_explanation
 					  h2 = "#{pluralize(@project.errors.count, "error")} prohibited this project from being saved:"
@@ -143,51 +143,24 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 					        = button_tag "Add Comment to Reject", class: "add_comment secondary tiny", id: "add_comment_#{i}", type: "button"
 					      td
 					        = text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
-	
+				table 
+					thead
+						tr
+							th
+								h1  Proxy Users
+					tbody
+						tr
+							th
+								= select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
+
 				div class = "approval-class"
 				 div(id="showHours" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 				.actions = f.submit
 		 div class="content" id="holidays"
 			- unless current_page?(action: 'new')
-			 div.row
-					h2.text-center(Holidays Setup)
-					br
-					br
-					- if @holidays.any?
-					 
-						- @holiday_exceptions.each do |h|
-						 .white-background
-							 h4.text-center Holiday Exceptions
-							 .row
-									.small-3.columns.text-center =("#{User.find(h.user_id).first_name} #{User.find(h.user_id).last_name}")
-									.small-6.columns.text-center = h.holiday_ids.count
-									.small-2.columns.text-center = link_to "Edit", edit_holiday_exception_path(h)
-									.small-1.columns
-					.white-background 	  
-						h4.text-center New Holiday Exception
-					    = form_for @holiday_exception do |f|
-								= f.select :user_id, @users_on_project.collect { |m| [ m.first_name, m.id ] }, include_blank: true
-								= f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name, include_hidden: false) do |h|
-								 .row
-									.small-3.columns.text-center = h.check_box
-									.small-3.columns.text-center = h.object.name
-									.small-3.columns.text-center = h.object.date.strftime("%m-%d-%y")
-									.small-3.columns
-								= f.hidden_field :customer_id, value: @customer.id
-								= f.hidden_field :project_id, value: @project.id
-								.actions = f.submit
-
-
-		table 
-				thead
-					tr
-						th
-							h1  Proxy Users
-				tbody
-					tr
-						th
-							= select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
-
+				div id ="dynamic_holiday_update"
+					== render partial: "holiday_exceptions_form"
+			 
 		.(class="row white-background")
 				h1.left_row Invite Users
 				table class="left-row"
@@ -224,44 +197,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 							      = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 		
 		.(class="row white-background")
-			.left-row-adhoc
-				h1 Adhoc Project Manager
-				= form_tag add_adhoc_pm_path(params[:project_id]), id: "adhoc_pm_form", method: :post
-					table
-						thead
-							tr
-								th User Email
-								th Start Date
-								th End Date
-						
-						tbody
-							tr
-								td
-									= select_tag :adhoc_pm_id, options_from_collection_for_select(@project.users, "id", "email"), :include_blank => true
-								td
-									= date_field_tag 'adhoc_start_date', params[:adhoc_start_date], {required: "required"}
-								td
-									= date_field_tag 'adhoc_end_date', params[:adhoc_end_date], {required: "required"}
-							
-					.actions = submit_tag 'Assign PM'
-						
-			.right-row-adhoc
-				h1 Assigned Adhoc PM
-				table
-					thead
-						tr
-							th User Email
-							th Start Date
-							th End Date
-
-					- if @adhoc_pm.present?
-						tbody
-							tr
-								td
-									= @adhoc_pm.email
-								td 
-									= @project.adhoc_start_date.to_date
-								td
-									= @project.adhoc_end_date.to_date
-
+			div(id="dynamic_adhoc_update")
+				== render partial: 'adhoc_pm_form'
+			
 

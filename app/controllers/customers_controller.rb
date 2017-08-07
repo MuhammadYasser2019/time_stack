@@ -132,7 +132,7 @@ class CustomersController < ApplicationController
     end
     project.save
 
-    redirect_to edit_customer_path(params[:customer_id])
+    redirect_to customers_path
   end
 
   def remove_user_from_customer

@@ -69,10 +69,10 @@
 							td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
 							td= link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
 							
-			br
-			.row
-				= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_project_path)
-
-.(id="dynamic_projects")
-	== render 'new_edit_form'
+	br
+	.row
+		= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_project_path) if !user_have_adhoc_permission(current_user)
+- if @projects.present?
+	.(id="dynamic_projects")
+		== render 'new_edit_form'
 

@@ -5,45 +5,39 @@ class ProjectsController < ApplicationController
   # GET /projects.json
   def index
     logger.debug("project-index- PROJECT ID IS #{params.inspect}")
-    if params[:project_id]
-      @project_id = params[:project_id]
-    else
-      @project_id = "1"
-			params[:project_id] = 1
-    end
-
-    logger.debug("project-index- @project_id #{@project_id}")
-    @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     @projects = Project.where(user_id: current_user.id)
-    @project_id = @projects.first.id if @projects.present?
-    @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
-     @tasks_on_project = Task.where(project_id: @project_id)
-    # @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4","1","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
-     @user_projects = Project.where(user_id: current_user.id)
-  
+		@weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
+    if @projects.present?
+      params[:project_id] = @project_id = @projects.first.id
+		  logger.debug("project-index- @project_id #{@project_id}")
+		  
+		  
+		   
+		  @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+		  @tasks_on_project = Task.where(project_id: @project_id)
+		  # @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4","1","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+		  @user_projects = Project.where(user_id: current_user.id)
+		
 
-    @customers = Customer.all
-    
-    @project = Project.includes(:tasks).find(@project_id)
-    @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
-    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
-    @users = User.all
-    @invited_users = User.where("invited_by_id = ?", current_user.id)
-    @proxies = User.where(proxy: true)
-    @customer = Customer.find(@project.customer_id)
-    customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
-    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
-    @holiday_exception = HolidayException.new
-    @holiday_exceptions = @project.holiday_exceptions
-		@adhoc_pm_project = Project.where(adhoc_pm_id: current_user.id)
-		@adhoc_pm = User.where(id: @project.adhoc_pm_id).first
-    respond_to do |format|
-      
-      format.html{}
-
-    end
-
-    
+		  @customers = Customer.all
+		  
+		  @project = Project.includes(:tasks).find(@project_id)
+		  @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+		  @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+		  @users = User.all
+		  @invited_users = User.where("invited_by_id = ?", current_user.id)
+		  @proxies = User.where(proxy: true)
+		  @customer = Customer.find(@project.customer_id)
+		  customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
+		  @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+		  @holiday_exception = HolidayException.new
+		  @holiday_exceptions = @project.holiday_exceptions
+			@adhoc_pm_project = Project.where(adhoc_pm_id: current_user.id)
+			@adhoc_pm = User.where(id: @project.adhoc_pm_id).first
+		  respond_to do |format|  
+		    format.html{}
+		  end
+		end
   end
 
   # GET /projects/1
@@ -108,17 +102,12 @@ class ProjectsController < ApplicationController
   # PATCH/PUT /projects/1
   # PATCH/PUT /projects/1.json
   def update
-    @customers = Customer.all
-    @project_id = params[:id]
+    params[:project_id] = @project_id = params[:id]
     @project = Project.includes(:tasks).find(params[:id])
-    @applicable_week = Week.joins(:time_entries).where("weeks.status_id = ? and time_entries.project_id= ?", "2",params[:id]).select(:id, :user_id, :start_date, :end_date , :comments).distinct
-    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
-    @users = User.all
-    @invited_users = User.where("invited_by_id = ?", current_user.id)
     
     task_attributes = params[:project][:tasks_attributes]
-    previous_codes = Project.previous_codes(@project)
-    task_code = Project.task_value(task_attributes, previous_codes)
+    #previous_codes = Project.previous_codes(@project)
+    #task_code = Project.task_value(task_attributes, previous_codes)
     task_attributes.permit!.to_h.each do |t|
       logger.debug "CODE: #{t}"
       logger.debug "id: #{t[1]["id"]}"
@@ -131,7 +120,6 @@ class ProjectsController < ApplicationController
       else
         @task = Task.create(id: t[1]["id"], code: t[1]["code"], description: t[1]["description"], project_id: @project.id)
       end
-      # logger.debug("############################ the tasks code in projects CONTROLLER #{task.inspect}")
     end
 
     logger.debug("############################ the tasks code in projects CONTROLLER #{@task.inspect}")
@@ -139,9 +127,27 @@ class ProjectsController < ApplicationController
     pp = project_params.delete("tasks_attributes")
     logger.debug "PROJECT PARAMS AFTER: #{project_params.inspect}"
     logger.debug "PROXY BABY: #{params["proxy"]}"
+
+
+	  @customers = Customer.all
+    @tasks_on_project = Task.where(project_id: @project_id)
+    @proxies = User.where(proxy: true)
+    @customer = Customer.find(@project.customer_id)
+		@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",params[:id],"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct    
+		@users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+    @users = User.all
+    @invited_users = User.where("invited_by_id = ?", current_user.id)
+    customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
+    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+    @holiday_exception = HolidayException.new
+    @holiday_exceptions = @project.holiday_exceptions
+    @adhoc_pm_project = Project.where(adhoc_pm_id: current_user.id)
+    @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
+    @project = Project.includes(:tasks).find(params[:id])
     respond_to do |format|
-      if @project.update(name: project_params["name"], customer_id: project_params["customer_id"], proxy: params["proxy"])
-        format.html { redirect_to project_path(@project), notice: 'Project was successfully updated.' }
+      if @project.update(customer_id: project_params["customer_id"], proxy: params["proxy"])
+				format.js
+        format.html { redirect_to projects_path, notice: 'Project was successfully updated.' }
         format.json { render :show, status: :ok, location: @project }
       else
         format.html { render :index }
@@ -275,7 +281,11 @@ class ProjectsController < ApplicationController
 		@project.adhoc_start_date = params[:adhoc_start_date]
 		@project.adhoc_end_date = params[:adhoc_end_date]
 		@project.save
-		redirect_to projects_path
+		@adhoc_pm = User.where(id: @project.adhoc_pm_id).first
+		respond_to do |format|
+     format.js
+   end
+		#redirect_to projects_path
   end
 
 
