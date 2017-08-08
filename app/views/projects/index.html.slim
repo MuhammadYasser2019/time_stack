@@ -51,7 +51,9 @@
 									td = radio_button_tag("project",project.id, true, class:"select-project")
 								- else
 									td = radio_button_tag("project",project.id, false,class:"select-project")
-								
+				br
+				.row
+					= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_project_path, title: "Create New Project") if !user_have_adhoc_permission(current_user)					
 			.right-row		
 				h1 Enter And Manage Time
 				table
@@ -69,10 +71,8 @@
 							td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
 							td= link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
 							
-	br
-	.row
-		= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_project_path) if !user_have_adhoc_permission(current_user)
+	
 - if @projects.present?
 	.(id="dynamic_projects")
-		== render 'new_edit_form'
+		== render partial: 'new_edit_form'
 
