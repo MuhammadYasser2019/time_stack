@@ -15,7 +15,7 @@ div.row
 	.white-background 	  
 		h4.text-center New Holiday Exception
 	    = form_for @holiday_exception, remote: true do |f|
-				= f.select :user_id, @users_on_project.collect { |m| [ m.first_name, m.id ] }, {include_blank: true}
+				= f.select :user_id, @users_on_project.collect { |m| [ m.first_name, m.id ] }, {include_blank: true}, {required: "required"}
 				= f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name, include_hidden: false) do |h|
 				 .row
 					.small-3.columns.text-center = h.check_box

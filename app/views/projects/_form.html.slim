@@ -1,4 +1,7 @@
-h1 #{@project.name}
+- if user_have_adhoc_permission(current_user)
+  h1 #{@adhoc_pm_project.name}
+-else
+  h1 #{@project.name}
 ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
  - if !user_have_adhoc_permission(current_user)
   - unless current_page?(action: 'new')

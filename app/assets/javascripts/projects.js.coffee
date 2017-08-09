@@ -5,19 +5,20 @@ jQuery ($) ->
   parse_row_id = (attr_val) ->
     row_id = attr_val.split("_")[2]
     return row_id
-  $(".add_comment").click ->
+  $(document).on("click", ".add_comment", ->
     row_id = parse_row_id($(this).attr('id'))
     $("#comment_text_"+row_id).show()
     return
+   )
 
-  $('.comment').change ->
+  $(document).on('change', '.comment',  ->
     console.log("In the comment")
     if $(this).val().length >= 8
       row_id = parse_row_id($(this).attr('id'))
       $("#time_reject_" + row_id).show()
     return
-
-  $('.reject_class').click ->
+   )
+  $(document).on('click', '.reject_class', ->
     row_id = parse_row_id($(this).attr('id'))
     cotent = $('#comment_text_' + row_id).val()
     project_url=$(location).attr('href')
@@ -28,7 +29,7 @@ jQuery ($) ->
       comments: cotent,
       row_id: row_id
     return
-
+   )
   parse_project_id = (attr_val) ->
     project_id = attr_val.split("/")[4]
     return project_id

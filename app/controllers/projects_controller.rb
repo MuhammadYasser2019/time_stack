@@ -7,40 +7,44 @@ class ProjectsController < ApplicationController
     logger.debug("project-index- PROJECT ID IS #{params.inspect}")
     @projects = Project.where(user_id: current_user.id)
 		@weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
+		@adhoc_pm_projects = Project.where(adhoc_pm_id: current_user.id)
+		@adhoc_pm_project = @adhoc_pm_projects.first
     if @projects.present?
-      params[:project_id] = @project_id = @projects.first.id
-		  logger.debug("project-index- @project_id #{@project_id}")
-		  
-		  
-		   
-		  @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
-		  @tasks_on_project = Task.where(project_id: @project_id)
-		  # @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4","1","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
-		  @user_projects = Project.where(user_id: current_user.id)
-		
+		  params[:project_id] = @project_id = @projects.first.id
+			logger.debug("project-index- @project_id #{@project_id}")
+			
+			
+			 
+			@users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+			@tasks_on_project = Task.where(project_id: @project_id)
+			# @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4","1","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+			@user_projects = Project.where(user_id: current_user.id)
+	
 
-		  @customers = Customer.all
-		  
-		  @project = Project.includes(:tasks).find(@project_id)
-		  @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
-		  @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
-		  @users = User.all
-		  @invited_users = User.where("invited_by_id = ?", current_user.id)
-		  @proxies = User.where(proxy: true)
-		  @customer = Customer.find(@project.customer_id)
-		  customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
-		  @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
-		  @holiday_exception = HolidayException.new
-		  @holiday_exceptions = @project.holiday_exceptions
-			@adhoc_pm_project = Project.where(adhoc_pm_id: current_user.id)
-			@adhoc_pm = User.where(id: @project.adhoc_pm_id).first
-		  respond_to do |format|  
-		    format.html{}
-		  end
+			@customers = Customer.all
+			
+			@project = Project.includes(:tasks).find(@project_id)
+			@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+			@users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+			@users = User.all
+			@invited_users = User.where("invited_by_id = ?", current_user.id)
+			@proxies = User.where(proxy: true)
+			@customer = Customer.find(@project.customer_id)
+			customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
+			@holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+			@holiday_exception = HolidayException.new
+			@holiday_exceptions = @project.holiday_exceptions
+		elsif @adhoc_pm_project.present?
+			@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@adhoc_pm_project.id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
 		end
+	  #@adhoc_pm = User.where(id: @project.adhoc_pm_id).first
+	  respond_to do |format|  
+	    format.html{}
+	  end
   end
 
   # GET /projects/1
+
   # GET /projects/1.json
   def show
     @customers = Customer.all
@@ -295,8 +299,8 @@ class ProjectsController < ApplicationController
     
     logger.debug("project-dynamic_project_update- @project_id #{@project_id}")
 
-    @projects = Project.where(user_id: current_user.id)
-    logger.debug("project-dynamic_project_update- PROJECT ID IS #{@projects.inspect} ********#{@projects.first.id} ")
+    #@projects = Project.where(user_id: current_user.id)
+    #logger.debug("project-dynamic_project_update- PROJECT ID IS #{@projects.inspect} ********#{@projects.first.id} ")
     @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
      @tasks_on_project = Task.where(project_id: @project_id)
     # @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4","1","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
@@ -315,6 +319,7 @@ class ProjectsController < ApplicationController
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
     @holiday_exception = HolidayException.new
     @holiday_exceptions = @project.holiday_exceptions
+		@adhoc_pm_project = @project
 		@adhoc_pm = User.where(id: @project.adhoc_pm_id).first
     respond_to do |format|  
       format.js

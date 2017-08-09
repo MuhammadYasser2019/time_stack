@@ -12,19 +12,20 @@
 						  th
 						  
 					tbody
-					- @adhoc_pm_project.each_with_index do |project, i|
-							tr
-								td = project.name
-								td = project.customer.name if !project.customer.nil?
-								td
-									- if project.inactive == true
-										span Yes
-									- elsif project.inactive == false || project.inactive == nil
-										span No
-								- if "#{i}" == "0"
-									td = radio_button_tag("project",project.id, true, class:"select-project")
-								- else
-									td = radio_button_tag("project",project.id, false,class:"select-project")
+					- if @adhoc_pm_projects.present? 
+						- @adhoc_pm_projects.each_with_index do |project, i|
+								tr
+									td = project.name
+									td = project.customer.name if !project.customer.nil?
+									td
+										- if project.inactive == true
+											span Yes
+										- elsif project.inactive == false || project.inactive == nil
+											span No
+									- if "#{i}" == "0"
+										td = radio_button_tag("project",project.id, true, class:"select-project")
+									- else
+										td = radio_button_tag("project",project.id, false,class:"select-project")
 								
 		- else
 			.left-row
@@ -72,7 +73,7 @@
 							td= link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
 							
 	
-- if @projects.present?
+- if @project.present? || @adhoc_pm_projects.present?
 	.(id="dynamic_projects")
 		== render partial: 'new_edit_form'
 
