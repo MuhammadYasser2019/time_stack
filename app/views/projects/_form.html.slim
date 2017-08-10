@@ -1,15 +1,16 @@
-- if user_have_adhoc_permission(current_user)
+- if @adhoc && user_have_adhoc_permission(current_user)
+  = hidden_field_tag "adhoc", @adhoc
   h1 #{@adhoc_pm_project.name}
 -else
   h1 #{@project.name}
 ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
- - if !user_have_adhoc_permission(current_user)
+ - if !(@adhoc && user_have_adhoc_permission(current_user))
   - unless current_page?(action: 'new')
    li class="tab-title active"
   	 a href="#information" Project Information
    li class="tab-title"
   	 a href="#holidays" Holiday Exceptions
-- if user_have_adhoc_permission(current_user)
+- if @adhoc && user_have_adhoc_permission(current_user)
  div.tabs-content
 	 div class="content active" id="information"
 		.white-background

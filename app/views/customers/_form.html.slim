@@ -10,7 +10,7 @@ ul(class="tabs" data-tab style="margin: 0 0 0 35%;")
 div.tabs-content
   div.white-background class="content active" id="information"
     h1 Editing customer
-	= form_for @customer do |f|
+	= form_for @customer, remote: true do |f|
 	  - if @customer.errors.any?
 	    #error_explanation
 	      h2 = "#{pluralize(@customer.errors.count, "error")} prohibited this customer from being saved:"
@@ -62,23 +62,15 @@ div.tabs-content
 		        	  .small-3.columns.text-center
 		        .actions = f.submit "Submit"
 		  - else 
-		   h3.text-center No Holidays created
+		    h3.text-center No Holidays created
 		  
 		  = link_to "Create New Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"
 		      
   div class="content" id="employment_types"
-		div.row
-			.small-8.small-offset-2
-			  h3.text-center Employment Type
-			  - if !@employment_type.blank?
-			  	- @employment_type.each do |et|
-			  		.row 
-			  			.small-1.columns.text-cente = link_to et.name, "/employment_types/#{et.id}/edit"
-			  			.small-3.columns.text-center = link_to "Delete", "/employment_types/#{et.id}", method: :delete , data: {confirm: 'Are you sure?'}, style: "color:#842929"
-			  - else
-			  	h3 No Employment Types
-			  = link_to "Create New Employment Type", new_employment_type_path(:customer_id => @customer.id ),id: "#{@customer.id}", class: "orange-button", style: "margin-top:30px;"
-
+    .(class="row white-background")
+			div(id="dynamic_employment")
+				== render partial: "employment_form"
+			
 div class = "disp-message"
 	.(class="row white-background")
 		div class="vacation-left-row"
@@ -92,7 +84,7 @@ div class = "disp-message"
 				tbody
 					-@users.each_with_index do |uop, i|
 						-if uop.customer_id == params[:customer_id].to_i
-							tr(id = "#{i}") 
+							tr(id = "users_#{i}") 
 								td = uop.first_name
 								td = link_to uop.email, "/edit_customer_user/#{uop.id}"
 								td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
@@ -108,7 +100,7 @@ div class = "disp-message"
 						th
 				tbody
 					- @vacation_requests.each_with_index do |vu, i|
-						tr id = "#{i}"
+						tr id = "vacation_#{i}"
 							td = User.find(VacationRequest.find(vu).user_id).email
 							td = vu.vacation_start_date.strftime('%Y-%m-%d')
 							td = vu.vacation_end_date.strftime('%Y-%m-%d')
@@ -154,45 +146,6 @@ div class = "disp-message"
 			          = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 
 	.(class="row white-background")
-		.left-row-adhoc
-			h1 Adhoc Project Manager
-			= form_tag add_adhoc_pm_by_cm_path(params[:customer_id]),id: "adhoc_pm_form", method: :post
-				table
-					thead
-						tr
-							th Project
-							th User Email
-							th Start Date
-							th End Date
-
-					tbody
-					tr
-							td
-								= select_tag :pm_project_id, options_from_collection_for_select(Project.all, "id", "name"), include_blank: true, class: "pm_project_id"
-							td
-								= select_tag :adhoc_pm_id, :include_blank => true
-							
-							td
-								= date_field_tag 'adhoc_start_date', params[:adhoc_start_date], {required: "required"}
-							td
-								= date_field_tag 'adhoc_end_date', params[:adhoc_end_date], {required: "required"}
-
-				.actions = submit_tag 'Assign PM'
-
-		.right-row-adhoc
-			h1 Assigned Adhoc PM
-			table
-				thead
-				  tr
-						th Project
-						th User Email
-						th Start Date
-						th End Date
-				tbody
-					- @adhoc_projects.each do |p|
-						tr
-							td = p.name
-							td = User.where(id: p.adhoc_pm_id).first.email
-							td = p.adhoc_start_date.to_date
-							td = p.adhoc_end_date.to_date	
-
+		div(id="dynamic_adhoc_update")
+				== render partial: 'adhoc_pm_form'
+		

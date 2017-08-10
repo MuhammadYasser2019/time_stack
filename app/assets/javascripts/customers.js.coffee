@@ -86,5 +86,5 @@ jQuery ($) ->
     $.get "/remove_user_from_customer",
   	  user_id: user_id,
   	  customer_id: customer_id,
-      row: row
+      	  row: row
   	return

@@ -69,7 +69,8 @@ jQuery ($) ->
     p_id = $(this).val()
     console.log("click select-project- Your project id is:" + p_id)
     $.get '/dynamic_project_update',
-      project_id: p_id
+      project_id: p_id,
+      adhoc: $('#adhoc').val()
     return
 
 
