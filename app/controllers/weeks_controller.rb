@@ -9,11 +9,16 @@ class WeeksController < ApplicationController
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(10)
     @projects.each do |p|
       if p.adhoc_pm_id.present? && p.adhoc_end_date.to_s(:db) < Time.now.to_s(:db)
-				p.adhoc_pm_id = nil
-				p.adhoc_start_date = nil
-				p.adhoc_end_date = nil
-				p.save
+	p.adhoc_pm_id = nil
+	p.adhoc_start_date = nil
+	p.adhoc_end_date = nil
+	p.save
       end
+    end
+    if current_user.cm?
+      return redirect_to customers_path
+    elsif current_user.pm?
+      return redirect_to projects_path
     end
   end
 

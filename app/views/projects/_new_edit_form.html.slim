@@ -3,14 +3,18 @@
 
 br
 -if !user_have_adhoc_permission(current_user)
-	= link_to 'Report', "/show_project_reports?id=#{@project.id}", :method => :get,class: "center orange-button"
-	br
-	- if @project.inactive == false || @project.inactive == nil
-		= button_to 'Deactivate', "/projects/#{@project.id}/deactivate_project", :method => :post, class: "center orange-button"
-	- elsif @project.inactive == true
-	  = button_to 'Reactivate', "/projects/#{@project.id}/reactivate_project", :method => :post, class: "center orange-button"
-	br
-	= link_to "Manage Customers", "customers", class: "orange-button" if user_represents_customers(current_user) || (can? :manage, Customer)
-	br
-= link_to 'Back', projects_path, class: "orange-button"
+  = link_to 'Report', "/show_project_reports?id=#{@project.id}", :method => :get,class: "center orange-button"
+  br
+  - if @project.inactive == false || @project.inactive == nil
+    = button_to 'Deactivate', "/projects/#{@project.id}/deactivate_project", :method => :post, class: "center orange-button"
+  - elsif @project.inactive == true
+    = button_to 'Reactivate', "/projects/#{@project.id}/reactivate_project", :method => :post, class: "center orange-button"
+br
+= link_to "Manage Customers", "customers", class: "orange-button" if user_represents_customers(current_user) || (can? :manage, Customer)
+= link_to "Adhoc PM", projects_path(adhoc: true), class: "orange-button" if user_have_adhoc_permission(current_user)
+= link_to "User Report", "/show_user_reports/#{current_user.id}", class: "orange-button"
+= link_to "Vacation Request", "/vacation_request", class: "orange-button"
+
+br
+= link_to 'Back to Project Lists', projects_path, class: "orange-button"
 

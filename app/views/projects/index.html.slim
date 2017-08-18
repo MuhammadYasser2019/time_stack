@@ -71,6 +71,7 @@
 							td = week.end_date.strftime('%Y-%m-%d')
 							td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
 							td= link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
+				= link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
 							
 	
 - if @project.present? || (@adhoc && @adhoc_pm_projects.present?)
