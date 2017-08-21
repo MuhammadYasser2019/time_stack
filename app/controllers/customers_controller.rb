@@ -6,6 +6,7 @@ class CustomersController < ApplicationController
   def index
     
     @customers = Customer.where(user_id: current_user.id)
+    @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     if @customers.present?
     params[:customer_id] = @customers.first.id unless params[:customer_id].present?
     @customer = @customers.first
