@@ -3,7 +3,7 @@
 		- if params["adhoc"] == "true" && user_have_adhoc_permission(current_user)
 			.left-row
 				h1 Listing projects				
-				table
+				table{class="project_table"}
 					thead
 						tr
 						  th Name
@@ -30,7 +30,7 @@
 		- else
 			.left-row
 				h1 Listing projects
-				table
+				table{class="project_table"}
 					thead
 						tr
 							th Name
