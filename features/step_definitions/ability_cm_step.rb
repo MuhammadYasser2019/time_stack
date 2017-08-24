@@ -9,6 +9,23 @@ Given(/^CM logs in with "([^"]*)" and "([^"]*)"$/) do |arg1, arg2|
   page.click_button "Log in"
 end
 
+Then(/^I should see contentsss and "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^click on logout$/) do
+  page.click_button "Logout"
+end
+
+Given(/^click on the button "([^"]*)"$/) do |arg1|
+ page.click_link("Manage Projects")
+end
+
+Then(/^User clicks on the button "([^"]*)"$/) do |arg1|
+ click_on(class: "create_project")
+ # page.click_img("/assets/plus.jpg")
+end
+
 Then(/^User should see link to "([^"]*)"$/) do |new_project_link|
   expect(page).to have_link(new_project_link, href: "/projects/new")
 end
@@ -25,10 +42,18 @@ Given(/^Go to customers page$/) do
   visit (customers_path)
 end
 
-Then(/^Shoud see "([^"]*)" and "([^"]*)" link for customer$/) do |customer_heading, edit_customer_link|
+Then(/^Should see "([^"]*)" and "([^"]*)" link for customer$/) do |customer_heading, edit_customer_link|
   expect(page).to have_content(customer_heading)
   expect(page).to have_link(edit_customer_link)
 end
+
+Then(/^Should be able to see heading "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^Should see "([^"]*)"$/) do |listing_projects|
+  page.should have_content(listing_projects)
+end 
 
 Then(/^Click on the edit link to edit the customer$/) do
   page.click_link("Edit" , href: "/customers/1/edit" )
@@ -50,7 +75,7 @@ end
 
 Then(/^Should see link to "([^"]*)"$/) do |project_name|
   expect(page).to have_content(project_name)
-  expect(page).to have_link(project_name, href: "/projects/1/edit")
+  #expect(page).to have_link(project_name, href: "/projects/1/edit")
 end
 
 Then(/^User should not see link to "([^"]*)"$/) do |project_name|

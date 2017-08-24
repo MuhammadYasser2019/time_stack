@@ -22,11 +22,27 @@ module TestDataSetupHelper
     s.id = 1
     s.status = "NEW"
     s.save
+
+    s1 = Status.new
+    s1.id = 2
+    s1.status = "SUBMITTED"
+    s1.save
+
+    s2 = Status.new
+    s2.id = 3
+    s2.status = "APPROVED"
+    s2.save
+
+    s3 = Status.new
+    s3.id = 4
+    s3.status = "REJECTED"
+    s3.save
   end
 
   def create_project
     p = Project.new
     p.id = 1
+    p.customer_id = 1
     p.name = "Time Entries"
     p.user_id = 1
     p.save
@@ -47,6 +63,7 @@ module TestDataSetupHelper
   def create_customers
     c = Customer.new
     c.id = 1
+    c.user_id = 1
     c.name = "Test"
     c.address = "Test"
     c.city = "Herndon"
@@ -67,8 +84,8 @@ module TestDataSetupHelper
     create_task
     create_week
     create_status
-    create_project
     create_customers
+    create_project
 
   end
 
@@ -86,8 +103,9 @@ module TestDataSetupHelper
     create_task
     create_week
     create_status
-    create_project
     create_customers
+    create_project
+    
   end
 
   def create_user
@@ -100,7 +118,7 @@ module TestDataSetupHelper
 
 
     u.save!
-
+    create_customers
     create_task
     create_week
     # t = Task.new
@@ -115,12 +133,39 @@ module TestDataSetupHelper
 
     create_status
 
-    # p = Project.new
-    # p.id = 1
-    # p.name = "Time Entries"
-    # p.user_id = 1
-    # p.save
+    u1 = User.new
+    u1.id = 2
+    u1.email = "pm.user@test.com"
+    u1.password = "123456"
+    u1.encrypted_password
+    u1.user = 1
+    u1.pm = 1
+    u1.customer_id = 1
+    u1.save!
 
+     p = Project.new
+     p.id = 1
+     p.name = "Time Entries"
+     p.user_id = 2
+     p.customer_id = 1
+     p.save
+
+     create_projects_user
+
+
+
+  end
+
+  def create_projects_user
+    pu1 = ProjectsUser.new
+    pu1.project_id = 1
+    pu1.user_id =  1
+    pu1.save
+
+    pu2 = ProjectsUser.new
+    pu2.project_id = 1
+    pu2.user_id =  2
+    pu2.save
   end
 
   def status
