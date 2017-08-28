@@ -45,11 +45,11 @@ module WeeksHelper
     end  
   end
 
-	def user_have_adhoc_permission(current_user)
-		if Project.where("adhoc_pm_id=? and adhoc_start_date <= ? and adhoc_end_date >=?", current_user.id, Time.now.to_s(:db), Time.now.to_s(:db) ).count > 0
-			return true
-		else
-			return false
-		end
-	end
+  def user_have_adhoc_permission(current_user)
+    if Project.where("adhoc_pm_id=? and adhoc_start_date <= ? and adhoc_end_date >=?", current_user.id, Time.now.to_s(:db), Time.now.to_s(:db) ).count > 0
+      return true
+    else
+      return false
+    end
+  end
 end

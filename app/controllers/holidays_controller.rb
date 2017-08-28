@@ -21,7 +21,7 @@ class HolidaysController < ApplicationController
         if @holiday.global
           redirect_to "/admin"
         else
-          redirect_to "/customers/#{Customer.find_by_user_id(current_user.id).id}/edit"
+          redirect_to customers_path
         end
       end
   end
@@ -39,7 +39,7 @@ class HolidaysController < ApplicationController
       if @holiday.global
         redirect_to "/admin"
       else
-        redirect_to "/customers/#{Customer.find_by_user_id(current_user.id)}"
+        redirect_to customers_path
       end
      end
   end

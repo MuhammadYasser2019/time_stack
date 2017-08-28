@@ -16,3 +16,136 @@
   border-radius: 2px;
 }
 
+#tasklist{
+  width: 45%;
+  margin-top: 0px;
+}
+
+.left-row {
+	float: left;
+	#margin: 30px !important;
+	width: 44%;
+}
+
+.left_row, h1 {
+  margin-left: 20px;
+  max-width: 40%;
+}
+
+.left-row h1 {
+	max-width: 77%;
+	margin-left: 45px;
+}
+
+.project_table{
+  margin-left: 45px !important;
+}
+
+.left-row table {
+	margin-left: 0px;
+}
+
+.right-row {
+	float: right;
+	#margin: 30px !important;
+	width: 54%;
+}
+
+.right-row, h1 {
+	margin-top: 20px;
+}
+.right-row h1 {
+	margin-left: 80px;
+	max-width: 77%;
+	margin-top: 0px;
+}
+
+.right-row table {
+	width: 100%;
+	margin-left: 0px;
+}
+
+.users-left-row {
+  margin-top: 23px;
+  text-align: center;
+  max-width: 42%;
+  margin-left: 5px;
+}
+
+.users-left-row table {
+	width: 52% !important;
+}
+
+.vacation-left-row {
+	float: left;
+	#margin: 30px !important;
+	width: 44%;
+}
+
+.vacation-left-row table {
+	margin-left: 15px;
+}
+
+.vacation-left-row h1 {
+	margin-left: 45px;
+	max-width: 77%;
+	margin-left: 45px;}
+
+.vacation-left-row {
+	table{
+    th {
+  		width:20%;
+		}
+	}
+}
+
+.left-row-adhoc {
+	float: left;
+	#margin: 30px !important;
+	width: 50%;
+}
+
+.left-row-adhoc {
+	table{
+    th {
+  		width:14%;
+		}
+	}
+}
+
+.left-row-adhoc h1 {
+	max-width: 85%;
+	margin-left: 45px;
+	
+}
+
+.right-row-adhoc {
+	float: right;
+	#margin: 30px !important;
+	width: 50%;
+	margin-top: 20px;
+}
+
+.right-row-adhoc h1 {
+	margin-left: 80px;
+	max-width: 70%;
+	margin-top: 0px;
+}
+
+.right-row-adhoc table {
+	width: 100%;
+	margin-left: 0px;
+}
+
+.pending-right-row{
+  margin-top: -63px;
+  margin-left:52%;
+  max-width: 38%;
+}
+
+.task-right-row{
+  margin-top: -63px;
+  margin-left:58%;
+  max-width: 38%;
+}
+

@@ -1,57 +1,80 @@
 .white-background
-	h1 Listing projects
-	- if params["adhoc"] == "true" && user_have_adhoc_permission(current_user)
-	  table
-	    thead
-	      tr
-	        th Name
-	        th Customer
-	        th Inactive?
-	        th
-	      
-	    tbody
-	    - @adhoc_pm_project.each do |project|
-	      tr
-	      	td = project.name
-	      	td = project.customer.name if !project.customer.nil?
-        	td
-						- if project.inactive == true
-							span Yes
-						- elsif project.inactive == false || project.inactive == nil
-							span No
-						td = link_to 'Manage', edit_project_path(project)
-	        
-  	- else
-		table
-			thead
-			  tr
-			    th Name
-			    th Customer
-			    th Inactive?
-			    th
-			    th
-			    -if current_user.admin || current_user.cm
-			    	th
+	.row
+		- if params["adhoc"] == "true" && user_have_adhoc_permission(current_user)
+			.left-row
+				h1 Listing projects				
+				table{class="project_table"}
+					thead
+						tr
+						  th Name
+						  th Customer
+						  th Inactive?
+						  th
+						  
+					tbody
+					- if @adhoc_pm_projects.present? 
+						- @adhoc_pm_projects.each_with_index do |project, i|
+								tr
+									td = project.name
+									td = project.customer.name if !project.customer.nil?
+									td
+										- if project.inactive == true
+											span Yes
+										- elsif project.inactive == false || project.inactive == nil
+											span No
+									- if "#{i}" == "0"
+										td = radio_button_tag("project",project.id, true, class:"select-project")
+									- else
+										td = radio_button_tag("project",project.id, false,class:"select-project")
+								
+		- else
+			.left-row
+				h1 Listing projects
+				table{class="project_table"}
+					thead
+						tr
+							th Name
+							th Customer
+							th Inactive?
+							th
+							
+					tbody
+						- @projects.each_with_index do |project,i|
+							tr
+								td = project.name
+								td = project.customer.name if !project.customer.nil?
+								td
+									- if project.inactive == true
+										span Yes
+									- elsif project.inactive == false || project.inactive == nil
+										span No
+								- if "#{i}" == "0"
+									td = radio_button_tag("project",project.id, true, class:"select-project")
+								- else
+									td = radio_button_tag("project",project.id, false,class:"select-project")
+				br
+				.row
+					= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_project_path, title: "Create New Project")					
+			.right-row		
+				h1 Enter And Manage Time
+				table
+					thead
+						tr
+							th Start date
+							th End date
+							th Status
+							th Report		
+					tbody
+					- @weeks.each do |week|
+						tr
+							td = week.start_date.strftime('%Y-%m-%d')
+							td = week.end_date.strftime('%Y-%m-%d')
+							td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
+							td= link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
+				= link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
+							
+	
+- if @project.present? || (@adhoc && @adhoc_pm_projects.present?)
+	.(id="dynamic_projects")
+		== render partial: 'new_edit_form'
 
-			tbody
-			  - @projects.each do |project|
-			    tr
-						td = project.name
-						td = project.customer.name if !project.customer.nil?
-							td
-								- if project.inactive == true
-									span Yes
-								- elsif project.inactive == false || project.inactive == nil
-									span No
-						td = link_to 'Manage', edit_project_path(project)
-						td = link_to 'Report', "/show_project_reports?id=#{project.id}", :method => :get
-						-if current_user.admin || current_user.cm
-							td
-									  - if project.inactive == false || project.inactive == nil
-									   = link_to 'Deactivate', "/projects/#{project.id}/deactivate_project", :method => :post
-									  - elsif project.inactive == true
-									   = link_to 'Reactivate', "/projects/#{project.id}/reactivate_project", :method => :post
-
-		br
-		.row
-			= link_to 'New Project', new_project_path, class:"orange-button"

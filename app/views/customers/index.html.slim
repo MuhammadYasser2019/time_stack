@@ -1,30 +1,56 @@
 .white-background
-	h1 Listing customers
+	.row
+		.left-row
+			h1 Listing customers
 	
-	table
-	  thead
-	    tr
-	      th Name
-	      th Address
-	      th City
-	      th State
-	      th Zipcode
-	      th
-	      th
-	      th
+			table
+				thead
+					tr
+					  th Name
+					  th Address
+					  th City
+					  th State
+					  th Zipcode
+					  th
+					  
+				tbody
+					- @customers.each_with_index do |customer, i|
+					  tr{id = "customer_id_#{customer.id}"}
+					    td{id="customer_name_#{customer.id}"} = customer.name
+					    td{id="customer_address_#{customer.id}"} = customer.address
+					    td{id="customer_city_#{customer.id}"} = customer.city
+					    td{id="customer_state_#{customer.id}"} = customer.state
+					    td{id="customer_zipcode_#{customer.id}"} = customer.zipcode	
+					    
+					    - if "#{i}" == "0"
+					      td = radio_button_tag("customer",customer.id, true, class:"select-customer")
+					    - else
+					      td = radio_button_tag("customer",customer.id, false,class:"select-customer")
+		
+			br
+			.row
+				= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_customer_path, title: "Create New Customer")
+
 	
-	  tbody
-	    - @customers.each do |customer|
-	      tr
-	        td = customer.name
-	        td = customer.address
-	        td = customer.city
-	        td = customer.state
-	        td = customer.zipcode
-	        td = link_to 'Manage', edit_customer_path(customer)
-	        td = link_to 'Report', "/customers/#{customer.id}/customer_reports", id: 'show_report'
-	        td = link_to 'Destroy', customer, data: {:confirm => 'Are you sure?'}, :method => :delete
-					
-	br
-	
-	= link_to 'New Customer', new_customer_path, class: "orange-button"
+		.right-row		
+				h1 Enter And Manage Time
+				table
+					thead
+						tr
+							th Start date
+							th End date
+							th Status
+							th Report		
+					tbody
+					- @weeks.each do |week|
+						tr
+							td = week.start_date.strftime('%Y-%m-%d')
+							td = week.end_date.strftime('%Y-%m-%d')
+							td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
+							td= link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
+				= link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
+
+-if @customers.present?
+	.(id="dynamic_customers")
+		== render 'new_edit_form'
+

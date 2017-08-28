@@ -4,7 +4,29 @@ class CustomersController < ApplicationController
   # GET /customers
   # GET /customers.json
   def index
+    
     @customers = Customer.where(user_id: current_user.id)
+    @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
+    if @customers.present?
+    params[:customer_id] = @customers.first.id unless params[:customer_id].present?
+    @customer = @customers.first
+    customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
+    @projects = @customer.projects
+    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+    @customer_holiday = CustomersHoliday.new
+    @invited_users = User.where("invited_by_id = ?", current_user.id)
+    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
+    @employment_type = EmploymentType.where(customer_id: @customer.id)
+    @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
+    logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
+
+    # @users= User.all
+    logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
+    @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
+    @adhoc_projects = Project.where("adhoc_pm_id is not null")
+    logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
+    logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
+   end
   end
 
   # GET /customers/1
@@ -63,13 +85,30 @@ class CustomersController < ApplicationController
     end
     @customer.user_id = params[:customer][:user_id]
     logger.debug("THIS IS THE CUSTOMER UPDATE METHOD")
+    params[:customer_id] = @customer.id
+    customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
+    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+    @customer_holiday = CustomersHoliday.new
+    @invited_users = User.where("invited_by_id = ?", current_user.id)
+    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
+    
+    @employment_type = EmploymentType.where(customer_id: @customer.id)
+    @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
+    logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
+
+    # @users= User.all
+    logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
+    @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
+    @adhoc_projects = Project.where("adhoc_pm_id is not null")
     @customer.save
     respond_to do |format|
       if @customer.update(customer_params)
-        format.html { redirect_to edit_customer_path(@customer), notice: 'Customer was successfully updated.' }
+    	@projects = @customer.projects
+	format.js
+        format.html { redirect_to customers_path, notice: 'Customer was successfully updated.' }
         format.json { redirect_to "/customers/#{params[:id]}/theme" }
       else
-        format.html { render :edit }
+        format.html { render :index }
         format.json { render json: @customer.errors, status: :unprocessable_entity }
       end
     end
@@ -96,7 +135,7 @@ class CustomersController < ApplicationController
   def invite_to_project
     logger.debug "INVITED BY #{params[:invited_by_id]}"
     @user = User.invite!(email: params[:email], invited_by_id: params[:invited_by_id].to_i, pm: params[:project_manager])
-    @user.update(invited_by_id: params[:invited_by_id])
+    @user.update(invited_by_id: params[:invited_by_id], customer_id: current_user.id)
     pu = ProjectsUser.new
     # @users_on_project = @project.users
     # @users_on_project = params[:user_id]
@@ -111,7 +150,7 @@ class CustomersController < ApplicationController
     end
     project.save
 
-    redirect_to edit_customer_path(params[:customer_id])
+    redirect_to customers_path
   end
 
   def remove_user_from_customer
@@ -145,7 +184,7 @@ class CustomersController < ApplicationController
     user.employment_type = params[:employment_type]
     user.save
     respond_to do |format|
-      format.html { redirect_to "/customers/#{user.customer_id}/edit"}
+      format.html { redirect_to customers_path}
     end
   end
 
@@ -289,21 +328,24 @@ class CustomersController < ApplicationController
   end
 
   def add_adhoc_pm_by_cm
-	@customer = Customer.find(params[:id])
-	@project = Project.find(params[:pm_project_id])
-	@adhoc_pm = @project.adhoc_pm_id
-	@user = User.find(params[:adhoc_pm_id])
-	if @adhoc_pm.present? && @adhoc_pm != @user.id
-		@project.adhoc_pm_id = nil
-		@project.adhoc_start_date = nil
-		@project.adhoc_end_date = nil
-		@project.save
-	end
-	@project.adhoc_pm_id = params[:adhoc_pm_id]
-	@project.adhoc_start_date = params[:adhoc_start_date]
-	@project.adhoc_end_date = params[:adhoc_end_date]
-	@project.save
-	redirect_to customers_path
+    @customer = Customer.find(params[:customer_id])
+    @project = Project.find(params[:pm_project_id])
+    @adhoc_pm = @project.adhoc_pm_id
+    @user = User.find(params[:adhoc_pm_id])
+    if @adhoc_pm.present? && @adhoc_pm != @user.id
+      @project.adhoc_pm_id = nil
+      @project.adhoc_start_date = nil
+      @project.adhoc_end_date = nil
+      @project.save
+    end
+    @project.adhoc_pm_id = params[:adhoc_pm_id]
+    @project.adhoc_start_date = params[:adhoc_start_date]
+    @project.adhoc_end_date = params[:adhoc_end_date]
+    @project.save
+    @adhoc_projects = Project.where("adhoc_pm_id is not null")
+    respond_to do |format|
+      format.js
+    end
   end
 
   def available_users
@@ -315,6 +357,34 @@ class CustomersController < ApplicationController
     logger.debug "available_users - leaving  @users is #{@users}"
     
   end
+
+  def dynamic_customer_update
+
+    logger.debug("customer-dynamic_customer_update- CUSTOMER ID IS #{params.inspect}")
+    @customer = Customer.find params[:customer_id]
+    customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
+	
+    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+    @customer_holiday = CustomersHoliday.new
+    @projects = @customer.projects
+    @invited_users = User.where("invited_by_id = ?", current_user.id)
+    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
+    @employment_type = EmploymentType.where(customer_id: @customer.id)
+    @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
+    logger.debug("customer-dynamic-update- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
+
+    # @users= User.all
+    logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
+    @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
+    @adhoc_projects = Project.where("adhoc_pm_id is not null")
+    logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
+    logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
+	
+    respond_to do |format|  
+      format.js
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

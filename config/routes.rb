@@ -27,6 +27,9 @@ Rails.application.routes.draw do
   root 'weeks#index'
   get 'weeks/:id/report' => 'weeks#report'
 
+  get '/dynamic_project_update' => 'projects#dynamic_project_update'
+  get '/dynamic_customer_update' => 'customers#dynamic_customer_update'
+
   get 'projects/:id/approve/:week_id/:row_id' => 'projects#approve'
   get 'projects/:id/reject/:week_id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
@@ -79,8 +82,8 @@ Rails.application.routes.draw do
   post "/users/invite_customer" => "users#invite_customer"
   
   post "/customers/invite_to_project" => "customers#invite_to_project"
-  post "project/:id/add_adhoc_pm" => "projects#add_adhoc_pm", as: :add_adhoc_pm
-  post "customer/:id/add_adhoc_pm_by_cm" => "customers#add_adhoc_pm_by_cm", as: :add_adhoc_pm_by_cm
+  post "project/:project_id/add_adhoc_pm" => "projects#add_adhoc_pm", as: :add_adhoc_pm
+  post "customer/:customer_id/add_adhoc_pm_by_cm" => "customers#add_adhoc_pm_by_cm", as: :add_adhoc_pm_by_cm
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 

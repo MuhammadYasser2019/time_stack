@@ -11,9 +11,9 @@ class EmploymentTypesController < ApplicationController
     # customer_id = current_user.customer_id
     # @employment_type.customer_id = customer_id
     if @employment_type.save
-      redirect_to "/customers/#{Customer.find(params[:employment_type][:customer_id]).id}/edit"
+      redirect_to customers_path
     else
-      redirect_to "/customers/#{Customer.find_by_user_id(current_user.id).id}/edit"
+      redirect_to customers_path
     end
   end
 
@@ -37,8 +37,12 @@ class EmploymentTypesController < ApplicationController
 
   def destroy
     employment_type = EmploymentType.find(params[:id])
+    @customer = Customer.find(employment_type.customer_id)
+    @employment_type = EmploymentType.where(customer_id: employment_type.customer_id)
     if employment_type.destroy
-      redirect_to "/customers/#{Customer.find_by_user_id(current_user.id)}"
+      respond_to do |format|
+	format.js
+      end
     end
   end
 

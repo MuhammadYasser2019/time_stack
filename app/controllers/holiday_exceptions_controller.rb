@@ -27,10 +27,18 @@ class HolidayExceptionsController < ApplicationController
   # POST /holiday_exceptions.json
   def create
     @holiday_exception = HolidayException.new(holiday_exception_params)
-  
+    @project = Project.find holiday_exception_params[:project_id]
+    @customer = Customer.find(@project.customer_id)
+        
+    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     respond_to do |format|
       if @holiday_exception.save
-        format.html { redirect_to @holiday_exception, notice: 'Holiday exception was successfully created.' }
+	@holiday_exceptions = @project.holiday_exceptions
+	customer_holiday_ids = CustomersHoliday.where(customer_id: @holiday_exception.customer_id).pluck(:holiday_id)
+    	@holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+	@holiday_exception = HolidayException.new
+	format.js
+        #format.html { redirect_to @holiday_exception, notice: 'Holiday exception was successfully created.' }
         format.json { render :show, status: :created, location: @holiday_exception }
       else
         format.html { render :new }
