@@ -33,6 +33,14 @@ Then(/^HE should go to new time entries$/) do
 
 end
 
+Then(/^click on the "([^"]*)" link$/) do |arg1|
+  page.click_link('NEW')
+end
+
+Then(/^click on "([^"]*)"$/) do |arg1|
+  click_button('Submit Timesheet')
+end
+
 Then(/^click "([^"]*)"$/) do |arg1|
   click_button('Save Timesheet')
 end
