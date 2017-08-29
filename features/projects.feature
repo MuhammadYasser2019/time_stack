@@ -45,7 +45,7 @@
 #      Then I should see "Editing project"
 #      And I fill in "Email" with "test1@resourcestack.com"
 #      And I click "Invite Users" having email "test1@resourcestack.com"
-##      And I should see Invitation subject "Invitation instructions"
+##     And I should see Invitation subject "Invitation instructions"
 #      And I click on "Accept invitation"
 #      And I should have heading "Create an Account"
 #      And You should not see Sign in with Google

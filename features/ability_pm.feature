@@ -4,7 +4,7 @@ Feature: Testing abilities of a User with PM role
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
     Given On the index page
-    # Then I should see link to "Enter Time for Current Week" and "Manage Projects"
+    #Then I should see link to "Enter Time for Current Week" and "Manage Projects"
 
 
   # This scenario will use the step definitions form ablity_user_step.rb
@@ -53,12 +53,6 @@ Feature: Testing abilities of a User with PM role
   Scenario: 10) With PM roles user should be able to Add Tasks
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
-    # And click on the button "Manage Projects"
-    #Then Should see "Listing projects" and link to the project
-    # And click the project link
-    #And Text "Editing project" should be present
-    #And Click on link "Add Task"
-    #And Fill the code and description of the task
     And Should be able to see heading "Tasks"
     And Should see "Add Task"
     And Fill the code and description of the task
@@ -78,5 +72,28 @@ Feature: Testing abilities of a User with PM role
     # And click the project link
     # And Text "Editing project" should be present
     Then User should see label "Adhoc Project Manager"
+
+
+  Scenario: 19) With PM roles user should able to make a vacation request
+    Given I am a project manager
+    Given PM logs in with "Email" and "Password"
+    Then On the index page
+    And click on the "Vacation Request" button
+    Then User should see "Reports for Users PM user" 
+    And User should see "Your Vacation Requests"
+
+  Scenario: 20) With PM roles user should be able to make an Holiday Exception
+    Given I am a customer manager
+    Given CM logs in with "Email" and "Password"
+    Given User is on Weeks index
+    And click on "Holidays" link
+    Then click the button "Create New Holiday"
+    And Enter "Name" and "Date of holiday this year"
+    Then On the index page
+    And click on the "Holiday Exceptions" button
+    And Expect page to have "New Holiday Exception"
+    And select a "user" 
+    And click on "Create Holiday Exception"
    
+    
 

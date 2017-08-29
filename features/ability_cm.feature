@@ -36,7 +36,7 @@ Feature: Testing abilities of a User with CM role
     
   
   #Scenario: 12) With CM role user should be able to Edit Customers but not add or delete them.
-   # Given I am a customer manager
+  #iGiven I am a customer manager
   #Given CM logs in with "Email" and "Password"
   #Then Go to customers page
   #And Should see "Listing customers" 
@@ -49,10 +49,38 @@ Feature: Testing abilities of a User with CM role
   #Then User should see "You are not allowed to access this page."
 
   #Scenario: 16) With CM role user should be able to delete a project
-  #  Given I am a customer manager
-  #  Given CM logs in with "Email" and "Password"
-  #  Given User is on Weeks index
-  #  And click on the "Manage Projects"
+  # Given I am a customer manager
+  # Given CM logs in with "Email" and "Password"
+  # Given User is on Weeks index
+  # And click on the "Manage Projects"
   # Then Should see link to "Time Entries"
   # Then User clicks on "Destroy" link
   # Then User should not see link to "Time Entries"
+
+  Scenario: With CM roles user should able to make a vacation request
+    Given I am a customer manager
+    Given CM logs in with "Email" and "Password"
+    Then On the index page
+    And click on the "Vacation Request" button
+    Then User should see "Reports for Users CM user" 
+    And User should see "Your Vacation Requests"
+
+  Scenario: 18) With CM role user should able to create New Holiday
+    Given I am a customer manager
+    Given CM logs in with "Email" and "Password"
+    Given User is on Weeks index
+    And click on "Holidays" link
+    Then click the button "Create New Holiday"
+    And Enter "Name" and "Date of holiday this year"
+    #And click on the global checkbox 
+    
+
+  Scenario: 21) With CM role user should be able to create Employment Types
+    Given I am a customer manager
+    Given CM logs in with "Email" and "Password"
+    Given User is on Weeks index
+    Then Click on the "Employment Types"
+    And Click on the "Create New Employment Type"
+    And Enter a "Name" 
+    And page should have a button "Create Employment Type"
+    And click button "Create Employment Type"

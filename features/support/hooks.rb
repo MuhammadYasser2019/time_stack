@@ -74,6 +74,9 @@ module TestDataSetupHelper
   def create_customer_manager
     u = User.new
     u.id = 1
+    u.customer_id = 1
+    u.first_name = "CM"
+    u.last_name = "user"
     u.email = "cm.user@test.com"
     u.password = "123456"
     u.encrypted_password
@@ -93,6 +96,9 @@ module TestDataSetupHelper
   def create_project_manager
     u = User.new
     u.id = 1
+    u.customer_id = 1
+    u.first_name = "PM"
+    u.last_name = "user"
     u.email = "pm.user@test.com"
     u.password = "123456"
     u.encrypted_password

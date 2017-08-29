@@ -24,8 +24,16 @@
 .left-row {
 	float: left;
 	#margin: 30px !important;
-	width: 44%;
+	width: 50%;
 }
+
+
+.left-row h1 {
+	max-width: 100%;
+	margin-left: 50px;
+}
+
+
 
 .left_row, h1 {
   margin-left: 20px;
@@ -39,6 +47,7 @@
 
 .left-row table {
 	margin-left: 45px;
+	table-layout: fixed;
 }
 
 .right-row {
@@ -58,7 +67,9 @@
 
 .right-row table {
 	width: 100%;
-	margin-left: 0px;
+	margin-left: 0px; 
+	margin-right:-90px;
+    table-layout: fixed;
 }
 
 .users-left-row {
@@ -145,3 +156,23 @@
   max-width: 38%;
 }
 
+
+
+
+@media only screen and (max-width: 1000px){
+  .left-row {
+    float: left;
+	width: 100%;
+	text-align: center;
+	}
+    .left-row table {
+	width: 100%;
+	margin-left: 0px; 
+	margin-right:-90px;
+}
+	.right-row{
+	float: left;
+    width: 100%;
+    text-align: center;
+	}
+}

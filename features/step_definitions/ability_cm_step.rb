@@ -81,3 +81,48 @@ end
 Then(/^User should not see link to "([^"]*)"$/) do |project_name|
   expect(page).to have_no_link(project_name)
 end
+
+Given(/^click on "([^"]*)" link$/) do |arg1|
+ page.click_link("Holidays")
+end
+
+
+Then(/^click the button "([^"]*)"$/) do |arg1|
+  page.click_link(arg1, href: "/holidays/new")
+end
+
+Then(/^Click on the "([^"]*)"$/) do |arg1|
+  page.click_link(arg1)
+end
+
+
+Then(/^Enter "([^"]*)" and "([^"]*)"$/) do |arg1, arg2|
+  #page.click_link(href: "/holidays/new" )
+  page.fill_in "Name", :with => "Labor Day"
+  #select '09/04/2017', :from => "Date of holiday this year"
+  page.fill_in 'holiday_date', :with => '09/04/2017'
+  page.click_button "Submit Holiday"
+end
+
+Then(/^Enter a "([^"]*)"$/) do |arg1|
+   page.fill_in "Name", :with => "Full Time"
+
+end
+
+Then(/^click button "([^"]*)"$/) do |arg1|
+   #page.click_link(arg1, href: "employment_types/new?customer_id=1")
+   #find("input[type=submit][value='Create Employment Type']").click
+   click_button("Create Employment Type")
+end
+
+
+Then(/^page should have a button "([^"]*)"$/) do |arg1|
+  expect(page).to have_button(arg1)
+end
+
+
+Then(/^click on the global checkbox$/) do
+  #find("#holiday_global").set(true)
+  #find('#Global holiday?').click
+  expect(page).to have_selector("#holiday_global")
+end

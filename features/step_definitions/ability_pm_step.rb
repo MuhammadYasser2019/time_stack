@@ -63,13 +63,15 @@ Given(/^click on the "([^"]*)"$/) do |projects_link|
   page.click_link projects_link
 end
 
+
+
 Then(/^Should see "([^"]*)" and link to the project$/) do |listing_projects|
   page.should have_content(listing_projects)
   expect(page).to have_link('Manage', href: '/projects/1/edit')
 end
 
-Then(/^User should see "([^"]*)"$/) do |not_allowed|
-  expect(page).to have_content(not_allowed)
+Then(/^User should see "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
 end
 
 Then(/^User clicks on "([^"]*)" link$/) do |destroy_link|
@@ -127,10 +129,16 @@ Then(/^User should see label "([^"]*)"$/) do |arg1|
   page.should have_content(arg1) # Write code here that turns the phrase above into concrete actions
 end
 
+Then(/^click on the "([^"]*)" button$/) do |arg1|
+ page.click_link("Vacation Request")
+end
 
+Then(/^select a "([^"]*)"$/) do |arg1|
+ 
+end
 
-    
-
-
+Then(/^Expect page to have "([^"]*)"$/) do |arg1|
+  expect(page).to have_link(arg1)
+end
 
 
