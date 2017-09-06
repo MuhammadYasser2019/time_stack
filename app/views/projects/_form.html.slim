@@ -3,13 +3,17 @@
   h1 #{@adhoc_pm_project.name}
 -else
   h1 #{@project.name}
-ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
+ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
  - if !(@adhoc && user_have_adhoc_permission(current_user))
   - unless current_page?(action: 'new')
    li class="tab-title active"
   	 a href="#information" Project Information
    li class="tab-title"
   	 a href="#holidays" Holiday Exceptions
+   li class="tab-title"
+  	 a href="#user_invitation" Invite Users
+   li class="tab-title"
+  	 a href="#adhoc_pm" Assign Adhoc PM
 - if @adhoc && user_have_adhoc_permission(current_user)
  div.tabs-content
 	 div class="content active" id="information"
@@ -164,8 +168,9 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 			- unless current_page?(action: 'new')
 				div id ="dynamic_holiday_update"
 					== render partial: "holiday_exceptions_form"
-			 
-		.(class="row white-background")
+
+		 div class="content" id="user_invitation"	 
+		  .(class="row white-background")
 				h1.left_row Invite Users
 				table class="left-row"
 					thead
@@ -200,8 +205,9 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 33%;")
 							    td
 							      = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 		
-		.(class="row white-background")
-			div(id="dynamic_adhoc_update")
+		 div class="content" id="adhoc_pm"
+		  .(class="row white-background")
+			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 			
 

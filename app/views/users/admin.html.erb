@@ -36,8 +36,11 @@
 			  
 			</tbody>
 		</table>
-	   <%= submit_tag "Submit" %>
-      <% end %>
+		<div style="margin-left: 47%">
+		   <%= submit_tag "Submit"%>
+	      <% end %>
+	    </div>
+
 <table>
   <thead>
     <tr>
@@ -89,8 +92,8 @@
 			<h2 class="text-center">Holidays Setup</h2>
 			<% if @holidays.any? %>
 			<div class="row">
-				<h4 class="small-4 columns text-center underline" style="text-decoration:underline;">Name</h4>
-				<h4 class="small-4 columns text-center underline" style="text-decoration:underline;">Date</h4>
+				<h4 class="small-4 columns text-center underline" style="text-decoration:underline; margin: 5px;">Name</h4>
+				<h4 class="small-4 columns text-center underline" style="text-decoration:underline; margin: 5px;">Date</h4>
 				<h4 class="small-4 columns text-center"></h4>
 			</div>
 				<% @holidays.each do |h| %>

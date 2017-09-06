@@ -108,7 +108,7 @@ img {
 
 img {
   display: inline-block;
-  vertical-align: middle; }
+  vertical-align: left; }
 
 textarea {
   height: auto;
@@ -3273,7 +3273,7 @@ meta.foundation-mq-topbar {
 @media only screen and (min-width: 64.063em) {
   .icon-bar.eight-up.large-vertical .item {
     width: auto; } }
-
+}
 .tabs {
   margin-bottom: 0 !important;
   margin-left: 0; }
@@ -3291,7 +3291,7 @@ meta.foundation-mq-topbar {
       display: block;
       background-color: #EFEFEF;
       color: #222222;
-      padding: 1rem 2rem;
+      padding: 1rem 1rem;
       font-family: "Helvetica Neue", Helvetica, Roboto, Arial, sans-serif;
       font-size: 1rem; }
       .tabs dd > a:hover, .tabs .tab-title > a:hover {

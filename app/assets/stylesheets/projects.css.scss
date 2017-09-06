@@ -24,17 +24,17 @@
 .left-row {
 	float: left;
 	#margin: 30px !important;
-	width: 44%;
+	width: 35%;
 }
 
 .left_row, h1 {
   margin-left: 20px;
-  max-width: 40%;
+  max-width: 35%;
 }
 
 .left-row h1 {
 	max-width: 77%;
-	margin-left: 45px;
+	#margin-left: 45px;
 }
 
 .project_table{
@@ -48,20 +48,20 @@
 .right-row {
 	float: right;
 	#margin: 30px !important;
-	width: 54%;
+	width: 40%;
 }
 
 .right-row, h1 {
 	margin-top: 20px;
 }
 .right-row h1 {
-	margin-left: 80px;
-	max-width: 77%;
+	#margin-left: 80px;
+	max-width: 100%;
 	margin-top: 0px;
 }
 
 .right-row table {
-	width: 100%;
+	width: 0%;
 	margin-left: 0px;
 }
 
@@ -79,16 +79,16 @@
 .vacation-left-row {
 	float: left;
 	#margin: 30px !important;
-	width: 44%;
+	width: 35%;
 }
 
 .vacation-left-row table {
-	margin-left: 15px;
+	margin-left: 1%;
 }
 
 .vacation-left-row h1 {
 	margin-left: 45px;
-	max-width: 77%;
+	max-width: 100%;
 	margin-left: 45px;}
 
 .vacation-left-row {
@@ -102,7 +102,7 @@
 .left-row-adhoc {
 	float: left;
 	#margin: 30px !important;
-	width: 50%;
+	width: 35%;
 }
 
 .left-row-adhoc {
@@ -114,38 +114,184 @@
 }
 
 .left-row-adhoc h1 {
-	max-width: 85%;
-	margin-left: 45px;
+	max-width: 100%;
+	margin-left: 13px;
 	
 }
 
 .right-row-adhoc {
 	float: right;
 	#margin: 30px !important;
-	width: 50%;
+	width: 43%;
 	margin-top: 20px;
 }
 
 .right-row-adhoc h1 {
-	margin-left: 80px;
+	margin-left: 25px;
 	max-width: 70%;
 	margin-top: 0px;
 }
 
 .right-row-adhoc table {
-	width: 100%;
+	width: 80%;
 	margin-left: 0px;
 }
 
 .pending-right-row{
   margin-top: -63px;
-  margin-left:52%;
+  margin-left:57%;
   max-width: 38%;
 }
 
 .task-right-row{
   margin-top: -63px;
-  margin-left:58%;
+  margin-left: 70%;
+  margin-right: 20%;
   max-width: 38%;
 }
+
+.vacation-right-row {
+	float: left;
+	#margin: 30px !important;
+	width: 50%;
+}
+
+.vacation-right-row, h1 {
+	margin-top: 20px;
+	margin-left:15%;
+}
+.vacation-right-row h1 {
+	#margin-left: 80px;
+	max-width: 60%;
+	margin-left: 8%;
+	margin-top: 10px;
+}
+
+.vacation-right-row table {
+	float: left;
+}
+
+@media only screen and (max-width:1200px){
+  .left-row {
+	float: left;
+    width: 80%;
+    text-align: center;
+	}
+   .left-row table {
+    width: 100%;
+    margin-left: 0px;
+    margin-right: 10px;
+   }
+    .left-row h1 {
+	max-width: 100%;
+   }
+   .project_table{
+   margin-left: 5px !important;
+   }
+	.right-row {
+	float: left;
+	width: 80%;
+	text-align: center;
+	}
+	.right-row h1 {
+	#margin-left: 80px;
+	max-width: 100%;
+	margin-top: 0px;
+    }
+
+   .right-row table {
+	width: 100%;
+	margin-left: 0px;
+   }
+
+}  
+
+@media only screen and (max-width:1200px){
+	.vacation-left-row {
+	float: left;
+	width: 100%;
+	text-align: center;
+    }
+
+   .vacation-left-row table {
+	width: 100%;
+    margin-left: 10px;
+    margin-right: 10px;
+    }
+
+   .vacation-right-row {
+	float: left;
+    width: 100%;
+    }   
+
+    .vacation-right-row h1 {
+	#margin-left: 80px;
+	max-width: 60%;
+	margin-top: 10px;
+	} 
+}
+
+@media only screen and (max-width:1200px){
+   .left_row, h1 {
+   margin-left: 20px;
+   max-width: 80%;
+   }
+   .pending-right-row{
+   float: left;
+   margin-top: 10px;
+   margin-left:10%;
+   width: 80%;
+   }
+} 
+
+@media only screen and (max-width:1200px){
+	.left-row-adhoc {
+	float: left;
+	width: 80%;
+	text-align: centre;
+    }
+
+	.left-row-adhoc {
+		table{
+	    th {
+	  		width:14%;
+			}
+		}
+	 }
+
+	.right-row-adhoc {
+	float: left;
+	width: 80%;
+	text-align: centre;
+    }
+}
+
+@media only screen and (max-width:1200px){
+ .users-left-row {
+  float: left;
+  width: 80%;
+  }
+
+ .task-right-row{
+   margin-top: 10px;
+   float: left;
+   margin-left: 5%;
+   width: 100%;
+  }
+}
+
+@media only screen and (min-device-width: 768px) and (max-device-width: 1024px) and (orientation: portrait){
+   table{
+   overflow-x: auto;
+   display: block;
+   }
+}
+
+
+
+
+
+
+
+
 
