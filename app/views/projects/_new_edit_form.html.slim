@@ -20,9 +20,7 @@ div[style="width: 90%; margin-left: 7%;"]
       style: "margin: 5px;" 
     - if current_user.proxy
         = link_to "Manage Proxy Projects", "/users/#{current_user.id}/proxies", class: "orange-button large-3 columns", style: "margin: 5px;" 
-    = link_to "User Report", "/show_user_reports/#{current_user.id}", class: "orange-button large-3 columns", style: "margin: 5px;"  
-    = link_to 'Back to Project Lists', projects_path, class: "orange-button large-3 columns",  
-        style: "margin: 5px" 
+    = link_to "User Report", "/show_user_reports/#{current_user.id}", class: "orange-button large-3 columns", style: "margin: 5px;"   
     br
 
       

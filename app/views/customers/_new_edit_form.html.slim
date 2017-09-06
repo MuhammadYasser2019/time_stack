@@ -13,8 +13,6 @@ div[style="width: 90%; margin-left: 7%;"]
 		= link_to "User Report", "/show_user_reports/#{current_user.id}", class: "orange-button large-3 columns", style: "margin: 5px;"
 		- if current_user.admin?
 			= link_to "Admin", "/admin", class: "orange-button large-3 columns", style: "margin: 5px;" 
-		= link_to 'Back to Customer List', customers_path, class: "orange-button large-3 columns",  
-			  style: "margin: 5px;" 
 	    br
     
 			
