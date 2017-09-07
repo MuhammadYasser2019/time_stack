@@ -89,23 +89,23 @@
 	</div>
 	<div class="content row" id="holidays">
 		<div class="small-6 small-offset-3">
-			<h2 class="text-center">Holidays Setup</h2>
+			<h1 class="text-center">Holidays Setup</h1>
 			<% if @holidays.any? %>
 			<div class="row">
-				<h4 class="small-4 columns text-center underline" style="text-decoration:underline; margin: 5px;">Name</h4>
+				<h4 class="small-4 columns text-center underline" style="text-decoration:underline; margin: 5px; margin-left: 20%;">Name</h4>
 				<h4 class="small-4 columns text-center underline" style="text-decoration:underline; margin: 5px;">Date</h4>
 				<h4 class="small-4 columns text-center"></h4>
 			</div>
 				<% @holidays.each do |h| %>
-					<div class="small-4 columns text-center"><%= h.name %></div>
+					<div class="small-4 columns text-center" style="margin-left:15%;"><%= h.name %></div>
 					<div class="small-4 columns text-center"><%= h.date.strftime("%m-%d-%y") %></div>
-					<div class="small-4 columns text-center"><%= link_to "Delete Holiday", h, method: :delete, data: { confirm: 'Are you sure?' }, style: "color:#842929" %></div>
+					<div class="button small" style="margin-left: 20%;"><%= link_to "Delete Holiday", h, method: :delete, data: { confirm: 'Are you sure?' }, style: "color:#842929" %></div>
 				<% end %>
 			<% else %>
 				<h3 class="text-center">No Holidays created</h3>
 			<% end %>
 			
-			<%= link_to "Create Global Holiday", new_holiday_path, class: "button small", style: "margin-top:30px;"%>
+			<%= link_to "Create Global Holiday", new_holiday_path, class: "button small", style: "margin-top:30px; margin-left: 20%;"%>
 		</div>
 	</div>
 	<div class="report-log-tab content"  id="panel3">
