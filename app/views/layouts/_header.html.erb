@@ -19,8 +19,10 @@
 	    <% end %>
 		</td>
 		<td>
-		<% if !current_user.nil? %>
-			<span style="float:left;margin-top:5px;"><%= link_to current_user.email, "/user_profile" %></span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %>
+		<% if !current_user.nil? && current_user.admin? %>
+		     <span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span><span style="float:right; margin: 5px;"><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span><span style="float:right; margin: 5px;"><a href= "/admin" %><%= button_to "Admin" %></span>
+		<% elsif !current_user.nil? %>
+			<span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %>
 		<% else %>
 			<%= link_to "Sign In", new_user_session_path %>
 		<% end %>
