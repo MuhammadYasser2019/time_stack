@@ -1,5 +1,5 @@
 
-<ul class="tabs" data-tab style="margin: 0 0 0 28%;">
+<ul class="tabs" data-tab style="margin: 0 0 0 33%;">
   <li class="tab-title active"><a href="#user_permissions">User Permissions</a></li>
   <li class="tab-title"><a href="#holidays">Holidays</a></li>
   <li class="tab-title"><a href="#panel3">Report Logo</a></li>
@@ -36,8 +36,11 @@
 			  
 			</tbody>
 		</table>
-	   <%= submit_tag "Submit" %>
-      <% end %>
+		<div style="margin-left: 47%">
+		   <%= submit_tag "Submit"%>
+	      <% end %>
+	    </div>
+
 <table>
   <thead>
     <tr>
@@ -86,26 +89,26 @@
 	</div>
 	<div class="content row" id="holidays">
 		<div class="small-6 small-offset-3">
-			<h2 class="text-center">Holidays Setup</h2>
+			<h1 class="text-center">Holidays Setup</h1>
 			<% if @holidays.any? %>
 			<div class="row">
-				<h4 class="small-4 columns text-center underline" style="text-decoration:underline;">Name</h4>
-				<h4 class="small-4 columns text-center underline" style="text-decoration:underline;">Date</h4>
+				<h4 class="small-4 columns text-center underline" style="text-decoration:underline; margin: 5px; margin-left: 20%;">Name</h4>
+				<h4 class="small-4 columns text-center underline" style="text-decoration:underline; margin: 5px;">Date</h4>
 				<h4 class="small-4 columns text-center"></h4>
 			</div>
 				<% @holidays.each do |h| %>
-					<div class="small-4 columns text-center"><%= h.name %></div>
+					<div class="small-4 columns text-center" style="margin-left:15%;"><%= h.name %></div>
 					<div class="small-4 columns text-center"><%= h.date.strftime("%m-%d-%y") %></div>
-					<div class="small-4 columns text-center"><%= link_to "Delete Holiday", h, method: :delete, data: { confirm: 'Are you sure?' }, style: "color:#842929" %></div>
+					<div class="button small" style="margin-left: 20%;"><%= link_to "Delete Holiday", h, method: :delete, data: { confirm: 'Are you sure?' }, style: "color:#842929" %></div>
 				<% end %>
 			<% else %>
 				<h3 class="text-center">No Holidays created</h3>
 			<% end %>
 			
-			<%= link_to "Create Global Holiday", new_holiday_path, class: "button small", style: "margin-top:30px;"%>
+			<%= link_to "Create Global Holiday", new_holiday_path, class: "button small", style: "margin-top:30px; margin-left: 20%;"%>
 		</div>
 	</div>
-	<div class="report-log-tab" id="panel3">
+	<div class="report-log-tab content"  id="panel3">
 	<h1>Create Report Logo</h1>
 	<%= form_tag report_logos_path, :multipart => true, method: :post do%>
 	<table>
@@ -123,12 +126,12 @@
 				<td><%= file_field_tag(:report_logo, id: "report-logo-upload") %></td>
 				<td><%= button_tag "Save Logo", class: "tiny orange-buton"%></td>
 			</tr>
-		</tbody>>
+		</tbody>
 	</table>
 	<% end %>
 
 
-	<h1>Assign Reoprt Logo To User</h1>
+	<h1>Assign Report Logo To User</h1>
 	<%= form_tag "/assign_report_logo_to_user", :multipart => true, method: :get do  %>
 	<table>
 		<thead>
@@ -143,7 +146,7 @@
 				<td><%= button_tag "Assign Logo", class: "tiny orange-buton" %></td>
 				<td><%= %></td>
 			</tr>
-		</tbody>>
+		</tbody>
 	</table>
 	<% end %>
 

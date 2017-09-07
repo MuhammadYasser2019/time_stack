@@ -16,3 +16,18 @@
 #   page.click_link(edit)
 #   # expect(current_path).to eql("/tasks/8/edit")
 # end
+=begin
+#create_user
+ #visit (user_session_path)
+  #page.fill_in "Email", :with => "test.user1@test.com"
+  #page.fill_in "Password", :with => "1234567"
+  #page.click_button "Log in"
+
+  expect(page).to have_link("Enter Time for Current Week", href: '/weeks/new')
+  visit (weeks_path)
+  page.click_on "Enter Time for Current Week"
+
+   page.should have_content('New week')
+
+   find('#week_time_entries_attributes_0_project_id').find(:xpath, 'option[1]').select_option
+=end

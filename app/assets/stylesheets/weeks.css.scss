@@ -142,9 +142,10 @@ table thead tr th, table tfoot tr th, table tfoot tr td, table tbody tr th, tabl
 
 input, select, textarea{
   
-  border-width: 3px !important;
-  border-radius: 2px;
+  border-width: 1px !important;
+  border-radius: 2%;
   background-color: #FAFAFA !important;
+  font-size: 13px;
 }
 
 input[type="submit"]{
@@ -161,7 +162,7 @@ input[type="submit"]{
 .orange-button{
   
   padding: 9px;
-  border-radius: 3px;
+  border-radius: 20px;
     /* margin: 15px; */
   color: black;
   font-weight: bold;
@@ -172,6 +173,7 @@ input[type="submit"]{
   text-align: center;
   margin: 0 auto;
 }
+
 
 .center{
   text-align:center;
@@ -211,7 +213,7 @@ input[type="submit"]{
   background-color:white;
   border-radius: 5px;
   padding:10px;
-  max-width: 80%;
+  max-width: 90%;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 

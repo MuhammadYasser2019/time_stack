@@ -1,4 +1,4 @@
-ul(class="tabs" data-tab style="margin: 0 0 0 35%;")
+ul(class="tabs" data-tab style="margin: 0 0 0 10%;")
  - unless current_page?(action: 'new')
   li class="tab-title active"
   	a href="#information" Customer Information
@@ -6,6 +6,14 @@ ul(class="tabs" data-tab style="margin: 0 0 0 35%;")
   	a href="#holidays" Holidays
   li class="tab-title"
   	a href="#employment_types" Employment Types
+  li class="tab-title"
+  	a href="#customer_employees" Customer Employees
+  li class="tab-title"
+  	a href="#vacation_request" Vacation Request	
+  li class="tab-title"
+  	 a href="#user_invitation" Invite Users
+  li class="tab-title"
+  	 a href="#adhoc_pm" Assign Adhoc PM
 
 div.tabs-content
   div.white-background class="content active" id="information"
@@ -70,63 +78,72 @@ div.tabs-content
     .(class="row white-background")
 			div(id="dynamic_employment")
 				== render partial: "employment_form"
-			
-div class = "disp-message"
-	.(class="row white-background")
-		div class="vacation-left-row"
-			h1 Customer Employees
-			table
-				thead
-					tr
-						th User
-						th Email
-						th
-				tbody
-					-@users.each_with_index do |uop, i|
-						-if uop.customer_id == params[:customer_id].to_i
-							tr(id = "users_#{i}") 
-								td = uop.first_name
-								td = link_to uop.email, "/edit_customer_user/#{uop.id}"
-								td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
-		div class="right-row"
-			h1 Vacation Request
-			table
-				thead
-					tr
-						th Employee
-						th Vacation Start Date
-						th Vacation End Date
-						th 
-						th
-				tbody
-					- @vacation_requests.each_with_index do |vu, i|
-						tr id = "vacation_#{i}"
-							td = User.find(VacationRequest.find(vu).user_id).email
-							td = vu.vacation_start_date.strftime('%Y-%m-%d')
-							td = vu.vacation_end_date.strftime('%Y-%m-%d')
-							td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true
-							td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
+	
+  div class="content" id="customer_employees"
+	div class = "disp-message"
+	  div.row
+      .small-8.small-offset-2
+		.(class="row white-background")
+			div class="vacation-left-row" 
+				h1 Customer Employees
+				table 
+					thead
+						tr
+							th User
+							th Email
+							th
+					tbody
+						-@users.each_with_index do |uop, i|
+							-if uop.customer_id == params[:customer_id].to_i
+								tr(id = "users_#{i}") 
+									td = uop.first_name
+									td = link_to uop.email, "/edit_customer_user/#{uop.id}"
+									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
 
-	.(class="row white-background")
-		h1.left_row Invite Users	
-		table class="left-row"
+  div class="content" id="vacation_request"
+    div.row
+      .small-8.small-offset-2
+  	    .(class="row white-background")
+			div class="vacation-right-row"
+				h1 Vacation Request
+				table
+					thead
+						tr
+							th Employee
+							th Vacation Start Date
+							th Vacation End Date
+							th 
+							th
+					tbody
+						- @vacation_requests.each_with_index do |vu, i|
+							tr id = "vacation_#{i}"
+								td = User.find(VacationRequest.find(vu).user_id).email.truncate(20)
+								td = vu.vacation_start_date.strftime('%Y-%m-%d')
+								td = vu.vacation_end_date.strftime('%Y-%m-%d')
+								td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true
+								td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
+
+  div class="content" id="user_invitation"
+		.(class="row white-background")
+		  h1.left_row Invite Users	
+		  table class="left-row"
 			thead
 			tbody
 				tr
-				  th
-				    = form_tag(action: :invite_to_project, html: {class: 'form-inline'}) do
-				      = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email"
-				      = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name)
-				      = hidden_field_tag :invited_by_id, current_user.id
-				      = hidden_field_tag :customer_id, @customer.id
-				      .row(style="margin-top: 10px;margin-left: 10px;")
-					      .small-8.columns(style="padding-left: 0;") = label_tag "Project Manager?"
-					      .small-2.columns = check_box_tag :project_manager
-					  .actions
-				      	= submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
+				    th
+					    = form_tag(action: :invite_to_project, html: {class: 'form-inline'}) do
+					      = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email"
+					      = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name)
+					      = hidden_field_tag :invited_by_id, current_user.id
+					      = hidden_field_tag :customer_id, @customer.id
+					      .row(style="margin-top: 10px;margin-left: 10px;")
+						      .small-8.columns(style="padding-left: 0;") = label_tag "Project Manager?"
+						      .small-2.columns = check_box_tag :project_manager
+						  .actions
+					      	= submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
 	  
-		h1.pending-right-row Pending Users
-		table class="right-row"
+		  h1.pending-right-row Pending Users
+		  table class="right-row"
 			thead
 			  tr
 			    th User Email
@@ -145,7 +162,8 @@ div class = "disp-message"
 			        td
 			          = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 
-	.(class="row white-background")
-		div(id="dynamic_adhoc_update")
+  div class="content" id="adhoc_pm"
+		.(class="row white-background")
+			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 		
