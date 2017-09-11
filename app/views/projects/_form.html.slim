@@ -181,6 +181,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 							    = f.input :email, placeholder: 'Email', label: "Email", class: "invitation_email"
 							    = f.hidden_field :project_id, value: @project_id
 							    = f.hidden_field :invited_by_id, value:  @current_user_id
+							    = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
 							    = f.label :body, label: 'Employment Type' 
 							    = f.select :employment_type, options_from_collection_for_select(EmploymentType.all, :id, :name)
 							    .actions = f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'
@@ -199,15 +200,34 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 							- if user.invitation_accepted_at.nil?
 							  tr
 							    td
-							      = user.email
+							      = link_to user.email, "#", id: "pending_email_#{user.id}", class: "tiny secondary pending-email", type: "link", data: {reveal_id: "projectspendingEmail"}
 							    td
 							      = user.invitation_sent_at
 							    td
 							      = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
+			    div class = "pending-class"
+				 div(id="projectspendingEmail" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 		
 		 div class="content" id="adhoc_pm"
 		  .(class="row white-background")
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 			
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 

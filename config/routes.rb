@@ -38,6 +38,8 @@ Rails.application.routes.draw do
   post 'projects/:id/reactivate_project' => 'projects#reactivate_project'
   post 'time_reject' => 'weeks#time_reject'
   post 'show_hours' => 'projects#show_hours'
+  post '/pending_email' => 'projects#pending_email'
+  post '/customers_pending_email' => 'customers#customers_pending_email'
 
   get '/show_user_reports/:id' => 'users#show_user_reports'
   post '/show_user_reports/:id' => 'users#show_user_reports'

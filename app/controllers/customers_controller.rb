@@ -134,7 +134,7 @@ class CustomersController < ApplicationController
   
   def invite_to_project
     logger.debug "INVITED BY #{params[:invited_by_id]}"
-    @user = User.invite!(email: params[:email], invited_by_id: params[:invited_by_id].to_i, pm: params[:project_manager])
+    @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, pm: params[:project_manager])
     @user.update(invited_by_id: params[:invited_by_id], customer_id: current_user.id)
     pu = ProjectsUser.new
     # @users_on_project = @project.users
@@ -151,6 +151,13 @@ class CustomersController < ApplicationController
     project.save
 
     redirect_to customers_path
+  end
+
+  def customers_pending_email
+    logger.debug "CHECKING FOR params[:user_id]  #{params[:user_id]}"
+    @cuser = User.find(params[:user_id])
+    user_project = ProjectsUser.find_by_user_id(params[:user_id]).project_id
+    @project = Project.find(user_project)
   end
 
   def remove_user_from_customer
