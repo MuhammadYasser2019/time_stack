@@ -83,7 +83,7 @@ class CustomersController < ApplicationController
     if params[:customer].blank?
       params[:customer] =params
     end
-    @customer.user_id = params[:customer][:user_id]
+    @customer.user_id = params[:customer][:user_id].present? ? params[:customer][:user_id] : @customer.user_id
     logger.debug("THIS IS THE CUSTOMER UPDATE METHOD")
     params[:customer_id] = @customer.id
     customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
