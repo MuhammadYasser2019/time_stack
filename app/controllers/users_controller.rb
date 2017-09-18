@@ -150,7 +150,7 @@ class UsersController < ApplicationController
 
   def user_profile
     @user = current_user
-    binding.pry
+    
     @default_project = @user.default_project
     @default_task = @user.default_task
     @project_tasks = Task.where(project_id: @default_project)

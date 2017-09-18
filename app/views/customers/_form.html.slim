@@ -132,10 +132,14 @@ div.tabs-content
 				tr
 				    th
 					    = form_tag(action: :invite_to_project, html: {class: 'form-inline'}) do
+					      = label_tag "Email"
 					      = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email"
+					      = label_tag "Select Start Date"
 					      = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
+					      = label_tag "Employment Type"
  						  = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name )
-					      = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:15px;"
+ 						  = label_tag "Project"
+					      = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
 					      = hidden_field_tag :invited_by_id, current_user.id
 					      = hidden_field_tag :customer_id, @customer.id
 					      .row(style="margin-top: 10px;margin-left: 10px;")

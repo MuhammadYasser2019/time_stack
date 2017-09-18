@@ -23,6 +23,34 @@ class Week < ApplicationRecord
   def self.left_joins_user_week_statuses(some_user, week_id)
     weeks = Week.where("weeks.id = ?", week_id).weeks_with_user_week_statuses(some_user)
   end
+  def self.copy_week(current_time_entries, pre_week_time_entries)
+    count = 0
+    current_time_entries.each do |t|
+       
+     Rails.logger.debug("#{count}")
+     Rails.logger.debug("NEW WEEKS DATE OF ACTIVITY: #{t.date_of_activity}")
+     Rails.logger.debug("OLD WEEKS DATE OF ACTIVITY: #{pre_week_time_entries[count].date_of_activity}")
+     Rails.logger.debug("HOURS to populate: #{pre_week_time_entries[count].hours}")
+     Rails.logger.debug("OLD WEEKS PROJECT: #{pre_week_time_entries[count].project_id}")
+     Rails.logger.debug("COPYING OLD WEEKS TASKS: #{pre_week_time_entries[count].task_id}")
+     Rails.logger.debug("COPYING OLD WEEKS TIME-IN: #{pre_week_time_entries[count].time_in}")
+     Rails.logger.debug("COPYING OLD WEEKS TIME-OUT: #{pre_week_time_entries[count].time_out}")
+     Rails.logger.debug("COPYING DESCRIPTION: #{pre_week_time_entries[count].activity_log}")
+     Rails.logger.debug("COPYING SICK DAY: #{pre_week_time_entries[count].sick}")
+     Rails.logger.debug("COPYING PERSONAL DAY: #{pre_week_time_entries[count].personal_day}")
+     t.hours = pre_week_time_entries[count].hours
+     t.project_id = pre_week_time_entries[count].project_id
+     t.task_id = pre_week_time_entries[count].task_id
+     t.time_in = pre_week_time_entries[count].time_in
+     t.time_out = pre_week_time_entries[count].time_out
+     t.activity_log = pre_week_time_entries[count].activity_log
+     t.sick = pre_week_time_entries[count].sick
+     t.personal_day = pre_week_time_entries[count].personal_day
+     t.save
+
+     count += 1
+    end
+  end
   
   def self.weekly_weeks
     User.all.each do |u|

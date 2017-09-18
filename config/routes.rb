@@ -86,6 +86,7 @@ Rails.application.routes.draw do
   post "/customers/invite_to_project" => "customers#invite_to_project"
   post "project/:project_id/add_adhoc_pm" => "projects#add_adhoc_pm", as: :add_adhoc_pm
   post "customer/:customer_id/add_adhoc_pm_by_cm" => "customers#add_adhoc_pm_by_cm", as: :add_adhoc_pm_by_cm
+  get "/copy_timesheet/:id" => "weeks#copy_timesheet"
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 

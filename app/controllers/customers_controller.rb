@@ -84,6 +84,7 @@ class CustomersController < ApplicationController
       params[:customer] =params
     end
     @customer.user_id = params[:customer][:user_id]
+    logger.debug("USER ID ****************************** #{(params[:customer][:user_id]).inspect}")
     logger.debug("THIS IS THE CUSTOMER UPDATE METHOD")
     params[:customer_id] = @customer.id
     customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
@@ -101,6 +102,7 @@ class CustomersController < ApplicationController
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
     @adhoc_projects = Project.where("adhoc_pm_id is not null")
     @customer.save
+    logger.debug("CHECK FOR CUSTOMER params#{@cutomer.inspect}")
     respond_to do |format|
       if @customer.update(customer_params)
     	@projects = @customer.projects
