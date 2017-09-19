@@ -20,9 +20,36 @@ class Week < ApplicationRecord
                   
     joins(weeks)
   end
+
   def self.left_joins_user_week_statuses(some_user, week_id)
     weeks = Week.where("weeks.id = ?", week_id).weeks_with_user_week_statuses(some_user)
   end
+
+  def self.weeks_with_invitation_start_date(user)
+      next_week_start_date = Date.today.beginning_of_week + 7.days
+      user_invite_start_date = user.invitation_start_date.beginning_of_week 
+
+      until user_invite_start_date == next_week_start_date
+        new_week = Week.where(user_id: user.id, start_date: user_invite_start_date).last
+        if new_week.blank?
+          new_week = Week.new
+          new_week.start_date = user_invite_start_date
+          new_week.end_date = user_invite_start_date.to_date.end_of_week.strftime('%Y-%m-%d') 
+          new_week.user_id = user.id
+          new_week.status_id = 1
+          new_week.save
+        end
+
+        7.times { new_week.time_entries.build( user_id: user.id )}
+        new_week.time_entries.each_with_index do | te, i |
+          new_week.time_entries[i].date_of_activity = Date.new(new_week.start_date.year, new_week.start_date.month, new_week.start_date.day) + i
+          new_week.time_entries[i].user_id = user.id
+        end
+        new_week.save
+        user_invite_start_date += 7.days
+      end
+  end
+
   def self.copy_week(current_time_entries, pre_week_time_entries)
     count = 0
     current_time_entries.each do |t|

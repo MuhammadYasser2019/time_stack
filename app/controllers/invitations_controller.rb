@@ -38,6 +38,7 @@ class InvitationsController < Devise::InvitationsController
     end
     logger.debug("######create accout #{params.inspect}")
     user_data_save
+    Week.weeks_with_invitation_start_date(user)
     super
   end
 
