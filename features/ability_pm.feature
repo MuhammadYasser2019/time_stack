@@ -18,18 +18,6 @@ Feature: Testing abilities of a User with PM role
     And when user goes to projects reports page
     And he should see "Reports for Project "
 
-  #Scenario: 9) 16) With PM roles user should not be able to add or delete projects.
-   # Given I am a project manager
-   #Given PM logs in with "Email" and "Password"
-   # And click on the button "Manage Projects"
-   # Then Should see "Listing projects" and link to the project
-   #Then User should see link to "New Project"
-   #Then User clicks on New Project link
-   #Then User should see "You are not allowed to access this page."
-   #Then User clicks on "Deactivate" link
-    #Then User should see "You are not allowed to access this page."
-
-
   Scenario: 13) 14) 4) With PM roles user should be able to Approve/Reject timesheets.
     Given I am a user
     Given user logs in with "Email" and "Password"
@@ -78,22 +66,56 @@ Feature: Testing abilities of a User with PM role
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
     Then On the index page
-    And click on the "Vacation Request" button
+    Then Should see "Listing projects" 
+    And click on the "Vacation Request" button with link "/vacation request"
     Then User should see "Reports for Users PM user" 
     And User should see "Your Vacation Requests"
 
   Scenario: 20) With PM roles user should be able to make an Holiday Exception
-    Given I am a customer manager
-    Given CM logs in with "Email" and "Password"
+    Given I am a project manager
+    Given PM logs in with "Email" and "Password"
     Given User is on Weeks index
-    And click on "Holidays" link
-    Then click the button "Create New Holiday"
-    And Enter "Name" and "Date of holiday this year"
-    Then On the index page
-    And click on the "Holiday Exceptions" button
+    Then Should see "Listing projects" 
+    #And click on the "Invite Users" button
+    #And Expect page to have "Invite Users"
+    And PM click on the "Holiday Exceptions" link
     And Expect page to have "New Holiday Exception"
     And select a "user" 
     And click on "Create Holiday Exception"
+
+  Scenario: 23) With PM roles user should able to copy the timesheet from previous week
+    Given I am a project manager
+    Given PM logs in with "Email" and "Password"
+    Given If "Enter Time for Current Week" is clicked
+    Then HE should go to new time entries
+    And click "Save Timesheet"
+    Given User is on the index page
+    Then user should see the link "COPY"
+    Then click on "COPY" link
+    Then User clicks on the "NEW" link
+    And should see "Time Entries" in "project_id" field
+
+  Scenario: 24) When the TimeSheet is submitted, there should be no Copy Link for that week
+    Given I am a project manager
+    Given PM logs in with "Email" and "Password"
+    Given If "Enter Time for Current Week" is clicked
+    Then HE should go to new time entries
+    And click "Save Timesheet"
+    And Go to the index page
+    And Expect page to have "NEW" link
+    And click on the "NEW" link
+    And Expect page to have link "Save Timesheet" and "Submit Timesheet"
+    And click on "Submit Timesheet"
+    And Expect page to have link "SUBMITTED" but not "Copy" link
+
+  Scenario: 25) When it is first TimeSheet, there should be NEW but no Copy link
+    Given I am a project manager
+    Given PM logs in with "Email" and "Password"
+    Given If "Enter Time for Current Week" is clicked
+    Then HE should go to new time entries
+    And click "Save Timesheet"
+    And Go to the index page
+    And Expect page to have link "NEW" but not "Copy"
    
     
 

@@ -13,8 +13,54 @@ module TestDataSetupHelper
   def create_week
     w = Week.new
     w.id = 1
+    #w.user_id = 1
     w.status_id = 1
     w.save
+  end
+
+  def create_second_week
+
+    start_date = Date.today.beginning_of_week
+    new_week = Week.new
+    new_week.id = 3
+    new_week.start_date = start_date
+    new_week.end_date = start_date.to_date.end_of_week.strftime('%Y-%m-%d') 
+    new_week.user_id = 1
+    new_week.status_id = 1
+    new_week.save
+  end
+
+  def create_first_week
+
+    start_date = Date.today.beginning_of_week- 7.days
+    new_week = Week.new
+    new_week.id = 2
+    new_week.start_date = start_date
+    new_week.end_date = start_date.to_date.end_of_week.strftime('%Y-%m-%d') 
+    new_week.user_id = 1
+    new_week.status_id = 1
+    new_week.save
+  end
+
+  def create_second_week_and_submit
+    start_date = Date.today.beginning_of_week
+    new_week = Week.new
+    new_week.id = 3
+    new_week.start_date = start_date
+    new_week.end_date = start_date.to_date.end_of_week.strftime('%Y-%m-%d') 
+    new_week.user_id = 1
+    new_week.status_id = 2
+    new_week.save
+  end
+
+  def create_time_sheet
+    t = TimeEntry.new
+    t.project_id = 1
+    t.week_id = 2
+    t.user_id = 1
+    t.hours = 8
+    t.date_of_activity = Date.today.beginning_of_week- 7.days
+    t.save
   end
 
   def create_status
@@ -110,8 +156,26 @@ module TestDataSetupHelper
     create_week
     create_status
     create_customers
+    #create_customer_holidays
     create_project
     
+  end
+
+  def create_holidays
+    h = Holiday.new
+    h.id = 1
+    h.name = "labor day"
+    h.date = "2017-08-04"
+    h.global = 1
+    h.save
+  end
+
+  def create_customer_holidays
+    create_holidays
+    ch = CustomerHoliday.new
+    ch.customer_id = 1
+    ch.holiday_id = 1
+    ch.save
   end
 
   def create_user
@@ -126,7 +190,10 @@ module TestDataSetupHelper
     u.save!
     create_customers
     create_task
+    create_status
     create_week
+    
+    #create_second_week
     # t = Task.new
     # t.code = "007"
     # t.description = "Test Description"
@@ -136,8 +203,8 @@ module TestDataSetupHelper
     # w = Week.new
     # w.id = 1
     # w.save
-
-    create_status
+   
+    #create_status
 
     u1 = User.new
     u1.id = 2

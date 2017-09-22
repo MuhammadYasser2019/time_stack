@@ -129,9 +129,10 @@ Then(/^User should see label "([^"]*)"$/) do |arg1|
   page.should have_content(arg1) # Write code here that turns the phrase above into concrete actions
 end
 
-Then(/^click on the "([^"]*)" button$/) do |arg1|
- page.click_link("Vacation Request")
+Then(/^PM click on the "([^"]*)" link$/) do |arg1|
+ page.click_link(arg1)
 end
+
 
 Then(/^select a "([^"]*)"$/) do |arg1|
  
@@ -139,6 +140,10 @@ end
 
 Then(/^Expect page to have "([^"]*)"$/) do |arg1|
   expect(page).to have_link(arg1)
+end
+
+Then(/^click on the "([^"]*)" button with link "([^"]*)"$/) do |arg1, arg2|
+ page.click_link(arg1)
 end
 
 

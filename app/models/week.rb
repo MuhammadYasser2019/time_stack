@@ -50,7 +50,7 @@ class Week < ApplicationRecord
       end
   end
 
-  def self.copy_week(current_time_entries, pre_week_time_entries)
+  def copy_week(current_time_entries, pre_week_time_entries)
     count = 0
     current_time_entries.each do |t|
        
@@ -102,4 +102,61 @@ class Week < ApplicationRecord
       end
     end
   end
+
+  def copy_last_week_timesheet(user)
+
+    current_week_start_date = self.start_date
+    pre_week_start_date = current_week_start_date - 7.days
+    pre_week = Week.where("user_id = ? && start_date = ?", user ,pre_week_start_date)
+    logger.debug("CHECKING FOR PREVIOUS WEEK: #{pre_week.inspect}")
+    #w = week.find(current_week_id)
+    #w1 = Week.where(user_id: 1)[-2]
+    #puts "previous week id is: #{w1.d}"
+    #w2 = Week.where(user_id: current_user).last
+
+    pre_week_time_entries = TimeEntry.where(week_id: pre_week[0].id)
+
+    current_time_entries = TimeEntry.where(week_id: self.id)
+    count = 0
+    if pre_week_time_entries.count == 7
+      logger.debug("WEEK WITH 7 TIME ENTRIES")
+      copy_week(current_time_entries, pre_week_time_entries)
+      
+    else
+      if pre_week_time_entries.count != current_time_entries.count
+        day_array = []
+        pre_week_time_entries.each do |t|
+          day = t.date_of_activity.strftime("%A")
+          logger.debug("THE DAY IS: #{day}")
+          day_array << day
+        end
+        dup_days = day_array.select{|d| day_array.count(d)>1}.uniq
+        logger.debug("THE DAY ARRAY IS: #{dup_days.inspect}")
+
+        dup_days.each do |dd|
+          logger.debug("THE DAY IS: #{dd}")
+          num_of_repetition = day_array.count(dd)
+          logger.debug("num_of_repetition is :#{num_of_repetition}")
+
+          current_time_entries.each do |cwte|
+            if cwte.date_of_activity.strftime("%A") == dd
+              date = cwte.date_of_activity
+              logger.debug("CHECKING FOR DATE #{date.inspect}")
+              (num_of_repetition - 1).times{
+                t = TimeEntry.new
+                t.week_id = current_week_id
+                t.date_of_activity = date
+                t.save
+              }
+            end
+          end
+        end
+      end 
+      current_time_entries_1 = TimeEntry.where(week_id: self.id)
+      copy_week(current_time_entries_1, pre_week_time_entries)
+    end    
+    
+
+  end
+  
 end
