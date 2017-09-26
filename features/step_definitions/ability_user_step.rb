@@ -15,12 +15,10 @@ Given(/^User is on the index page$/) do
   visit (weeks_path)
 end
 
-
 Then(/^He should see link to "([^"]*)" but not "([^"]*)"$/) do |arg1, arg2|
   expect(page).to have_link(arg1, href: '/weeks/new')
   expect(page).to have_no_link(arg2, href: 'projects')
 end
-
 
 Given(/^If "([^"]*)" is clicked$/) do |new_week_link|
   # save_and_open_page
@@ -57,7 +55,6 @@ end
 
 Then(/^user should see the link "([^"]*)"$/) do |arg1|
   create_first_week
-  #visit (weeks_path)
   create_second_week
   visit (weeks_path)
   expect(page).to have_link(arg1, href: '/copy_timesheet/3')
@@ -69,7 +66,6 @@ Then(/^click on the link "([^"]*)"$/) do |arg1|
   w= Week.find 3
   w.copy_last_week_timesheet(1)
   visit (weeks_path)
-
 end
 
 Then(/^Time Entries from the previous week are copied$/) do
@@ -80,10 +76,14 @@ Then(/^User clicks on the "([^"]*)" link$/) do |arg1|
    expect(page).to have_link(arg1, href: '/weeks/2/edit') 
 end
 
-
 Then(/^should see "([^"]*)" in "([^"]*)" field$/) do |arg1,arg2|
    visit('/weeks/2/edit')
    find_field("week_time_entries_attributes_0_project_id").find('option[selected]').text == arg1
+end
+
+Then(/^should see the "([^"]*)" in "([^"]*)" field$/) do |arg1,arg2|
+   visit('/weeks/2/edit')
+   expect(find_field('week_time_entries_attributes_0_hours').value).to eq ("8.0")
 end
 
 Then(/^Expect page to have link "([^"]*)" but not "([^"]*)"$/) do |arg1, arg2|
@@ -98,4 +98,9 @@ Then(/^Expect page to have link "([^"]*)" but not "([^"]*)" link$/) do |arg1, ar
   visit (weeks_path)
   expect(page).to have_link(arg1)
   expect(page).to have_no_link(arg2, href: '/copy_timesheet/3')
+end
+
+Given(/^Expect page to have "([^"]*)" and "([^"]*)" link$/) do |arg1, arg2|
+  expect(page).to have_link(arg1, href: '/week/3/edit')
+  expect(page).to have_link(arg2, href: '/copy_timesheet/3')
 end

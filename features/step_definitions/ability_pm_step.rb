@@ -12,7 +12,7 @@ Given(/^PM logs in with "([^"]*)" and "([^"]*)"$/) do |email, password|
 end
 
 Given(/^On the index page$/) do
-  visit (weeks_path)
+  visit (projects_path)
 end
 
 Then(/^Expect page to have "([^"]*)" link$/) do |arg1|
@@ -47,7 +47,8 @@ end
 
 Then(/^User should see "([^"]*)" button$/) do |arg1|
   # save_and_open_page
-  expect(page).to have_link(arg1, href: 'projects/1/approve/1/0')
+  visit(projects_path)
+  expect(page).to have_link(arg1)
 end
 
 Then(/^Go to the index page$/) do
@@ -63,8 +64,6 @@ Given(/^click on the "([^"]*)"$/) do |projects_link|
   page.click_link projects_link
 end
 
-
-
 Then(/^Should see "([^"]*)" and link to the project$/) do |listing_projects|
   page.should have_content(listing_projects)
   expect(page).to have_link('Manage', href: '/projects/1/edit')
@@ -73,12 +72,6 @@ end
 Then(/^User should see "([^"]*)"$/) do |arg1|
   expect(page).to have_content(arg1)
 end
-
-Then(/^User clicks on "([^"]*)" link$/) do |destroy_link|
-  visit (projects_path)
-  page.click_link destroy_link
-end
-
 
 Then(/^click the project link$/) do
   page.click_link('Manage')
@@ -131,6 +124,7 @@ end
 
 Then(/^PM click on the "([^"]*)" link$/) do |arg1|
  page.click_link(arg1)
+ visit(projects_path)
 end
 
 
@@ -139,11 +133,33 @@ Then(/^select a "([^"]*)"$/) do |arg1|
 end
 
 Then(/^Expect page to have "([^"]*)"$/) do |arg1|
-  expect(page).to have_link(arg1)
+  expect(page).to have_content(arg1)
 end
 
 Then(/^click on the "([^"]*)" button with link "([^"]*)"$/) do |arg1, arg2|
  page.click_link(arg1)
 end
+
+Then(/^PM clicks on "([^"]*)"$/) do |arg1|
+  visit(projects_path)
+  click_button('Create Holiday exception')
+end
+
+Then(/^User should see button to "([^"]*)"$/) do |arg1|
+  expect(page).to have_button(arg1)
+end
+
+Then(/^pm clicks on the link "([^"]*)"$/) do |arg1|
+  create_time_sheet
+  visit(projects_path)
+  click_link(arg1, :href => '/copy_timesheet/3')
+end
+
+Then(/^pm should see "([^"]*)" in "([^"]*)" field$/) do |arg1,arg2|
+   visit('/weeks/3/edit')
+   find_field("week_time_entries_attributes_0_project_id").find('option[selected]').text == arg1
+end
+
+
 
 

@@ -23,7 +23,7 @@ end
 
 Then(/^User clicks on the button "([^"]*)"$/) do |arg1|
  click_on(class: "create_project")
- # page.click_img("/assets/plus.jpg")
+ page.click_img("/assets/plus.jpg")
 end
 
 Then(/^User should see link to "([^"]*)"$/) do |new_project_link|
@@ -64,18 +64,12 @@ Then(/^You should see "([^"]*)"$/) do |customer_editing_heading|
   expect(find_field('Name').value).to eq ("Test")
 end
 
-Then(/^click on "([^"]*)" for a customer$/) do |destroy_customer_link|
-  page.click_link(destroy_customer_link, href: "/customers/1")
-end
-
-
 Then(/^Click on "([^"]*)"$/) do |new_customer_link|
   page.click_link(new_customer_link, href: "/customers/new")
 end
 
 Then(/^Should see link to "([^"]*)"$/) do |project_name|
   expect(page).to have_content(project_name)
-  #expect(page).to have_link(project_name, href: "/projects/1/edit")
 end
 
 Then(/^User should not see link to "([^"]*)"$/) do |project_name|
@@ -83,7 +77,7 @@ Then(/^User should not see link to "([^"]*)"$/) do |project_name|
 end
 
 Given(/^click on "([^"]*)" link$/) do |arg1|
- page.click_link("Holidays")
+ page.click_link(arg1)
 end
 
 
@@ -97,21 +91,16 @@ end
 
 
 Then(/^Enter "([^"]*)" and "([^"]*)"$/) do |arg1, arg2|
-  #page.click_link(href: "/holidays/new" )
   page.fill_in "Name", :with => "Labor Day"
-  #select '09/04/2017', :from => "Date of holiday this year"
   page.fill_in 'holiday_date', :with => '09/04/2017'
   page.click_button "Submit Holiday"
 end
 
 Then(/^Enter a "([^"]*)"$/) do |arg1|
    page.fill_in "Name", :with => "Full Time"
-
 end
 
 Then(/^click button "([^"]*)"$/) do |arg1|
-   #page.click_link(arg1, href: "employment_types/new?customer_id=1")
-   #find("input[type=submit][value='Create Employment Type']").click
    click_button("Create Employment Type")
 end
 
@@ -120,9 +109,30 @@ Then(/^page should have a button "([^"]*)"$/) do |arg1|
   expect(page).to have_button(arg1)
 end
 
-
 Then(/^click on the global checkbox$/) do
-  #find("#holiday_global").set(true)
-  #find('#Global holiday?').click
   expect(page).to have_selector("#holiday_global")
+end
+
+Then(/^CM clicks on "([^"]*)" link$/) do |arg1|
+  page.click_link(arg1, href: "/vacation_request")
+end
+
+Then(/^CM Expect page to have "([^"]*)"$/) do |arg1|
+ expect(page).to have_css("img[src*='/assets/plus.jpg']")
+end
+
+Then(/^CM clicks on the button "([^"]*)"$/) do |arg1|
+ click_link("", :href => "/projects/new")
+end
+
+Then(/^CM should see heading "([^"]*)"$/) do |arg1|
+  expect(page).to have_content("New project")
+end
+
+Then(/^cm clicks on the link "([^"]*)"$/) do |arg1|
+  create_time_sheet
+  click_link(arg1, :href => '/copy_timesheet/3')
+  w= Week.find 3
+  w.copy_last_week_timesheet(1)
+  visit (weeks_path)
 end

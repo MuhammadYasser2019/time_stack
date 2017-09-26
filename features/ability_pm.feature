@@ -35,7 +35,7 @@ Feature: Testing abilities of a User with PM role
     Given User is on Weeks index
     And he should see Time Sheets Submitted for Approval
     Then User should see "Approve" button
-    Then User should see link to "Add Comment to Reject"
+    Then User should see button to "Add Comment to Reject"
     
 
   Scenario: 10) With PM roles user should be able to Add Tasks
@@ -55,10 +55,7 @@ Feature: Testing abilities of a User with PM role
   Scenario: With Pm roles user should be able to assign adhoc PM
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
-    # And click on the button "Manage Projects"
     Then Should see "Listing projects" 
-    # And click the project link
-    # And Text "Editing project" should be present
     Then User should see label "Adhoc Project Manager"
 
 
@@ -74,14 +71,11 @@ Feature: Testing abilities of a User with PM role
   Scenario: 20) With PM roles user should be able to make an Holiday Exception
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
-    Given User is on Weeks index
+    Then On the index page
     Then Should see "Listing projects" 
-    #And click on the "Invite Users" button
-    #And Expect page to have "Invite Users"
+    And Expect page to have "Holiday Exceptions"
     And PM click on the "Holiday Exceptions" link
     And Expect page to have "New Holiday Exception"
-    And select a "user" 
-    And click on "Create Holiday Exception"
 
   Scenario: 23) With PM roles user should able to copy the timesheet from previous week
     Given I am a project manager
@@ -89,13 +83,14 @@ Feature: Testing abilities of a User with PM role
     Given If "Enter Time for Current Week" is clicked
     Then HE should go to new time entries
     And click "Save Timesheet"
-    Given User is on the index page
+    And Go to the index page
+    And Expect page to have "NEW" link
     Then user should see the link "COPY"
-    Then click on "COPY" link
+    Then pm clicks on the link "COPY"
     Then User clicks on the "NEW" link
-    And should see "Time Entries" in "project_id" field
+    And should see the "8" in "hours" field
 
-  Scenario: 24) When the TimeSheet is submitted, there should be no Copy Link for that week
+  Scenario: 24) When the TimeSheet is submitted, there should be no COPY Link for that week
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
     Given If "Enter Time for Current Week" is clicked
@@ -106,16 +101,16 @@ Feature: Testing abilities of a User with PM role
     And click on the "NEW" link
     And Expect page to have link "Save Timesheet" and "Submit Timesheet"
     And click on "Submit Timesheet"
-    And Expect page to have link "SUBMITTED" but not "Copy" link
+    And Expect page to have link "SUBMITTED" but not "COPY" link
 
-  Scenario: 25) When it is first TimeSheet, there should be NEW but no Copy link
+  Scenario: 25) When it is first TimeSheet, there should be NEW but no COPY link
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
     Given If "Enter Time for Current Week" is clicked
     Then HE should go to new time entries
     And click "Save Timesheet"
     And Go to the index page
-    And Expect page to have link "NEW" but not "Copy"
+    And Expect page to have link "NEW" but not "COPY"
    
     
 

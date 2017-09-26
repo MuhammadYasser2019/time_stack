@@ -22,18 +22,11 @@ Feature: Testing the ability of a User with user role
     Then click on the link "Copy"
     Then User clicks on the "NEW" link
     And should see "Time Entries" in "project_id" field
+    And should see the "8" in "hours" field
 
   Scenario: 24) When the TimeSheet is submitted, there should be no Copy Link for that week
     Given I am a user
     Given user logs in with "Email" and "Password"
-    Given If "Enter Time for Current Week" is clicked
-    Then HE should go to new time entries
-    And click "Save Timesheet"
-    And Go to the index page
-    And Expect page to have "NEW" link
-    And click on the "NEW" link
-    And Expect page to have link "Save Timesheet" and "Submit Timesheet"
-    And click on "Submit Timesheet"
     And Expect page to have link "SUBMITTED" but not "Copy" link
 
   Scenario: 25) When it is first TimeSheet, there should be NEW but no Copy link
