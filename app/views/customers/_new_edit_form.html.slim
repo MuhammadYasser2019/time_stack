@@ -9,8 +9,8 @@ div[style="width: 90%; margin-left: 7%;"]
 			= link_to "Manage Proxy Projects", "/users/#{current_user.id}/proxies", class: "orange-button large-3 columns", style: "margin: 5px;"
 		= link_to "Vacation Request", "/vacation_request", class: "orange-button large-3 columns", style: "margin: 5px;"
 		- if user_have_adhoc_permission(current_user)
-			= link_to "Adhoc PM", projects_path(adhoc: true), class: "orange-button large-3 columns", style: "margin: 5px;" 
-		= link_to "User Report", "/show_user_reports/#{current_user.id}", class: "orange-button large-3 columns", style: "margin: 5px;" 
+			= link_to "Adhoc PM", projects_path(adhoc: true), class: "orange-button large-3 columns", style: "margin: 5px;"
+		= link_to "User Report", "/show_user_reports/#{current_user.id}", class: "orange-button large-3 columns", style: "margin: 5px;"
 	    br
     
 			

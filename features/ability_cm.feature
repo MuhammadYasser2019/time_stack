@@ -22,6 +22,7 @@ Feature: Testing abilities of a User with CM role
     Then I should see contentsss and "Pending Users"
     And click on the button "Manage Projects"
     Then User should see heading "Listing projects"
+#<<<<<<< HEAD
     And CM Expect page to have "plus"
     Then CM clicks on the button "plus"
     Then Expect page to have "New project"
@@ -89,3 +90,67 @@ Feature: Testing abilities of a User with CM role
     And Go to the index page
     And Expect page to have link "NEW" but not "COPY"
     
+#=======
+#    Then User clicks on the button "plus"
+#    Then User should see heading "New project"
+#
+#  Scenario: 13) 14) 4) With CM roles user should be able to Edit Projects and Add Tasks #####and Approve/Reject timesheets.
+#    Given I am a customer manager
+#    Given CM logs in with "Email" and "Password"
+#    Given User is on Weeks index
+#    And click on the "Manage Projects"
+#    Then Should see "Listing projects"
+#    And Should be able to see heading "Tasks"
+#    And Should see "Add Task"
+#
+#
+#  #Scenario: 12) With CM role user should be able to Edit Customers but not add or delete them.
+#  #iGiven I am a customer manager
+#  #Given CM logs in with "Email" and "Password"
+#  #Then Go to customers page
+#  #And Should see "Listing customers"
+#  #Then You should see "Editing customer"
+#  #And Go to customers page
+#  #And click on "Destroy" for a customer
+#  #Then User should see "You are not allowed to access this page."
+#  #And Go to customers page
+#  #And Click on "New Customer"
+#  #Then User should see "You are not allowed to access this page."
+#
+#  #Scenario: 16) With CM role user should be able to delete a project
+#  # Given I am a customer manager
+#  # Given CM logs in with "Email" and "Password"
+#  # Given User is on Weeks index
+#  # And click on the "Manage Projects"
+#  # Then Should see link to "Time Entries"
+#  # Then User clicks on "Destroy" link
+#  # Then User should not see link to "Time Entries"
+#
+#  Scenario: With CM roles user should able to make a vacation request
+#    Given I am a customer manager
+#    Given CM logs in with "Email" and "Password"
+#    Then On the index page
+#    And click on the "Vacation Request" button
+#    Then User should see "Reports for Users CM user"
+#    And User should see "Your Vacation Requests"
+#
+#  Scenario: 18) With CM role user should able to create New Holiday
+#    Given I am a customer manager
+#    Given CM logs in with "Email" and "Password"
+#    Given User is on Weeks index
+#    And click on "Holidays" link
+#    Then click the button "Create New Holiday"
+#    And Enter "Name" and "Date of holiday this year"
+#    #And click on the global checkbox
+#
+#
+#  Scenario: 21) With CM role user should be able to create Employment Types
+#    Given I am a customer manager
+#    Given CM logs in with "Email" and "Password"
+#    Given User is on Weeks index
+#    Then Click on the "Employment Types"
+#    And Click on the "Create New Employment Type"
+#    And Enter a "Name"
+#    And page should have a button "Create Employment Type"
+#    And click button "Create Employment Type"
+#>>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3

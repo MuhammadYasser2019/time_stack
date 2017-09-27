@@ -3272,7 +3272,7 @@ meta.foundation-mq-topbar {
     width: auto; } }
 @media only screen and (min-width: 64.063em) {
   .icon-bar.eight-up.large-vertical .item {
-    width: auto; } 
+    width: auto; }
 }
 .tabs {
   margin-bottom: 0 !important;
