@@ -144,7 +144,7 @@ class Week < ApplicationRecord
               logger.debug("CHECKING FOR DATE #{date.inspect}")
               (num_of_repetition - 1).times{
                 t = TimeEntry.new
-                t.week_id = current_week_id
+                t.week_id = self.id
                 t.date_of_activity = date
                 t.save
               }
