@@ -137,7 +137,7 @@ div.tabs-content
 					      = label_tag "Select Start Date"
 					      = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
 					      = label_tag "Employment Type"
- 						  = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name )
+ 						  = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type"
  						  = label_tag "Project"
 					      = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
 					      = hidden_field_tag :invited_by_id, current_user.id
