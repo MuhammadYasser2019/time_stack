@@ -57,12 +57,8 @@ end
 
 Then(/^User should see "([^"]*)" button$/) do |arg1|
   # save_and_open_page
-# <<<<<<< HEAD
   visit(projects_path)
   expect(page).to have_link(arg1)
-# =======
-#   expect(page).to have_link(arg1, href: 'projects/1/approve/1/0')
-# >>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3
 end
 
 Then(/^Go to the index page$/) do
@@ -138,25 +134,16 @@ Then(/^User should see label "([^"]*)"$/) do |arg1|
   page.should have_content(arg1) # Write code here that turns the phrase above into concrete actions
 end
 
-# <<<<<<< HEAD
 Then(/^PM click on the "([^"]*)" link$/) do |arg1|
  page.click_link(arg1)
  visit(projects_path)
 end
 
-
-# =======
-# Then(/^click on the "([^"]*)" button$/) do |arg1|
-#  page.click_link("Vacation Request")
-# end
-#
-# >>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3
 Then(/^select a "([^"]*)"$/) do |arg1|
  
 end
 
 Then(/^Expect page to have "([^"]*)"$/) do |arg1|
-# <<<<<<< HEAD
   expect(page).to have_content(arg1)
 end
 
@@ -184,11 +171,4 @@ Then(/^pm should see "([^"]*)" in "([^"]*)" field$/) do |arg1,arg2|
    find_field("week_time_entries_attributes_0_project_id").find('option[selected]').text == arg1
 end
 
-
-
-# =======
-#   expect(page).to have_link(arg1)
-# end
-#
-# >>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3
 

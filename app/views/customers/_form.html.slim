@@ -89,9 +89,9 @@ div.tabs-content
 				table 
 					thead
 						tr
-							th User
-							th Email
-							th
+                          th User
+                          th Email
+                          th
 					tbody
 						-@users.each_with_index do |uop, i|
 							-if uop.customer_id == params[:customer_id].to_i
@@ -109,11 +109,11 @@ div.tabs-content
 				table
 					thead
 						tr
-							th Employee
-							th Vacation Start Date
-							th Vacation End Date
-							th 
-							th
+                          th Employee
+                          th Vacation Start Date
+                          th Vacation End Date
+                          th
+                          th
 					tbody
 						- @vacation_requests.each_with_index do |vu, i|
 							tr id = "vacation_#{i}"
@@ -130,23 +130,23 @@ div.tabs-content
 			thead
 			tbody
 				tr
-				    th
-					    = form_tag(action: :invite_to_project, html: {class: 'form-inline'}) do
-					      = label_tag "Email"
-					      = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email"
-					      = label_tag "Select Start Date"
-					      = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
-					      = label_tag "Employment Type"
- 						  = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type"
- 						  = label_tag "Project"
-					      = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
-					      = hidden_field_tag :invited_by_id, current_user.id
-					      = hidden_field_tag :customer_id, @customer.id
-					      .row(style="margin-top: 10px;margin-left: 10px;")
-						      .small-8.columns(style="padding-left: 0;") = label_tag "Project Manager?"
-						      .small-2.columns = check_box_tag :project_manager
-						  .actions
-					      	= submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
+                  th
+                    = form_tag(action: :invite_to_project, html: {class: 'form-inline'}) do
+                      = label_tag "Email"
+                      = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email"
+                      = label_tag "Select Start Date"
+                      = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
+                      = label_tag "Employment Type"
+                      = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type"
+                      = label_tag "Project"
+                      = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
+                      = hidden_field_tag :invited_by_id, current_user.id
+                      = hidden_field_tag :customer_id, @customer.id
+                      .row(style="margin-top: 10px;margin-left: 10px;")
+                          .small-8.columns(style="padding-left: 0;") = label_tag "Project Manager?"
+                          .small-2.columns = check_box_tag :project_manager
+                      .actions
+                        = submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
 	  
 		  h1.pending-right-row Pending Users
 		  table class="right-row"
@@ -175,34 +175,3 @@ div.tabs-content
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 		
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

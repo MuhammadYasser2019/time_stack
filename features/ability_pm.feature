@@ -46,11 +46,7 @@ Feature: Testing abilities of a User with PM role
     Given User is on Weeks index
     And he should see Time Sheets Submitted for Approval
     Then User should see "Approve" button
-#<<<<<<< HEAD
     Then User should see button to "Add Comment to Reject"
-#=======
-#    Then User should see link to "Add Comment to Reject"
-#>>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3
     
 
   Scenario: 10) With PM roles user should be able to Add Tasks
@@ -70,14 +66,7 @@ Feature: Testing abilities of a User with PM role
   Scenario: With Pm roles user should be able to assign adhoc PM
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
-#<<<<<<< HEAD
-    Then Should see "Listing projects" 
-#=======
-#    # And click on the button "Manage Projects"
-#    Then Should see "Listing projects"
-#    # And click the project link
-#    # And Text "Editing project" should be present
-#>>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3
+    Then Should see "Listing projects"
     Then User should see label "Adhoc Project Manager"
 
 
@@ -85,17 +74,12 @@ Feature: Testing abilities of a User with PM role
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
     Then On the index page
-#<<<<<<< HEAD
     Then Should see "Listing projects" 
     And click on the "Vacation Request" button with link "/vacation request"
-#=======
-#    And click on the "Vacation Request" button
-#>>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3
     Then User should see "Reports for Users PM user" 
     And User should see "Your Vacation Requests"
 
   Scenario: 20) With PM roles user should be able to make an Holiday Exception
-<<<<<<< HEAD
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
     Then On the index page
@@ -138,19 +122,6 @@ Feature: Testing abilities of a User with PM role
     And click "Save Timesheet"
     And Go to the index page
     And Expect page to have link "NEW" but not "COPY"
-#=======
-#    Given I am a customer manager
-#    Given CM logs in with "Email" and "Password"
-#    Given User is on Weeks index
-#    And click on "Holidays" link
-#    Then click the button "Create New Holiday"
-#    And Enter "Name" and "Date of holiday this year"
-#    Then On the index page
-#    And click on the "Holiday Exceptions" button
-#    And Expect page to have "New Holiday Exception"
-#    And select a "user"
-#    And click on "Create Holiday Exception"
-#>>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3
    
     
 

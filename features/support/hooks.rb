@@ -156,7 +156,6 @@ module TestDataSetupHelper
     create_week
     create_status
     create_customers
-# <<<<<<< HEAD
     #create_customer_holidays
     create_project
     
@@ -177,10 +176,6 @@ module TestDataSetupHelper
     ch.customer_id = 1
     ch.holiday_id = 1
     ch.save
-# =======
-#     create_project
-#
-# >>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3
   end
 
   def create_user
@@ -234,32 +229,6 @@ module TestDataSetupHelper
 
   end
 
-# <<<<<<< HEAD
-# =======
-#     u1 = User.new
-#     u1.id = 2
-#     u1.email = "pm.user@test.com"
-#     u1.password = "123456"
-#     u1.encrypted_password
-#     u1.user = 1
-#     u1.pm = 1
-#     u1.customer_id = 1
-#     u1.save!
-#
-#      p = Project.new
-#      p.id = 1
-#      p.name = "Time Entries"
-#      p.user_id = 2
-#      p.customer_id = 1
-#      p.save
-#
-#      create_projects_user
-#
-#
-#
-#   end
-#
-# >>>>>>> d5710c2e9e632589d68c6d1cc71a7879b92002e3
   def create_projects_user
     pu1 = ProjectsUser.new
     pu1.project_id = 1
