@@ -219,6 +219,12 @@ end
 
   end
 
+  def pending_email
+    @user = User.find(params[:user_id])
+
+  end
+    
+
   def add_user_to_project
     # User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id").select("users.email, projects_users.project_id, projects_users.active").collect {|u| "#{u.email}, #{u.project_id}, Status #{u.active}"}
     logger.debug(" add_user_to_project - #{params.inspect}")

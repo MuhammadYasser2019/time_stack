@@ -47,6 +47,22 @@ jQuery ($) ->
       week_id: $('#week_id_' + row_id).val()
     return
   )
+
+  parse_user_id = (attr_val) ->
+    user_id = attr_val.split("_")[2]
+    return user_id
+
+  $(document).on("click", ".pending-email", ->
+    #$('.pending-email').click ->
+    #row_id = parse_row_id($(this).attr('id'))
+    #project_id = $(this).parent().children("#project_id_"+row_id).val()
+    user_id = parse_user_id($(this).attr('id'))
+    console.log("THE USER ID IS: " + user_id)
+    $.post '/pending_email',
+      user_id: user_id
+    return
+  )
+
   $(document).on("click", ".add-user-to-project", ->
   #$('.add-user-to-project').click ->
     console.log("check is clicked" +$(this).val())

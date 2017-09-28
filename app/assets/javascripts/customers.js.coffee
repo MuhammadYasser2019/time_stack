@@ -76,6 +76,21 @@ jQuery ($) ->
     return
   )
 
+  parse_user_id = (attr_val) ->
+   user_id = attr_val.split("_")[2]
+   return user_id
+
+  $(document).on("click", ".customers-pending-email", ->
+    #$('.pending-email').click ->
+    #row_id = parse_row_id($(this).attr('id'))
+    #project_id = $(this).parent().children("#project_id_"+row_id).val()
+    user_id = parse_user_id($(this).attr('id'))
+    console.log("THE USER ID IS: " + user_id)
+    $.post '/customers_pending_email',
+      user_id: user_id
+    return
+  )
+
   $(document).on('click', '.remove-user-from-customer', ->
     console.log("customers.js- romove customer")
     user_id = parse_user_id($(this).attr('id'))

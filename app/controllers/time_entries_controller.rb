@@ -48,6 +48,40 @@ class TimeEntriesController < ApplicationController
 
   # POST /time_entries
   # POST /time_entries.json
+
+  def copy_timesheet
+    #@time_entry = TimeEntry.where(usere_id: params[:user_id]).last
+    #TimeEntry.create(date: @time_entry.date.next_week, hours: , :activity_log, :task_id, :week_id, :user_id, :sick, :personal_day,
+     #                             :updated_by)
+    current_week_id = params[:id]
+    #current_week = Date.today.beginning_of_week.strftime
+    #pre_week = Time.now.beggining_of_week - 7.days
+    current_week = Week.find(current_week_id)
+    current_week_start_date = current_week.start_date
+    pre_week_start_date = current_week_start_date - 7.days
+    pre_week = Week.where("user_id = ? && start_date = ?", current_user.id ,pre_week_start_date)
+    logger.debug("CHECKING FOR PREVIOUS WEEK: #{pre_week.inspect}")
+    #w = week.find(current_week_id)
+    #w1 = Week.where(user_id: 1)[-2]
+    #puts "previous week id is: #{w1.d}"
+    #w2 = Week.where(user_id: current_user).last
+
+    pre_week_time_entries = TimeEntry.where(week_id: pre_week[0].id)
+
+    current_time_entries = TimeEntry.where(week_id: current_week.id)
+    count = 0
+    current_time_entries.each do |t|
+     
+     puts "#{count}"
+     puts "NEW WEEKS DATE OF ACTIVITY: #{t.date_of_activity}"
+     puts "OLD WEEKS DATE OF ACTIVITY: #{pre_week_time_entries[count].date_of_activity}"
+     puts "HOURS to populate: #{pre_week_time_entries[count].hours}"
+     t.hours = pre_week_time_entries[count].hours
+     t.save
+
+     count += 1
+  end
+  
   def create
     @time_entry = TimeEntry.new(time_entry_params)
     respond_to do |format|
@@ -93,7 +127,8 @@ class TimeEntriesController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def time_entry_params
-      params.require(:time_entry).permit(:date, :hours, :activity_log, :task_id, :week_id, :user_id, :sick, :personal_day,
-                                  :updated_by)
+      params.require(:time_entry).permit(:date, :hours, :activity_log, :task_id, :week_id, :user_id, :sick, :personal_day, :updated_by)
     end
+  end
 end
+

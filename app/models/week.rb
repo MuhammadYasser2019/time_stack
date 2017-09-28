@@ -20,8 +20,63 @@ class Week < ApplicationRecord
                   
     joins(weeks)
   end
+
   def self.left_joins_user_week_statuses(some_user, week_id)
     weeks = Week.where("weeks.id = ?", week_id).weeks_with_user_week_statuses(some_user)
+  end
+
+  def self.weeks_with_invitation_start_date(user)
+      next_week_start_date = Date.today.beginning_of_week + 7.days
+      user_invite_start_date = user.invitation_start_date.beginning_of_week 
+
+      until user_invite_start_date == next_week_start_date
+        new_week = Week.where(user_id: user.id, start_date: user_invite_start_date).last
+        if new_week.blank?
+          new_week = Week.new
+          new_week.start_date = user_invite_start_date
+          new_week.end_date = user_invite_start_date.to_date.end_of_week.strftime('%Y-%m-%d') 
+          new_week.user_id = user.id
+          new_week.status_id = 1
+          new_week.save
+        end
+
+        7.times { new_week.time_entries.build( user_id: user.id )}
+        new_week.time_entries.each_with_index do | te, i |
+          new_week.time_entries[i].date_of_activity = Date.new(new_week.start_date.year, new_week.start_date.month, new_week.start_date.day) + i
+          new_week.time_entries[i].user_id = user.id
+        end
+        new_week.save
+        user_invite_start_date += 7.days
+      end
+  end
+
+  def copy_week(current_time_entries, pre_week_time_entries)
+    count = 0
+    current_time_entries.each do |t|
+       
+     Rails.logger.debug("#{count}")
+     Rails.logger.debug("NEW WEEKS DATE OF ACTIVITY: #{t.date_of_activity}")
+     Rails.logger.debug("OLD WEEKS DATE OF ACTIVITY: #{pre_week_time_entries[count].date_of_activity}")
+     Rails.logger.debug("HOURS to populate: #{pre_week_time_entries[count].hours}")
+     Rails.logger.debug("OLD WEEKS PROJECT: #{pre_week_time_entries[count].project_id}")
+     Rails.logger.debug("COPYING OLD WEEKS TASKS: #{pre_week_time_entries[count].task_id}")
+     Rails.logger.debug("COPYING OLD WEEKS TIME-IN: #{pre_week_time_entries[count].time_in}")
+     Rails.logger.debug("COPYING OLD WEEKS TIME-OUT: #{pre_week_time_entries[count].time_out}")
+     Rails.logger.debug("COPYING DESCRIPTION: #{pre_week_time_entries[count].activity_log}")
+     Rails.logger.debug("COPYING SICK DAY: #{pre_week_time_entries[count].sick}")
+     Rails.logger.debug("COPYING PERSONAL DAY: #{pre_week_time_entries[count].personal_day}")
+     t.hours = pre_week_time_entries[count].hours
+     t.project_id = pre_week_time_entries[count].project_id
+     t.task_id = pre_week_time_entries[count].task_id
+     t.time_in = pre_week_time_entries[count].time_in
+     t.time_out = pre_week_time_entries[count].time_out
+     t.activity_log = pre_week_time_entries[count].activity_log
+     t.sick = pre_week_time_entries[count].sick
+     t.personal_day = pre_week_time_entries[count].personal_day
+     t.save
+
+     count += 1
+    end
   end
   
   def self.weekly_weeks
@@ -47,4 +102,61 @@ class Week < ApplicationRecord
       end
     end
   end
+
+  def copy_last_week_timesheet(user)
+
+    current_week_start_date = self.start_date
+    pre_week_start_date = current_week_start_date - 7.days
+    pre_week = Week.where("user_id = ? && start_date = ?", user ,pre_week_start_date)
+    logger.debug("CHECKING FOR PREVIOUS WEEK: #{pre_week.inspect}")
+    #w = week.find(current_week_id)
+    #w1 = Week.where(user_id: 1)[-2]
+    #puts "previous week id is: #{w1.d}"
+    #w2 = Week.where(user_id: current_user).last
+
+    pre_week_time_entries = TimeEntry.where(week_id: pre_week[0].id)
+
+    current_time_entries = TimeEntry.where(week_id: self.id)
+    count = 0
+    if pre_week_time_entries.count == 7
+      logger.debug("WEEK WITH 7 TIME ENTRIES")
+      copy_week(current_time_entries, pre_week_time_entries)
+      
+    else
+      if pre_week_time_entries.count != current_time_entries.count
+        day_array = []
+        pre_week_time_entries.each do |t|
+          day = t.date_of_activity.strftime("%A")
+          logger.debug("THE DAY IS: #{day}")
+          day_array << day
+        end
+        dup_days = day_array.select{|d| day_array.count(d)>1}.uniq
+        logger.debug("THE DAY ARRAY IS: #{dup_days.inspect}")
+
+        dup_days.each do |dd|
+          logger.debug("THE DAY IS: #{dd}")
+          num_of_repetition = day_array.count(dd)
+          logger.debug("num_of_repetition is :#{num_of_repetition}")
+
+          current_time_entries.each do |cwte|
+            if cwte.date_of_activity.strftime("%A") == dd
+              date = cwte.date_of_activity
+              logger.debug("CHECKING FOR DATE #{date.inspect}")
+              (num_of_repetition - 1).times{
+                t = TimeEntry.new
+                t.week_id = self.id
+                t.date_of_activity = date
+                t.save
+              }
+            end
+          end
+        end
+      end 
+      current_time_entries_1 = TimeEntry.where(week_id: self.id)
+      copy_week(current_time_entries_1, pre_week_time_entries)
+    end    
+    
+
+  end
+  
 end

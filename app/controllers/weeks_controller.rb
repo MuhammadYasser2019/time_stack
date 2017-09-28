@@ -41,7 +41,7 @@ class WeeksController < ApplicationController
 
     @week = Week.new
     @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
-    @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d')
+    @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d') 
     @week.user_id = current_user.id
     @week.status_id = Status.find_by_status("NEW").id
     @week.save!
@@ -71,6 +71,20 @@ class WeeksController < ApplicationController
     @week_user = User.find(@week.user_id)
     vacation(@week)
 
+  end
+
+  def copy_timesheet
+    #@time_entry = TimeEntry.where(usere_id: params[:user_id]).last
+    #TimeEntry.create(date: @time_entry.date.next_week, hours: , :activity_log, :task_id, :week_id, :user_id, :sick, :personal_day,
+     #                             :updated_by)
+    current_week_id = params[:id]
+    #current_week = Date.today.beginning_of_week.strftime
+    #pre_week = Time.now.beggining_of_week - 7.days
+    current_week = Week.find(current_week_id)
+    current_week.copy_last_week_timesheet(current_user.id)
+    
+
+    redirect_to root_path
   end
 
   # GET /weeks/1/edit
