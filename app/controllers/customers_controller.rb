@@ -136,7 +136,7 @@ class CustomersController < ApplicationController
   def invite_to_project
     logger.debug "INVITED BY #{params[:invited_by_id]}"
     @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, pm: params[:project_manager])
-    @user.update(invited_by_id: params[:invited_by_id], customer_id: current_user.id)
+    @user.update(invited_by_id: params[:invited_by_id])
     pu = ProjectsUser.new
     # @users_on_project = @project.users
     # @users_on_project = params[:user_id]

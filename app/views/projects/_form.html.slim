@@ -14,6 +14,8 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
   	 a href="#user_invitation" Invite Users
    li class="tab-title"
   	 a href="#adhoc_pm" Assign Adhoc PM
+   li class="tab-title"
+  	 a href="#users_on_project" Users on the Project
 - if @adhoc && user_have_adhoc_permission(current_user)
  div.tabs-content
 	 div class="content active" id="information"
@@ -213,6 +215,12 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 		  .(class="row white-background")
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
+
+
+	     div class="content" id="users_on_project"
+		  .(class="row white-background")
+			 div(id="dynamic_user_update")
+				== render partial: 'add_remove_users'
 			
 
 

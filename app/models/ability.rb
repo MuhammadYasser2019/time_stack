@@ -18,6 +18,7 @@ class Ability
        can :manage, User
        can :manage, Week
        can :manage, Customer
+       can :manage, Project
       end
       if user.cm
         can :manage, TimeEntry

@@ -33,6 +33,8 @@ Rails.application.routes.draw do
   get 'projects/:id/approve/:week_id/:row_id' => 'projects#approve'
   get 'projects/:id/reject/:week_id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
+  post 'add_multiple_users_to_project' => "projects#add_multiple_users_to_project"
+  post 'remove_multiple_users_from_project' => "projects#remove_multiple_users_from_project"
   post 'show_project_reports' => 'projects#show_project_reports'
   post 'projects/:id/deactivate_project' => 'projects#deactivate_project'
   post 'projects/:id/reactivate_project' => 'projects#reactivate_project'
