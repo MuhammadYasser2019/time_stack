@@ -16,7 +16,8 @@ jQuery ($) ->
     my_url = '/available_users/'+project_id
     $.ajax my_url,
       data: {}
-      type: 'GET'
+      type: 'GET',
+      async: false,
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
         $my_data = data
