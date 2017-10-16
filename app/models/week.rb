@@ -107,6 +107,7 @@ class Week < ApplicationRecord
 
     current_week_start_date = self.start_date
     pre_week_start_date = current_week_start_date - 7.days
+    logger.debug("CHECKING FOR USER : #{pre_week_start_date.inspect} , #{user.inspect}")
     pre_week = Week.where("user_id = ? && start_date = ?", user ,pre_week_start_date)
     logger.debug("CHECKING FOR PREVIOUS WEEK: #{pre_week.inspect}")
     #w = week.find(current_week_id)
@@ -154,6 +155,7 @@ class Week < ApplicationRecord
       end 
       current_time_entries_1 = TimeEntry.where(week_id: self.id)
       copy_week(current_time_entries_1, pre_week_time_entries)
+      logger.debug("CHECKING FOR CODE")
     end    
     
 
