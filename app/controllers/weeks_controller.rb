@@ -82,7 +82,8 @@ class WeeksController < ApplicationController
     #pre_week = Time.now.beggining_of_week - 7.days
     current_week = Week.find(current_week_id)
     current_week.copy_last_week_timesheet(current_user.id)
-    
+    current_week.status_id = 5 
+    current_week.save
 
     redirect_to root_path
   end
@@ -219,9 +220,9 @@ class WeeksController < ApplicationController
       # end
     end
     if params[:commit] == "Save Timesheet"
-        @week.status_id = 1
+        @week.status_id = 5
         @week.time_entries.where(status_id: [nil, 4]).each do |t|
-          t.update(status_id: 1)
+          t.update(status_id: 5)
         end
     elsif params[:commit] == "Submit Timesheet"
         @week.status_id = 2
