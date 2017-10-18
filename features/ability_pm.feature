@@ -123,5 +123,11 @@ Feature: Testing abilities of a User with PM role
     And Go to the index page
     And Expect page to have link "NEW" but not "COPY"
    
-    
-
+Scenario: 21) With PM roles user should be able to assign users
+    Given I am a project manager
+    Given PM logs in with "Email" and "Password"
+    Then On the index page
+    Then Should see "Listing projects" 
+    And Expect page to have "Users on the Project"
+    And PM click on the "Users on the Project" link
+    And Expect page to have "Available Users"

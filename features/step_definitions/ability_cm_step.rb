@@ -136,3 +136,24 @@ Then(/^cm clicks on the link "([^"]*)"$/) do |arg1|
   w.copy_last_week_timesheet(1)
   visit (weeks_path)
 end
+
+Given(/^User is on customers index$/) do
+  visit(customers_path)
+end
+
+Then(/^page should have "([^"]*)" link$/) do |arg1|
+  expect(page).to have_link(arg1)
+  click_link arg1
+end
+
+Then(/^click on the shared checkbox$/) do
+  expect(page).to have_selector('#shared_user_id')
+end
+
+Then(/^go to customer index page$/) do
+  visit(customers_path)
+end
+
+Then(/^the shared checkbox should be checked$/) do
+  find('#shared_user_id').checked?
+end

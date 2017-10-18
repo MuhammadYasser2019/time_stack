@@ -89,3 +89,12 @@ Feature: Testing abilities of a User with CM role
     And Go to the index page
     And Expect page to have link "NEW" but not "COPY"
 
+  Scenario: 29) With CM role user should able to make shared employee and assign PM role
+    Given I am a customer manager
+    Given CM logs in with "Email" and "Password"
+    Given User is on customers index
+    Then page should have "Customer Employees" link
+    Then click on "Customer Employees" link
+    Then click on the shared checkbox
+    Then go to customer index page
+    Then the shared checkbox should be checked

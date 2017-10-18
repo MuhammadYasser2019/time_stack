@@ -18,6 +18,7 @@ module TestDataSetupHelper
     w.save
   end
 
+
   def create_second_week
 
     start_date = Date.today.beginning_of_week
@@ -83,6 +84,11 @@ module TestDataSetupHelper
     s3.id = 4
     s3.status = "REJECTED"
     s3.save
+
+    s4 = Status.new
+    s4.id = 5
+    s4.status = "EDIT"
+    s4.save
   end
 
   def create_project
@@ -137,7 +143,6 @@ module TestDataSetupHelper
     create_project
 
   end
-
 
   def create_project_manager
     u = User.new
