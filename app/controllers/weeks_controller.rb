@@ -99,9 +99,10 @@ class WeeksController < ApplicationController
   end
 
   def clear_timesheet
+    logger.debug("WEEKS CONTROLLER --------------")
     current_week_id = params[:id]
     current_week = Week.find(current_week_id)
-    current_week.clear_current_week_timesheet(current_user.id)
+    current_week.clear_current_week_timesheet
     current_week.status_id = 1 
     current_week.save
 
