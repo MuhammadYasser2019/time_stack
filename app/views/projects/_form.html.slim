@@ -34,7 +34,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 						th
 						th
 
-				tbody
+				tbody	
 					- @applicable_week.each_with_index do |at, i|
 						tr id = "#{i}"
 							td
@@ -74,39 +74,9 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 					= f.label :customer
 					= f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
 				.row class="white-background"
-				
-					h1 class="users-left-row" Users On The Project
-					table class="left-row"
-						thead
-						  tr
-						    th User
-						    th Email
-						    th Active
-						tbody
-						  - @users_on_project.each_with_index do |uop,i|
-						    -if uop.project_id == @project_id.to_i
-						      tr
-		
-						        td
-						          = link_to uop.first_name, "/projects/#{uop.project_id}/user_time_report?user_id=#{uop.id}", class: "user-time-report"
-		
-						        td
-						          = uop.email
-						        td
-						          = check_box_tag "test", uop.id, true, class: "add-user-to-project"
-						          = hidden_field_tag "add_user_#{i}", @project.id
-						    -else
-						      tr
-						        td
-						          = uop.first_name
-						        td
-						          = uop.email
-						        td
-						          = check_box_tag "test", uop.id, false,class: "add-user-to-project"
-						          = hidden_field_tag "add_user_#{i}", @project.id
-	
-					h1 class="task-right-row" Tasks
-					table class="right-row " border="1" id="tasklist"
+						
+					h1 class="task-center-row" Tasks
+					table class="center-row " border="1" id="tasklist"
 						thead
 						  tr 
 						    td Code
