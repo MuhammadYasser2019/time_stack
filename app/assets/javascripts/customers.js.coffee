@@ -46,8 +46,6 @@ jQuery ($) ->
 
   parse_customer_id = (attr_val) ->
     customer_id = attr_val.split("/")[4]
-    alert(customer_id)
-    alert(attr_val)
     return customer_id
 
   $('.select-customer').click ->
