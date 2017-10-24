@@ -18,7 +18,6 @@ module TestDataSetupHelper
     w.save
   end
 
-
   def create_second_week
 
     start_date = Date.today.beginning_of_week
@@ -61,6 +60,16 @@ module TestDataSetupHelper
     t.user_id = 1
     t.hours = 8
     t.date_of_activity = Date.today.beginning_of_week- 7.days
+    t.save
+  end
+
+    def create_second_time_sheet
+    t = TimeEntry.new
+    t.project_id = 1
+    t.week_id = 3
+    t.user_id = 1
+    t.hours = nil
+    t.date_of_activity = Date.today.beginning_of_week
     t.save
   end
 
