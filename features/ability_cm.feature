@@ -62,7 +62,7 @@ Feature: Testing abilities of a User with CM role
     And page should have a button "Create Employment Type"
     And click button "Create Employment Type"
 
-  Scenario: 26) CM should able to copy the timesheet from previous week
+  Scenario: 26) CM should able to copy the timesheet from previous week and clear,edit the current week
     Given I am a customer manager
     Given CM logs in with "Email" and "Password"
     Given If "Enter Time for Current Week" is clicked
@@ -72,8 +72,14 @@ Feature: Testing abilities of a User with CM role
     And Expect page to have "NEW" link
     Then user should see the link "COPY"
     Then cm clicks on the link "COPY"
-    Then User clicks on the "NEW" link
+    Then User clicks on the "EDIT" link
     And should see the "8" in "hours" field
+    Then user should see the link "CLEAR" for clearing 
+    And click on the clear "CLEAR" button
+    Then user should see the new link "NEW"
+    And click on new "NEW"
+    And should see "" in "Hours" 
+    And should see "" in "Description"
 
   Scenario: 27) When the TimeSheet is submitted, there should be no COPY Link for that week
     Given I am a customer manager

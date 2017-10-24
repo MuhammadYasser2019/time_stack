@@ -171,4 +171,11 @@ Then(/^pm should see "([^"]*)" in "([^"]*)" field$/) do |arg1,arg2|
    find_field("week_time_entries_attributes_0_project_id").find('option[selected]').text == arg1
 end
 
+Then(/^Submit the timesheet$/) do
+ create_second_week_and_submit
+ click_link('Submit Timesheet', :href => 'weeks/3/edit')
+
+end
+
+
 
