@@ -122,3 +122,11 @@ jQuery ($) ->
     $.get '/add_pm_role',
       user_id: user_id,
   )
+
+  $(document).ready ->
+    $('#show_reports').DataTable({
+      dom: 'Bfrtip',
+      "retrieve": true,
+      buttons: [ 'excel', 'pdf']
+    
+    })
