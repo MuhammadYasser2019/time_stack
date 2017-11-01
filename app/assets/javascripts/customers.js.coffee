@@ -123,10 +123,33 @@ jQuery ($) ->
       user_id: user_id,
   )
 
-  $(document).ready ->
-    $('#show_reports').DataTable({
-      dom: 'Bfrtip',
-      "retrieve": true,
-      buttons: [ 'excel', 'pdf']
+  $('#show_reports').DataTable({
+    dom: 'Bfrtip',
+    "retrieve": true,
+    buttons: [ 'excel', 'pdf']
+  
+  })
+
+
+  $(document).on("change", ".pm_user_id", ->
+    console.log "Inside user change" + $(this).attr('id') +  " the value selected is " + $(this).val()  
+    pm_user_id = $(this).val() 
+    project_id = $(this).closest('tr').attr('id')
+    $("#pm_user_id_"+project_id).val(pm_user_id)
+  )
+
+  $(document).on('click', '.assign_pm', (event)->
+    event.preventDefault()
+    customer_id = $('#customer_id').val()
+    project_id = $(this).closest('tr').attr('id')
+   
+    my_url = '/assign_pm/'+customer_id
+
+    $.post my_url,
+
+      "project_id": project_id,
+      "user_id": $("#pm_user_id_"+project_id).val(),
+  )
     
-    })
+
+

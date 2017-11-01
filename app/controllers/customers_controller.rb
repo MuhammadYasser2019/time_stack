@@ -19,13 +19,15 @@ class CustomersController < ApplicationController
     @employment_type = EmploymentType.where(customer_id: @customer.id)
     @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
     logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
-
+    @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
     # @users= User.all
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
     @adhoc_projects = Project.where("adhoc_pm_id is not null")
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
     logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
+
+
    end
   end
 
@@ -390,6 +392,24 @@ class CustomersController < ApplicationController
     end
   end
 
+  def assign_pm
+    @customer = Customer.find params[:id]
+    @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
+    @projects = @customer.projects
+
+    if params["user_id"].present? && params["project_id"].present?      
+      @project = Project.find params["project_id"]
+      @project.user_id = params["user_id"].to_i
+      @project.save
+
+      @projects = @customer.projects
+      respond_to do |format|
+        format.js
+      end
+    end
+    
+  end
+
   def available_users
     logger.debug "available_users - starting to process, params passed  are #{params[:id]}"
     project_id  = params[:id]
@@ -414,7 +434,7 @@ class CustomersController < ApplicationController
     @employment_type = EmploymentType.where(customer_id: @customer.id)
     @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
     logger.debug("customer-dynamic-update- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
-
+    @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
     # @users= User.all
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
