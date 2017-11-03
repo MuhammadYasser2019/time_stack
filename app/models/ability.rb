@@ -8,7 +8,7 @@ class Ability
       can [:new, :create, :update], TimeEntry
       can [:user_account, :edit, :update, :show_user_reports, :user_profile,:set_default_project], User
       can [:read, :available_tasks], Task
-      can [:read, :edit, :create, :update, :new, :report, :copy_timesheet], Week
+      can [:read, :edit, :create, :update, :new, :report, :copy_timesheet, :clear_timesheet, :previous_comments, :add_previous_comments], Week
       can [:read, :permission_denied], Project
       can [:vacation_request], Customer
 

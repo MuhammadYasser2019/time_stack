@@ -99,9 +99,10 @@ class WeeksController < ApplicationController
   end
 
   def clear_timesheet
+    logger.debug("WEEKS CONTROLLER --------------")
     current_week_id = params[:id]
     current_week = Week.find(current_week_id)
-    current_week.clear_current_week_timesheet(current_user.id)
+    current_week.clear_current_week_timesheet
     current_week.status_id = 1 
     current_week.save
 
@@ -160,6 +161,30 @@ class WeeksController < ApplicationController
     end
   end
 
+  def previous_comments
+     @wuser = User.find(params[:user_id])
+     @week_id = params[:week_id]
+     @t = TimeEntry.where.not(activity_log: "").where("user_id= ?",params[:user_id]).order(created_at: :desc) .limit(10)
+     @t.each do |t|
+      logger.debug("PRINT T #{t.inspect}")
+     end
+
+     logger.debug("PREVIOUS COMMENTS WEEKS CONTROLLER_________________________ #{@t.inspect}")
+     #@time_entries = @week.time_entries.where(activity_log: )
+     #@week_user = User.find(@week.user_id)
+     #@t = TimeEntry.find(@t.activity_log)
+
+  end
+
+  def add_previous_comments
+    @wuser = User.find(params[:id])
+    @week_id = params[:week_id ]
+    @time_entry = TimeEntry.find(params[:activity_log])
+
+    respond_to do |format|
+      format.js
+    end
+  end
 
   # POST /weeks
   # POST /weeks.json

@@ -18,11 +18,12 @@ Feature: Testing the ability of a User with user role
     Given I am a user
     Given user logs in with "Email" and "Password"
     Given User is on the index page
-    Then user should see the link "Copy"
-    Then click on the link "Copy"
-    Then User clicks on the "NEW" link
+    Then user should see the link "COPY"
+    Then click on the link "COPY"
+    Then user should see the link "EDIT" for editing
+    Then User clicks on the "EDIT" link
     And should see "Time Entries" in "project_id" field
-    And should see the "8" in "hours" field
+    And should see the "8" in "Hours" field
 
   Scenario: 24) When the TimeSheet is submitted, there should be no Copy Link for that week
     Given I am a user
@@ -37,6 +38,23 @@ Feature: Testing the ability of a User with user role
     And click "Save Timesheet"
     And Go to the index page
     And Expect page to have link "NEW" but not "Copy"
+
+
+   Scenario: User should able to clear and edit the current week
+
+    Given I am a user
+    Given user logs in with "Email" and "Password"
+    Given User is on the index page
+    Then user should see the link "COPY"
+    Then click on the link "COPY"
+    Then user should see the link "EDIT" for editing
+    Then User clicks on the "EDIT" link
+    Then user should see the link "CLEAR" for clearing 
+    And click on the clear "CLEAR" button
+    Then user should see the new link "NEW"
+    And click on new "NEW"
+    And should see "" in "Hours" 
+    And should see "" in "Description"
     
 
   
