@@ -8,27 +8,26 @@ class CustomersController < ApplicationController
     @customers = Customer.where(user_id: current_user.id)
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     if @customers.present?
-    params[:customer_id] = @customers.first.id unless params[:customer_id].present?
-    @customer = @customers.first
-    customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
-    @projects = @customer.projects
-    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
-    @customer_holiday = CustomersHoliday.new
-    @invited_users = User.where("invited_by_id = ?", current_user.id)
-    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
-    @employment_type = EmploymentType.where(customer_id: @customer.id)
-    @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
-    logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
-    @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
-    # @users= User.all
-    logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
-    @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
-    @adhoc_projects = Project.where("adhoc_pm_id is not null")
-    logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
-    logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
-
-
-   end
+      params[:customer_id] = @customers.first.id unless params[:customer_id].present?
+      @customer = @customers.first
+      customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
+      @projects = @customer.projects
+      @pm_projects = Project.where(user_id: current_user.id)
+      @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+      @customer_holiday = CustomersHoliday.new
+      @invited_users = User.where("invited_by_id = ?", current_user.id)
+      @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
+      @employment_type = EmploymentType.where(customer_id: @customer.id)
+      @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
+      logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
+      @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
+      # @users= User.all
+      logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
+      @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
+      @adhoc_projects = Project.where("adhoc_pm_id is not null")
+      logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
+      logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
+    end
   end
 
   # GET /customers/1
