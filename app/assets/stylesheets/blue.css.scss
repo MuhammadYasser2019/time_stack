@@ -41,3 +41,10 @@ table tr:nth-of-type(even) {
       background: #98cde1 ;
 }
 
+.right-arrow:after {
+  border-left: 10px solid #2897c1 !important;
+}
+
+.left-arrow:after {
+  border-right: 10px solid #2897c1 !important;
+}
