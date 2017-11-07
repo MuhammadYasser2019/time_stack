@@ -251,6 +251,15 @@ input[type="submit"]{
   background-color: transparent;
 }
 
+.add_comments table{
+  border: 1px solid black !important;
+  text-align: center;
+  display:block;
+  height: 400px;      
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .enter_time {
   display: none;
 }

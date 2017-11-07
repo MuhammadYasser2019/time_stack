@@ -93,7 +93,7 @@ Rails.application.routes.draw do
   post "customer/:customer_id/add_adhoc_pm_by_cm" => "customers#add_adhoc_pm_by_cm", as: :add_adhoc_pm_by_cm
   get "/copy_timesheet/:id" => "weeks#copy_timesheet"
   get "/clear_timesheet/:id" => "weeks#clear_timesheet"
-  post "/add_previous_comments/:id" => "weeks#add_previous_comments", as: :add_previous_comments
+  post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
