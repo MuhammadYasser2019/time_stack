@@ -57,7 +57,7 @@ class WeeksController < ApplicationController
     end
 
 
-    7.times {  @week.time_entries.build( user_id: current_user.id )}
+    7.times {  @week.time_entries.build( user_id: current_user.id, status_id: 1 )}
       
     @week.time_entries.each_with_index do |te, i|
       logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
@@ -74,12 +74,7 @@ class WeeksController < ApplicationController
   end
 
   def copy_timesheet
-    #@time_entry = TimeEntry.where(usere_id: params[:user_id]).last
-    #TimeEntry.create(date: @time_entry.date.next_week, hours: , :activity_log, :task_id, :week_id, :user_id, :sick, :personal_day,
-     #                             :updated_by)
     current_week_id = params[:id]
-    #current_week = Date.today.beginning_of_week.strftime
-    #pre_week = Time.now.beggining_of_week - 7.days
     current_week = Week.find(current_week_id)
     current_week.copy_last_week_timesheet(current_user.id)
     hours_array =[]
@@ -162,7 +157,7 @@ class WeeksController < ApplicationController
   end
 
   def previous_comments
-     @wuser = User.find(params[:user_id])
+     @wuser = params[:user_id]
      @week_id = params[:week_id]
      @t = TimeEntry.where.not(activity_log: "").where("user_id= ?",params[:user_id]).order(created_at: :desc) .limit(10)
      @t.each do |t|
@@ -177,7 +172,7 @@ class WeeksController < ApplicationController
   end
 
   def add_previous_comments
-    @wuser = User.find(params[:id])
+    #@wuser = User.find(params[:id])
     @week_id = params[:week_id ]
     @time_entry = TimeEntry.find(params[:activity_log])
 
@@ -270,6 +265,7 @@ class WeeksController < ApplicationController
 
     end
     test_array
+    logger.debug("TEST ARRAY ---------------------#{test_array.inspect}")
     if params[:commit] == "Save Timesheet"
         if test_array.empty?
           @week.status_id = 1
