@@ -78,8 +78,8 @@
 								td = link_to "CLEAR", "/clear_timesheet/#{week.id}"
 				= link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
 							
-	
 - if @project.present? || (@adhoc && @adhoc_pm_projects.present?)
+	== render partial: 'timesheets_for_approval', locals: {projects: @projects}
 	.(id="dynamic_projects")
 		== render partial: 'new_edit_form'
 

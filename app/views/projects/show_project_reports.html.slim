@@ -15,7 +15,7 @@ table
       = hidden_field_tag 'id', @project_id
       td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
       td = button_tag "Show Report" 
-table id='show_report'
+table id='show_reports' class="display" width="100%" cellspacing="0"
   thead
     tr
       th Consultant Name

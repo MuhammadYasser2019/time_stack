@@ -57,6 +57,7 @@
 				= link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
 
 -if @customers.present?
+	== render partial: 'projects/timesheets_for_approval', locals: {projects: @pm_projects}
 	.(id="dynamic_customers")
 		== render 'new_edit_form'
 

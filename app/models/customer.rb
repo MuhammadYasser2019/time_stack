@@ -17,11 +17,11 @@ class Customer < ApplicationRecord
     end
 
     consultant_ids.each do |c|
+     total_hours = 0
      project_list.each do |p|
       time_entries = TimeEntry.where(user_id: c, project_id: p.id, date_of_activity: start_date..end_date).order(:date_of_activity)
       logger.debug "consultant is #{c}"
       employee_time_hash = Hash.new
-      total_hours = 0
       daily_hours = 0
       count = 1
       time_entries.each do |t|
@@ -42,12 +42,10 @@ class Customer < ApplicationRecord
           daily_hours = !t.hours.blank? ? t.hours : 0
           logger.debug "DAILY HOURS 3: #{daily_hours}"
         end
-
         total_hours = total_hours + t.hours if !t.hours.blank?
         employee_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: daily_hours, activity_log: t.activity_log }
       end
       logger.debug "POST LOOP EMPLOYEE HASH: #{employee_time_hash.inspect}"
-
       if hash_report_data[c].blank?
         hash_report_data[c] = { daily_hash: employee_time_hash, total_hours: total_hours } if hash_report_data[c].nil?
         logger.debug "DAILY HASH: #{hash_report_data[c][:daily_hash]}"

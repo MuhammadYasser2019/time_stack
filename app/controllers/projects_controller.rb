@@ -20,7 +20,7 @@ class ProjectsController < ApplicationController
       @user_projects = Project.where(user_id: current_user.id)
       @customers = Customer.all
       @project = Project.includes(:tasks).find(@project_id)
-      @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+      #@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id IN (#{@projects.collect(&:id).join(",")}) and time_entries.status_id=?", "2", "4","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
       @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
       @available_users = User.where("shared =? or customer_id IS ? OR customer_id = ?", true, nil , @project.customer.id)
     
@@ -38,10 +38,10 @@ class ProjectsController < ApplicationController
       @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@adhoc_pm_project.id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
    end
 
-respond_to do |format|  
-format.html{}
-end
+  respond_to do |format|  
+    format.html{}
   end
+end
 
   # GET /projects/1
 
@@ -137,7 +137,7 @@ end
     @tasks_on_project = Task.where(project_id: @project_id)
     @proxies = User.where(proxy: true)
     @customer = Customer.find(@project.customer_id)
-		@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",params[:id],"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct    
+		#@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",params[:id],"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct    
 		@users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @users = User.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
@@ -148,6 +148,7 @@ end
     @adhoc_pm_project = Project.where(adhoc_pm_id: current_user.id)
     @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
     @project = Project.includes(:tasks).find(params[:id])
+    @available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id)
     respond_to do |format|
       if @project.update(customer_id: project_params["customer_id"], proxy: params["proxy"])
 				format.js
@@ -353,7 +354,7 @@ end
 
     @customers = Customer.all
     @project = Project.includes(:tasks).find(@project_id)
-    @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+    #@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
     @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id)
     @users = User.all
