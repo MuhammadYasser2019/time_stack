@@ -33,6 +33,8 @@ Rails.application.routes.draw do
   get 'projects/:id/approve/:week_id/:row_id' => 'projects#approve'
   get 'projects/:id/reject/:week_id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
+  post 'add_multiple_users_to_project' => "projects#add_multiple_users_to_project"
+  post 'remove_multiple_users_from_project' => "projects#remove_multiple_users_from_project"
   post 'show_project_reports' => 'projects#show_project_reports'
   post 'projects/:id/deactivate_project' => 'projects#deactivate_project'
   post 'projects/:id/reactivate_project' => 'projects#reactivate_project'
@@ -40,6 +42,7 @@ Rails.application.routes.draw do
   post 'show_hours' => 'projects#show_hours'
   post '/pending_email' => 'projects#pending_email'
   post '/customers_pending_email' => 'customers#customers_pending_email'
+  post '/previous_comments' => 'weeks#previous_comments'
 
   get '/show_user_reports/:id' => 'users#show_user_reports'
   post '/show_user_reports/:id' => 'users#show_user_reports'
@@ -53,6 +56,8 @@ Rails.application.routes.draw do
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
   get 'remove_user_from_customer' => "customers#remove_user_from_customer"
+  get 'shared_user' => "customers#shared_user"
+  get 'add_pm_role' => "customers#add_pm_role"
   get 'edit_customer_user/:user_id' => "customers#edit_customer_user"
   get '/update_user_employment' => "customers#update_user_employment"
   get 'vacation_request' => "customers#vacation_request"
@@ -87,6 +92,10 @@ Rails.application.routes.draw do
   post "project/:project_id/add_adhoc_pm" => "projects#add_adhoc_pm", as: :add_adhoc_pm
   post "customer/:customer_id/add_adhoc_pm_by_cm" => "customers#add_adhoc_pm_by_cm", as: :add_adhoc_pm_by_cm
   get "/copy_timesheet/:id" => "weeks#copy_timesheet"
+  post "assign_pm/:id" => "customers#assign_pm", as: :assign_pm
+  get "/clear_timesheet/:id" => "weeks#clear_timesheet"
+  post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments
+
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 

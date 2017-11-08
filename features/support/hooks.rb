@@ -63,6 +63,16 @@ module TestDataSetupHelper
     t.save
   end
 
+    def create_second_time_sheet
+    t = TimeEntry.new
+    t.project_id = 1
+    t.week_id = 3
+    t.user_id = 1
+    t.hours = nil
+    t.date_of_activity = Date.today.beginning_of_week
+    t.save
+  end
+
   def create_status
     s = Status.new
     s.id = 1
@@ -83,6 +93,11 @@ module TestDataSetupHelper
     s3.id = 4
     s3.status = "REJECTED"
     s3.save
+
+    s4 = Status.new
+    s4.id = 5
+    s4.status = "EDIT"
+    s4.save
   end
 
   def create_project
@@ -137,7 +152,6 @@ module TestDataSetupHelper
     create_project
 
   end
-
 
   def create_project_manager
     u = User.new

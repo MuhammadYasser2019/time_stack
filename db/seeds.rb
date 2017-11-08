@@ -17,7 +17,9 @@ end
 Status.find_or_initialize_by(id: 4, status: 'REJECTED') do |s|
   s.save!
 end
-
+Status.find_or_initialize_by(id: 5, status: 'EDIT') do |s|
+  s.save!
+end
 
 Role.find_or_initialize_by(id: 1, name: "User") do |n|
   n.save!

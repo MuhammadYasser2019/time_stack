@@ -11,13 +11,14 @@
  * file per style scope.
  *
  
- *= require dataTables/jquery.dataTables
+ * require dataTables/jquery.dataTables
  *= require scaffolds
  *= require_self
+ *= require buttons.dataTables.min
+ *= require jquery.dataTables.min
  *= require foundation
  *= require normalize
  *= require projects
  *= require time_entries
  *= require weeks
- 
  */

@@ -17,7 +17,7 @@
 }
 
 #tasklist{
-  width: 45%;
+  width: 51%;
   margin-top: 0px;
 }
 
@@ -62,7 +62,7 @@
 
 .right-row table {
 	width: 0%;
-	margin-left: 0px;
+	margin-left: -3px;
 }
 
 .users-left-row {
@@ -117,6 +117,30 @@
 	
 }
 
+.add_remove_left_row{
+    float: left;
+	width: 35%;
+}
+
+.add_remove_left_row table{
+	float: left;
+	border: 2px solid black !important;
+	width: 100%;
+	tbody{
+	display:block;
+	height: 291px;      
+	overflow-y: auto;
+    overflow-x: hidden;
+    }
+}
+
+.add_remove_left_row h1{
+	max-width: 100%;
+	margin-left: 13px;
+}
+
+
+
 .right-row-adhoc {
 	float: right;
 	#margin: 30px !important;
@@ -166,6 +190,86 @@
 	margin-left: auto;
 }
 
+.add_remove_right_row {
+	float: right;
+	width: 35%;
+}
+
+.add_remove_right_row table{
+	float: right;
+	border: 2px solid black !important;
+	width: 100%;
+	align: center;
+	tbody {
+		display:block;
+		height: 291px;      
+		overflow-y: auto;
+	    overflow-x: hidden;
+	}
+}
+
+.add_remove_right_row h1 {
+	max-width: 100%;
+}
+
+.add_user_center {
+	float: left;
+	margin-top: 140px;
+	width: 7%;
+	margin-left:97px;
+}
+
+.remove_user_center{
+	margin-left: -94px;
+	float:left;
+	margin-top:192px;
+	position:absolute;
+}
+
+
+.right-arrow {
+	display: inline-block;
+	position: relative;
+	padding: 6px;
+}
+
+.right-arrow:after {
+	content: '';
+	display: block;  
+	position: absolute;
+	left: 100%;
+	top: 50%;
+	margin-top: -10px;
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-right: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-left: 10px solid #ffd079 !important;
+}
+
+.left-arrow {
+	display: inline-block;
+	position: relative;
+	padding: 0px;
+}
+
+.left-arrow:after {
+	content: '';
+	display: block;  
+	position: absolute;
+	left: -20%;
+	top: 50%;
+	margin-top: -10px;
+	width: 0;
+	height: 0;
+	border-top: 10px solid transparent;
+	border-left: 10px solid transparent;
+	border-bottom: 10px solid transparent;
+	border-right: 10px solid #ffd079 !important;
+}
+
+
 @media only screen and (max-width:1200px){
   .left-row {
 	float: left;
@@ -196,7 +300,7 @@
 
    .right-row table {
 	width: 100%;
-	margin-left: 0px;
+	margin-left: -3px;
    }
 
 }  
@@ -259,6 +363,8 @@
 	width: 80%;
 	text-align: centre;
     }
+
+    
 }
 
 @media only screen and (max-width:1200px){

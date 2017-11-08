@@ -1,4 +1,4 @@
-ul(class="tabs" data-tab style="margin: 0 0 0 10%;")
+ul(class="tabs" data-tab style="margin: 0 0 0 5%;")
  - unless current_page?(action: 'new')
   li class="tab-title active"
   	a href="#information" Customer Information
@@ -14,6 +14,8 @@ ul(class="tabs" data-tab style="margin: 0 0 0 10%;")
   	 a href="#user_invitation" Invite Users
   li class="tab-title"
   	 a href="#adhoc_pm" Assign Adhoc PM
+  li class="tab-title"
+  	 a href="#assign_pm" Projects
 
 div.tabs-content
   div.white-background class="content active" id="information"
@@ -92,6 +94,8 @@ div.tabs-content
                           th User
                           th Email
                           th
+                          th Shared
+                          th PM
 					tbody
 						-@users.each_with_index do |uop, i|
 							-if uop.customer_id == params[:customer_id].to_i
@@ -99,6 +103,8 @@ div.tabs-content
 									td = uop.first_name
 									td = link_to uop.email, "/edit_customer_user/#{uop.id}"
 									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
+									td = check_box_tag "shared_user_id", uop.id, uop.shared?, class: "shared_user"
+									td = check_box_tag "add_pm_role", uop.id, uop.pm?, class: "add_pm_role"
 
   div class="content" id="vacation_request"
     div.row
@@ -145,6 +151,9 @@ div.tabs-content
                       .row(style="margin-top: 10px;margin-left: 10px;")
                           .small-8.columns(style="padding-left: 0;") = label_tag "Project Manager?"
                           .small-2.columns = check_box_tag :project_manager
+                      .row(style="margin-top: 10px;margin-left: 10px;")
+                          .small-8.columns(style="padding-left: 0;") = label_tag "Shared?"
+                          .small-2.columns = check_box_tag :shared_user
                       .actions
                         = submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
 	  
@@ -174,4 +183,9 @@ div.tabs-content
 		.(class="row white-background")
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
+
+  div class="content" id="assign_pm"
+		.(class="row white-background")
+			 div(id="dynamic_assign_pm")
+				== render partial: 'assign_pm_form'
 		

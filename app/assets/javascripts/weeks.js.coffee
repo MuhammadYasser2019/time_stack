@@ -180,6 +180,28 @@ jQuery ($) ->
 	    date = $(this).parent().siblings(".date1").children("label").text()
 	    check_holidays($(this).val(), date, tr)
 
+
+  parse_user_id = (attr_val) ->
+    user_id = attr_val.split("_")[2]
+    return user_id
+
+  $("tbody").on("click", ".previous_commment_icon", ->
+    user_id = parse_user_id($(this).attr('id'))
+    week_id = $(this).attr('id').split("_")[3]
+    console.log("THE USER ID IS: " + user_id)
+    $.post '/previous_comments',
+      user_id: user_id,
+      week_id: week_id
+    return
+  )
+
+  $("tbody").on("click", ".add_button", ->
+    console.log("BEFORE REVEAL")
+    $("#userPreviousComments").foundation('reveal', 'close')
+    console.log("AFTER REVEAL")
+  )
+
+
   $("tbody").on("click", ".add-time", ->
     console.log("weeks.coffee add time")
     row = $(this).parent().parent("tr")
