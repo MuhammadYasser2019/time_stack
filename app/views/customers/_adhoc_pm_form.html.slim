@@ -12,7 +12,7 @@
 			tbody
 			tr
 					td
-						= select_tag :pm_project_id, options_from_collection_for_select(Project.all, "id", "name"), include_blank: true, class: "pm_project_id"
+						= select_tag :pm_project_id, options_from_collection_for_select(Project.where(:customer_id=> params[:customer_id]), "id", "name"), include_blank: true, class: "pm_project_id"
 					td
 						= select_tag :adhoc_pm_id,'', :include_blank => true
 					
