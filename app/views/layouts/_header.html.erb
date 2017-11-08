@@ -3,18 +3,18 @@
 		<td>
 		
 			<% if current_user.nil?%>
-	      <a href="/", class ="header_logo" ><%= image_tag "RSILogo.png" %></a>
+	      <a href="/", class ="header_logo" ><%= image_tag "/assets/timestack", class: 'logo' %></a>
 	    <% else %> 
 	    	<% if !current_user.customer_id.nil? %>
 
 		    	<% customer = Customer.find(current_user.customer_id)%>
 		      <% if !customer.logo.blank?%>
-		        <a href="/", class="header_logo"><%= image_tag "#{customer.logo}" %></a>
+		        <a href="/", class="header_logo"><%= image_tag "#{customer.logo}", class: 'logo' %></a>
 		      <% else %>
-		      	<a href="/", class="header_logo"><%= image_tag "RSILogo.png" %></a>
+		      	<a href="/", class="header_logo"><%= image_tag "/assets/timestack", class: 'logo' %></a>
 		      <% end %>
 		    <% else %>
-		    	  <a href="/", class="header_logo"><%= image_tag "RSILogo.png" %></a>
+		    	  <a href="/", class="header_logo"><%= image_tag "/assets/timestack", class: 'logo' %></a>
 	    	<% end %>
 	    <% end %>
 		</td>
@@ -24,7 +24,7 @@
 		<% elsif !current_user.nil? %>
 			<span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %>
 		<% else %>
-			<%= link_to "Sign In", new_user_session_path %>
+
 		<% end %>
 		</td>
 	</tr>

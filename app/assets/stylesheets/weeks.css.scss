@@ -21,7 +21,7 @@ h1,h2,h3,h4,h5{
    margin-top: 8px;*/
    box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
    border-collapse: separate;
-   width: 66%;
+   width: 100%;
 }
 
 .no-background{
@@ -162,7 +162,7 @@ input[type="submit"]{
 .orange-button{
   
   padding: 9px;
-  border-radius: 20px;
+  border-radius: 10px;
     /* margin: 15px; */
   color: black;
   font-weight: bold;
@@ -172,6 +172,26 @@ input[type="submit"]{
   width: 200px;
   text-align: center;
   margin: 0 auto;
+}
+
+.sign-in-button{
+  padding:10px;
+  border-radius:10px;
+  color: black;
+  font-weight:bold;
+  box-shadow: none;
+  border:none;
+  text-align:center;
+  margin: 0 auto;
+  background-color: #e46a27;
+}
+
+.add_row{
+  background-color: #e7e7e7;
+  border-color: #b9b9b9;
+  color: #333333;
+  padding: 10px;
+  display: block;
 }
 
 
@@ -215,6 +235,10 @@ input[type="submit"]{
   padding:10px;
   max-width: 90%;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header_logo{
+  margin-left: 10%;
 }
 
 .header_logo:hover{

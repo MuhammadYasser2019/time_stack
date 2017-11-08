@@ -24,7 +24,11 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
   post '/weeks/:id(.:format)' => 'weeks#update'
   # You can have the root of your site routed with "root"
-  root 'weeks#index'
+  authenticated :user do
+    root to: 'weeks#index', as: :authenticated_root
+  end
+  #root 'weeks#index'
+  root 'static_pages#home'
   get 'weeks/:id/report' => 'weeks#report'
 
   get '/dynamic_project_update' => 'projects#dynamic_project_update'
