@@ -108,21 +108,22 @@ end
   def update
     params[:project_id] = @project_id = params[:id]
     @project = Project.includes(:tasks).find(params[:id])
-    
-    task_attributes = params[:project][:tasks_attributes]
+    task_attributes = params[:project][:tasks_attributes] if params[:project]
     #previous_codes = Project.previous_codes(@project)
     #task_code = Project.task_value(task_attributes, previous_codes)
-    task_attributes.permit!.to_h.each do |t|
-      logger.debug "CODE: #{t}"
-      logger.debug "id: #{t[1]["id"]}"
-      if t[1]["id"].blank?
-        logger.debug "ID IS NILLLLLLLL"
-        t[1]["id"] = Task.all.count + 1
-      end
-      if Task.where(id: t[1]["id"]).present?
-        @task = Task.find(t[1]["id"]).update(code: t[1]["code"], description: t[1]["description"])
-      else
-        @task = Task.create(id: t[1]["id"], code: t[1]["code"], description: t[1]["description"], project_id: @project.id)
+    if task_attributes
+      task_attributes.permit!.to_h.each do |t|
+        logger.debug "CODE: #{t}"
+        logger.debug "id: #{t[1]["id"]}"
+        if t[1]["id"].blank?
+          logger.debug "ID IS NILLLLLLLL"
+          t[1]["id"] = Task.all.count + 1
+        end
+        if Task.where(id: t[1]["id"]).present?
+          @task = Task.find(t[1]["id"]).update(code: t[1]["code"], description: t[1]["description"])
+        else
+          @task = Task.create(id: t[1]["id"], code: t[1]["code"], description: t[1]["description"], project_id: @project.id)
+        end
       end
     end
 
@@ -347,7 +348,7 @@ end
     #@projects = Project.where(user_id: current_user.id)
     #logger.debug("project-dynamic_project_update- PROJECT ID IS #{@projects.inspect} ********#{@projects.first.id} ")
     @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
-     @tasks_on_project = Task.where(project_id: @project_id)
+    @tasks_on_project = Task.where(project_id: @project_id)
     # @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4","1","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
      @user_projects = Project.where(user_id: current_user.id)
   

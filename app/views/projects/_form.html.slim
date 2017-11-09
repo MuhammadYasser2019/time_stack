@@ -70,9 +70,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 					    - @project.errors.full_messages.each do |message|
 					      li = message
 			
-				.field
-					= f.label :customer
-					= f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
+				= f.hidden_field :customer_id, value: @project.customer_id	
 				.row class="white-background"
 						
 					h1 class="task-center-row" Tasks
