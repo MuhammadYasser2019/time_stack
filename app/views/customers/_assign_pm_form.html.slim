@@ -8,13 +8,13 @@ table
 			th New Project Manager
 			th 
 	- @projects.each do |p|
-		- user = User.find (p.user_id)
+		- user = User.where(id: p.user_id).first
 
 		tbody
 			tr id= "#{p.id}"
 				td = p.name 
 						
-				td = user.email 
+				td = user ? user.email : ''
 				td
 					= select_tag "pm_user_id_#{p.id}", options_from_collection_for_select(@user_with_pm_role, "id", "email"), include_blank: true, class: "pm_user_id"
 					= hidden_field_tag "pm_user_id_#{p.id}", ''
