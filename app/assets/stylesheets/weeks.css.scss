@@ -260,6 +260,15 @@ input[type="submit"]{
   overflow-x: hidden;
 }
 
+.add_users_to_customers{
+  border: 1px solid black !important;
+  text-align: center;
+  display:block;
+  height: 400px;      
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .enter_time {
   display: none;
 }

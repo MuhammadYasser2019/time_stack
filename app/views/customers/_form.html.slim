@@ -103,8 +103,11 @@ div.tabs-content
 									td = uop.first_name
 									td = link_to uop.email, "/edit_customer_user/#{uop.id}"
 									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
-									td = check_box_tag "shared_user_id", uop.id, uop.shared?, class: "shared_user"
+									td = check_box_tag "shared_user_id", uop.id, uop.shared?, class: "shared_user", data: {reveal_id: "sharedUser"}
 									td = check_box_tag "add_pm_role", uop.id, uop.pm?, class: "add_pm_role"
+
+					div class = "shareduser-class"
+						div(id="sharedUser" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 
   div class="content" id="vacation_request"
     div.row

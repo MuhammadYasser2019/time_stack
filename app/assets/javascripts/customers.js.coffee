@@ -115,6 +115,17 @@ jQuery ($) ->
       user_id: shared_user_id,
   )
 
+  $(document).on("click", ".shared_customer", ->
+    console.log("customers check is clicked" +$(this).val())
+
+    shared_customer_id = $(this).val()
+    user_id = $('#user_id').val()
+    $.get '/add_shared_users',
+      async: false,
+      customer_id: shared_customer_id,
+      user_id: user_id
+  )
+
   $(document).on("click", ".add_pm_role", ->
     console.log("check is clicked" +$(this).val())
 
