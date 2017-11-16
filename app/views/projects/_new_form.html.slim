@@ -9,9 +9,8 @@
   .field
     = f.label :name
     = f.text_field :name
-  .field
-    = f.label :customer
-    = f.select :customer_id, options_from_collection_for_select(@customers, "id", "name")
+  
+    = f.hidden_field :customer_id, value: current_user.customer_id.present? ? current_user.customer_id : Customer.find_by_name("Resource Stack, Inc.").id
     = f.hidden_field :user_id, value: current_user.id
   fieldset class="form-inline"
   table border="1" id="tasklist"

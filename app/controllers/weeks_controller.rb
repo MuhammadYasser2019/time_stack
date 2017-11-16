@@ -277,7 +277,7 @@ class WeeksController < ApplicationController
         end
     elsif params[:commit] == "Submit Timesheet"
         @week.status_id = 2
-        @week.time_entries.where(status_id: [nil, 1,4]).each do |t|
+        @week.time_entries.where(status_id: [nil,1,4,5]).each do |t|
           t.update(status_id: 2)
         end
     end
