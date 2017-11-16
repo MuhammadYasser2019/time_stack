@@ -22,8 +22,15 @@ class ProjectsController < ApplicationController
       @project = Project.includes(:tasks).find(@project_id)
       #@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id IN (#{@projects.collect(&:id).join(",")}) and time_entries.status_id=?", "2", "4","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
       @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
-      @available_users = User.where("shared =? or customer_id IS ? OR customer_id = ?", true, nil , @project.customer.id)
-    
+      available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id) 
+      shared_users = SharedEmployee.where(customer_id: @project.customer.id).collect{|u| u.user_id}
+      shared_user_array = Array.new
+      shared_users.each do |su|
+        u = User.find(su)
+        shared_user_array.push(u)
+      end
+      logger.debug("AVAIALABLE SHARED USERS #{shared_users.inspect}, The USER IS #{shared_user_array.inspect}")
+      @available_users = available_users + shared_user_array
       @users = User.all
       @invited_users = User.where("invited_by_id = ?", current_user.id)
       @proxies = User.where(proxy: true)
@@ -356,7 +363,16 @@ end
     @project = Project.includes(:tasks).find(@project_id)
     #@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
     @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
-    @available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id)
+    #@available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id)
+    available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id) 
+    shared_users = SharedEmployee.where(customer_id: @project.customer.id).collect{|u| u.user_id}
+    shared_user_array = Array.new
+    shared_users.each do |su|
+      u = User.find(su)
+      shared_user_array.push(u)
+    end
+    logger.debug("AVAIALABLE SHARED USERS #{shared_users.inspect}, The USER IS #{shared_user_array.inspect}")
+    @available_users = available_users + shared_user_array
     @users = User.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
     @proxies = User.where(proxy: true)

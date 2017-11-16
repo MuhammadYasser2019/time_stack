@@ -182,7 +182,7 @@ class CustomersController < ApplicationController
 
   def shared_user
     @shuser = User.find params[:user_id]
-    @customer = Customer.all
+    @customer = Customer.where("id != ?", params[:customer_id])
     #if @shuser.present?
     #  if @shuser.shared?
      #   @shuser.shared = false

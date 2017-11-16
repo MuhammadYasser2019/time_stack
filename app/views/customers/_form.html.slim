@@ -103,7 +103,7 @@ div.tabs-content
 									td = uop.first_name
 									td = link_to uop.email, "/edit_customer_user/#{uop.id}"
 									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
-									td = check_box_tag "shared_user_id", uop.id, uop.shared?, class: "shared_user", data: {reveal_id: "sharedUser"}
+									td = check_box_tag "shared_user_id_#{params[:customer_id]}", uop.id, uop.shared?, class: "shared_user", data: {reveal_id: "sharedUser"}
 									td = check_box_tag "add_pm_role", uop.id, uop.pm?, class: "add_pm_role"
 
 					div class = "shareduser-class"
@@ -154,9 +154,9 @@ div.tabs-content
                       .row(style="margin-top: 10px;margin-left: 10px;")
                           .small-8.columns(style="padding-left: 0;") = label_tag "Project Manager?"
                           .small-2.columns = check_box_tag :project_manager
-                      .row(style="margin-top: 10px;margin-left: 10px;")
+                      /.row(style="margin-top: 10px;margin-left: 10px;")
                           .small-8.columns(style="padding-left: 0;") = label_tag "Shared?"
-                          .small-2.columns = check_box_tag :shared_user
+                          .small-2.columns = check_box_tag :shared_user /!
                       .actions
                         = submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
 	  

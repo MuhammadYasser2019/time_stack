@@ -107,12 +107,18 @@ jQuery ($) ->
     return
   )
 
+  parse_customer_id = (attr_val) ->
+   customer_id = attr_val.split("_")[3]
+   return customer_id
+
   $(document).on("click", ".shared_user", ->
     console.log("check is clicked" +$(this).val())
-
+    customer_id = parse_customer_id($(this).attr('id'))
+    console.log("customer id is " + customer_id)
     shared_user_id = $(this).val()
     $.get '/shared_user',
       user_id: shared_user_id,
+      customer_id: customer_id
   )
 
   $(document).on("click", ".shared_customer", ->
