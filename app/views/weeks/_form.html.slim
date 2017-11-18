@@ -29,15 +29,17 @@
     = f.fields_for :time_entries, @time_entries do |cf|
       tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
       - @count += 1
-
   - if f.object.status_id == 2 || f.object.status_id == 3
 
   - else
     div.upload_text
-      = f.label(:time_sheet, "Upload Timesheet", class: "action", for: "file-upload")
-      = f.file_field(:time_sheet, id: "file-upload")
-    - if @week.time_sheet.present?
-      div = link_to "You have attached: #{@week.time_sheet_identifier} ", @week.time_sheet.url, :target => "_blank"
+      = label_tag(:time_sheet, "Upload Timesheet", class: 'action', for: 'file-upload')
+      = f.fields_for :upload_timesheets do |u|
+        
+        = u.file_field(:time_sheet, id: "file-upload")
+      - @week.upload_timesheets.each do |t|
+        - if t.time_sheet.present?
+          div = link_to "You have attached: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
     .actions
      = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3)
      = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"}

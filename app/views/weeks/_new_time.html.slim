@@ -29,8 +29,9 @@
     tbody
     = f.fields_for :time_entries do |cf|
       tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
-  div
-    = f.label :upload_time_sheet
-    .action = f.file_field :time_sheet
+  div.upload_text
+      = f.fields_for :upload_timesheets do |u|
+        = u.label(:time_sheet, "Upload Timesheet", class: 'action', for: 'file-upload')
+        = u.file_field(:time_sheet, id: "file-upload")
   .actions = f.submit "Save Timesheet"
 

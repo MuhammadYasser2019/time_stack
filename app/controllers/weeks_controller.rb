@@ -9,10 +9,10 @@ class WeeksController < ApplicationController
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(10)
     @projects.each do |p|
       if p.adhoc_pm_id.present? && p.adhoc_end_date.to_s(:db) < Time.now.to_s(:db)
-	p.adhoc_pm_id = nil
-	p.adhoc_start_date = nil
-	p.adhoc_end_date = nil
-	p.save
+	      p.adhoc_pm_id = nil
+	      p.adhoc_start_date = nil
+	      p.adhoc_end_date = nil
+	      p.save
       end
     end
     if current_user.cm?
@@ -70,6 +70,7 @@ class WeeksController < ApplicationController
 
     @week_user = User.find(@week.user_id)
     vacation(@week)
+    @upload_timesheet = @week.upload_timesheets.build
 
   end
 
@@ -130,7 +131,7 @@ class WeeksController < ApplicationController
     status_ids = [1,2]
     @statuses = Status.find(status_ids)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
-    
+    @week.upload_timesheets.build if @week.upload_timesheets.blank?
     vacation(@week)
     # vr.where("status = ? && vacation_start_date >= ?", "Approved", @week.start_date)
   end
@@ -290,6 +291,11 @@ class WeeksController < ApplicationController
           @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
         end
         logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
+        params.require(:week).permit(upload_timesheets_attributes: [:time_sheet]).to_h.each do |attr, row|
+          row.each do |i, timesheet|
+            @upload_timesheet = @week.upload_timesheets.create(timesheet) if timesheet.present?
+          end
+        end
         @week.save
         @week.time_entries.where(user_id: nil).each do |we|
           we.update(user_id: week_user)  
