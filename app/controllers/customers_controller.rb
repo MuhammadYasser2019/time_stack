@@ -181,19 +181,37 @@ class CustomersController < ApplicationController
   end
 
   def shared_user
-    user = User.find params[:user_id]
-    if user.present?
-      if user.shared?
-        user.shared = false
-      else
-        user.shared = true
-      end
-      user.save
-    end
+    @shuser = User.find params[:user_id]
+    @customer = Customer.where("id != ?", params[:customer_id])
+    #if @shuser.present?
+    #  if @shuser.shared?
+     #   @shuser.shared = false
+     # else
+     #   @shuser.shared = true
+     # end
+     # @shuser.save
+    #end
     respond_to do |format|
       format.js
     end
   end
+
+  def add_shared_users
+    if params[:user_id].present? && params[:customer_id].present?
+      @shuser = User.find params[:user_id]
+      sh_emplyee = SharedEmployee.where("user_id =? and customer_id=?", params[:user_id], params[:customer_id]).first
+      if sh_emplyee.present?
+        sh_emplyee.destroy!
+      else
+        SharedEmployee.create!(user_id: params[:user_id], customer_id: params[:customer_id], permanent: false)
+      end
+    end
+    respond_to do |format|
+      format.js
+    end
+
+  end
+
 
   def add_pm_role
     user = User.find params[:user_id]

@@ -43,6 +43,8 @@ Rails.application.routes.draw do
   post '/pending_email' => 'projects#pending_email'
   post '/customers_pending_email' => 'customers#customers_pending_email'
   post '/previous_comments' => 'weeks#previous_comments'
+  post '/shared_user' => 'customers#shared_user'
+  get '/add_shared_users' => 'customers#add_shared_users'
 
   get '/show_user_reports/:id' => 'users#show_user_reports'
   post '/show_user_reports/:id' => 'users#show_user_reports'

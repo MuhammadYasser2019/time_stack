@@ -107,12 +107,33 @@ jQuery ($) ->
     return
   )
 
+  parse_customer_id = (attr_val) ->
+   customer_id = attr_val.split("_")[2]
+   return customer_id
+
+  parse_shared_user_id = (attr_val) ->
+   shared_user_id = attr_val.split("_")[5]
+   return shared_user_id
+
   $(document).on("click", ".shared_user", ->
     console.log("check is clicked" +$(this).val())
-
-    shared_user_id = $(this).val()
+    customer_id = parse_customer_id($(this).attr('id'))
+    console.log("customer id is " + customer_id)
+    shared_user_id = parse_shared_user_id($(this).attr('id'))
     $.get '/shared_user',
       user_id: shared_user_id,
+      customer_id: customer_id
+  )
+
+  $(document).on("click", ".shared_customer", ->
+    console.log("customers check is clicked" +$(this).val())
+
+    shared_customer_id = $(this).val()
+    user_id = $('#user_id').val()
+    $.get '/add_shared_users',
+      async: false,
+      customer_id: shared_customer_id,
+      user_id: user_id
   )
 
   $(document).on("click", ".add_pm_role", ->
