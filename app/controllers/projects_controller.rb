@@ -33,7 +33,7 @@ class ProjectsController < ApplicationController
       @available_users = available_users + shared_user_array
       @users = User.all
       @invited_users = User.where("invited_by_id = ?", current_user.id)
-      @proxies = User.where(proxy: true)
+      @proxies = User.where("customer_id =? and proxy = ?", @project.customer.id, true)
       @customer = Customer.find(@project.customer_id)
       customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
       @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
@@ -143,7 +143,7 @@ end
 
 	  @customers = Customer.all
     @tasks_on_project = Task.where(project_id: @project_id)
-    @proxies = User.where(proxy: true)
+    @proxies = User.where("customer_id =? and proxy =?", @project.customer.id, true)
     @customer = Customer.find(@project.customer_id)
 		#@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",params[:id],"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct    
 		@users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
@@ -376,7 +376,7 @@ end
     @available_users = available_users + shared_user_array
     @users = User.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
-    @proxies = User.where(proxy: true)
+    @proxies = User.where("customer_id =? and proxy = ?", @project.customer.id, true)
     @customer = Customer.find(@project.customer_id)
     customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
