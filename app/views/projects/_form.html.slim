@@ -1,7 +1,7 @@
 - if @adhoc && user_have_adhoc_permission(current_user)
   = hidden_field_tag "adhoc", @adhoc
   h1 #{@adhoc_pm_project.name}
--else
+-elsif @projects.present?
   h1 #{@project.name}
 ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
  - if !(@adhoc && user_have_adhoc_permission(current_user))
@@ -57,7 +57,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 							td
 								= text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
 
-- else
+- elsif @projects.present?
 		div.tabs-content
 		 div class="content active" id="information"
 	 
