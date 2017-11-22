@@ -22,7 +22,7 @@
 			td = link_to "COPY", "/copy_timesheet/#{week.id}" if ((find_status(week) == "NEW") || (find_status(week) == "EDIT")) && @weeks.last.id != week.id
 	
 	    tr
-	      td = link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
+	      td = link_to "Enter Time for Current Week", new_week_path(user_id: @proxy_user.id), id: "new_week" if current_week_available(@proxy_user).blank?
 	      td
 	      td
 	      td

@@ -38,12 +38,12 @@ class WeeksController < ApplicationController
   # GET /weeks/new
   def new
     #@projects =  Project.joins(:projects_users).where("projects_users.user_id=? AND inactive=?", current_user.id, false )
-
     @week = Week.new
     @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
     @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d') 
-    @week.user_id = current_user.id
+    @week.user_id = params[:user_id].present? ? params[:user_id] : current_user.id
     @week.status_id = Status.find_by_status("NEW").id
+    @week.proxy_user_id = current_user.id
     @week.save!
 
     if current_user.id == @week.user_id
@@ -57,14 +57,14 @@ class WeeksController < ApplicationController
     end
 
 
-    7.times {  @week.time_entries.build( user_id: current_user.id, status_id: 1 )}
+    7.times {  @week.time_entries.build( user_id: @week.user_id, status_id: 1 )}
       
     @week.time_entries.each_with_index do |te, i|
       logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
       logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
       logger.debug "i #{i}"
       @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
-      @week.time_entries[i].user_id = current_user.id
+      @week.time_entries[i].user_id = @week.user_id
     end
     @week.save!
 
@@ -77,7 +77,7 @@ class WeeksController < ApplicationController
   def copy_timesheet
     current_week_id = params[:id]
     current_week = Week.find(current_week_id)
-    current_week.copy_last_week_timesheet(current_user.id)
+    current_week.copy_last_week_timesheet(current_week.user_id)
     hours_array =[]
     current_week.time_entries.each do |w|
       if !w.hours.nil?
@@ -186,6 +186,8 @@ class WeeksController < ApplicationController
   # POST /weeks.json
   def create
     @week = Week.new(week_params)
+    @week.proxy_user_id = current_user.id
+    @week.proxy_updated_date = Time.now
     prev_date_of_activity =""
     week_params["time_entries_attributes"].each do |t|
       # store teh date of activity from previous row
@@ -284,6 +286,7 @@ class WeeksController < ApplicationController
     end
     logger.debug "STATUS ID IS #{week_params[:status_id]}"
     logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
+    
     respond_to do |format|
       if @week.update_attributes(week_params)
         week_params['time_entries_attributes'].each_with_index  do |t,i|
@@ -296,6 +299,8 @@ class WeeksController < ApplicationController
             @upload_timesheet = @week.upload_timesheets.create(timesheet) if timesheet.present?
           end
         end
+        @week.proxy_user_id = current_user.id
+        @week.proxy_updated_date = Time.now
         @week.save
         @week.time_entries.where(user_id: nil).each do |we|
           we.update(user_id: week_user)  

@@ -156,6 +156,7 @@ end
     @adhoc_pm_project = Project.where(adhoc_pm_id: current_user.id)
     @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
     @project = Project.includes(:tasks).find(params[:id])
+    @projects = Project.where(id: params[:project_id])
     @available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id)
     respond_to do |format|
       if @project.update(customer_id: project_params["customer_id"], proxy: params["proxy"])
@@ -383,6 +384,7 @@ end
     @holiday_exception = HolidayException.new
     @holiday_exceptions = @project.holiday_exceptions
     @adhoc_pm_project = @project
+    @projects = Project.where(id: @project_id)
     @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
     respond_to do |format|  
       format.js
