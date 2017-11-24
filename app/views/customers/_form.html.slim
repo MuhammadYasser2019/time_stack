@@ -51,30 +51,29 @@ div.tabs-content
 	  
   div class="content" id="holidays"
    - unless current_page?(action: 'new')
-    div.row
-      .small-8.small-offset-2
-		  h3.text-center Holidays Setup
-		  - if @holidays.any?
-		   .row
-		    h4.small-1.columns
-		    h4.small-5.columns.text-center.underline.no-background style="text-decoration:underline;"  Name
-		    h4.small-3.columns.text-center.underline.no-background style="text-decoration:underline;"  Date
-		    h4.small-3.columns.text-center
-		   = form_for @customer do |f|
-			    = f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name) do |h|
-			     .row
-	  				.small-1.columns.text-center = h.check_box
-			  		.small-5.columns.text-center = h.object.name
-			  		.small-3.columns.text-center = h.object.date.strftime("%m-%d-%y")
-			  		- if h.object.global != true
-			  		  .small-3.columns.text-center = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
-		        	- else
-		        	  .small-3.columns.text-center
-		        .actions = f.submit "Submit"
-		  - else 
-		    h3.text-center No Holidays created
-		  
-		  = link_to "Create New Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"
+    .(class="row white-background")
+	  h3.text-center Holidays Setup
+	  - if @holidays.any?
+	   .row
+	    h4.small-1.columns
+	    h4.small-5.columns.text-center.underline.no-background style="text-decoration:underline;"  Name
+	    h4.small-3.columns.text-center.underline.no-background style="text-decoration:underline;"  Date
+	    h4.small-3.columns.text-center
+	   = form_for @customer do |f|
+		    = f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name) do |h|
+		     .row
+  				.small-1.columns.text-center = h.check_box
+		  		.small-5.columns.text-center = h.object.name
+		  		.small-3.columns.text-center = h.object.date.strftime("%m-%d-%y")
+		  		- if h.object.global != true
+		  		  .small-3.columns.text-center = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
+	        	- else
+	        	  .small-3.columns.text-center
+	        .actions = f.submit "Submit"
+	  - else 
+	    h3.text-center No Holidays created
+	  
+	  = link_to "Create New Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"
 		      
   div class="content" id="employment_types"
     .(class="row white-background")
@@ -83,11 +82,9 @@ div.tabs-content
 	
   div class="content" id="customer_employees"
 	div class = "disp-message"
-	  div.row
-      .small-8.small-offset-2
-		.(class="row white-background")
+	  	.(class="row white-background")
 			div class="vacation-left-row" 
-				h1 Customer Employees
+				h3.text-center Customer Employees
 				table 
 					thead
 						tr
@@ -96,6 +93,7 @@ div.tabs-content
                           th
                           th Shared
                           th PM
+                          th Proxy
 					tbody
 						-@users.each_with_index do |uop, i|
 							-if uop.customer_id == params[:customer_id].to_i
@@ -105,32 +103,31 @@ div.tabs-content
 									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
 									td = link_to "Change Share Status", "#", id: "c_id_#{params[:customer_id]}_u_id_#{uop.id}", class: "shared_user", type: "link", data: {reveal_id: "sharedUser"}
 									td = check_box_tag "add_pm_role", uop.id, uop.pm?, class: "add_pm_role"
+									td = check_box_tag "add_pm_role", uop.id, uop.proxy?, class: "assign_proxy_role"
 
 					div class = "shareduser-class"
 						div(id="sharedUser" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 
   div class="content" id="vacation_request"
-    div.row
-      .small-8.small-offset-2
-  	    .(class="row white-background")
-			div class="vacation-right-row"
-				h1 Vacation Request
-				table
-					thead
-						tr
-                          th Employee
-                          th Vacation Start Date
-                          th Vacation End Date
-                          th
-                          th
-					tbody
-						- @vacation_requests.each_with_index do |vu, i|
-							tr id = "vacation_#{i}"
-								td = User.find(VacationRequest.find(vu).user_id).email.truncate(20)
-								td = vu.vacation_start_date.strftime('%Y-%m-%d')
-								td = vu.vacation_end_date.strftime('%Y-%m-%d')
-								td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true
-								td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
+    .(class="row white-background")
+		div class="vacation-right-row"
+			h3.text-center Vacation Request
+			table
+				thead
+					tr
+                      th Employee
+                      th Vacation Start Date
+                      th Vacation End Date
+                      th
+                      th
+				tbody
+					- @vacation_requests.each_with_index do |vu, i|
+						tr id = "vacation_#{i}"
+							td = User.find(VacationRequest.find(vu).user_id).email.truncate(20)
+							td = vu.vacation_start_date.strftime('%Y-%m-%d')
+							td = vu.vacation_end_date.strftime('%Y-%m-%d')
+							td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true
+							td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
 
   div class="content" id="user_invitation"
 		.(class="row white-background")

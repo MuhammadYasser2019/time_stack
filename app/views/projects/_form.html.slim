@@ -101,8 +101,9 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 				.actions = f.submit
 		 div class="content" id="holidays"
 			- unless current_page?(action: 'new')
-				div id ="dynamic_holiday_update"
-					== render partial: "holiday_exceptions_form"
+				.(class="row white-background")
+					div id ="dynamic_holiday_update"
+						== render partial: "holiday_exceptions_form"
 
 		 div class="content" id="user_invitation"	 
 		  .(class="row white-background")

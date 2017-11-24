@@ -60,6 +60,7 @@ Rails.application.routes.draw do
   get 'remove_user_from_customer' => "customers#remove_user_from_customer"
   get 'shared_user' => "customers#shared_user"
   get 'add_pm_role' => "customers#add_pm_role"
+  get 'assign_proxy_role' => "customers#assign_proxy_role"
   get 'edit_customer_user/:user_id' => "customers#edit_customer_user"
   get '/update_user_employment' => "customers#update_user_employment"
   get 'vacation_request' => "customers#vacation_request"

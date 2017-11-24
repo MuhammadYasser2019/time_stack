@@ -226,6 +226,21 @@ class CustomersController < ApplicationController
     respond_to do |format|
       format.js
     end
+  end
+
+  def assign_proxy_role
+    user = User.find params[:user_id]
+    if user.present?
+      if user.proxy?
+        user.proxy = false
+      else
+        user.proxy = true
+      end
+      user.save
+    end
+    respond_to do |format|
+      format.js
+    end
 
   end
 
