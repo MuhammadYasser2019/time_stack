@@ -1,3 +1,14 @@
 // Place all the styles related to the customers controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+.add_users_to_customers{
+  border: 1px solid black !important;
+  text-align: center;
+  display:block;
+  height: 400px;      
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+

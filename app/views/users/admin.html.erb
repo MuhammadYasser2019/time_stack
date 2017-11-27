@@ -54,8 +54,10 @@
       <th>
         <%= form_tag(action: :invite_customer) do %>
           <%= text_field_tag :email, nil, placeholder: "Email", class: "invitation_email" %>
-          <%= select_tag :customer_id, options_from_collection_for_select(@customers, :id, :name) %>
+          <%= date_field_tag 'invite_start_date', params[:invite_start_date], {placeholder: "Select start date", required: "required"} %>
+          <%= select_tag :customer_id, options_from_collection_for_select(@customers, :id, :name)%>
           <%= hidden_field_tag :invited_by_id, current_user.id %>
+
           <%= submit_tag 'Invite Customer Manager', class: 'btn-primary invite_user_button' %>
         <% end %>
       </th>

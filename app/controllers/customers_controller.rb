@@ -8,25 +8,26 @@ class CustomersController < ApplicationController
     @customers = Customer.where(user_id: current_user.id)
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     if @customers.present?
-    params[:customer_id] = @customers.first.id unless params[:customer_id].present?
-    @customer = @customers.first
-    customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
-    @projects = @customer.projects
-    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
-    @customer_holiday = CustomersHoliday.new
-    @invited_users = User.where("invited_by_id = ?", current_user.id)
-    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
-    @employment_type = EmploymentType.where(customer_id: @customer.id)
-    @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
-    logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
-
-    # @users= User.all
-    logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
-    @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
-    @adhoc_projects = Project.where("adhoc_pm_id is not null")
-    logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
-    logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
-   end
+      params[:customer_id] = @customers.first.id unless params[:customer_id].present?
+      @customer = @customers.first
+      customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
+      @projects = @customer.projects
+      @pm_projects = Project.where("customer_id=? and user_id=?", @customer.id, current_user.id)
+      @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+      @customer_holiday = CustomersHoliday.new
+      @invited_users = User.where("invited_by_id = ?", current_user.id)
+      @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
+      @employment_type = EmploymentType.where(customer_id: @customer.id)
+      @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
+      logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
+      @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
+      # @users= User.all
+      logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
+      @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
+      @adhoc_projects = Project.where("adhoc_pm_id is not null")
+      logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
+      logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
+    end
   end
 
   # GET /customers/1
@@ -137,7 +138,7 @@ class CustomersController < ApplicationController
     logger.debug "INVITED BY #{params[:invited_by_id]}"
     project = Project.find(params[:project_id])
 
-    @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, pm: params[:project_manager])
+    @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, pm: params[:project_manager], shared: params[:shared_user])
     @user.update(invited_by_id: params[:invited_by_id], customer_id: project.customer_id)
     pu = ProjectsUser.new
     # @users_on_project = @project.users
@@ -164,10 +165,11 @@ class CustomersController < ApplicationController
   end
 
   def remove_user_from_customer
-    customer_id = params[:customer_id]
+    #customer_id = params[:customer_id]
     user = User.find(params[:user_id])
-    logger.debug("CUSTOMER ID: #{customer_id}***********AND USER CUSTOMER ID: #{user.customer_id}")
-    if !customer_id.blank? && !user.blank?
+    @row_id = params[:row]
+    #logger.debug("CUSTOMER ID: #{customer_id}***********AND USER CUSTOMER ID: #{user.customer_id}")
+    if !user.blank?
       user.customer_id = nil
       user.save
       logger.debug("REMOVING THE USER*******")
@@ -176,6 +178,70 @@ class CustomersController < ApplicationController
     respond_to do |format|
      format.js
    end
+  end
+
+  def shared_user
+    @shuser = User.find params[:user_id]
+    @customer = Customer.where("id != ?", params[:customer_id])
+    #if @shuser.present?
+    #  if @shuser.shared?
+     #   @shuser.shared = false
+     # else
+     #   @shuser.shared = true
+     # end
+     # @shuser.save
+    #end
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def add_shared_users
+    if params[:user_id].present? && params[:customer_id].present?
+      @shuser = User.find params[:user_id]
+      sh_emplyee = SharedEmployee.where("user_id =? and customer_id=?", params[:user_id], params[:customer_id]).first
+      if sh_emplyee.present?
+        sh_emplyee.destroy!
+      else
+        SharedEmployee.create!(user_id: params[:user_id], customer_id: params[:customer_id], permanent: false)
+      end
+    end
+    respond_to do |format|
+      format.js
+    end
+
+  end
+
+
+  def add_pm_role
+    user = User.find params[:user_id]
+    if user.present?
+      if user.pm?
+        user.pm = false
+      else
+        user.pm = true
+      end
+      user.save
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def assign_proxy_role
+    user = User.find params[:user_id]
+    if user.present?
+      if user.proxy?
+        user.proxy = false
+      else
+        user.proxy = true
+      end
+      user.save
+    end
+    respond_to do |format|
+      format.js
+    end
+
   end
 
   def edit_customer_user
@@ -312,26 +378,26 @@ class CustomersController < ApplicationController
 
   def customer_reports
     @customer_id = params[:id]
-    c = Customer.find(@customer_id)
+    @customer = Customer.find(@customer_id)
     @users = Array.new
-    c.projects.each do |p|
+    @customer.projects.each do |p|
       @users << p.users
     end
     @users = @users.flatten.uniq
     @users_array = @users.pluck(:id)
-    @projects = c.projects
-    @dates_array = c.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
+    @projects = @customer.projects
+    @dates_array = @customer.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
     if params[:user] == "" || params[:user] == nil
       if params[:project] == "" || params[:project] == nil
-        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, @projects)
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, @projects)
       else
-        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, params[:project])
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, params[:project])
       end
     else
       if params[:project] == "" || params[:project] == nil
-        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], @projects)
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], @projects)
       else
-        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], params[:project])
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], params[:project])
       end
 
     end
@@ -358,6 +424,24 @@ class CustomersController < ApplicationController
     end
   end
 
+  def assign_pm
+    @customer = Customer.find params[:id]
+    @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
+    @projects = @customer.projects
+
+    if params["user_id"].present? && params["project_id"].present?      
+      @project = Project.find params["project_id"]
+      @project.user_id = params["user_id"].to_i
+      @project.save
+
+      @projects = @customer.projects
+      respond_to do |format|
+        format.js
+      end
+    end
+    
+  end
+
   def available_users
     logger.debug "available_users - starting to process, params passed  are #{params[:id]}"
     project_id  = params[:id]
@@ -382,7 +466,7 @@ class CustomersController < ApplicationController
     @employment_type = EmploymentType.where(customer_id: @customer.id)
     @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
     logger.debug("customer-dynamic-update- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
-
+    @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
     # @users= User.all
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")

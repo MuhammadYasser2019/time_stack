@@ -73,5 +73,10 @@ div.report
       td
       td
       td
+  - @week.each do |w|
+    - w.upload_timesheets.each do |t|
+      - if t.time_sheet.present?
+        div = link_to "You have attached: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+
   -if @print_report == "false"
     = button_tag "Print", class: "print-user-report secondary tiny", type: "button"

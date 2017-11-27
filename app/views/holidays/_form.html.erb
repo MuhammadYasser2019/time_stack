@@ -2,7 +2,7 @@
 	<%= f.label :name %>
 	<%= f.text_field :name %>
 	<%= f.label "Date Of Holiday This Year"%>
-	<%= f.date_field :date %>
+	<%= f.date_field :date, required: "required" %>
 	<% if current_user.admin && @customer == true %>
 	  <div class="row">
 		<div class="small-4 columns"><%= f.label "Global Holiday?" %></div>

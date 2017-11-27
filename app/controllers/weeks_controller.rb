@@ -9,10 +9,10 @@ class WeeksController < ApplicationController
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(10)
     @projects.each do |p|
       if p.adhoc_pm_id.present? && p.adhoc_end_date.to_s(:db) < Time.now.to_s(:db)
-	p.adhoc_pm_id = nil
-	p.adhoc_start_date = nil
-	p.adhoc_end_date = nil
-	p.save
+	      p.adhoc_pm_id = nil
+	      p.adhoc_start_date = nil
+	      p.adhoc_end_date = nil
+	      p.save
       end
     end
     if current_user.cm?
@@ -38,12 +38,12 @@ class WeeksController < ApplicationController
   # GET /weeks/new
   def new
     #@projects =  Project.joins(:projects_users).where("projects_users.user_id=? AND inactive=?", current_user.id, false )
-
     @week = Week.new
     @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
     @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d') 
-    @week.user_id = current_user.id
+    @week.user_id = params[:user_id].present? ? params[:user_id] : current_user.id
     @week.status_id = Status.find_by_status("NEW").id
+    @week.proxy_user_id = current_user.id
     @week.save!
 
     if current_user.id == @week.user_id
@@ -57,32 +57,50 @@ class WeeksController < ApplicationController
     end
 
 
-    7.times {  @week.time_entries.build( user_id: current_user.id )}
+    7.times {  @week.time_entries.build( user_id: @week.user_id, status_id: 1 )}
       
     @week.time_entries.each_with_index do |te, i|
       logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
       logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
       logger.debug "i #{i}"
       @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
-      @week.time_entries[i].user_id = current_user.id
+      @week.time_entries[i].user_id = @week.user_id
     end
     @week.save!
 
     @week_user = User.find(@week.user_id)
     vacation(@week)
+    @upload_timesheet = @week.upload_timesheets.build
 
   end
 
   def copy_timesheet
-    #@time_entry = TimeEntry.where(usere_id: params[:user_id]).last
-    #TimeEntry.create(date: @time_entry.date.next_week, hours: , :activity_log, :task_id, :week_id, :user_id, :sick, :personal_day,
-     #                             :updated_by)
     current_week_id = params[:id]
-    #current_week = Date.today.beginning_of_week.strftime
-    #pre_week = Time.now.beggining_of_week - 7.days
     current_week = Week.find(current_week_id)
-    current_week.copy_last_week_timesheet(current_user.id)
-    
+    current_week.copy_last_week_timesheet(current_week.user_id)
+    hours_array =[]
+    current_week.time_entries.each do |w|
+      if !w.hours.nil?
+        hours_array.push("true")
+      end 
+    end
+    hours_array
+    if !hours_array.empty?
+
+     current_week.status_id = 5 
+     current_week.save
+    end
+
+    redirect_to root_path
+  end
+
+  def clear_timesheet
+    logger.debug("WEEKS CONTROLLER --------------")
+    current_week_id = params[:id]
+    current_week = Week.find(current_week_id)
+    current_week.clear_current_week_timesheet
+    current_week.status_id = 1 
+    current_week.save
 
     redirect_to root_path
   end
@@ -113,7 +131,7 @@ class WeeksController < ApplicationController
     status_ids = [1,2]
     @statuses = Status.find(status_ids)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
-    
+    @week.upload_timesheets.build if @week.upload_timesheets.blank?
     vacation(@week)
     # vr.where("status = ? && vacation_start_date >= ?", "Approved", @week.start_date)
   end
@@ -139,11 +157,37 @@ class WeeksController < ApplicationController
     end
   end
 
+  def previous_comments
+     @wuser = params[:user_id]
+     @week_id = params[:week_id]
+     @t = TimeEntry.where.not(activity_log: "").where("user_id= ?",params[:user_id]).order(created_at: :desc) .limit(10)
+     @t.each do |t|
+      logger.debug("PRINT T #{t.inspect}")
+     end
+
+     logger.debug("PREVIOUS COMMENTS WEEKS CONTROLLER_________________________ #{@t.inspect}")
+     #@time_entries = @week.time_entries.where(activity_log: )
+     #@week_user = User.find(@week.user_id)
+     #@t = TimeEntry.find(@t.activity_log)
+
+  end
+
+  def add_previous_comments
+    #@wuser = User.find(params[:id])
+    @week_id = params[:week_id ]
+    @time_entry = TimeEntry.find(params[:activity_log])
+
+    respond_to do |format|
+      format.js
+    end
+  end
 
   # POST /weeks
   # POST /weeks.json
   def create
     @week = Week.new(week_params)
+    @week.proxy_user_id = current_user.id
+    @week.proxy_updated_date = Time.now
     prev_date_of_activity =""
     week_params["time_entries_attributes"].each do |t|
       # store teh date of activity from previous row
@@ -178,6 +222,7 @@ class WeeksController < ApplicationController
     logger.debug("week params: #{params.inspect}")
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
     week = Week.find(params[:id])
+    test_array = []
     week_user = week.user_id
     logger.debug("THE USER ON THE WEEK IS: #{week_user}")
 
@@ -217,20 +262,31 @@ class WeeksController < ApplicationController
       #     TimeEntry.create( week_id: @week.id, project_id: t[1]["project_id"], task_id: t[1]["task_id"], hours: t[1]["hours"], user_id: current_user.id, activity_log: t[1]["activity_log"], date_of_activity: t[1]["date_of_activity"])
       #   end
       # end
+      if !t[1]["hours"].blank? || !t[1]["time_in(4i)"].blank? || !t[1]["time_in(5i)"].blank? || !t[1]["time_out(4i)"].blank? || !t[1]["time_out(5i)"].blank?
+       test_array.push("true")
+      end
+
     end
+    test_array
+    logger.debug("TEST ARRAY ---------------------#{test_array.inspect}")
     if params[:commit] == "Save Timesheet"
-        @week.status_id = 1
+        if test_array.empty?
+          @week.status_id = 1
+        else
+          @week.status_id = 5
+        end
         @week.time_entries.where(status_id: [nil, 4]).each do |t|
-          t.update(status_id: 1)
+          t.update(status_id: 5)
         end
     elsif params[:commit] == "Submit Timesheet"
         @week.status_id = 2
-        @week.time_entries.where(status_id: [nil, 1,4]).each do |t|
+        @week.time_entries.where(status_id: [nil,1,4,5]).each do |t|
           t.update(status_id: 2)
         end
     end
     logger.debug "STATUS ID IS #{week_params[:status_id]}"
     logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
+    
     respond_to do |format|
       if @week.update_attributes(week_params)
         week_params['time_entries_attributes'].each_with_index  do |t,i|
@@ -238,6 +294,13 @@ class WeeksController < ApplicationController
           @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
         end
         logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
+        params.require(:week).permit(upload_timesheets_attributes: [:time_sheet]).to_h.each do |attr, row|
+          row.each do |i, timesheet|
+            @upload_timesheet = @week.upload_timesheets.create(timesheet) if timesheet.present?
+          end
+        end
+        @week.proxy_user_id = current_user.id
+        @week.proxy_updated_date = Time.now
         @week.save
         @week.time_entries.where(user_id: nil).each do |we|
           we.update(user_id: week_user)  

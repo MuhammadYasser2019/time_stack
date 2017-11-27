@@ -18,7 +18,6 @@ module WeeksHelper
   end
   
 
-
   def current_week_available(current_user)
     #logger.debug "weeks_helper - current_week_available - See if current user #{current_user.email}, has time entered for this week."
     current_week = Week.where(user_id: current_user, start_date: Date.today.beginning_of_week.strftime('%Y-%m-%d'))

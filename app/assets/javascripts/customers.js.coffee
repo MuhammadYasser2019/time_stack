@@ -16,7 +16,8 @@ jQuery ($) ->
     my_url = '/available_users/'+project_id
     $.ajax my_url,
       data: {}
-      type: 'GET'
+      type: 'GET',
+      async: false,
       dataType: 'json'
       success: (data, textStatus, jqXHR) ->
         $my_data = data
@@ -76,7 +77,7 @@ jQuery ($) ->
     return
   )
 
-  parse_user_id = (attr_val) ->
+  parse_email_user_id = (attr_val) ->
    user_id = attr_val.split("_")[2]
    return user_id
 
@@ -84,7 +85,7 @@ jQuery ($) ->
     #$('.pending-email').click ->
     #row_id = parse_row_id($(this).attr('id'))
     #project_id = $(this).parent().children("#project_id_"+row_id).val()
-    user_id = parse_user_id($(this).attr('id'))
+    user_id = parse_email_user_id($(this).attr('id'))
     console.log("THE USER ID IS: " + user_id)
     $.post '/customers_pending_email',
       user_id: user_id
@@ -105,3 +106,79 @@ jQuery ($) ->
       row: row
     return
   )
+
+  parse_customer_id = (attr_val) ->
+   customer_id = attr_val.split("_")[2]
+   return customer_id
+
+  parse_shared_user_id = (attr_val) ->
+   shared_user_id = attr_val.split("_")[5]
+   return shared_user_id
+
+  $(document).on("click", ".shared_user", ->
+    console.log("check is clicked" +$(this).val())
+    customer_id = parse_customer_id($(this).attr('id'))
+    console.log("customer id is " + customer_id)
+    shared_user_id = parse_shared_user_id($(this).attr('id'))
+    $.get '/shared_user',
+      user_id: shared_user_id,
+      customer_id: customer_id
+  )
+
+  $(document).on("click", ".shared_customer", ->
+    console.log("customers check is clicked" +$(this).val())
+
+    shared_customer_id = $(this).val()
+    user_id = $('#user_id').val()
+    $.get '/add_shared_users',
+      async: false,
+      customer_id: shared_customer_id,
+      user_id: user_id
+  )
+
+  $(document).on("click", ".add_pm_role", ->
+    console.log("check is clicked" +$(this).val())
+
+    user_id = $(this).val()
+    $.get '/add_pm_role',
+      user_id: user_id,
+  )
+
+  $(document).on("click", ".assign_proxy_role", ->
+    console.log("check is clicked" +$(this).val())
+
+    user_id = $(this).val()
+    $.get '/assign_proxy_role',
+      user_id: user_id,
+  )
+
+  $('#show_reports').DataTable({
+    dom: 'Bfrtip',
+    "retrieve": true,
+    buttons: [ 'excel', 'pdf']
+  
+  })
+
+
+  $(document).on("change", ".pm_user_id", ->
+    console.log "Inside user change" + $(this).attr('id') +  " the value selected is " + $(this).val()  
+    pm_user_id = $(this).val() 
+    project_id = $(this).closest('tr').attr('id')
+    $("#pm_user_id_"+project_id).val(pm_user_id)
+  )
+
+  $(document).on('click', '.assign_pm', (event)->
+    event.preventDefault()
+    customer_id = $('#customer_id').val()
+    project_id = $(this).closest('tr').attr('id')
+   
+    my_url = '/assign_pm/'+customer_id
+
+    $.post my_url,
+
+      "project_id": project_id,
+      "user_id": $("#pm_user_id_"+project_id).val(),
+  )
+    
+
+

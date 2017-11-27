@@ -194,6 +194,36 @@ input[type="submit"]{
   display: block;
 }
 
+.comment-button{
+  
+  padding: 9px;
+  border-radius: 20px;
+    /* margin: 15px; */
+  color: black;
+  font-weight: bold;
+  box-shadow: none;
+  border: none;
+  display:block;
+  width: 200px;
+  text-align: center;
+  margin: 0 auto;
+}
+
+.add_button_class{
+  
+  padding: 9px;
+  border-radius: 20px;
+    /* margin: 15px; */
+  color: black;
+  font-weight: bold;
+  box-shadow: none;
+  border: none;
+  display:block;
+  width: 200px;
+  text-align: center;
+  margin: 0 auto;
+}
+
 
 .center{
   text-align:center;
@@ -245,6 +275,24 @@ input[type="submit"]{
   background-color: transparent;
 }
 
+.add_comments table{
+  border: 1px solid black !important;
+  text-align: center;
+  display:block;
+  height: 400px;      
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+.add_users_to_customers{
+  border: 1px solid black !important;
+  text-align: center;
+  display:block;
+  height: 400px;      
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
 .enter_time {
   display: none;
 }
@@ -263,4 +311,8 @@ input[type="submit"]{
 
 .enter_time select:nth-child(3), .enter_time select:nth-child(6) { 
   width: 26%;
+}
+
+.previous_commment_icon{
+  margin-left: 100%
 }

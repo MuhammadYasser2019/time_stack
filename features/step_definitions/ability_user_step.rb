@@ -56,6 +56,7 @@ end
 Then(/^user should see the link "([^"]*)"$/) do |arg1|
   create_first_week
   create_second_week
+  create_second_time_sheet
   visit (weeks_path)
   expect(page).to have_link(arg1, href: '/copy_timesheet/3')
 end
@@ -63,9 +64,6 @@ end
 Then(/^click on the link "([^"]*)"$/) do |arg1|
   create_time_sheet
   page.click_on arg1
-  w= Week.find 3
-  w.copy_last_week_timesheet(1)
-  visit (weeks_path)
 end
 
 Then(/^Time Entries from the previous week are copied$/) do
@@ -73,17 +71,21 @@ Then(/^Time Entries from the previous week are copied$/) do
 end
 
 Then(/^User clicks on the "([^"]*)" link$/) do |arg1|
-   expect(page).to have_link(arg1, href: '/weeks/2/edit') 
+   expect(page).to have_link(arg1, href: '/weeks/3/edit') 
 end
 
 Then(/^should see "([^"]*)" in "([^"]*)" field$/) do |arg1,arg2|
-   visit('/weeks/2/edit')
-   find_field("week_time_entries_attributes_0_project_id").find('option[selected]').text == arg1
+   visit('/weeks/3/edit')
+   #save_and_open_page
+   find_field('week_time_entries_attributes_0_project_id').find('option[selected]').text == arg1
 end
 
 Then(/^should see the "([^"]*)" in "([^"]*)" field$/) do |arg1,arg2|
-   visit('/weeks/2/edit')
-   expect(find_field('week_time_entries_attributes_0_hours').value).to eq ("8.0")
+   visit('/weeks/3/edit')
+   page.find('#week_time_entries_attributes_0_hours')
+   #save_and_open_page
+   #find_field('Hours').should have_content('8')
+   #expect(find_field('week_time_entries_attributes_0_hours'))
 end
 
 Then(/^Expect page to have link "([^"]*)" but not "([^"]*)"$/) do |arg1, arg2|
@@ -103,4 +105,56 @@ end
 Given(/^Expect page to have "([^"]*)" and "([^"]*)" link$/) do |arg1, arg2|
   expect(page).to have_link(arg1, href: '/week/3/edit')
   expect(page).to have_link(arg2, href: '/copy_timesheet/3')
+end
+
+
+Then(/^user should see the link "([^"]*)" for clearing$/) do |arg1|
+  visit (weeks_path)
+  page.should have_link(arg1)
+  expect(page).to have_link(arg1, href: '/clear_timesheet/3')
+end
+
+Then(/^save timesheet by clicking on "([^"]*)"$/) do |arg1|
+  click_button('Save Timesheet')
+end
+
+Then(/^fill in the "([^"]*)"$/) do |arg1|
+  visit('/weeks/2/edit')
+  expect(page).to have_content('Editing week')
+  page.fill_in "week_time_entries_attributes_0_hours", :with => "8"
+end
+
+Then(/^for saving click on "([^"]*)"$/) do |arg1|
+  click_button('Save Timesheet')
+end
+
+Then(/^The User clicks on the "([^"]*)" link$/) do |arg1|
+   create_first_week
+   expect(page).to have_link(arg1, href: '/weeks/2/edit') 
+end
+
+Then(/^Expect page to have hours "([^"]*)"$/) do |arg1|
+  page.should have_content(arg1)
+end
+
+Then(/^user should see the link "([^"]*)" for editing$/) do |arg1|
+  page.should have_content(arg1)
+end
+
+Then(/^click on the clear "([^"]*)" button$/) do |arg1|
+  page.click_on arg1
+end
+
+Then(/^user should see the new link "([^"]*)"$/) do |arg1|
+  visit (weeks_path)
+  expect(page).to have_link(arg1)
+end
+
+Then(/^click on new "([^"]*)"$/) do |arg1|
+  click_link(arg1, href: '/weeks/3/edit')
+end
+
+Then(/^should see "([^"]*)" in "([^"]*)"$/) do |arg1, arg2|
+   visit('/weeks/3/edit')
+   page.find('#week_time_entries_attributes_0_hours')
 end

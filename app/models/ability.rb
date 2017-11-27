@@ -8,7 +8,7 @@ class Ability
       can [:new, :create, :update], TimeEntry
       can [:user_account, :edit, :update, :show_user_reports, :user_profile,:set_default_project], User
       can [:read, :available_tasks], Task
-      can [:read, :edit, :create, :update, :new, :report, :copy_timesheet], Week
+      can [:read, :edit, :create, :update, :new, :report, :copy_timesheet, :clear_timesheet, :previous_comments, :add_previous_comments], Week
       can [:read, :permission_denied], Project
       can [:vacation_request], Customer
 
@@ -18,13 +18,14 @@ class Ability
        can :manage, User
        can :manage, Week
        can :manage, Customer
+       can :manage, Project
       end
       if user.cm
         can :manage, TimeEntry
         can [:read,:edit,:update], Task
         can [:manage, :permission_denied, :show_project_reports,:approve], Project
         can [:manage, :read,:edit,:update, :add_user_to_customer, :set_theme], Customer
-	can [:time_reject], Week
+	      can [:time_reject], Week
       end
       if user.pm
        can :manage, TimeEntry
@@ -33,7 +34,7 @@ class Ability
        can [:new, :create, :edit, :update, :time_reject], Week
       end
       if user.proxy
-        can [:proxies, :proxy_user], User
+        can [:proxies, :proxy_users], User
         can :proxy_week, Week
       end
      

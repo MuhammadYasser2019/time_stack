@@ -42,12 +42,10 @@ class Customer < ApplicationRecord
           daily_hours = !t.hours.blank? ? t.hours : 0
           logger.debug "DAILY HOURS 3: #{daily_hours}"
         end
-
         total_hours = total_hours + t.hours if !t.hours.blank?
         employee_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: daily_hours, activity_log: t.activity_log }
       end
       logger.debug "POST LOOP EMPLOYEE HASH: #{employee_time_hash.inspect}"
-
       if hash_report_data[c].blank?
         hash_report_data[c] = { daily_hash: employee_time_hash, total_hours: total_hours } if hash_report_data[c].nil?
         logger.debug "DAILY HASH: #{hash_report_data[c][:daily_hash]}"

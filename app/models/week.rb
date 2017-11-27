@@ -2,7 +2,9 @@ class Week < ApplicationRecord
   has_many :time_entries, -> {order(:date_of_activity)}
   has_many :user_week_statuses
   accepts_nested_attributes_for :time_entries, allow_destroy: true, reject_if: proc { |time_entries| time_entries[:date_of_activity].blank? }
-  mount_uploader :time_sheet, TimeSheetUploader
+  has_many :upload_timesheets
+  accepts_nested_attributes_for :upload_timesheets
+  #mount_uploader :time_sheet, TimeSheetUploader
 
   def self.current_user_time_entries(current_user)
     logger.debug "Week - current_user_time_entries entering"
@@ -62,7 +64,7 @@ class Week < ApplicationRecord
      Rails.logger.debug("COPYING OLD WEEKS TASKS: #{pre_week_time_entries[count].task_id}")
      Rails.logger.debug("COPYING OLD WEEKS TIME-IN: #{pre_week_time_entries[count].time_in}")
      Rails.logger.debug("COPYING OLD WEEKS TIME-OUT: #{pre_week_time_entries[count].time_out}")
-     Rails.logger.debug("COPYING DESCRIPTION: #{pre_week_time_entries[count].activity_log}")
+     Rails.logger.debug("COPYING DESCRIPTION: #{pre_week_time_entries[count].activity_log}")         
      Rails.logger.debug("COPYING SICK DAY: #{pre_week_time_entries[count].sick}")
      Rails.logger.debug("COPYING PERSONAL DAY: #{pre_week_time_entries[count].personal_day}")
      t.hours = pre_week_time_entries[count].hours
@@ -107,6 +109,7 @@ class Week < ApplicationRecord
 
     current_week_start_date = self.start_date
     pre_week_start_date = current_week_start_date - 7.days
+    logger.debug("CHECKING FOR USER : #{pre_week_start_date.inspect} , #{user.inspect}")
     pre_week = Week.where("user_id = ? && start_date = ?", user ,pre_week_start_date)
     logger.debug("CHECKING FOR PREVIOUS WEEK: #{pre_week.inspect}")
     #w = week.find(current_week_id)
@@ -154,9 +157,21 @@ class Week < ApplicationRecord
       end 
       current_time_entries_1 = TimeEntry.where(week_id: self.id)
       copy_week(current_time_entries_1, pre_week_time_entries)
-    end    
-    
-
+      logger.debug("CHECKING FOR CODE")
+    end 
   end
+
+    def clear_current_week_timesheet
+      logger.debug("CLEAR WEEK ============================ #{self.inspect}")
+      time_entries = self.time_entries
+      logger.debug("TIME ENTRIES TTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTTT #{time_entries.inspect}")
+      time_entries.each do |t|
+        t.hours = nil
+        t.activity_log = nil
+        t.status_id = 1
+        t.save
+      end
+
   
+    end 
 end

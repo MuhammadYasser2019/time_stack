@@ -1,9 +1,9 @@
 - if @adhoc && user_have_adhoc_permission(current_user)
   = hidden_field_tag "adhoc", @adhoc
   h1 #{@adhoc_pm_project.name}
--else
+-elsif @projects.present?
   h1 #{@project.name}
-ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
+ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
  - if !(@adhoc && user_have_adhoc_permission(current_user))
   - unless current_page?(action: 'new')
    li class="tab-title active"
@@ -14,6 +14,8 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
   	 a href="#user_invitation" Invite Users
    li class="tab-title"
   	 a href="#adhoc_pm" Assign Adhoc PM
+   li class="tab-title"
+  	 a href="#users_on_project" Users on the Project
 - if @adhoc && user_have_adhoc_permission(current_user)
  div.tabs-content
 	 div class="content active" id="information"
@@ -32,7 +34,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 						th
 						th
 
-				tbody
+				tbody	
 					- @applicable_week.each_with_index do |at, i|
 						tr id = "#{i}"
 							td
@@ -55,7 +57,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 							td
 								= text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
 
-- else
+- elsif @projects.present?
 		div.tabs-content
 		 div class="content active" id="information"
 	 
@@ -68,43 +70,11 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 					    - @project.errors.full_messages.each do |message|
 					      li = message
 			
-				.field
-					= f.label :customer
-					= f.select :customer_id, options_from_collection_for_select(@customers, "id", "name", f.object.customer_id)
+				= f.hidden_field :customer_id, value: @project.customer_id	
 				.row class="white-background"
-				
-					h1 class="users-left-row" Users On The Project
-					table class="left-row"
-						thead
-						  tr
-						    th User
-						    th Email
-						    th Active
-						tbody
-						  - @users_on_project.each_with_index do |uop,i|
-						    -if uop.project_id == @project_id.to_i
-						      tr
-		
-						        td
-						          = link_to uop.first_name, "/projects/#{uop.project_id}/user_time_report?user_id=#{uop.id}", class: "user-time-report"
-		
-						        td
-						          = uop.email
-						        td
-						          = check_box_tag "test", uop.id, true, class: "add-user-to-project"
-						          = hidden_field_tag "add_user_#{i}", @project.id
-						    -else
-						      tr
-						        td
-						          = uop.first_name
-						        td
-						          = uop.email
-						        td
-						          = check_box_tag "test", uop.id, false,class: "add-user-to-project"
-						          = hidden_field_tag "add_user_#{i}", @project.id
-	
-					h1 class="task-right-row" Tasks
-					table class="right-row " border="1" id="tasklist"
+						
+					h1 class="task-center-row" Tasks
+					table class="center-row " border="1" id="tasklist"
 						thead
 						  tr 
 						    td Code
@@ -115,42 +85,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 						tr 
 					     td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"	
 
-				h1 Time Sheets Submitted for Approval
-				table
-					thead
-					  tr
-					    th Employee
-					    th Start date
-					    th End date
-					    th Hours
-					    th
-					    th
-					    th
-					    th
-	
-					tbody
-					  - @applicable_week.each_with_index do |at, i|
-					    tr id = "#{i}"
-					      td
-					        = hidden_field_tag "week_id_#{i}", at.id
-					        = hidden_field_tag "user_id_#{i}", at.user_id
-					        = User.find(at.user_id).email
-					      td
-					        = at.start_date.strftime('%Y-%m-%d')
-					      td
-					        = at.end_date.strftime('%Y-%m-%d')
-					      td
-					      	= hidden_field_tag "project_id_#{i}", @project.id
-					        = button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {reveal_id: "showHours"}
-	
-					      td = link_to "Approve","/projects/#{@project.id}/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
-					      /td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
-					      td
-					        = button_tag "Reject", class: "reject_class alert tiny", id:"time_reject_#{i}" , type: "button", remote: true
-					      td
-					        = button_tag "Add Comment to Reject", class: "add_comment secondary tiny", id: "add_comment_#{i}", type: "button"
-					      td
-					        = text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
+				
 				table 
 					thead
 						tr
@@ -166,8 +101,9 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 				.actions = f.submit
 		 div class="content" id="holidays"
 			- unless current_page?(action: 'new')
-				div id ="dynamic_holiday_update"
-					== render partial: "holiday_exceptions_form"
+				.(class="row white-background")
+					div id ="dynamic_holiday_update"
+						== render partial: "holiday_exceptions_form"
 
 		 div class="content" id="user_invitation"	 
 		  .(class="row white-background")
@@ -213,22 +149,9 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 27%;")
 		  .(class="row white-background")
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
-			
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+	     div class="content" id="users_on_project"
+		  .(class="row white-background")
+			 div(id="dynamic_user_update")
+				== render partial: 'add_remove_users'

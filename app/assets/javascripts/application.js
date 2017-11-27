@@ -20,4 +20,5 @@
 //= require turbolinks-compatibility
 //= require_tree .
 
+
 $(function(){ $(document).foundation(); });

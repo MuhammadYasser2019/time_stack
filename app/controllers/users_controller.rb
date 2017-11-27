@@ -11,7 +11,7 @@ class UsersController < ApplicationController
   def admin
     @users = User.all
     @holidays = Holiday.where(global: true)
-    @customers = Customer.where(user_id: nil)
+    @customers = Customer.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
     @all_report_logos = ReportLogo.all
     @users_with_logo= User.where("report_logo IS NOT ? ", nil)
@@ -72,7 +72,8 @@ class UsersController < ApplicationController
   end
   
   def invite_customer
-    @user = User.invite!(email: params[:email], invited_by_id: params[:invited_by_id])
+    @user = User.invite!(email: params[:email], invitation_start_date: params[:invite_start_date], invited_by_id: params[:invited_by_id])
+    @user.update(invited_by_id: params[:invited_by_id])
     Customer.find(params[:customer_id]).update(user_id: @user.id)
     redirect_to admin_path
   end
@@ -131,6 +132,7 @@ class UsersController < ApplicationController
         @hours_sum += t.hours
       end
     end
+    @week = Week.where("start_date >=? and end_date <=?", params["proj_report_start_date"], params["proj_report_end_date"] )
     split_url = request.original_url.split("/")
     period_url = split_url[4].split("?")
     logger.debug "PERIOD DEBUG #{period_url}"
