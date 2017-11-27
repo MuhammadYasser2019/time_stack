@@ -12,7 +12,7 @@ class CustomersController < ApplicationController
       @customer = @customers.first
       customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
       @projects = @customer.projects
-      @pm_projects = Project.where(user_id: current_user.id)
+      @pm_projects = Project.where("customer_id=? and user_id=?", @customer.id, current_user.id)
       @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
       @customer_holiday = CustomersHoliday.new
       @invited_users = User.where("invited_by_id = ?", current_user.id)
@@ -378,26 +378,26 @@ class CustomersController < ApplicationController
 
   def customer_reports
     @customer_id = params[:id]
-    c = Customer.find(@customer_id)
+    @customer = Customer.find(@customer_id)
     @users = Array.new
-    c.projects.each do |p|
+    @customer.projects.each do |p|
       @users << p.users
     end
     @users = @users.flatten.uniq
     @users_array = @users.pluck(:id)
-    @projects = c.projects
-    @dates_array = c.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
+    @projects = @customer.projects
+    @dates_array = @customer.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
     if params[:user] == "" || params[:user] == nil
       if params[:project] == "" || params[:project] == nil
-        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, @projects)
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, @projects)
       else
-        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, params[:project])
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, params[:project])
       end
     else
       if params[:project] == "" || params[:project] == nil
-        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], @projects)
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], @projects)
       else
-        @consultant_hash = c.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], params[:project])
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], params[:project])
       end
 
     end
