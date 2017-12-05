@@ -132,7 +132,7 @@ class UsersController < ApplicationController
         @hours_sum += t.hours
       end
     end
-    @week = Week.where("start_date >=? and end_date <=?", params["proj_report_start_date"], params["proj_report_end_date"] )
+    @week = Week.where("start_date >=? and end_date <=? and user_id=?", params["proj_report_start_date"], params["proj_report_end_date"], @user.id)
     split_url = request.original_url.split("/")
     period_url = split_url[4].split("?")
     logger.debug "PERIOD DEBUG #{period_url}"
