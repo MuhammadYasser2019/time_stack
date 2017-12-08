@@ -14,7 +14,7 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require dataTables/jquery.dataTables
-//= require foundation
+//= require foundation.min
 //= require foundation-datetimepicker
 //= require turbolinks
 //= require turbolinks-compatibility

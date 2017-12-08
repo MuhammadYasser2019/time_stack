@@ -1,31 +1,77 @@
-<table class="header">
-	<tr>
-		<td>
-		
-			<% if current_user.nil?%>
-	      <a href="/", class ="header_logo" ><%= image_tag "/assets/timestack", class: 'logo' %></a>
-	    <% else %> 
-	    	<% if !current_user.customer_id.nil? %>
+<div class="header">	
+  <div class="top-bar" style="background:white;">
+    <div class="top-bar-left" style="width:30%;">
+	    <% if current_user.nil?%>
+		    <a href="/", class ="header_logo" ><%= image_tag "/assets/timestack", class: 'logo' %></a>
+		<% else %> 
+		    <% if !current_user.customer_id.nil? %>
+			  <% customer = Customer.find(current_user.customer_id)%>
+			  <% if !customer.logo.blank?%>
+			    <a href="/", class="header_logo"><%= image_tag "#{customer.logo}", class: 'logo' %></a>
+			  <% else %>
+			    <a href="/", class="header_logo"><%= image_tag "/assets/timestack", class: 'logo' %></a>
+			  <% end %>
+			<% else %>
+			  <a href="/", class="header_logo"><%= image_tag "/assets/timestack", class: 'logo' %></a>
+		    <% end %>
+		<% end %>
+	</div>
+  	<div class="top-bar-right" style="background:#e6e6e6;">
+  		<% if current_user.nil?%>
+		  	<ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+			  <li>
+			    <a href="#">Features</a>
+			    <ul class="vertical menu">
+			      <li><a href="#">Easy Automation</a></li>
+			      <li><a href="#">Employee Time Entry</a></li>
+			      <li><a href="#">Submission and Approval</a></li>
+			      <li><a href="#">Flexible Reports</a></li>
+			      <li><a href="#">Optional Payroll System Integration</a></li>
+			    </ul>
+			      
+			  </li>
+			  <li>
+			    <a href="#">Case Studies</a>
+			    <ul class="vertical menu">
+			      <li><a href="#">Resource Stack</a></li>
+			      <li><a href="#">JSM Consulting</a></li>
+			    </ul>
+			  </li>
+			  <li>
+			    <a href="#">About</a>
+			    <ul class="vertical menu">
+			      <li><a href="#">About</a></li>
+			      <li><a href="#">Compnay Overview</a></li>
+			    </ul>
+			  </li>
+			  <li>
+			    <a href="#">Contact</a>
+			    <ul class="vertical menu">
+			      <li><a href="#">About</a></li>
+			      <li><a href="#">Compnay Overview</a></li>
+			    </ul>
+			  </li>
+			  <li>
+			  	<a href="#" data-reveal-id="myModal">SignIn</a>
+			  			
+			  </li>
+			</ul>
+	    
+		    <ul class="menu">
+		      <li><input type="search" placeholder="Search"></li>
+		      <li><button type="button" class="button">Search</button></li>
+		    </ul>
+	  <% else %>
 
-		    	<% customer = Customer.find(current_user.customer_id)%>
-		      <% if !customer.logo.blank?%>
-		        <a href="/", class="header_logo"><%= image_tag "#{customer.logo}", class: 'logo' %></a>
-		      <% else %>
-		      	<a href="/", class="header_logo"><%= image_tag "/assets/timestack", class: 'logo' %></a>
-		      <% end %>
-		    <% else %>
-		    	  <a href="/", class="header_logo"><%= image_tag "/assets/timestack", class: 'logo' %></a>
-	    	<% end %>
-	    <% end %>
-		</td>
-		<td>
-		<% if !current_user.nil? && current_user.admin? %>
+	  	<% if !current_user.nil? && current_user.admin? %>
 		     <span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span><span style="float:right; margin: 5px;"><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span><span style="float:right; margin: 5px;"><a href= "/admin" %><%= button_to "Admin" %></span>
 		<% elsif !current_user.nil? %>
 			<span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %>
 		<% else %>
 
 		<% end %>
-		</td>
-	</tr>
-</table>
+	  <% end %>
+	  </div>
+	  </div>
+</div>
+
