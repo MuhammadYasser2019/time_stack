@@ -1,6 +1,6 @@
 <div class="header">	
   <div class="top-bar" style="background:white;">
-    <div class="top-bar-left" style="width:30%;">
+    <div class="top-bar-left" style="width:30% !important;">
 	    <% if current_user.nil?%>
 		    <a href="/", class ="header_logo" ><%= image_tag "/assets/timestack", class: 'logo' %></a>
 		<% else %> 
@@ -16,9 +16,10 @@
 		    <% end %>
 		<% end %>
 	</div>
-  	<div class="top-bar-right" style="background:#e6e6e6;">
-  		<% if current_user.nil?%>
-		  	<ul class="vertical medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
+	<% if current_user.nil?%>
+  		<div class="top-bar-right" style="width:70% !important;">
+  		
+		  	<ul class="medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
 			  <li>
 			    <a href="#">Features</a>
 			    <ul class="vertical menu">
@@ -46,32 +47,33 @@
 			  </li>
 			  <li>
 			    <a href="#">Contact</a>
-			    <ul class="vertical menu">
-			      <li><a href="#">About</a></li>
-			      <li><a href="#">Compnay Overview</a></li>
-			    </ul>
+			   
 			  </li>
 			  <li>
-			  	<a href="#" data-reveal-id="myModal">SignIn</a>
+			  	<a href="javascript:void(0)" data-open="loginbox">SignIn</a>
 			  			
 			  </li>
 			</ul>
 	    
-		    <ul class="menu">
-		      <li><input type="search" placeholder="Search"></li>
-		      <li><button type="button" class="button">Search</button></li>
+		    <ul class="menu search-box">
+		      <input type="search">
+		      <!--<li></li>
+		      <li><button type="button" class="button">Search</button></li>-->
 		    </ul>
+		 </div>
 	  <% else %>
 
 	  	<% if !current_user.nil? && current_user.admin? %>
-		     <span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span><span style="float:right; margin: 5px;"><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span><span style="float:right; margin: 5px;"><a href= "/admin" %><%= button_to "Admin" %></span>
+		     <span style="float:right;margin-top:0px;"><%= link_to current_user.email, "/user_profile" %></span>
+		     <span style="float:right; margin: 5px;"><a href= "/admin" %><%= button_to "Admin" %></a></span>
+		     <span style="float:right; margin: 5px;"><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span>
 		<% elsif !current_user.nil? %>
-			<span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %>
+			<span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span>
+			<span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span>
 		<% else %>
 
 		<% end %>
 	  <% end %>
-	  </div>
 	  </div>
 </div>
 

@@ -2237,7 +2237,8 @@ h6, .h6 {
   h5 small, .h5 small,
   h6 small, .h6 small {
     line-height: 0;
-    color: #cacaca; }
+    font-size: 60%;
+    color: #6f6f6f; }
 
 h1, .h1 {
   font-size: 1.5rem;
@@ -2276,16 +2277,18 @@ h6, .h6 {
   margin-bottom: 0.5rem; }
 
 @media print, screen and (min-width: 40em) {
+  h1, h2, h3, h4, h5, h6 {
+    line-height: 1.4; }
   h1, .h1 {
-    font-size: 3rem; }
+    font-size: 2.75rem; }
   h2, .h2 {
-    font-size: 2.5rem; }
+    font-size: 2.3125rem; }
   h3, .h3 {
-    font-size: 1.9375rem; }
+    font-size: 1.6875rem; }
   h4, .h4 {
-    font-size: 1.5625rem; }
+    font-size: 1.4375rem; }
   h5, .h5 {
-    font-size: 1.25rem; }
+    font-size: 1.125rem; }
   h6, .h6 {
     font-size: 1rem; } }
 

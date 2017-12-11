@@ -3,22 +3,22 @@
   h1 #{@adhoc_pm_project.name}
 -elsif @projects.present?
   h1 #{@project.name}
-ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
+ul(class="tabs center" data-tabs id=""projects-tab style="margin: 0 0 0 18%;")
  - if !(@adhoc && user_have_adhoc_permission(current_user))
   - unless current_page?(action: 'new')
-   li class="tab-title active"
-  	 a href="#information" Project Information
-   li class="tab-title"
-  	 a href="#holidays" Holiday Exceptions
-   li class="tab-title"
-  	 a href="#user_invitation" Invite Users
-   li class="tab-title"
-  	 a href="#adhoc_pm" Assign Adhoc PM
-   li class="tab-title"
-  	 a href="#users_on_project" Users on the Project
+   li class="tabs-title is-active"
+  	 a aria-selected="true" href="#information" Project Information
+   li class="tabs-title"
+  	 a data-tabs-target="holidays" href="#holidays" Holiday Exceptions
+   li class="tabs-title"
+  	 a data-tabs-target="user_invitation" href="#user_invitation" Invite Users
+   li class="tabs-title"
+  	 a data-tabs-target="adhoc_pm" href="#adhoc_pm" Assign Adhoc PM
+   li class="tabs-title"
+  	 a data-tabs-target="users_on_project" href="#users_on_project" Users on the Project
 - if @adhoc && user_have_adhoc_permission(current_user)
- div.tabs-content
-	 div class="content active" id="information"
+ div.tabs-content data-tabs-content="projects-tabs"
+	 div class="tabs-panel is-active" id="information"
 		.white-background
 	
 	 		h1 Time Sheets Submitted for Approval
@@ -58,8 +58,8 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 								= text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
 
 - elsif @projects.present?
-		div.tabs-content
-		 div class="content active" id="information"
+		div.tabs-content data-tabs-content="projects-tabs"
+		 div class="tabs-panel is-active" id="information"
 	 
 			div class= "display-text"
 			= form_for @project, remote: true do |f|
@@ -71,7 +71,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 					      li = message
 			
 				= f.hidden_field :customer_id, value: @project.customer_id	
-				.row class="white-background"
+				.grid-x class="white-background"
 						
 					h1 class="task-center-row" Tasks
 					table class="center-row " border="1" id="tasklist"
@@ -99,14 +99,14 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 				div class = "approval-class"
 				 div(id="showHours" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 				.actions = f.submit
-		 div class="content" id="holidays"
+		 div class="tabs-panel" id="holidays"
 			- unless current_page?(action: 'new')
 				.(class="row white-background")
 					div id ="dynamic_holiday_update"
 						== render partial: "holiday_exceptions_form"
 
-		 div class="content" id="user_invitation"	 
-		  .(class="row white-background")
+		 div class="tabs-panel" id="user_invitation"	 
+		  .(class="grid-x white-background")
 				h1.left_row Invite Users
 				table class="left-row"
 					thead
@@ -145,13 +145,13 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 			    div class = "pending-class"
 				 div(id="projectspendingEmail" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 		
-		 div class="content" id="adhoc_pm"
-		  .(class="row white-background")
+		 div class="tabs-panel" id="adhoc_pm"
+		  .(class="grid-x white-background")
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 
 
-	     div class="content" id="users_on_project"
-		  .(class="row white-background")
+	     div class="tabs-panel" id="users_on_project"
+		  .(class="grid-x white-background")
 			 div(id="dynamic_user_update")
 				== render partial: 'add_remove_users'

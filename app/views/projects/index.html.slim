@@ -1,5 +1,5 @@
 .white-background
-	.row
+	.grid-x
 		- if params["adhoc"] == "true" && user_have_adhoc_permission(current_user)
 			.left-row
 				h1 Listing projects				
@@ -53,7 +53,7 @@
 								- else
 									td = radio_button_tag("project",project.id, false,class:"select-project")
 				br
-				.row
+				.grid-x
 					= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_project_path, title: "Create New Project")					
 			.right-row		
 				h1 Enter And Manage Time

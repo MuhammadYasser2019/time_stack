@@ -47,7 +47,7 @@
 	          = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name)
 	          = hidden_field_tag :invited_by_id, current_user.id
 	          = hidden_field_tag :customer_id, @customer.id
-	          .row(style="margin-top: 10px;")
+	          .grid-x(style="margin-top: 10px;")
 		          .small-10.columns(style="padding-left: 0;") = label_tag "Project Manager?"
 		          .small-2.columns = check_box_tag :project_manager
 		      .actions

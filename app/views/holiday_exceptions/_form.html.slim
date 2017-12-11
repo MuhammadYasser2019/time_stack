@@ -4,7 +4,7 @@
   - else
   	h3(style="text-align:center;") = "#{User.find(f.object.user_id).first_name} #{User.find(f.object.user_id).last_name}"
   	= f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name, checked: @holiday_exception.holiday_ids, include_hidden: false) do |h|
-		.row
+		.grid-x
 			.small-3.columns.text-center = h.check_box
 			.small-3.columns.text-center = h.object.name
 			.small-3.columns.text-center = h.object.date.strftime("%m-%d-%y")

@@ -1,7 +1,7 @@
 h3.text-center Employment Type
 - if !@employment_type.blank?
 	- @employment_type.each do |et|
-		.row 
+		.grid-x 
 			.small-3.columns.text-cente = link_to et.name, "/employment_types/#{et.id}/edit"
 			.small-3.columns.text-center = link_to "Delete", "/employment_types/#{et.id}", method: :delete , data: {confirm: 'Are you sure?'}, style: "color:#842929", remote: true
 - else

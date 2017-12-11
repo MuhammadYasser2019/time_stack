@@ -26,7 +26,7 @@ div.report
           /= hidden_field_tag 'id', @user.id
           td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
           td = button_tag "Show User Report"
-  .row
+  .grid-x
     a(href="#{@url}") Convert to Excel Document
   table border="1"
     thead

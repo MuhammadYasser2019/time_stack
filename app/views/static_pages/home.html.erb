@@ -1,6 +1,7 @@
-<ul class="medium-8" style="width:100%;">
-  <%= image_tag "/assets/background_image", style: "width:85%;float:left;margin-left:50px;" %>
-</ul>
+<div class="medium-8" style="width:100%;">
+  <%= image_tag "/assets/background_image", style: "width:92%;float:left;margin-left:48px;" %>
+</div>
+<div class="tiny reveal" id="loginbox" data-reveal>
     <%= simple_form_for(:user, :url => session_path(:user)) do |f| %>
       <div class="form-inputs">
         <%= f.input :email, required: false, autofocus: true %>
@@ -12,47 +13,35 @@
         <%= f.button :submit, "Log in" %>
       </div>
     <% end %>
-    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+  <button class="close-button" data-close aria-label="Close modal" type="button">
+    <span aria-hidden="true">&times;</span>
+  </button>
 </div>
 
 
-<div class="row front-row full-width banner" style="background-image: url('/assets/lovewar.jpg'); float:left;">
+<div class="grid-x front-row full-width banner" style="background-image: url('/assets/lovewar.jpg'); float:left;">
   <div class="full-width dark-foreground"></div>
   <div class="banner-text">Testimonials</div>
 </div>
 
-<div class="row front-row">
-  <h5 class="center bold" style="background-color: #e46a27;">People Are Loving Timestack</h5>
-  <p style="margin-left: 10%; margin-right: 10%; text-align:center;">Just look at what our customers are saying! </p>
-</div>
 
-<div class="row front-row">
-  <div class="medium-4">
-    <div class="front-box">
-      <div class="bold center front-box-header">Testimonial 1</div>
-      <p>Track Track Track Track Track Track Track Track Track Track Track Track Track
-        Track Track Track Track Track Track Track Track Track Track Track Track Track Track
-        Track Track Track Track Track Track Track Track Track Track Track Track Track Track.</p>
-    </div>
+<div class=".grid-x front-row full-width footer" style="margin-bottom: 0 !important;">
+  <div style="background:black;color: white;height:100px;font-size: 30px;text-align: center;">
+    <p>CONTACT RESOURCE STACK</p>
   </div>
-  <div class="medium-4">
-    <div class="front-box">
-      <div class="bold center front-box-header">Testimonial 2</div>
-      <p>Track Track Track Track Track Track Track Track Track Track Track Track Track
-        Track Track Track Track Track Track Track Track Track Track Track Track Track Track
-        Track Track Track Track Track Track Track Track Track Track Track Track Track Track.</p>
-    </div>
+  <div style="background:#5b5bd7;color: black;height:125px;font-size: 30px;text-align: center;padding:10px;">
+    <p>sameer.sharma@resourcestack.com</p>
+    <p style="color:white;font-size: 30px;text-align: center;">(571)2232013</p>
   </div>
-  <div class="medium-4">
-    <div class="front-box">
-      <div class="bold center front-box-header">Testimonial 3</div>
-      <p>Track Track Track Track Track Track Track Track Track Track Track Track Track
-        Track Track Track Track Track Track Track Track Track Track Track Track Track Track
-        Track Track Track Track Track Track Track Track Track Track Track Track Track Track.</p>
+  <div style="height:100px;"">
+    <div class="icons" style="float:left;padding: 50px;margin-left: 20px;">
+      <a href="#" style="padding: 40px;"><%= image_tag "/assets/linkedin" %></a><a href="#"><%= image_tag "/assets/facebook" %></a>
     </div>
-  </div>
-</div>
+    <div class="address" style="float:right;margin-right:70px;margin-top: 10px;">
 
-<div class="row front-row full-width footer" style="margin-bottom: 0 !important;">
-<p>Resource Stack, Inc. ©2017</p>
+      <p>Resource Stack, INC.</br>626 Grant Street Suite D</br>Herndon, VA 20170</p>
+    </div>
+
+
+  </div>
 </div>

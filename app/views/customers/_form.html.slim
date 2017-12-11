@@ -1,24 +1,24 @@
-ul(class="tabs" data-tab style="margin: 0 0 0 5%;")
+ul(class="tabs" data-tabs id="customer-tabs" style="margin: 0 0 0 5%;")
  - unless current_page?(action: 'new')
-  li class="tab-title active"
-  	a href="#information" Customer Information
-  li class="tab-title"
-  	a href="#holidays" Holidays
-  li class="tab-title"
-  	a href="#employment_types" Employment Types
-  li class="tab-title"
-  	a href="#customer_employees" Customer Employees
-  li class="tab-title"
-  	a href="#vacation_request" Vacation Request	
-  li class="tab-title"
-  	 a href="#user_invitation" Invite Users
-  li class="tab-title"
-  	 a href="#adhoc_pm" Assign Adhoc PM
-  li class="tab-title"
-  	 a href="#assign_pm" Projects
+  li class="tabs-title is-active"
+  	a aria-selected="true" href="#information" Customer Information
+  li class="tabs-title"
+  	a data-tabs-target="holidays" href="#holidays" Holidays
+  li class="tabs-title"
+  	a data-tabs-target="employment_types" href="#employment_types" Employment Types
+  li class="tabs-title"
+  	a data-tabs-target="customer_employees" href="#customer_employees" Customer Employees
+  li class="tabs-title"
+  	a data-tabs-target="vacation_request" href="#vacation_request" Vacation Request	
+  li class="tabs-title"
+  	 a data-tabs-target="user_invitation" href="#user_invitation" Invite Users
+  li class="tabs-title"
+  	 a data-tabs-target="adhoc_pm" href="#adhoc_pm" Assign Adhoc PM
+  li class="tabs-title"
+  	 a data-tabs-target="assign_pm" href="#assign_pm" Projects
 
-div.tabs-content
-  div.white-background class="content active" id="information"
+div.tabs-content data-tabs-content="customer-tabs"
+  div.white-background class="tabs-panel is-active" id="information"
     h1 Editing customer
 	= form_for @customer, remote: true do |f|
 	  - if @customer.errors.any?
@@ -49,19 +49,19 @@ div.tabs-content
 	  
 	  .actions = f.submit
 	  
-  div class="content" id="holidays"
+  div class="tabs-panel" id="holidays"
    - unless current_page?(action: 'new')
-    .(class="row white-background")
+    .(class="grid-x white-background")
 	  h3.text-center Holidays Setup
 	  - if @holidays.any?
-	   .row
+	   .grid-x
 	    h4.small-1.columns
 	    h4.small-5.columns.text-center.underline.no-background style="text-decoration:underline;"  Name
 	    h4.small-3.columns.text-center.underline.no-background style="text-decoration:underline;"  Date
 	    h4.small-3.columns.text-center
 	   = form_for @customer do |f|
 		    = f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name) do |h|
-		     .row
+		     .grid-x
   				.small-1.columns.text-center = h.check_box
 		  		.small-5.columns.text-center = h.object.name
 		  		.small-3.columns.text-center = h.object.date.strftime("%m-%d-%y")
@@ -75,14 +75,14 @@ div.tabs-content
 	  
 	  = link_to "Create New Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"
 		      
-  div class="content" id="employment_types"
-    .(class="row white-background")
+  div class="tabs-panel" id="employment_types"
+    .(class="grid-x white-background")
 			div(id="dynamic_employment")
 				== render partial: "employment_form"
 	
-  div class="content" id="customer_employees"
+  div class="tabs-panel" id="customer_employees"
 	div class = "disp-message"
-	  	.(class="row white-background")
+	  	.(class="grid-x white-background")
 			div class="vacation-left-row" 
 				h3.text-center Customer Employees
 				table 
@@ -108,8 +108,8 @@ div.tabs-content
 					div class = "shareduser-class"
 						div(id="sharedUser" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 
-  div class="content" id="vacation_request"
-    .(class="row white-background")
+  div class="tabs-panel" id="vacation_request"
+    .(class="grid-x white-background")
 		div class="vacation-right-row"
 			h3.text-center Vacation Request
 			table
@@ -129,8 +129,8 @@ div.tabs-content
 							td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true
 							td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
 
-  div class="content" id="user_invitation"
-		.(class="row white-background")
+  div class="tabs-panel" id="user_invitation"
+		.(class="grid-x white-background")
 		  h1.left_row Invite Users	
 		  table class="left-row"
 			thead
@@ -148,10 +148,10 @@ div.tabs-content
                       = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
                       = hidden_field_tag :invited_by_id, current_user.id
                       = hidden_field_tag :customer_id, @customer.id
-                      .row(style="margin-top: 10px;margin-left: 10px;")
+                      .grid-x(style="margin-top: 10px;margin-left: 10px;")
                           .small-8.columns(style="padding-left: 0;") = label_tag "Project Manager?"
                           .small-2.columns = check_box_tag :project_manager
-                      /.row(style="margin-top: 10px;margin-left: 10px;")
+                      /.grid-x(style="margin-top: 10px;margin-left: 10px;")
                           .small-8.columns(style="padding-left: 0;") = label_tag "Shared?"
                           .small-2.columns = check_box_tag :shared_user /!
                       .actions
@@ -179,13 +179,13 @@ div.tabs-content
 		  div class = "customerpending-class"
 			div(id="customersPendingEmail" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 
-  div class="content" id="adhoc_pm"
-		.(class="row white-background")
+  div class="tabs-panel" id="adhoc_pm"
+		.(class="grid-x white-background")
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 
-  div class="content" id="assign_pm"
-		.(class="row white-background")
+  div class="tabs-panel" id="assign_pm"
+		.(class="grid-x white-background")
 			 div(id="dynamic_assign_pm")
 				== render partial: 'assign_pm_form'
 		

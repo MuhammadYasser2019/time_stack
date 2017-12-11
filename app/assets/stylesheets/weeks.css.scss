@@ -18,7 +18,7 @@ h1,h2,h3,h4,h5{
   //border: solid 3px #ffedda;
   //outline: solid 4px gray;
    //box-shadow: 0 0 0 6px hsl(0, 0%, 0%);
-   margin-top: 8px;
+   //margin-top: 8px;
    box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
    border-collapse: separate;
    width: 100%;
@@ -48,7 +48,7 @@ table{
   margin-right: auto;
 }
 
-h1.row{
+h1.grid-x{
   text-align:center;
 }
 
@@ -240,7 +240,7 @@ input[type="submit"]{
 
 #holidays {
   
-     .row{
+     .grid-x{
         .small-8{
           background-color:white;
           border-radius: 5px;
@@ -255,7 +255,7 @@ input[type="submit"]{
              font-weight: bold;
            }
            .edit_customer{
-              .row:nth-of-type(even){
+              .grid-x:nth-of-type(even){
                 background: rgba(255, 176, 57, 0.19);
               }
            }
@@ -325,4 +325,23 @@ input[type="submit"]{
 .previous_commment_icon{
   margin-left: 100%
 }
-
+/*  monu chauhan */
+.header .top-bar-right .menu.medium-horizontal {
+    float: left;
+    background: transparent;
+}
+.header .top-bar-right .search-box {
+    float: right;
+    margin-right: 50px;
+    background: transparent;
+}
+.header .top-bar-right .search-box input {
+    margin-right: 0px;
+    width: 32px;
+    height: 32px;
+    box-shadow: none;
+    border-radius: 50%;
+    background:#fff url("/assets/search_icon.png") no-repeat 9px 7px;
+    background-size: 22px;
+}
+.header .top-bar-right .search-box input:focus { width:200px; border-radius: 10px;background-position: 169px 7px; }
