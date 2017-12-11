@@ -143,12 +143,31 @@ jQuery ($) ->
     $.get '/add_pm_role',
       user_id: user_id,
   )
+  customer_name = -> 
+    console.log("checking for customer_name")
+    c_name =  $("#customer_id").attr("class")
+    console.log("name is " + c_name)
+    c = "#{c_name} - Time Tracking System"
+    return c
 
   $('#show_reports').DataTable({
-    dom: 'Bfrtip',
+    "language": {
+      "zeroRecords": "Nothing found - Sorry",
+      "info": "Showing page _PAGE_ of _PAGES_",
+      "infoEmpty": "No records available",
+    }
+    dom: 'lBfrtip',
     "retrieve": true,
-    buttons: [ 'excel', 'pdf']
-  
+    buttons: [
+      {
+        extend: 'excel',
+        title: customer_name,
+      },
+      {
+        extend: 'pdf',
+        title: customer_name
+      }
+    ]
   })
 
 
