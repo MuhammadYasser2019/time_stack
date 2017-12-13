@@ -575,7 +575,7 @@ textarea {
   width: 16.66667%; }
 
 .grid-x > .small-3 {
-  width: 25%; }
+  width: 18%; }
 
 .grid-x > .small-4 {
   width: 33.33333%; }
@@ -652,7 +652,7 @@ textarea {
   .grid-x > .large-2 {
     width: 16.66667%; }
   .grid-x > .large-3 {
-    width: 25%; }
+    width: 18%; }
   .grid-x > .large-4 {
     width: 33.33333%; }
   .grid-x > .large-5 {
@@ -2300,7 +2300,8 @@ a {
   a:hover, a:focus {
     color: #1468a0; }
   a img {
-    border: 0; }
+    border: 0;
+    margin-left: 400%; }
 
 hr {
   clear: both;
@@ -2405,7 +2406,8 @@ ul.no-bullet, ol.no-bullet {
   text-align: right; }
 
 .text-center {
-  text-align: center; }
+  text-align: center;
+  max-width: 100% }
 
 .text-justify {
   text-align: justify; }

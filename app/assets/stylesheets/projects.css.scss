@@ -43,7 +43,7 @@
 }
 
 .left-row table {
-	margin-left: 0px;
+	margin-left: 10%;
 }
 
 .right-row {
@@ -54,16 +54,19 @@
 
 .right-row, h1 {
 	margin-top: 20px;
+
 }
 .right-row h1 {
-	#margin-left: 80px;
-	max-width: 100%;
+	width: 100%;
 	margin-top: 0px;
+	float: right;
+	max-width: 100%;
+	margin-left: 50%;
+	margin-right: -50%;
 }
 
 .right-row table {
-	width: 0%;
-	margin-left: -3px;
+	margin-left: 50%;
 }
 
 .users-left-row {
@@ -294,8 +297,10 @@
 	}
 	.right-row h1 {
 	#margin-left: 80px;
+	float: left;
 	max-width: 100%;
 	margin-top: 0px;
+	margin-left: 0%;
     }
 
    .right-row table {
