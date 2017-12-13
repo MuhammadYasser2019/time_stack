@@ -137,13 +137,13 @@ div.tabs-content data-tabs-content="customer-tabs"
 				tr
                   th
                     = form_tag(action: :invite_to_project, html: {class: 'form-inline'}) do
-                      = label_tag "Email"
+                      = label_tag "Email",nil, :style=>"text-align: left;"
                       = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email"
-                      = label_tag "Select Start Date"
+                      = label_tag "Select Start Date",nil, :style=>"text-align: left;"
                       = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
-                      = label_tag "Employment Type"
+                      = label_tag "Employment Type",nil, :style=>"text-align: left;"
                       = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type"
-                      = label_tag "Project"
+                      = label_tag "Project",nil, :style=>"text-align: left;"
                       = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
                       = hidden_field_tag :invited_by_id, current_user.id
                       = hidden_field_tag :customer_id, @customer.id
