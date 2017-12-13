@@ -2406,7 +2406,8 @@ ul.no-bullet, ol.no-bullet {
   text-align: right; }
 
 .text-center {
-  text-align: center; }
+  text-align: center;
+  max-width: 100% }
 
 .text-justify {
   text-align: justify; }
