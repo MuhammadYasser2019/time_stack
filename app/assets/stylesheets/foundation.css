@@ -4977,7 +4977,14 @@ table.hover:not(.unstriped) tr:nth-of-type(even):hover {
   border-top: 0;
   background: #fefefe;
   color: #0a0a0a;
+  width:90%;
+  margin-left:64px;
   transition: all 0.5s ease; }
+.tabs-content:before, .tabs-content:after {
+    content: " ";
+    display: table; }
+  .tabs-content:after {
+    clear: both; }
 
 .tabs-content.vertical {
   border: 1px solid #e6e6e6;
