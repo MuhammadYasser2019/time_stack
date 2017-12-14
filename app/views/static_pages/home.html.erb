@@ -1,47 +1,53 @@
-<div class="medium-8" style="width:100%;">
-  <%= image_tag "/assets/background_image", style: "width:92%;float:left;margin-left:48px;" %>
+<div class="front_div" style="margin-left:4%;">
+  <%= image_tag "/assets/background_image"%>
 </div>
-<div class="tiny reveal" id="loginbox" data-reveal>
-    <%= simple_form_for(:user, :url => session_path(:user)) do |f| %>
-      <div class="form-inputs">
-        <%= f.input :email, required: false, autofocus: true %>
-        <%= f.input :password, required: false %>
-        <%= f.input :remember_me, as: :boolean %>
-      </div>
+<div class="image-banner-text">
+    <p>Small Business Solution To Automate</p>
+    <p>Employee Time Entry and Reporting</p>
+</div>
+<div class="sub-heading">
+  <h5 style="background-color: #f3f3f3;text-align: center;">Deploy in Minutes. Accelerate Your Efficiency by Light Years</h5>
 
-      <div class="form-actions">
-        <%= f.button :submit, "Log in" %>
-      </div>
-    <% end %>
-  <button class="close-button" data-close aria-label="Close modal" type="button">
-    <span aria-hidden="true">&times;</span>
-  </button>
+  <p>Early-stage consulting firms and other small business with fewer than 50 employees often resort to manual time entry to track their employees’ work. TimeStack™ enables employers to automate and streamline the time-entry and reporting process. The cloud-based platform is simple to deploy for business owners and easy for their employees to use. While TimeStack is feature rich, it is designed for small companies with limited budgets who don’t need enterprise-scale software.</p>
 </div>
 
+<%= render partial: 'static_pages/login_form'%>
 
-<div class="grid-x front-row full-width banner" style="background-image: url('/assets/lovewar.jpg'); float:left;">
+
+<div class="grid-x front-row full-width banner" style="float:left;">
+  <%= image_tag "/assets/feature-bg" %>
   <div class="full-width dark-foreground"></div>
-  <div class="banner-text">Testimonials</div>
+  <div class="banner-text">
+    <div class="automation_section" style="float:left;width:200px;font-size: 20px;border: 2px solid #5296ce;border-radius: 10px;margin-top: 40px;margin-left: 210px;">
+      <p>Simple for small business to deploy and manage</p>
+    </div>
+    <div class="time_entry_section" style="float:left;width:200px;font-size: 20px;border: 2px solid #5296ce;border-radius: 10px; margin-top: 40px;margin-left: 90px;">
+    <p>Flexible, cloud-based employees time entry desktop, tablet or smartphone</p>
+    </div>
+    <div class="report_section" style="float:left;width:200px;font-size: 20px;border: 2px solid #5296ce;border-radius: 10px; margin-top: 40px;margin-left: 90px;">
+      <p>Configurable Management Reports, Optional Payroll Integration</p>
+    </div>
+
+  </div>
 </div>
 
 
-<div class=".grid-x front-row full-width footer" style="margin-bottom: 0 !important;">
+<div class="front-row full-width footer" style="height:325px;margin-bottom: 0 !important;">
   <div style="background:black;color: white;height:100px;font-size: 30px;text-align: center;">
     <p>CONTACT RESOURCE STACK</p>
   </div>
-  <div style="background:#5b5bd7;color: black;height:125px;font-size: 30px;text-align: center;padding:10px;">
+  <div style="background:#5296ce;color: black;height:125px;font-size: 30px;text-align: center;padding:10px;">
     <p>sameer.sharma@resourcestack.com</p>
-    <p style="color:white;font-size: 30px;text-align: center;">(571)2232013</p>
+    <p style="color:white;font-size: 30px;text-align: center;">(571) 223-2013</p>
   </div>
-  <div style="height:100px;"">
-    <div class="icons" style="float:left;padding: 50px;margin-left: 20px;">
+  <div class="footer_section" style="height:80px;background-color: white;">
+    <div class="icons" style="height:80px;float:left;padding: 40px;margin-left: 20px;">
       <a href="#" style="padding: 40px;"><%= image_tag "/assets/linkedin" %></a><a href="#"><%= image_tag "/assets/facebook" %></a>
     </div>
-    <div class="address" style="float:right;margin-right:70px;margin-top: 10px;">
+    <div class="address" style="height:80px;float:right;margin-right:70px;margin-top: 10px;">
 
       <p>Resource Stack, INC.</br>626 Grant Street Suite D</br>Herndon, VA 20170</p>
     </div>
-
-
   </div>
+  <p style="padding-left: 38%;background-color: white;q">&copy; 2017 Resource Stack, Inc. All Rights Reserved</p>
 </div>

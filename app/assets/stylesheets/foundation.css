@@ -2301,7 +2301,7 @@ a {
     color: #1468a0; }
   a img {
     border: 0;
-    margin-left: 400%; }
+    //margin-left: 400%; }
 
 hr {
   clear: both;

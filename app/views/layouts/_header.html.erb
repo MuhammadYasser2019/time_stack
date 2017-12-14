@@ -1,6 +1,6 @@
 <div class="header">	
   <div class="top-bar" style="background:white;">
-    <div class="top-bar-left" style="width:30% !important;">
+    <div class="top-bar-left" style="width:30% !important;margin-left: 20px;">
 	    <% if current_user.nil?%>
 		    <a href="/", class ="header_logo" ><%= image_tag "/assets/timestack", class: 'logo' %></a>
 		<% else %> 
@@ -21,21 +21,24 @@
   		
 		  	<ul class="medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown">
 			  <li>
+			  	<%= link_to "Home" , root_path %>
+			  </li>
+			  <li>
 			    <a href="#">Features</a>
 			    <ul class="vertical menu">
-			      <li><a href="#">Easy Automation</a></li>
-			      <li><a href="#">Employee Time Entry</a></li>
-			      <li><a href="#">Submission and Approval</a></li>
-			      <li><a href="#">Flexible Reports</a></li>
-			      <li><a href="#">Optional Payroll System Integration</a></li>
+			      <li><%= link_to "Easy Automation", feature_path(id:1) %></a></li>
+			      <li><%= link_to "Employee Time Entry", feature_path(id:2) %></li>
+			      <li><%= link_to "Submission and Approval", feature_path(id:3)%></li>
+			      <li><%= link_to "Flexible Reports", feature_path(id:4) %></li>
+			      <li><%= link_to "Optional Payroll System Integration", feature_path(id:5) %></li>
 			    </ul>
 			      
 			  </li>
 			  <li>
 			    <a href="#">Case Studies</a>
 			    <ul class="vertical menu">
-			      <li><a href="#">Resource Stack</a></li>
-			      <li><a href="#">JSM Consulting</a></li>
+			      <li><%= link_to "Resource Stack", case_study_path(id:1) %></li>
+			      <li><%= link_to "JSM Consulting", case_study_path(id:2) %></li>
 			    </ul>
 			  </li>
 			  <li>

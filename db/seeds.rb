@@ -46,5 +46,28 @@ weeks_with_no_status.each do |w_id|
     end
   end
 end
+Feature.find_or_initialize_by(id: 1, feature_type: "Easy Automation", feature_data:"Automatic date updation") do |f|
+  f.save!
+end
+Feature.find_or_initialize_by(id: 2, feature_type: "Employee Time Entry", feature_data:"Automatic date updation") do |f|
+  f.save!
+end
+Feature.find_or_initialize_by(id: 3, feature_type: "Submission and Approval", feature_data:"Automatic date updation") do |f|
+  f.save!
+end
+Feature.find_or_initialize_by(id: 4, feature_type: "Flexible Reports", feature_data:"Automatic date updation") do |f|
+  f.save!
+end
+Feature.find_or_initialize_by(id: 5, feature_type: "Optional Payroll System Integration", feature_data:"Automatic date updation") do |f|
+  f.save!
+end
+
+CaseStudy.find_or_initialize_by(id: 1, case_study_name: "Resourse Stack", case_study_data: "Nitin study") do |cs|
+  cs.save!
+end
+CaseStudy.find_or_initialize_by(id: 2, case_study_name: "JSM Consulting", case_study_data: "Nitin study") do |cs|
+  cs.save!
+end
+
 
 

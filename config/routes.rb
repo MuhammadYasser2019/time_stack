@@ -12,6 +12,8 @@ Rails.application.routes.draw do
   resources :employment_types
   resources :customers_holidays
   resources :report_logos
+  resources :features
+  resources :case_studies
   devise_for :users, :path => "account", :controllers => { registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do

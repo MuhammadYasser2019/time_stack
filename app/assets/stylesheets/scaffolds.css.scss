@@ -165,7 +165,7 @@ div {
 .banner{
   margin-top: 30px;
   background-color: #777777;
-  margin-bottom: 30px;
+  //margin-bottom: 30px;
   position: relative;
   background-size: cover;
   height:300px;
@@ -175,14 +175,31 @@ div {
   font-size:50px;
   color:white;
   position:absolute;
-  top:30%;
+  //top:30%;
+  //bottom:30%;
+  //left: 30%;
+  //right: 30%;
+  font-weight:bold;
+  text-align:center;
+  p{
+  line-height:2.6rem;
+  }
+}
+
+.image-banner-text{
+  font-size:30px;
+  color:white;
+  position:absolute;
+  top:160px;
   bottom:30%;
-  left: 30%;
+  left: 27%;
   right: 30%;
   font-weight:bold;
   text-align:center;
+  p{
+  line-height:2.6rem;
+  }
 }
-
 .footer{
   width:100%;
   margin-top: 50px;
@@ -227,7 +244,8 @@ div {
   display:block;
   width: 100%;
   max-width: 100% !important;
-  margin-bottom: 40px !important;
+  height:400px;
+  //margin-bottom: 40px !important;
 }
 
 .front-sign-in-form{
@@ -253,4 +271,16 @@ div {
   width: 66.66667% !important;
   float:left;
   margin-bottom: 40px;
+}
+.front_div img {
+  width:1100px;
+  height:400px;
+  float:left;
+  margin-left:45px;
+}
+.sub-heading{
+    float:left;
+    padding-top:33px;
+    width:1070px;
+    margin-left:95px;
 }
