@@ -59,8 +59,8 @@ ul(class="tabs center" data-tabs id=""projects-tab style="margin: 0 0 0 18%;")
 
 - elsif @projects.present?
 		div.tabs-content data-tabs-content="projects-tabs"
-		 div class="tabs-panel is-active" id="information"
-	 
+		 div class=" white-background tabs-panel is-active" id="information"
+
 			div class= "display-text"
 			= form_for @project, remote: true do |f|
 				- if @project.errors.any?
@@ -71,8 +71,8 @@ ul(class="tabs center" data-tabs id=""projects-tab style="margin: 0 0 0 18%;")
 					      li = message
 			
 				= f.hidden_field :customer_id, value: @project.customer_id	
-				.grid-x class="white-background"
-						
+				.white-background	
+
 					h1 class="task-center-row" Tasks
 					table class="center-row " border="1" id="tasklist"
 						thead
@@ -101,7 +101,7 @@ ul(class="tabs center" data-tabs id=""projects-tab style="margin: 0 0 0 18%;")
 				.actions = f.submit
 		 div class="tabs-panel" id="holidays"
 			- unless current_page?(action: 'new')
-				.(class="row white-background")
+				.(class="white-background")
 					div id ="dynamic_holiday_update"
 						== render partial: "holiday_exceptions_form"
 

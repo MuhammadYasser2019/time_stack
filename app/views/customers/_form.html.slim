@@ -68,15 +68,15 @@ div.tabs-content data-tabs-content="customer-tabs"
 		  		  .small-3.columns.text-center = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
 	        	- else
 	        	  .small-3.columns.text-center
-	        .actions = f.submit "Submit"
+	        .actions = f.submit "SUBMIT"
 	  - else 
 	    h3.text-center No Holidays created
 	  
 	  = link_to "Create New Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"
 		      
   div class="tabs-panel" id="employment_types"
-    .(class="grid-x white-background")
-			div(id="dynamic_employment" style="margin-left: 39%;")
+    .(class="white-background")
+			div(id="dynamic_employment")
 				== render partial: "employment_form"
 	
   div class="tabs-panel" id="customer_employees"
@@ -89,7 +89,7 @@ div.tabs-content data-tabs-content="customer-tabs"
 						tr
                           th User
                           th Email
-                          th
+                          th Action
                           th Shared
                           th PM
                           th Proxy
@@ -129,7 +129,6 @@ div.tabs-content data-tabs-content="customer-tabs"
 							td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
 
   div class="tabs-panel" id="user_invitation"
-		.(class="white-background")
 		  h1.left_row Invite Users	
 		  table class="left-row"
 			thead
