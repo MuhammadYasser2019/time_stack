@@ -181,6 +181,9 @@ div {
   //right: 30%;
   font-weight:bold;
   text-align:center;
+  p{
+  line-height:2.6rem;
+  }
 }
 
 .image-banner-text{
@@ -189,10 +192,13 @@ div {
   position:absolute;
   top:160px;
   bottom:30%;
-  left: 22%;
+  left: 27%;
   right: 30%;
   font-weight:bold;
   text-align:center;
+  p{
+  line-height:2.6rem;
+  }
 }
 .footer{
   width:100%;
