@@ -51,20 +51,19 @@ div.tabs-content data-tabs-content="customer-tabs"
 	  
   div class="tabs-panel" id="holidays"
    - unless current_page?(action: 'new')
-    .(class="grid-x white-background")
+    .(class="white-background")
 	  h3.text-center Holidays Setup
 	  - if @holidays.any?
 	   .grid-x
-	    h4.small-1.columns
-	    h4.small-5.columns.text-center.underline.no-background style="text-decoration:underline;"  Name
-	    h4.small-3.columns.text-center.underline.no-background style="text-decoration:underline;"  Date
-	    h4.small-3.columns.text-center
+	    h4.large-4.columns.text-center.underline.no-background
+	    h4.large-4.columns.text-center.underline.no-background style="text-decoration:underline;"  Name
+	    h4.large-4.columns.text-center.underline.no-background style="text-decoration:underline;"  Date
 	   = form_for @customer do |f|
 		    = f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name) do |h|
 		     .grid-x
-  				.small-1.columns.text-center = h.check_box
-		  		.small-5.columns.text-center = h.object.name
-		  		.small-3.columns.text-center = h.object.date.strftime("%m-%d-%y")
+  				.large-4.columns.text-center = h.check_box
+		  		.large-4.columns.text-center = h.object.name
+		  		.large-4.columns.text-center = h.object.date.strftime("%m-%d-%y")
 		  		- if h.object.global != true
 		  		  .small-3.columns.text-center = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
 	        	- else
@@ -77,7 +76,7 @@ div.tabs-content data-tabs-content="customer-tabs"
 		      
   div class="tabs-panel" id="employment_types"
     .(class="grid-x white-background")
-			div(id="dynamic_employment" style="margin-left: 40%;")
+			div(id="dynamic_employment" style="margin-left: 39%;")
 				== render partial: "employment_form"
 	
   div class="tabs-panel" id="customer_employees"
@@ -130,7 +129,7 @@ div.tabs-content data-tabs-content="customer-tabs"
 							td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
 
   div class="tabs-panel" id="user_invitation"
-		.(class="grid-x white-background")
+		.(class="white-background")
 		  h1.left_row Invite Users	
 		  table class="left-row"
 			thead
@@ -138,13 +137,13 @@ div.tabs-content data-tabs-content="customer-tabs"
 				tr
                   th
                     = form_tag(action: :invite_to_project, html: {class: 'form-inline'}) do
-                      = label_tag "Email"
+                      = label_tag "Email",nil, :style=>"text-align: left;"
                       = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email"
-                      = label_tag "Select Start Date"
+                      = label_tag "Select Start Date",nil, :style=>"text-align: left;"
                       = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
-                      = label_tag "Employment Type"
+                      = label_tag "Employment Type",nil, :style=>"text-align: left;"
                       = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type"
-                      = label_tag "Project"
+                      = label_tag "Project",nil, :style=>"text-align: left;"
                       = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
                       = hidden_field_tag :invited_by_id, current_user.id
                       = hidden_field_tag :customer_id, @customer.id
@@ -186,6 +185,6 @@ div.tabs-content data-tabs-content="customer-tabs"
 
   div class="tabs-panel" id="assign_pm"
 		.(class="grid-x white-background")
-			 div(id="dynamic_assign_pm")
+			 div(id="dynamic_assign_pm" style="margin-left: 20%;")
 				== render partial: 'assign_pm_form'
 		

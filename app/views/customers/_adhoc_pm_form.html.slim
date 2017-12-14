@@ -17,9 +17,9 @@
 						= select_tag :adhoc_pm_id,'', :include_blank => true
 					
 					td
-						= date_field_tag 'adhoc_start_date', params[:adhoc_start_date], {required: "required"}
+						= date_field_tag 'adhoc_start_date', params[:adhoc_start_date], {required: "required", :style=>"font-size: 12.5px;"}
 					td
-						= date_field_tag 'adhoc_end_date', params[:adhoc_end_date], {required: "required"}
+						= date_field_tag 'adhoc_end_date', params[:adhoc_end_date], {required: "required", :style=>"font-size: 12.5px;"}
 
 		.actions = submit_tag 'Assign PM'
 
@@ -29,7 +29,7 @@
 		thead
 		  tr
 				th Project
-				th User Email
+				th User <br> Email
 				th Start Date
 				th End Date
 		tbody
