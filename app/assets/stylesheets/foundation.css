@@ -2202,7 +2202,7 @@ td {
 p {
   margin-bottom: 1rem;
   font-size: inherit;
-  line-height: 1.6;
+  line-height: 2.6;
   text-rendering: optimizeLegibility; }
 
 em,
@@ -2301,7 +2301,7 @@ a {
     color: #1468a0; }
   a img {
     border: 0;
-    margin-left: 400%; }
+    //margin-left: 400%; }
 
 hr {
   clear: both;
