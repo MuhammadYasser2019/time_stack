@@ -17,7 +17,7 @@ ul(class="tabs" data-tabs id="projects-tab" style="margin: 0 0 0 18%;")
      li class="tabs-title"
   	   a data-tabs-target="users_on_project" href="#users_on_project" Users on the Project
 
-.tabs-content data-tabs-content="projects-tabs"
+div.tabs-content data-tabs-content="projects-tab"
   	- if @adhoc && user_have_adhoc_permission(current_user)
 		div class="tabs-panel is-active" id="information"
 			.white-background
