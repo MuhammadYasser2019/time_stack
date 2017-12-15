@@ -115,7 +115,7 @@
 	<div class="report-log-tab tabs-panel"  id="panel3">
 	<h1>Create Report Logo</h1>
 	<%= form_tag report_logos_path, :multipart => true, method: :post do%>
-	<table>
+	<table style="width:60%;">
 		<thead>
 			<th>Name</th>
 			<th></th>
@@ -137,7 +137,7 @@
 
 	<h1>Assign Report Logo To User</h1>
 	<%= form_tag "/assign_report_logo_to_user", :multipart => true, method: :get do  %>
-	<table>
+	<table style="width: 60%; margin-left: 22%;">
 		<thead>
 			<th>Report Logos</th>
 			<th>Users</th>
@@ -155,7 +155,7 @@
 	<% end %>
 
 	<h1>Users With Logo</h1>
-	<table>
+	<table style="width:60%;">
 		<thead>
 			<th>User</th>
 			<th>Logo Name</th>
@@ -174,7 +174,7 @@
 	</table>
 
 
-	<%= link_to "Back", root_path %>
+	<%= link_to "Back", root_path, class: "button large"%>
 	</div>
 	<div class="tabs-panel" id="panel4">
 	</div>
