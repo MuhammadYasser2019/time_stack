@@ -18,7 +18,7 @@ ul(class="tabs" data-tabs id="customer-tabs" style="margin: 0 64px 0 5%;")
   	 a data-tabs-target="assign_pm" href="#assign_pm" Projects
 
 div.tabs-content data-tabs-content="customer-tabs"
-  div.white-background class="tabs-panel is-active" id="information"
+  div class="tabs-panel is-active" id="information"
     h1 Editing customer
 	= form_for @customer, remote: true do |f|
 	  - if @customer.errors.any?
@@ -51,7 +51,6 @@ div.tabs-content data-tabs-content="customer-tabs"
 	  
   div class="tabs-panel" id="holidays"
    - unless current_page?(action: 'new')
-    .(class="white-background")
 	  h3.text-center Holidays Setup
 	  - if @holidays.any?
 	   .grid-x
@@ -75,13 +74,11 @@ div.tabs-content data-tabs-content="customer-tabs"
 	  = link_to "Create New Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"
 		      
   div class="tabs-panel" id="employment_types"
-    .(class="grid-x white-background")
-			div(id="dynamic_employment" style="margin-left: 39%;")
+			div(id="dynamic_employment")
 				== render partial: "employment_form"
 	
   div class="tabs-panel" id="customer_employees"
 	div class = "disp-message"
-	  	.(class="grid-x white-background")
 			div class="vacation-left-row" 
 				h3.text-center Customer Employees
 				table 
@@ -108,7 +105,6 @@ div.tabs-content data-tabs-content="customer-tabs"
 						div(id="sharedUser" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 
   div class="tabs-panel" id="vacation_request"
-    .(class="grid-x white-background")
 		div class="vacation-right-row"
 			h3.text-center Vacation Request
 			table
@@ -179,12 +175,10 @@ div.tabs-content data-tabs-content="customer-tabs"
 			div(id="customersPendingEmail" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 
   div class="tabs-panel" id="adhoc_pm"
-		.(class="grid-x white-background")
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 
   div class="tabs-panel" id="assign_pm"
-		.(class="grid-x white-background")
-			 div(id="dynamic_assign_pm" style="margin-left: 20%;")
+			 div(id="dynamic_assign_pm")
 				== render partial: 'assign_pm_form'
 		
