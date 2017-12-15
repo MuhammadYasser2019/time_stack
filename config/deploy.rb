@@ -1,16 +1,16 @@
 # config valid only for current version of Capistrano
 # lock "3.7.2"
 
-set :application, "time_stack"
-set :repo_url, "git@github.com:sameersharma25/time_stack.git"
-set :branch, "master"
+# set :application, "time_stack"
+# set :repo_url, "git@github.com:sameersharma25/time_stack.git"
+# set :branch, "master"
 
 # Default branch is :master
 # ask :branch, `git rev-parse --abbrev-ref HEAD`.chomp
 
 # Default deploy_to directory is /var/www/my_app_name
 # set :deploy_to, "/var/www/my_app_name"
-set :deploy_to, "/home/ssharma/dev/timestack_releases"
+# set :deploy_to, "/home/ssharma/dev/timestack_releases"
 
 # Default value for :format is :airbrussh.
 # set :format, :airbrussh
