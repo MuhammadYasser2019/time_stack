@@ -74,8 +74,7 @@ div.tabs-content data-tabs-content="customer-tabs"
 	  = link_to "Create New Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"
 		      
   div class="tabs-panel" id="employment_types"
-    .(class="grid-x white-background")
-			div(id="dynamic_employment" style="margin-left: 39%;")
+			div(id="dynamic_employment")
 				== render partial: "employment_form"
 	
   div class="tabs-panel" id="customer_employees"
