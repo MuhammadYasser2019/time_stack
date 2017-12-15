@@ -1,25 +1,26 @@
 - if @adhoc && user_have_adhoc_permission(current_user)
   = hidden_field_tag "adhoc", @adhoc
   h1 #{@adhoc_pm_project.name}
--elsif @projects.present?
+- elsif @projects.present?
   h1 #{@project.name}
-ul(class="tabs center" data-tabs id=""projects-tab style="margin: 0 0 0 18%;")
- - if !(@adhoc && user_have_adhoc_permission(current_user))
-  - unless current_page?(action: 'new')
-   li class="tabs-title is-active"
-  	 a aria-selected="true" href="#information" Project Information
-   li class="tabs-title"
-  	 a data-tabs-target="holidays" href="#holidays" Holiday Exceptions
-   li class="tabs-title"
-  	 a data-tabs-target="user_invitation" href="#user_invitation" Invite Users
-   li class="tabs-title"
-  	 a data-tabs-target="adhoc_pm" href="#adhoc_pm" Assign Adhoc PM
-   li class="tabs-title"
-  	 a data-tabs-target="users_on_project" href="#users_on_project" Users on the Project
-- if @adhoc && user_have_adhoc_permission(current_user)
- div.tabs-content data-tabs-content="projects-tabs"
-	 div class="tabs-panel is-active" id="information"
-		.white-background
+ul(class="tabs" data-tabs id="projects-tab" style="margin: 0 0 0 18%;")
+  - if !(@adhoc && user_have_adhoc_permission(current_user))
+    - unless current_page?(action: 'new')
+     li class="tabs-title is-active"
+  	   a aria-selected="true" href="#information" Project Information
+     li class="tabs-title"
+  	   a data-tabs-target="holidays" href="#holidays" Holiday Exceptions
+     li class="tabs-title"
+  	   a data-tabs-target="user_invitation" href="#user_invitation" Invite Users
+     li class="tabs-title"
+  	   a data-tabs-target="adhoc_pm" href="#adhoc_pm" Assign Adhoc PM
+     li class="tabs-title"
+  	   a data-tabs-target="users_on_project" href="#users_on_project" Users on the Project
+
+.tabs-content data-tabs-content="projects-tabs"
+  	- if @adhoc && user_have_adhoc_permission(current_user)
+		div class="tabs-panel is-active" id="information"
+			.white-background
 	
 	 		h1 Time Sheets Submitted for Approval
 			table
@@ -46,7 +47,7 @@ ul(class="tabs center" data-tabs id=""projects-tab style="margin: 0 0 0 18%;")
 							td
 								= at.end_date.strftime('%Y-%m-%d')
 							td
-								= button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {reveal_id: "showHours"}
+								= button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {toggle: "showHours", target: "#showHours"}
 
 							td = link_to "Approve","/projects/#{@project.id}/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
 							/td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
@@ -57,10 +58,8 @@ ul(class="tabs center" data-tabs id=""projects-tab style="margin: 0 0 0 18%;")
 							td
 								= text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
 
-- elsif @projects.present?
-		div.tabs-content data-tabs-content="projects-tabs"
-		 div class=" white-background tabs-panel is-active" id="information"
-
+	- elsif @projects.present?
+		div class="tabs-panel is-active" id="information"
 			div class= "display-text"
 			= form_for @project, remote: true do |f|
 				- if @project.errors.any?
@@ -97,16 +96,16 @@ ul(class="tabs center" data-tabs id=""projects-tab style="margin: 0 0 0 18%;")
 								= select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
 
 				div class = "approval-class"
-				 div(id="showHours" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
+				 div(id="showHours" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 				.actions = f.submit
-		 div class="tabs-panel" id="holidays"
+		div class="tabs-panel" id="holidays"
 			- unless current_page?(action: 'new')
 				.(class="white-background")
 					div id ="dynamic_holiday_update"
 						== render partial: "holiday_exceptions_form"
 
-		 div class="tabs-panel" id="user_invitation"	 
-		  .(class="grid-x white-background")
+		div class="tabs-panel" id="user_invitation"	 
+		    .(class="grid-x white-background")
 				h1.left_row Invite Users
 				table class="left-row"
 					thead
@@ -145,13 +144,13 @@ ul(class="tabs center" data-tabs id=""projects-tab style="margin: 0 0 0 18%;")
 			    div class = "pending-class"
 				 div(id="projectspendingEmail" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 		
-		 div class="tabs-panel" id="adhoc_pm"
-		  .(class="grid-x white-background")
-			 div(id="dynamic_adhoc_update")
-				== render partial: 'adhoc_pm_form'
+		div class="tabs-panel" id="adhoc_pm"
+		  	.(class="grid-x white-background")
+			 	div(id="dynamic_adhoc_update")
+					== render partial: 'adhoc_pm_form'
 
 
-	     div class="tabs-panel" id="users_on_project"
-		  .(class="grid-x white-background")
-			 div(id="dynamic_user_update")
-				== render partial: 'add_remove_users'
+	    div class="tabs-panel" id="users_on_project"
+		  	.(class="grid-x white-background")
+			 	div(id="dynamic_user_update")
+					== render partial: 'add_remove_users'

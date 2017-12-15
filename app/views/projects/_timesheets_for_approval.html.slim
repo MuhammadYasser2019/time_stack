@@ -34,7 +34,7 @@
 					        	= at.end_date.strftime('%Y-%m-%d')
 					      	td
 					      		= hidden_field_tag "project_id_#{i}", p.id
-					        	= button_tag TimeEntry.where(week_id: at.id, project_id: p.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {reveal_id: "showHours"}
+					        	= button_tag TimeEntry.where(week_id: at.id, project_id: p.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {toggle: "showHours", target: "#showHours"}
 
 					      	td = link_to "Approve","/projects/#{p.id}/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
 					      	/td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
@@ -45,3 +45,5 @@
 					      	td
 					        	= text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
 					    - i +=1	
+			    div class = "approval-class"
+				 div(id="showHours" class="reveal" aria-hidden="true" role="dialog" data-reveal)

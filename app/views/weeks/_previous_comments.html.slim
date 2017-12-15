@@ -15,5 +15,5 @@ div class="add_comments"
             = radio_button_tag("activity_log",t.id, true, class: "radio_input")
 
     = submit_tag "ADD" , :id=> "add_button" , :class=> "add_button_class"
-  a class="close-reveal-modal" aria-label="Close" 
-        | &#215;
+  button.close-button aria-label=("Close modal") data-close="" type="button" 
+    span aria-hidden="true"  &times;
