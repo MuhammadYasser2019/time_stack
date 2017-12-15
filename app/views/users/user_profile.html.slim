@@ -1,6 +1,6 @@
 div.report
 	h4 User Details
-	div 
+	div.grid-y 
 		p <b>First Name:</b> #{@user.first_name} <b>Last Name:</b> #{@user.last_name} 
 		-if !@user.customer_id.nil?
 			p <b>User Employer:</b> #{Customer.find(@user.customer_id).name}
