@@ -3740,7 +3740,7 @@ select {
   width: 0;
   height: 0;
   border: inset 6px;
-  content: '';
+  //content: '';
   border-bottom-width: 0;
   border-top-style: solid;
   border-color: #1779ba transparent transparent;
@@ -3818,7 +3818,7 @@ select {
     width: 0;
     height: 0;
     border: inset 6px;
-    content: '';
+    //content: '';
     border-bottom-width: 0;
     border-top-style: solid;
     border-color: #1779ba transparent transparent;
