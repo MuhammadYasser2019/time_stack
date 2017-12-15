@@ -4,7 +4,7 @@
 - elsif @projects.present?
   h1 #{@project.name}
 ul(class="tabs" data-tabs id="projects-tab" style="margin: 0 0 0 18%;")
-  - if !(@adhoc && user_have_adhoc_permission(current_user))
+  	- if !(@adhoc && user_have_adhoc_permission(current_user))
     - unless current_page?(action: 'new')
      li class="tabs-title is-active"
   	   a aria-selected="true" href="#information" Project Information
@@ -57,6 +57,8 @@ ul(class="tabs" data-tabs id="projects-tab" style="margin: 0 0 0 18%;")
 								= button_tag "Add Comment to Reject", class: "add_comment secondary tiny", id: "add_comment_#{i}", type: "button"
 							td
 								= text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
+				div class = "approval-class"
+				 div(id="showHours" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 
 	- elsif @projects.present?
 		div class="tabs-panel is-active" id="information"
@@ -95,8 +97,6 @@ ul(class="tabs" data-tabs id="projects-tab" style="margin: 0 0 0 18%;")
 							th
 								= select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
 
-				div class = "approval-class"
-				 div(id="showHours" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 				.actions = f.submit
 		div class="tabs-panel" id="holidays"
 			- unless current_page?(action: 'new')
@@ -136,13 +136,13 @@ ul(class="tabs" data-tabs id="projects-tab" style="margin: 0 0 0 18%;")
 							- if user.invitation_accepted_at.nil?
 							  tr
 							    td
-							      = link_to user.email, "#", id: "pending_email_#{user.id}", class: "tiny secondary pending-email", type: "link", data: {reveal_id: "projectspendingEmail"}
+							      = link_to user.email, "javascript:void()", id: "pending_email_#{user.id}", class: "tiny secondary pending-email", type: "link", data: {toggle: "projectspendingEmail", target: "#projectspendingEmail"}
 							    td
 							      = user.invitation_sent_at
 							    td
 							      = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 			    div class = "pending-class"
-				 div(id="projectspendingEmail" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
+				 div(id="projectspendingEmail" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 		
 		div class="tabs-panel" id="adhoc_pm"
 		  	.(class="grid-x white-background")

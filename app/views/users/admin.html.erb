@@ -1,11 +1,11 @@
 
-<ul class="tabs center" data-tab style="margin: 0 0 0 30%;">
-  <li class="tabs-title is-active"><a href="#user_permissions" aria-selected="true">User Permissions</a></li>
-  <li class="tabs-title"><a href="#holidays">Holidays</a></li>
-  <li class="tabs-title"><a href="#panel3">Report Logo</a></li>
-  <li class="tabs-title"><a href="#panel4">Tab 4</a></li>
+<ul class="tabs" data-tabs id="admin-tab" style="margin: 0 0 0 30%;">
+  <li class="tabs-title is-active"><a aria-selected="true" href="#user_permissions">User Permissions</a></li>
+  <li class="tabs-title"><a data-tabs-target ="holidays" href="#holidays">Holidays</a></li>
+  <li class="tabs-title"><a data-tabs-target ="panel3" href="#panel3">Report Logo</a></li>
+  <li class="tabs-title"><a data-tabs-target ="panel4" href="#panel4">Tab 4</a></li>
  </ul>
-<div class="tabs-content">
+<div class="tabs-content" data-tabs-content ="admin-tab">
 	<div class="tabs-panel is-active" id="user_permissions">
 	  <%= form_tag users_path, method: :update do %>
 		<table>
@@ -94,13 +94,13 @@
 			<h1 class="text-center">Holidays Setup</h1>
 			<% if @holidays.any? %>
 			<div class="grid-x">
-				<h4 class="small-4 columns text-center underline" style="text-decoration:underline; margin: 5px; margin-left: 20%;">Name</h4>
-				<h4 class="small-4 columns text-center underline" style="text-decoration:underline; margin: 5px;">Date</h4>
-				<h4 class="small-4 columns text-center"></h4>
+				<h4 class="small-4 cell text-center underline" style="text-decoration:underline; margin: 5px; margin-left: 20%;">Name</h4>
+				<h4 class="small-4 cell text-center underline" style="text-decoration:underline; margin: 5px;">Date</h4>
+				<h4 class="small-4 cell text-center"></h4>
 			</div>
 				<% @holidays.each do |h| %>
-					<div class="small-4 columns text-center" style="margin-left:15%;"><%= h.name %></div>
-					<div class="small-4 columns text-center"><%= h.date.strftime("%m-%d-%y") %></div>
+					<div class="small-4 cell text-center" style="margin-left:15%;"><%= h.name %></div>
+					<div class="small-4 cell text-center"><%= h.date.strftime("%m-%d-%y") %></div>
 					<div class="button small" style="margin-left: 20%;"><%= link_to "Delete Holiday", h, method: :delete, data: { confirm: 'Are you sure?' }, style: "color:#842929" %></div>
 				<% end %>
 			<% else %>
@@ -110,7 +110,7 @@
 			<%= link_to "Create Global Holiday", new_holiday_path, class: "button small", style: "margin-top:30px; margin-left: 20%;"%>
 		</div>
 	</div>
-	<div class="report-log-tab content"  id="panel3">
+	<div class="report-log-tab tabs-panel"  id="panel3">
 	<h1>Create Report Logo</h1>
 	<%= form_tag report_logos_path, :multipart => true, method: :post do%>
 	<table>

@@ -167,13 +167,13 @@ div.tabs-content data-tabs-content="customer-tabs"
 			    - if user.invitation_accepted_at.nil?
 			      tr
 			        td
-			          = link_to user.email, "#", id: "pending_email_#{user.id}", class: "tiny secondary customers-pending-email", type: "link", data: {reveal_id: "customersPendingEmail"}
+			          = link_to user.email, "javascript:void()", id: "pending_email_#{user.id}", class: "tiny secondary customers-pending-email", type: "link", data: {toggle: "customersPendingEmail", target: "#customersPendingEmail"}
 			        td
 			          = user.invitation_sent_at
 			        td
 			          = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 		  div class = "customerpending-class"
-			div(id="customersPendingEmail" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
+			div(id="customersPendingEmail" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 
   div class="tabs-panel" id="adhoc_pm"
 			 div(id="dynamic_adhoc_update")

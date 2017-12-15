@@ -15,5 +15,5 @@ table
       = EmploymentType.find(@cuser.employment_type).name if @cuser.employment_type
     td
       = @project.name
-  a class="close-reveal-modal" aria-label="Close"
-    | &#215;
+button.close-button aria-label=("Close modal") data-close="" type="button" 
+  span aria-hidden="true"  &times;
