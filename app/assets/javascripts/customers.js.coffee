@@ -143,6 +143,12 @@ jQuery ($) ->
     $.get '/add_pm_role',
       user_id: user_id,
   )
+  customer_name = -> 
+    console.log("checking for customer_name")
+    c_name =  $("#customer_id").attr("class")
+    console.log("name is " + c_name)
+    c = "#{c_name} - Time Tracking System"
+    return c
 
   $(document).on("click", ".assign_proxy_role", ->
     console.log("check is clicked" +$(this).val())
@@ -155,8 +161,16 @@ jQuery ($) ->
   $('#show_reports').DataTable({
     dom: 'lBfrtip',
     "retrieve": true,
-    buttons: [ 'excel', 'pdf']
-  
+    buttons: [
+      {
+        extend: 'excel',
+        title: customer_name,
+      },
+      {
+        extend: 'pdf',
+        title: customer_name
+      }
+    ]
   })
 
 
