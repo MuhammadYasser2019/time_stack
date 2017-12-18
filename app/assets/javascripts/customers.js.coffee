@@ -153,7 +153,7 @@ jQuery ($) ->
   )
 
   $('#show_reports').DataTable({
-    dom: 'Bfrtip',
+    dom: 'lBfrtip',
     "retrieve": true,
     buttons: [ 'excel', 'pdf']
   
