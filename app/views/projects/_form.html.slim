@@ -90,8 +90,7 @@ div.tabs-content data-tabs-content="projects-tab"
 				table 
 					thead
 						tr
-							th
-								h1  Proxy Users
+							th style="text-align: center;font-size: 20px;" Proxy Users
 					tbody
 						tr
 							th
@@ -105,7 +104,6 @@ div.tabs-content data-tabs-content="projects-tab"
 						== render partial: "holiday_exceptions_form"
 
 		div class="tabs-panel" id="user_invitation"	 
-		    .(class="grid-x white-background")
 				h1.left_row Invite Users
 				table class="left-row"
 					thead
@@ -113,12 +111,13 @@ div.tabs-content data-tabs-content="projects-tab"
 						tr
 							th
 							  = simple_form_for(User.new, url: user_invitation_path, html: {class: 'form-inline'}) do |f|
-							    = f.input :email, placeholder: 'Email', label: "Email", class: "invitation_email"
+							  	= f.label :body, label: 'Email', :style=>"text-align: left;"
+							    = f.input :email, placeholder: 'Email'
 							    = f.hidden_field :project_id, value: @project_id
-							    =f.label :body, label: 'Select Start Date' 
+							    =f.label :body, label: 'Select Start Date', :style=>"text-align: left;" 
 							    = f.hidden_field :invited_by_id, value:  @current_user_id
 							    = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
-							    = f.label :body, label: 'Employment Type' 
+							    = f.label :body, label: 'Employment Type', :style=>"text-align: left;" 
 							    = f.select :employment_type, options_from_collection_for_select(EmploymentType.all, :id, :name),include_blank: "Select Employment Type"
 							    .actions = f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'
 
@@ -151,6 +150,5 @@ div.tabs-content data-tabs-content="projects-tab"
 
 
 	    div class="tabs-panel" id="users_on_project"
-		  	.(class="grid-x white-background")
 			 	div(id="dynamic_user_update")
 					== render partial: 'add_remove_users'
