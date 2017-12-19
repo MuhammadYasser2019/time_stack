@@ -26,14 +26,6 @@ table id="show_reports" class="display" width="100%" cellspacing="0"
         th #{d}
       end
       th Total
-  tbody
-    - @consultant_hash.keys.each do |c|
-      tr
-        th Consultant Name
-        - @dates_array.each do |d|
-          th #{d}
-        end
-        th Total
     tbody
       - @consultant_hash.keys.each do |c|
         tr
@@ -48,5 +40,3 @@ table id="show_reports" class="display" width="100%" cellspacing="0"
           td = @consultant_hash[c][:total_hours]
       end
   br
-- else
-  h1 You are not allowed to access this page.
