@@ -17,7 +17,7 @@ ul(class="tabs" data-tabs id="customer-tabs" style="margin: 0 64px 0 5%;")
   li class="tabs-title"
   	 a data-tabs-target="assign_pm" href="#assign_pm" Projects
 
-div.tabs-content data-tabs-content="customer-tabs"
+div.tabs-content.white-background data-tabs-content="customer-tabs"
   div class="tabs-panel is-active" id="information"
     h1 Editing customer
 	= form_for @customer, remote: true do |f|
@@ -54,19 +54,20 @@ div.tabs-content data-tabs-content="customer-tabs"
 	  h3.text-center Holidays Setup
 	  - if @holidays.any?
 	   .grid-x
-	    h4.large-4.columns.text-center.underline.no-background
-	    h4.large-4.columns.text-center.underline.no-background style="text-decoration:underline;"  Name
-	    h4.large-4.columns.text-center.underline.no-background style="text-decoration:underline;"  Date
+	    h4.large-3.cell.text-center.underline.no-background
+	    h4.large-3.cell.text-center.underline.no-background style="text-decoration:underline;"  Name
+	    h4.large-3.cell.text-center.underline.no-background style="text-decoration:underline;"  Date
+	    h4.large-3.cell.text-center.underline.no-background
 	   = form_for @customer do |f|
 		    = f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name) do |h|
-		     .grid-x
-  				.large-4.columns.text-center = h.check_box
-		  		.large-4.columns.text-center = h.object.name
-		  		.large-4.columns.text-center = h.object.date.strftime("%m-%d-%y")
+		      .grid-x
+  			    .large-3.cell.text-center = h.check_box
+		  		.large-3.cell.text-center = h.object.name
+		  		.large-3.cell.text-center = h.object.date.strftime("%m-%d-%y")
 		  		- if h.object.global != true
-		  		  .small-3.columns.text-center = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
+		  		  .large-3.cell.text-center = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
 	        	- else
-	        	  .small-3.columns.text-center
+	        	  .large-4.cell.text-center
 	        .actions = f.submit "Submit"
 	  - else 
 	    h3.text-center No Holidays created

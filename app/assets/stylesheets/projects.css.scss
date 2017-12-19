@@ -35,6 +35,7 @@
 .left-row h1 {
 	max-width: 77%;
 	#margin-left: 45px;
+	width:67%;
 }
 
 .project_table{
@@ -42,7 +43,7 @@
 }
 
 .left-row table {
-	margin-left: 10%;
+	margin-left: 6%;
 }
 
 .right-row {
@@ -117,7 +118,8 @@
 
 .left-row-adhoc h1 {
 	max-width: 100%;
-	margin-left: 13px;
+	margin-left: 35px;
+	width:90%;
 	
 }
 
@@ -140,7 +142,8 @@
 
 .add_remove_left_row h1{
 	max-width: 100%;
-	margin-left: 13px;
+	margin-left: 42px;
+	width:77%;
 }
 
 
@@ -155,6 +158,7 @@
 	margin-left: 25px;
 	max-width: 70%;
 	margin-top: 0px;
+	width:90%;
 }
 
 .right-row-adhoc table {
@@ -213,6 +217,7 @@
 
 .add_remove_right_row h1 {
 	max-width: 100%;
+	width:90%;
 }
 
 .add_user_center {
@@ -270,6 +275,10 @@
 	border-left: 10px solid transparent;
 	border-bottom: 10px solid transparent;
 	border-right: 10px solid #ffd079 !important;
+}
+
+.edit_customer .grid-x{
+	margin-left:15%
 }
 
 
