@@ -15,6 +15,19 @@ class UsersController < ApplicationController
     @invited_users = User.where("invited_by_id = ?", current_user.id)
     @all_report_logos = ReportLogo.all
     @users_with_logo= User.where("report_logo IS NOT ? ", nil)
+    @features = Feature.all  
+
+  end
+
+  def update_front_page_content
+
+    @feature = Feature.find params[:feature_id]
+    @feature.feature_data = params[:feature_content][:content]
+    @feature.save
+    respond_to do |format|
+      format.js
+
+    end
 
   end
   
