@@ -1,7 +1,7 @@
 div.grid-x style="width:100%;"
-  h1 style="padding:10px;background:#5296ce;" #{@feature.feature_type}
+  h1 style="padding:10px;background:#5296ce;width:50%;" #{@feature.feature_type}
   div.main_div style="font-size:20px;border: 2px solid #5296ce;width:80%;margin-left:100px;height:400px;"
-    == @feature.feature_data.html_safe
+    == @feature.feature_data.html_safe if @feature.feature_data.present?
 
 .front-row.full-width.footer style=("height:325px;margin-bottom: 0 !important;") 
   div style=("background:black;color: white;height:100px;font-size: 30px;text-align: center;") 
