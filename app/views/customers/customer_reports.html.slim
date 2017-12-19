@@ -17,7 +17,7 @@ table
       td = date_field_tag 'proj_report_start_date', params[:proj_report_start_date], {required: "required", style: 'margin: 0;'}
       = hidden_field_tag 'id', @customer_id
       td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required", style: 'margin: 0;'}
-      td = button_tag "Show Report"
+      td = button_tag "Show Report", class:"orange-button"
 table id="show_reports" class="display" width="100%" cellspacing="0"
   thead
     tr
