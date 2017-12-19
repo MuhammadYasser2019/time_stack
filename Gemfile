@@ -74,6 +74,7 @@ gem 'fastimage'
 gem 'axlsx_styler'
 
 gem "omniauth-google-oauth2"
+gem 'ckeditor'
 
 group :development do
   gem 'better_errors'
@@ -90,6 +91,7 @@ group :development do
   gem 'rb-fsevent', :require=>false
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
+  gem 'byebug'
   # gem 'binding_of_caller'
 
 
