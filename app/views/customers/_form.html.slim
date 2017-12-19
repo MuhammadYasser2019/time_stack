@@ -63,7 +63,7 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
 		      .grid-x
   			    .large-3.cell.text-center = h.check_box
 		  		.large-3.cell.text-center = h.object.name
-		  		.large-3.cell.text-center = h.object.date.strftime("%m-%d-%y")
+		  		.large-5.cell.text-center = h.object.date.strftime("%m-%d-%y")
 		  		- if h.object.global != true
 		  		  .large-3.cell.text-center = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
 	        	- else
