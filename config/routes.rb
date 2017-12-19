@@ -61,6 +61,7 @@ Rails.application.routes.draw do
   get '/projects/:id/user_time_report' => 'projects#user_time_report'
   match 'user_account', :to => "users#user_account",  via: [:get, :post]
   match 'admin', :to => "users#admin", via: [:get, :post]
+  post 'update_front_page_content' => "users#update_front_page_content"
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
   get 'remove_user_from_customer' => "customers#remove_user_from_customer"
@@ -104,6 +105,9 @@ Rails.application.routes.draw do
   post "assign_pm/:id" => "customers#assign_pm", as: :assign_pm
   get "/clear_timesheet/:id" => "weeks#clear_timesheet"
   post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments
+
+
+  #mount Ckeditor::Engine => '/ckeditor'
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

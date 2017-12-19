@@ -2,7 +2,7 @@
   <li class="tabs-title is-active"><a aria-selected="true" href="#user_permissions">User Permissions</a></li>
   <li class="tabs-title"><a data-tabs-target ="holidays" href="#holidays">Holidays</a></li>
   <li class="tabs-title"><a data-tabs-target ="panel3" href="#panel3">Report Logo</a></li>
-  <li class="tabs-title"><a data-tabs-target ="panel4" href="#panel4">Tab 4</a></li>
+  <li class="tabs-title"><a data-tabs-target ="panel4" href="#panel4">Manage Content</a></li>
  </ul>
 <div class="tabs-content" data-tabs-content ="admin-tab">
 	<div class="tabs-panel is-active" id="user_permissions">
@@ -181,10 +181,29 @@
 				<% end %>
 			</tbody>
 		</table>
-
-
 	<%= link_to "Back", root_path, class: "button large"%>
 	</div>
-	<div class="tabs-panel  white-background" id="panel4">
+	<div class="tabs-panel white-background" id="panel4">
+		<h1>Manage Login Page Content</h1>
+		<%= form_tag update_front_page_content_path, id: "front_page_content", method: :post, remote: true %>
+			<table>
+				
+				<tr>
+					<th>Feature Type</th>
+					<td><%= select_tag :feature_id, options_from_collection_for_select(@features, "id", "feature_type"), {required: "required", :include_blank => true}  %></td>
+				</tr>
+
+
+				<tr>
+					<th>Content</th>
+					<td><%= cktext_area :feature_content, :content, cols: 40 %></td>
+
+				</tr>
+			</table>
+						
+					
+			<div class="actions"><%= submit_tag 'Update Content' %></div>
+
+
 	</div>
 </div>
