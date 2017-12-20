@@ -108,7 +108,7 @@ div.tabs-content.white-background data-tabs-content="projects-tab"
 							th
 							  = simple_form_for(User.new, url: user_invitation_path, html: {class: 'form-inline'}) do |f|
 							  	= f.label :body, label: 'Email', :style=>"text-align: left;"
-							    = f.input :email, placeholder: 'Email'
+							    = f.input_field :email, placeholder: 'Email'
 							    = f.hidden_field :project_id, value: @project_id
 							    =f.label :body, label: 'Select Start Date', :style=>"text-align: left;" 
 							    = f.hidden_field :invited_by_id, value:  @current_user_id
