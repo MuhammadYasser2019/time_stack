@@ -145,9 +145,15 @@ jQuery ($) ->
   )
   customer_name = -> 
     console.log("checking for customer_name")
-    c_name =  $("#customer_id").attr("class")
+    c_name =  $("#customer_id").attr("value")
+    p_name = $("#project_name").attr("value")
     console.log("name is " + c_name)
-    c = "#{c_name} - Time Tracking System"
+    console.log("Project name is " + p_name)
+    if p_name?
+      console.log("Project is undefined")
+      c = "#{c_name} - Time Tracking System - #{p_name}"
+    else
+      c = "#{c_name} - Time Tracking System" 
     return c
 
   $(document).on("click", ".assign_proxy_role", ->
