@@ -168,7 +168,9 @@ jQuery ($) ->
       },
       {
         extend: 'pdf',
-        title: customer_name
+        title: customer_name,
+        orientation:'landscape',
+        pageSize: 'TABLOID'
       }
     ]
   })
