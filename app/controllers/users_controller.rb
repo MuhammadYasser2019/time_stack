@@ -18,18 +18,6 @@ class UsersController < ApplicationController
     @features = Feature.all  
 
   end
-
-  def update_front_page_content
-
-    @feature = Feature.find params[:feature_id]
-    @feature.feature_data = params[:feature_content][:content]
-    @feature.save
-    respond_to do |format|
-      format.js
-
-    end
-
-  end
   
   def new
     @user = User.find(params[:id])
