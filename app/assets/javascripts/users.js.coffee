@@ -25,3 +25,23 @@ jQuery ($) ->
         console.log "data is "+item.code + "  "  + item.description
         $('#'+field_id).append($("<option></option>").attr("value",item.id).text(item.description))
       #task_id = $('#'+field_id+' :selected').val()
+
+  $("#feature_id").change ->
+    console.log("You changed the feature "+ $(this).attr('id') + "the value is " + $(this).val())
+    content_id = "cke_1_contents"
+    build_task(content_id, $(this).val())
+
+  build_task = (content_id, feature_id) ->
+    $('#'+content_id).find('val').empty()
+    console.log "Inside comment_id  " +  content_id +  "  " + feature_id
+    my_url = '/available_data/'+feature_id
+    $.ajax my_url,
+    data: {}
+    type: 'GET'
+    dataType: 'json'
+    success: (data, textStatus, jqXHR) ->
+      $my_data = data
+      for item in $my_data
+        console.log "data is "+ item.feature_type
+        $('#feature_content_content').html(item.feature_data)
+      
