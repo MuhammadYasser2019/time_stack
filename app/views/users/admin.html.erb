@@ -185,25 +185,18 @@
 	</div>
 	<div class="tabs-panel white-background" id="panel4">
 		<h1>Manage Login Page Content</h1>
+		<span class="success_message" style="color: green;"></span>
 		<%= form_tag update_front_page_content_path, id: "front_page_content", method: :post, remote: true %>
-			<table>
-				
+			<table>			
 				<tr>
 					<th>Feature Type</th>
 					<td><%= select_tag :feature_id, options_from_collection_for_select(@features, "id", "feature_type"), {required: "required", :include_blank => true}  %></td>
 				</tr>
-
-
 				<tr>
 					<th>Content</th>
 					<td><%= cktext_area :feature_content, :content, cols: 40 %></td>
-
 				</tr>
 			</table>
-						
-					
-			<div class="actions"><%= submit_tag 'Update Content' %></div>
-
-
+		<div class="actions"><%= submit_tag 'Update Content' %></div>
 	</div>
 </div>

@@ -61,7 +61,7 @@ Rails.application.routes.draw do
   get '/projects/:id/user_time_report' => 'projects#user_time_report'
   match 'user_account', :to => "users#user_account",  via: [:get, :post]
   match 'admin', :to => "users#admin", via: [:get, :post]
-  post 'update_front_page_content' => "users#update_front_page_content"
+  post 'update_front_page_content' => "features#update_front_page_content"
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
   get 'remove_user_from_customer' => "customers#remove_user_from_customer"
@@ -82,6 +82,7 @@ Rails.application.routes.draw do
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
   get 'available_tasks/:id' => 'tasks#available_tasks'
+  get 'available_data/:id' => 'features#available_data'
   get 'available_users/:id' => 'customers#available_users'
   
   get 'check_holidays/:id' => "holidays#check_holidays"
