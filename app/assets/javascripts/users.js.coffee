@@ -28,6 +28,7 @@ jQuery ($) ->
 
   $("#feature_id").change ->
     console.log("You changed the feature "+ $(this).attr('id') + "the value is " + $(this).val())
+    $('.success_message').empty()
     content_id = "cke_1_contents"
     build_task(content_id, $(this).val())
 
@@ -43,5 +44,4 @@ jQuery ($) ->
       $my_data = data
       for item in $my_data
         console.log "data is "+ item.feature_type
-        $('#feature_content_content').html(item.feature_data)
-      
+        CKEDITOR.instances.feature_content_content.setData( item.feature_data)
