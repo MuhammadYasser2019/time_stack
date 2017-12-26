@@ -44,4 +44,9 @@ jQuery ($) ->
       $my_data = data
       for item in $my_data
         console.log "data is "+ item.feature_type
-        CKEDITOR.instances.feature_content_content.setData( item.feature_data)
+        if (item.feature_data)
+          CKEDITOR.instances.feature_content_content.setData( item.feature_data)
+        else
+          CKEDITOR.instances.feature_content_content.setData('')
+        
+
