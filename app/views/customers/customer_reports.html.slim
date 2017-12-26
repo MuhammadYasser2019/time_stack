@@ -1,5 +1,5 @@
-= hidden_field_tag "#{Customer.find(@customer_id).name}", "1"
-h1#customer_id{class = "#{Customer.find(@customer_id).name}"} Reports for Customer #{Customer.find(@customer_id).name}
+= hidden_field_tag :customer_id, "#{Customer.find(@customer_id).name}"
+h1#customer_id{class = "#{Customer.find(@customer_id).name}"} Reports for Customer 
 = form_tag "/customers/#{params[:id]}/customer_reports", method: :get
 table 
   thead
