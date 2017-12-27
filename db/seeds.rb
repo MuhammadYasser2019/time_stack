@@ -58,6 +58,9 @@ end
 Feature.find_or_initialize_by(id: 4, feature_type: "Flexible Reports") do |f|
   f.save!
 end
+Feature.find_or_initialize_by(id: 5, feature_type: "Optional Payroll System Integration") do |f|
+  f.save!
+end
 Feature.find_or_initialize_by(id: 6, feature_type: "Resourse Stack") do |f|
   f.save!
 end
@@ -70,6 +73,3 @@ end
 Feature.find_or_initialize_by(id: 9, feature_type: "Company Overview") do |f|
   f.save!
 end
-
-
-
