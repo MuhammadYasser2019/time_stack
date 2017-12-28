@@ -342,7 +342,7 @@ input[type="submit"]{
     height: 32px;
     box-shadow: none;
     border-radius: 50%;
-    background:#fff url("search_icon.png") no-repeat 9px 7px;
+    background: #fff image-url("search_icon.png") no-repeat 9px 7px;
     background-size: 22px;
 }
 .header .top-bar-right .search-box input:focus { width:200px; border-radius: 10px;background-position: 169px 7px; }
