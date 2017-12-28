@@ -2,17 +2,17 @@
   <div class="top-bar" style="background:white;">
     <div class="top-bar-left" style="width:30% !important;margin-left: 20px;">
 	    <% if current_user.nil?%>
-		    <a href="/", class ="header_logo" ><%= image_tag "/assets/timestack", class: 'logo' %></a>
+		    <a href="/", class ="header_logo" ><%= image_tag "timestack.png", class: 'logo' %></a>
 		<% else %> 
 		    <% if !current_user.customer_id.nil? %>
 			  <% customer = Customer.find(current_user.customer_id)%>
 			  <% if !customer.logo.blank?%>
 			    <a href="/", class="header_logo"><%= image_tag "#{customer.logo}", class: 'logo' %></a>
 			  <% else %>
-			    <a href="/", class="header_logo"><%= image_tag "/assets/timestack", class: 'logo' %></a>
+			    <a href="/", class="header_logo"><%= image_tag "timestack.png", class: 'logo' %></a>
 			  <% end %>
 			<% else %>
-			  <a href="/", class="header_logo"><%= image_tag "/assets/timestack", class: 'logo' %></a>
+			  <a href="/", class="header_logo"><%= image_tag "timestack.png", class: 'logo' %></a>
 		    <% end %>
 		<% end %>
 	</div>
