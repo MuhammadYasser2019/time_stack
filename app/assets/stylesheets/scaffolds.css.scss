@@ -187,6 +187,12 @@ div {
   }
 }
 
+@media only screen and (min-width: 1500px){
+  .banner-text {
+    left: 30%;
+  }
+}
+
 .image-banner-text{
   font-size:30px;
   color:white;
