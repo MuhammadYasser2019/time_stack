@@ -41,7 +41,7 @@ td(class="hour")
     strong(class="thisisit") Out:
     = f.time_select(:time_out, ampm: true,ignore_date: true, include_blank: true,:default => {:hour => '', :minute => ''})
 td.activity_log
- = link_to image_tag("/assets/plus.jpg", :width => 15, :height => 15), "javascript:void()", id: "previous_comments_#{@week_user.id}_#{@count}", class: "previous_commment_icon", type: "link", data: {toggle: "userPreviousComments", target: "#userPreviousComments"}
+ = link_to image_tag("plus.jpg", :width => 15, :height => 15), "javascript:void()", id: "previous_comments_#{@week_user.id}_#{@count}", class: "previous_commment_icon", type: "link", data: {toggle: "userPreviousComments", target: "#userPreviousComments"}
  - if f.object.sick || f.object.personal_day || f.object.week.status_id == 2 || f.object.week.status_id == 3
   = f.object.activity_log 
  - else
