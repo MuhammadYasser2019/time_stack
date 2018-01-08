@@ -4881,9 +4881,10 @@ table {
   table tbody th,
   table tbody td {
     padding: 0.5rem 0.625rem 0.625rem; }
-  table tbody tr:nth-child(even) {
+  /*table tbody tr:nth-child(even) {
     border-bottom: 0;
     background-color: #f1f1f1; }
+  */
   table.unstriped tbody {
     background-color: #fefefe; }
     table.unstriped tbody tr {
