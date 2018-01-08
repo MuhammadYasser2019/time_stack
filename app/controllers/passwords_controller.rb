@@ -6,7 +6,6 @@ class PasswordsController < Devise::PasswordsController
 
   # GET /resource/password/new
   def new
-  	debugger
     self.resource = resource_class.new
   end
 
