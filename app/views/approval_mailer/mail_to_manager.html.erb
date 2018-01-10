@@ -2,7 +2,6 @@
 <% usr = User.find_by_email(@sender) %>
 <%= "#{mgr.first_name}, #{mgr.last_name}" %>,<br/>
 <%= usr.first_name %> has submitted timesheet for Week of <%= @week.start_date.strftime('%Y-%m-%d') %> to <%= @week.end_date.strftime('%Y-%m-%d') %><br/>
-<%= link_to mgr.name, "https://timecards.resourcestack.com/" %>
 <table border='2'>
 <tr><th>Date of Activity</th><th>Project</th><th>Hours</th><th>Description</th></tr>
 <% @week.time_entries.each do |t| %>
@@ -14,5 +13,5 @@
   </tr>
 <% end %>
 </table>
-
-<%= link_to mgr.name, "https://timecards.resourcestack.com/" %>
+<br>
+<%= link_to 'CLICK HERE -> To Approve/Reject Timesheet', root_url %>
