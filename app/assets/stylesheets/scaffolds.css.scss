@@ -187,6 +187,12 @@ div {
   }
 }
 
+@media only screen and (min-width: 1500px){
+  .banner-text {
+    left: 30%;
+  }
+}
+
 .image-banner-text{
   font-size:30px;
   color:white;
@@ -277,11 +283,17 @@ div {
   width:90%;
   height:400px;
   float:left;
-  margin-left:3%;
 }
 .sub-heading{
     float:left;
     padding-top:33px;
     width:87%;
     margin-left:7%;
+}
+.main_div{
+  padding:5px;
+  font-size:20px;
+  width:80%;
+  margin-left:100px;
+  min-height:100px;
 }

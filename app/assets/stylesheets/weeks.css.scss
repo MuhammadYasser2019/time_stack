@@ -29,7 +29,7 @@ h1,h2,h3,h4,h5{
 
 
 .top-bar{
-  width:100%
+  width:100%;
   
 }
 
@@ -324,9 +324,9 @@ input[type="submit"]{
 }
 
 .previous_commment_icon{
-  margin-left: 100%
+  margin-left: 100%;
 }
-/*  monu chauhan */
+
 .header .top-bar-right .menu.medium-horizontal {
     float: left;
     background: transparent;
@@ -342,7 +342,12 @@ input[type="submit"]{
     height: 32px;
     box-shadow: none;
     border-radius: 50%;
-    background:#fff url("/assets/search_icon.png") no-repeat 9px 7px;
+    background: #fff image-url("search_icon.png") no-repeat 9px 7px;
     background-size: 22px;
 }
-.header .top-bar-right .search-box input:focus { width:200px; border-radius: 10px;background-position: 169px 7px; }
+
+.header .top-bar-right .search-box input:focus { 
+  width:200px; 
+  border-radius: 10px;
+  background-position: 169px 7px; 
+}
