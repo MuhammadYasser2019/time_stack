@@ -11,10 +11,8 @@ class ApprovalMailer < ActionMailer::Base
       end
       @week = week
       @sender = user.email
-  
       mail(to: @manager , subject:"Time sheet submitted for approval" , from: @sender )
     end
-
   end
 
   def mail_to_user(week, user)

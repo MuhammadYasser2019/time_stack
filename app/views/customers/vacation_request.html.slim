@@ -20,7 +20,7 @@ div.report
         td = check_box_tag "sick_leave", params[:sick_leave]
         td = check_box_tag "personal_leave", params[:personal_leave]
         td = text_area_tag "vacation_comment",nil, {required: "required"}
-        td = button_tag "Request Vacation"
+        td = button_tag "Request Vacation", class: "button primary"
   div class = "vacation_resend_msg"
   h1 Your Vacation Requests
   table

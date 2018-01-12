@@ -35,6 +35,7 @@
 .left-row h1 {
 	max-width: 77%;
 	#margin-left: 45px;
+	width:67%;
 }
 
 .project_table{
@@ -42,27 +43,28 @@
 }
 
 .left-row table {
-	margin-left: 0px;
+	margin-left: 6%;
 }
 
 .right-row {
 	float: right;
 	#margin: 30px !important;
 	width: 40%;
+	margin-left:20%;
 }
 
 .right-row, h1 {
-	margin-top: 20px;
+
 }
 .right-row h1 {
-	#margin-left: 80px;
-	max-width: 100%;
+	width: 100%;
 	margin-top: 0px;
+	float: right;
+	max-width: 100%;
 }
 
 .right-row table {
-	width: 0%;
-	margin-left: -3px;
+	width: 100%;
 }
 
 .users-left-row {
@@ -113,7 +115,8 @@
 
 .left-row-adhoc h1 {
 	max-width: 100%;
-	margin-left: 13px;
+	margin-left: 35px;
+	width:90%;
 	
 }
 
@@ -136,7 +139,8 @@
 
 .add_remove_left_row h1{
 	max-width: 100%;
-	margin-left: 13px;
+	margin-left: 42px;
+	width:77%;
 }
 
 
@@ -151,6 +155,7 @@
 	margin-left: 25px;
 	max-width: 70%;
 	margin-top: 0px;
+	width:90%;
 }
 
 .right-row-adhoc table {
@@ -209,6 +214,7 @@
 
 .add_remove_right_row h1 {
 	max-width: 100%;
+	width:90%;
 }
 
 .add_user_center {
@@ -268,6 +274,10 @@
 	border-right: 10px solid #ffd079 !important;
 }
 
+.edit_customer .grid-x{
+	margin-left:15%
+}
+
 
 @media only screen and (max-width:1200px){
   .left-row {
@@ -293,8 +303,10 @@
 	}
 	.right-row h1 {
 	#margin-left: 80px;
+	float: left;
 	max-width: 100%;
 	margin-top: 0px;
+	margin-left: 0%;
     }
 
    .right-row table {

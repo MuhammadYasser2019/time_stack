@@ -1,5 +1,5 @@
 .white-background
-	.row
+	.grid-x
 		.left-row
 			h1 Listing customers
 	
@@ -28,11 +28,10 @@
 					      td = radio_button_tag("customer",customer.id, false,class:"select-customer")
 		
 			br
-			.row
-				= link_to(image_tag("/assets/plus.jpg", :width => 50, :height => 50), new_customer_path, title: "Create New Customer")
+				= link_to(image_tag("plus.jpg", :width => 50, :height => 50), new_customer_path, title: "Create New Customer")
                
 	
-		.right-row		
+		.right-row	
 				h1 Enter And Manage Time
 				table
 					thead

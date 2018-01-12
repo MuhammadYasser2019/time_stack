@@ -1,26 +1,25 @@
 - if @adhoc && user_have_adhoc_permission(current_user)
   = hidden_field_tag "adhoc", @adhoc
   h1 #{@adhoc_pm_project.name}
--elsif @projects.present?
+- elsif @projects.present?
   h1 #{@project.name}
-ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
- - if !(@adhoc && user_have_adhoc_permission(current_user))
-  - unless current_page?(action: 'new')
-   li class="tab-title active"
-  	 a href="#information" Project Information
-   li class="tab-title"
-  	 a href="#holidays" Holiday Exceptions
-   li class="tab-title"
-  	 a href="#user_invitation" Invite Users
-   li class="tab-title"
-  	 a href="#adhoc_pm" Assign Adhoc PM
-   li class="tab-title"
-  	 a href="#users_on_project" Users on the Project
-- if @adhoc && user_have_adhoc_permission(current_user)
- div.tabs-content
-	 div class="content active" id="information"
-		.white-background
-	
+ul(class="tabs" data-tabs id="projects-tab" style="margin: 0 15% 0 18%;")
+  	- if !(@adhoc && user_have_adhoc_permission(current_user))
+    - unless current_page?(action: 'new')
+     li class="tabs-title is-active"
+  	   a aria-selected="true" href="#information" Project Information
+     li class="tabs-title"
+  	   a data-tabs-target="holidays" href="#holidays" Holiday Exceptions
+     li class="tabs-title"
+  	   a data-tabs-target="user_invitation" href="#user_invitation" Invite Users
+     li class="tabs-title"
+  	   a data-tabs-target="adhoc_pm" href="#adhoc_pm" Assign Adhoc PM
+     li class="tabs-title"
+  	   a data-tabs-target="users_on_project" href="#users_on_project" Users on the Project
+
+div.tabs-content.white-background data-tabs-content="projects-tab"
+  	- if @adhoc && user_have_adhoc_permission(current_user)
+		div class="tabs-panel is-active" id="information"
 	 		h1 Time Sheets Submitted for Approval
 			table
 				thead
@@ -46,7 +45,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 							td
 								= at.end_date.strftime('%Y-%m-%d')
 							td
-								= button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {reveal_id: "showHours"}
+								= button_tag TimeEntry.where(week_id: at.id, project_id: @project.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {toggle: "showHours", target: "#showHours"}
 
 							td = link_to "Approve","/projects/#{@project.id}/approve/#{at.id}/#{i}", class: "approve-class", type: "button", remote: true
 							/td = link_to "Reject", "/projects/reject/#{at.id}", class: "reject_class", id:"time_reject_#{i}" , remote: true
@@ -56,11 +55,11 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 								= button_tag "Add Comment to Reject", class: "add_comment secondary tiny", id: "add_comment_#{i}", type: "button"
 							td
 								= text_area_tag "comments", at.comments, size: "15x0.5", class: "comment", id: "comment_text_#{i}"
+				div class = "approval-class"
+				 div(id="showHours" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 
-- elsif @projects.present?
-		div.tabs-content
-		 div class="content active" id="information"
-	 
+	- elsif @projects.present?
+		div class="tabs-panel is-active" id="information"
 			div class= "display-text"
 			= form_for @project, remote: true do |f|
 				- if @project.errors.any?
@@ -71,8 +70,7 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 					      li = message
 			
 				= f.hidden_field :customer_id, value: @project.customer_id	
-				.row class="white-background"
-						
+				
 					h1 class="task-center-row" Tasks
 					table class="center-row " border="1" id="tasklist"
 						thead
@@ -89,24 +87,19 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 				table 
 					thead
 						tr
-							th
-								h1  Proxy Users
+							th style="text-align: center;font-size: 20px;" Proxy Users
 					tbody
 						tr
 							th
 								= select_tag("proxy", options_from_collection_for_select(@proxies, "id", "first_name", @project.proxy), include_blank: true, style: "width: 400px;")
 
-				div class = "approval-class"
-				 div(id="showHours" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
 				.actions = f.submit
-		 div class="content" id="holidays"
+		div class="tabs-panel" id="holidays"
 			- unless current_page?(action: 'new')
-				.(class="row white-background")
-					div id ="dynamic_holiday_update"
-						== render partial: "holiday_exceptions_form"
+				div id ="dynamic_holiday_update"
+					== render partial: "holiday_exceptions_form"
 
-		 div class="content" id="user_invitation"	 
-		  .(class="row white-background")
+		div class="tabs-panel" id="user_invitation"	 
 				h1.left_row Invite Users
 				table class="left-row"
 					thead
@@ -114,12 +107,13 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 						tr
 							th
 							  = simple_form_for(User.new, url: user_invitation_path, html: {class: 'form-inline'}) do |f|
-							    = f.input :email, placeholder: 'Email', label: "Email", class: "invitation_email"
+							  	= f.label :body, label: 'Email', :style=>"text-align: left;"
+							    = f.input_field :email, placeholder: 'Email'
 							    = f.hidden_field :project_id, value: @project_id
-							    =f.label :body, label: 'Select Start Date' 
+							    =f.label :body, label: 'Select Start Date', :style=>"text-align: left;" 
 							    = f.hidden_field :invited_by_id, value:  @current_user_id
 							    = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
-							    = f.label :body, label: 'Employment Type' 
+							    = f.label :body, label: 'Employment Type', :style=>"text-align: left;" 
 							    = f.select :employment_type, options_from_collection_for_select(EmploymentType.all, :id, :name),include_blank: "Select Employment Type"
 							    .actions = f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'
 
@@ -137,21 +131,19 @@ ul(class="tabs center" data-tab style="margin: 0 0 0 18%;")
 							- if user.invitation_accepted_at.nil?
 							  tr
 							    td
-							      = link_to user.email, "#", id: "pending_email_#{user.id}", class: "tiny secondary pending-email", type: "link", data: {reveal_id: "projectspendingEmail"}
+							      = link_to user.email, "javascript:void()", id: "pending_email_#{user.id}", class: "tiny secondary pending-email", type: "link", data: {toggle: "projectspendingEmail", target: "#projectspendingEmail"}
 							    td
 							      = user.invitation_sent_at
 							    td
 							      = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 			    div class = "pending-class"
-				 div(id="projectspendingEmail" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
+				 div(id="projectspendingEmail" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 		
-		 div class="content" id="adhoc_pm"
-		  .(class="row white-background")
-			 div(id="dynamic_adhoc_update")
+		div class="tabs-panel" id="adhoc_pm"
+		 	div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 
 
-	     div class="content" id="users_on_project"
-		  .(class="row white-background")
-			 div(id="dynamic_user_update")
+	    div class="tabs-panel" id="users_on_project"
+		 	div(id="dynamic_user_update")
 				== render partial: 'add_remove_users'

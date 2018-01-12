@@ -19,6 +19,5 @@ div class="add_users_to_customers"
 			    	= check_box_tag("shared_customer_id", c.id, true, class: "shared_customer")
 
 
-a class="close-reveal-modal" aria-label="Close"
-		    | &#215;
-
+button.close-button aria-label=("Close modal") data-close="" type="button" 
+  span aria-hidden="true"  &times;

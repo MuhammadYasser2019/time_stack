@@ -18,7 +18,12 @@
  *= require jquery.dataTables.min
  *= require foundation
  *= require normalize
- *= require projects
- *= require time_entries
- *= require weeks
+ *= require customers.css.scss
+ *= require projects.css.scss
+ *= require orange.css.scss
+ *= require blue.css.scss
+ *= require neutral.css.scss
+ *= require time_entries.css.scss
+ *= require weeks.css.scss
+ 
  */

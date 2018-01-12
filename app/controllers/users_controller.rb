@@ -15,6 +15,7 @@ class UsersController < ApplicationController
     @invited_users = User.where("invited_by_id = ?", current_user.id)
     @all_report_logos = ReportLogo.all
     @users_with_logo= User.where("report_logo IS NOT ? ", nil)
+    @features = Feature.all  
 
   end
   

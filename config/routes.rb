@@ -12,7 +12,9 @@ Rails.application.routes.draw do
   resources :employment_types
   resources :customers_holidays
   resources :report_logos
-  devise_for :users, :path => "account", :controllers => { registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
+  resources :features
+  resources :case_studies
+  devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
     match "/users/sign_in", :to => 'devise/sessions#new', via: [:get, :post]
@@ -24,7 +26,11 @@ Rails.application.routes.draw do
   # See how all your routes lay out with "rake routes".
   post '/weeks/:id(.:format)' => 'weeks#update'
   # You can have the root of your site routed with "root"
-  root 'weeks#index'
+  authenticated :user do
+    root to: 'weeks#index', as: :authenticated_root
+  end
+  #root 'weeks#index'
+  root 'static_pages#home'
   get 'weeks/:id/report' => 'weeks#report'
 
   get '/dynamic_project_update' => 'projects#dynamic_project_update'
@@ -55,6 +61,7 @@ Rails.application.routes.draw do
   get '/projects/:id/user_time_report' => 'projects#user_time_report'
   match 'user_account', :to => "users#user_account",  via: [:get, :post]
   match 'admin', :to => "users#admin", via: [:get, :post]
+  post 'update_front_page_content' => "features#update_front_page_content"
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'
   get 'remove_user_from_customer' => "customers#remove_user_from_customer"
@@ -75,6 +82,7 @@ Rails.application.routes.draw do
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
   get 'available_tasks/:id' => 'tasks#available_tasks'
+  get 'available_data/:id' => 'features#available_data'
   get 'available_users/:id' => 'customers#available_users'
   
   get 'check_holidays/:id' => "holidays#check_holidays"
@@ -98,6 +106,9 @@ Rails.application.routes.draw do
   post "assign_pm/:id" => "customers#assign_pm", as: :assign_pm
   get "/clear_timesheet/:id" => "weeks#clear_timesheet"
   post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments
+
+
+  #mount Ckeditor::Engine => '/ckeditor'
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

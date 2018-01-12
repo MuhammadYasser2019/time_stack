@@ -10,8 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-
-ActiveRecord::Schema.define(version: 20170407185947) do
+ActiveRecord::Schema.define(version: 20170910005426) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
@@ -31,6 +30,13 @@ ActiveRecord::Schema.define(version: 20170407185947) do
     t.integer "holiday_id"
     t.index ["customer_id", "holiday_id"], name: "index_customers_holidays_on_customer_id_and_holiday_id", using: :btree
     t.index ["holiday_id", "customer_id"], name: "index_customers_holidays_on_holiday_id_and_customer_id", using: :btree
+  end
+
+  create_table "employment_types", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "name"
+    t.datetime "created_at",  null: false
+    t.datetime "updated_at",  null: false
+    t.integer  "customer_id"
   end
 
   create_table "holiday_exceptions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
@@ -53,11 +59,14 @@ ActiveRecord::Schema.define(version: 20170407185947) do
   create_table "projects", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci" do |t|
     t.string   "name"
     t.integer  "customer_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",       null: false
+    t.datetime "updated_at",       null: false
     t.integer  "user_id"
     t.integer  "proxy"
     t.boolean  "inactive"
+    t.integer  "adhoc_pm_id"
+    t.datetime "adhoc_start_date"
+    t.datetime "adhoc_end_date"
     t.index ["customer_id"], name: "index_projects_on_customer_id", using: :btree
   end
 
@@ -121,6 +130,8 @@ ActiveRecord::Schema.define(version: 20170407185947) do
     t.integer  "status_id"
     t.integer  "approved_by"
     t.datetime "approved_date"
+    t.time     "time_in"
+    t.time     "time_out"
     t.index ["task_id"], name: "index_time_entries_on_task_id", using: :btree
     t.index ["user_id"], name: "index_time_entries_on_user_id", using: :btree
     t.index ["week_id"], name: "index_time_entries_on_week_id", using: :btree
@@ -180,6 +191,14 @@ ActiveRecord::Schema.define(version: 20170407185947) do
     t.datetime "vacation_start_date"
     t.datetime "vacation_end_date"
     t.integer  "report_logo"
+    t.boolean  "apm"
+    t.datetime "start_apm"
+    t.datetime "end_apm"
+    t.integer  "project_apm"
+    t.integer  "default_project"
+    t.integer  "default_task"
+    t.integer  "employment_type"
+    t.datetime "invitation_start_date"
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true, using: :btree
     t.index ["invitations_count"], name: "index_users_on_invitations_count", using: :btree

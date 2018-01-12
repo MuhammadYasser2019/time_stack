@@ -1,31 +1,81 @@
-<table class="header">
-	<tr>
-		<td>
-		
-			<% if current_user.nil?%>
-	      <a href="/", class ="header_logo" ><%= image_tag "RSILogo.png" %></a>
-	    <% else %> 
-	    	<% if !current_user.customer_id.nil? %>
-
-		    	<% customer = Customer.find(current_user.customer_id)%>
-		      <% if !customer.logo.blank?%>
-		        <a href="/", class="header_logo"><%= image_tag "#{customer.logo}" %></a>
-		      <% else %>
-		      	<a href="/", class="header_logo"><%= image_tag "RSILogo.png" %></a>
-		      <% end %>
-		    <% else %>
-		    	  <a href="/", class="header_logo"><%= image_tag "RSILogo.png" %></a>
-	    	<% end %>
-	    <% end %>
-		</td>
-		<td>
-		<% if !current_user.nil? && current_user.admin? %>
-		     <span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span><span style="float:right; margin: 5px;"><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span><span style="float:right; margin: 5px;"><a href= "/admin" %><%= button_to "Admin" %></span>
-		<% elsif !current_user.nil? %>
-			<span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %>
-		<% else %>
-			<%= link_to "Sign In", new_user_session_path %>
+<div class="header">	
+  <div class="top-bar" style="background:white;">
+    <div class="top-bar-left" style="width:30% !important;margin-left: 20px;">
+	    <% if current_user.nil?%>
+		    <a href="/", class ="header_logo" ><%= image_tag "chronstack.jpg", class: 'logo' %></a>
+		<% else %> 
+		    <% if !current_user.customer_id.nil? %>
+			  <% customer = Customer.find(current_user.customer_id)%>
+			  <% if !customer.logo.blank?%>
+			    <a href="/", class="header_logo"><%= image_tag "#{customer.logo}", class: 'logo' %></a>
+			  <% else %>
+			    <a href="/", class="header_logo"><%= image_tag "chronstack.jpg", class: 'logo' %></a>
+			  <% end %>
+			<% else %>
+			  <a href="/", class="header_logo"><%= image_tag "chronstack.jpg", class: 'logo' %></a>
+		    <% end %>
 		<% end %>
-		</td>
-	</tr>
-</table>
+	</div>
+	<% if current_user.nil?%>
+  		<div class="top-bar-right" style="width:70% !important;">
+  		
+		  	<ul class="medium-horizontal menu" data-responsive-menu="drilldown medium-dropdown" style="margin-left: 95px;">
+			  <li>
+			  	<%= link_to "Home" , root_path %>
+			  </li>
+			  <li>
+			    <a href="#">Features</a>
+			    <ul class="vertical menu">
+			      <li><%= link_to "Easy Automation", feature_path(id:1) %></a></li>
+			      <li><%= link_to "Employee Time Entry", feature_path(id:2) %></li>
+			      <li><%= link_to "Submission and Approval", feature_path(id:3)%></li>
+			      <li><%= link_to "Flexible Reports", feature_path(id:4) %></li>
+			      <li><%= link_to "Optional Payroll System Integration", feature_path(id:5) %></li>
+			    </ul>
+			      
+			  </li>
+			  <li>
+			    <a href="#">Case Studies</a>
+			    <ul class="vertical menu">
+			      <li><%= link_to "JSM Consulting", feature_path(id:7) %></li>
+			    </ul>
+			  </li>
+			  <li>
+			    <a href="#">About</a>
+			    <ul class="vertical menu">
+			      <li><%= link_to "About", feature_path(id:8) %></li>
+			      <li><%= link_to "Company Overview", feature_path(id:9) %></li>
+			    </ul>
+			  </li>
+			  <li>
+			    <a href="#">Contact</a>
+			   
+			  </li>
+			  <li>
+			  	<a href="javascript:void(0)" data-open="loginbox">SignIn</a>
+			  			
+			  </li>
+			</ul>
+	    
+		    <ul class="menu search-box">
+		      <input type="search">
+		      <!--<li></li>
+		      <li><button type="button" class="button">Search</button></li>-->
+		    </ul>
+		 </div>
+	  <% else %>
+
+	  	<% if !current_user.nil? && current_user.admin? %>
+		     <span style="float:right;margin-top:0px;"><%= link_to current_user.email, "/user_profile" %></span>
+		     <span style="float:right; margin: 5px;"><a href= "/admin" %><%= button_to "Admin" %></a></span>
+		     <span style="float:right; margin: 5px;"><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span>
+		<% elsif !current_user.nil? %>
+			<span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span>
+			<span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span>
+		<% else %>
+
+		<% end %>
+	  <% end %>
+	  </div>
+</div>
+

@@ -12,7 +12,7 @@ class CustomersController < ApplicationController
       @customer = @customers.first
       customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
       @projects = @customer.projects
-      @pm_projects = Project.where("customer_id=? and user_id=?", @customer.id, current_user.id)
+      @pm_projects = Project.where("user_id=?", current_user.id)
       @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
       @customer_holiday = CustomersHoliday.new
       @invited_users = User.where("invited_by_id = ?", current_user.id)
@@ -98,6 +98,7 @@ class CustomersController < ApplicationController
     logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
 
     # @users= User.all
+    @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
     @adhoc_projects = Project.where("adhoc_pm_id is not null")
@@ -105,8 +106,8 @@ class CustomersController < ApplicationController
     logger.debug("CHECK FOR CUSTOMER params#{@cutomer.inspect}")
     respond_to do |format|
       if @customer.update(customer_params)
-    	@projects = @customer.projects
-	format.js
+    	  @projects = @customer.projects
+	      format.js
         format.html { redirect_to customers_path, notice: 'Customer was successfully updated.' }
         format.json { redirect_to "/customers/#{params[:id]}/theme" }
       else

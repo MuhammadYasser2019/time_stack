@@ -1,24 +1,24 @@
-ul(class="tabs" data-tab style="margin: 0 0 0 5%;")
+ul(class="tabs" data-tabs id="customer-tabs" style="margin: 0 64px 0 5%;")
  - unless current_page?(action: 'new')
-  li class="tab-title active"
-  	a href="#information" Customer Information
-  li class="tab-title"
-  	a href="#holidays" Holidays
-  li class="tab-title"
-  	a href="#employment_types" Employment Types
-  li class="tab-title"
-  	a href="#customer_employees" Customer Employees
-  li class="tab-title"
-  	a href="#vacation_request" Vacation Request	
-  li class="tab-title"
-  	 a href="#user_invitation" Invite Users
-  li class="tab-title"
-  	 a href="#adhoc_pm" Assign Adhoc PM
-  li class="tab-title"
-  	 a href="#assign_pm" Projects
+  li class="tabs-title is-active"
+  	a aria-selected="true" href="#information" Customer Information
+  li class="tabs-title"
+  	a data-tabs-target="holidays" href="#holidays" Holidays
+  li class="tabs-title"
+  	a data-tabs-target="employment_types" href="#employment_types" Employment Types
+  li class="tabs-title"
+  	a data-tabs-target="customer_employees" href="#customer_employees" Customer Employees
+  li class="tabs-title"
+  	a data-tabs-target="vacation_request" href="#vacation_request" Vacation Request	
+  li class="tabs-title"
+  	 a data-tabs-target="user_invitation" href="#user_invitation" Invite Users
+  li class="tabs-title"
+  	 a data-tabs-target="adhoc_pm" href="#adhoc_pm" Assign Adhoc PM
+  li class="tabs-title"
+  	 a data-tabs-target="assign_pm" href="#assign_pm" Projects
 
-div.tabs-content
-  div.white-background class="content active" id="information"
+div.tabs-content.white-background data-tabs-content="customer-tabs"
+  div class="tabs-panel is-active" id="information"
     h1 Editing customer
 	= form_for @customer, remote: true do |f|
 	  - if @customer.errors.any?
@@ -49,40 +49,37 @@ div.tabs-content
 	  
 	  .actions = f.submit
 	  
-  div class="content" id="holidays"
+  div class="tabs-panel" id="holidays"
    - unless current_page?(action: 'new')
-    .(class="row white-background")
 	  h3.text-center Holidays Setup
 	  - if @holidays.any?
-	   .row
-	    h4.small-1.columns
-	    h4.small-5.columns.text-center.underline.no-background style="text-decoration:underline;"  Name
-	    h4.small-3.columns.text-center.underline.no-background style="text-decoration:underline;"  Date
-	    h4.small-3.columns.text-center
+	   .grid-x
+	    h4.large-3.cell.text-center.underline.no-background
+	    h4.large-3.cell.text-center.underline.no-background style="text-decoration:underline;"  Name
+	    h4.large-3.cell.text-center.underline.no-background style="text-decoration:underline;"  Date
+	    h4.large-3.cell.text-center.underline.no-background
 	   = form_for @customer do |f|
 		    = f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name) do |h|
-		     .row
-  				.small-1.columns.text-center = h.check_box
-		  		.small-5.columns.text-center = h.object.name
-		  		.small-3.columns.text-center = h.object.date.strftime("%m-%d-%y")
+		      .grid-x
+  			    .large-3.cell.text-center = h.check_box
+		  		.large-3.cell.text-center = h.object.name
+		  		.large-5.cell.text-center = h.object.date.strftime("%m-%d-%y")
 		  		- if h.object.global != true
-		  		  .small-3.columns.text-center = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
+		  		  .large-3.cell.text-center = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
 	        	- else
-	        	  .small-3.columns.text-center
+	        	  .large-4.cell.text-center
 	        .actions = f.submit "Submit"
 	  - else 
 	    h3.text-center No Holidays created
 	  
-	  = link_to "Create New Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"
+	
 		      
-  div class="content" id="employment_types"
-    .(class="row white-background")
+  div class="tabs-panel" id="employment_types"
 			div(id="dynamic_employment")
 				== render partial: "employment_form"
 	
-  div class="content" id="customer_employees"
+  div class="tabs-panel" id="customer_employees"
 	div class = "disp-message"
-	  	.(class="row white-background")
 			div class="vacation-left-row" 
 				h3.text-center Customer Employees
 				table 
@@ -90,7 +87,7 @@ div.tabs-content
 						tr
                           th User
                           th Email
-                          th
+                          th Action
                           th Shared
                           th PM
                           th Proxy
@@ -100,16 +97,15 @@ div.tabs-content
 								tr(id = "users_#{i}") 
 									td = uop.first_name
 									td = link_to uop.email, "/edit_customer_user/#{uop.id}"
-									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "remove-user-from-customer"
-									td = link_to "Change Share Status", "#", id: "c_id_#{params[:customer_id]}_u_id_#{uop.id}", class: "shared_user", type: "link", data: {reveal_id: "sharedUser"}
+									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "button alert remove-user-from-customer"
+									td = link_to "Change Share Status", "javascript:void()", id: "c_id_#{params[:customer_id]}_u_id_#{uop.id}", class: "shared_user", type: "link", data: {toggle: "sharedUser", target: "#sharedUser"}
 									td = check_box_tag "add_pm_role", uop.id, uop.pm?, class: "add_pm_role"
 									td = check_box_tag "add_pm_role", uop.id, uop.proxy?, class: "assign_proxy_role"
 
 					div class = "shareduser-class"
-						div(id="sharedUser" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
+						div(id="sharedUser" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 
-  div class="content" id="vacation_request"
-    .(class="row white-background")
+  div class="tabs-panel" id="vacation_request"
 		div class="vacation-right-row"
 			h3.text-center Vacation Request
 			table
@@ -126,11 +122,10 @@ div.tabs-content
 							td = User.find(VacationRequest.find(vu).user_id).email.truncate(20)
 							td = vu.vacation_start_date.strftime('%Y-%m-%d')
 							td = vu.vacation_end_date.strftime('%Y-%m-%d')
-							td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "approve-vacation", type: "button", remote: true
-							td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "reject-vacation", type: "button", remote: true
+							td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "orange-button approve-vacation", type: "button", remote: true, :style=>"width:100%;"
+							td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "orange-button reject-vacation", type: "button", remote: true, :style=>"width:100%;"
 
-  div class="content" id="user_invitation"
-		.(class="row white-background")
+  div class="tabs-panel" id="user_invitation"
 		  h1.left_row Invite Users	
 		  table class="left-row"
 			thead
@@ -138,20 +133,20 @@ div.tabs-content
 				tr
                   th
                     = form_tag(action: :invite_to_project, html: {class: 'form-inline'}) do
-                      = label_tag "Email"
+                      = label_tag "Email",nil, :style=>"text-align: left;"
                       = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email"
-                      = label_tag "Select Start Date"
+                      = label_tag "Select Start Date",nil, :style=>"text-align: left;"
                       = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
-                      = label_tag "Employment Type"
+                      = label_tag "Employment Type",nil, :style=>"text-align: left;"
                       = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type"
-                      = label_tag "Project"
+                      = label_tag "Project",nil, :style=>"text-align: left;"
                       = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
                       = hidden_field_tag :invited_by_id, current_user.id
                       = hidden_field_tag :customer_id, @customer.id
-                      .row(style="margin-top: 10px;margin-left: 10px;")
+                      .grid-x(style="margin-top: 10px;margin-left: 10px;")
                           .small-8.columns(style="padding-left: 0;") = label_tag "Project Manager?"
                           .small-2.columns = check_box_tag :project_manager
-                      /.row(style="margin-top: 10px;margin-left: 10px;")
+                      /.grid-x(style="margin-top: 10px;margin-left: 10px;")
                           .small-8.columns(style="padding-left: 0;") = label_tag "Shared?"
                           .small-2.columns = check_box_tag :shared_user /!
                       .actions
@@ -171,21 +166,19 @@ div.tabs-content
 			    - if user.invitation_accepted_at.nil?
 			      tr
 			        td
-			          = link_to user.email, "#", id: "pending_email_#{user.id}", class: "tiny secondary customers-pending-email", type: "link", data: {reveal_id: "customersPendingEmail"}
+			          = link_to user.email, "javascript:void()", id: "pending_email_#{user.id}", class: "tiny secondary customers-pending-email", type: "link", data: {toggle: "customersPendingEmail", target: "#customersPendingEmail"}
 			        td
 			          = user.invitation_sent_at
 			        td
 			          = button_to "Resend Invitation","/invitation/resend_invite?email=#{user.email}&invited_by_id=#{user.invited_by_id}", class: "secondary tiny"
 		  div class = "customerpending-class"
-			div(id="customersPendingEmail" class="reveal-modal" aria-hidden="true" role="dialog" data-reveal)
+			div(id="customersPendingEmail" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 
-  div class="content" id="adhoc_pm"
-		.(class="row white-background")
+  div class="tabs-panel" id="adhoc_pm"
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 
-  div class="content" id="assign_pm"
-		.(class="row white-background")
+  div class="tabs-panel" id="assign_pm"
 			 div(id="dynamic_assign_pm")
 				== render partial: 'assign_pm_form'
 		

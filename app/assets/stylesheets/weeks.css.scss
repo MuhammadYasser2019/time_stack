@@ -9,19 +9,28 @@ h1,h2,h3,h4,h5{
   
   border-radius: 5px;
   font-weight: bold;
-  max-width: 50%;
+  max-width: 70%;
   margin-left: auto;
   margin-right: auto;
 }
 
 .header{
-  border: solid 3px #ffedda;
- /*outline: solid 4px gray;
-   box-shadow: 0 0 0 6px hsl(0, 0%, 0%);
-   margin-top: 8px;*/
-   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+  //border: solid 3px #ffedda;
+  //outline: solid 4px gray;
+   //box-shadow: 0 0 0 6px hsl(0, 0%, 0%);
+   //margin-top: 8px;
+   box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.2);
    border-collapse: separate;
-   width: 66%;
+   width: 100%;
+   background: white;
+   height:75px;
+   display: flex;
+}
+
+
+.top-bar{
+  width:100%;
+  
 }
 
 .no-background{
@@ -36,10 +45,11 @@ table{
   border-collapse: separate;
   /*box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);*/
   margin-left: auto;
+  width: 70%;
   margin-right: auto;
 }
 
-h1.row{
+h1.grid-x{
   text-align:center;
 }
 
@@ -162,7 +172,7 @@ input[type="submit"]{
 .orange-button{
   
   padding: 9px;
-  border-radius: 20px;
+  border-radius: 10px;
     /* margin: 15px; */
   color: black;
   font-weight: bold;
@@ -172,6 +182,26 @@ input[type="submit"]{
   width: 200px;
   text-align: center;
   margin: 0 auto;
+}
+
+.sign-in-button{
+  padding:10px;
+  border-radius:10px;
+  color: black;
+  font-weight:bold;
+  box-shadow: none;
+  border:none;
+  text-align:center;
+  margin: 0 auto;
+  background-color: #e46a27;
+}
+
+.add_row{
+  background-color: #e7e7e7;
+  border-color: #b9b9b9;
+  color: #333333;
+  padding: 10px;
+  display: block;
 }
 
 .comment-button{
@@ -211,7 +241,7 @@ input[type="submit"]{
 
 #holidays {
   
-     .row{
+     .grid-x{
         .small-8{
           background-color:white;
           border-radius: 5px;
@@ -226,7 +256,7 @@ input[type="submit"]{
              font-weight: bold;
            }
            .edit_customer{
-              .row:nth-of-type(even){
+              .grid-x:nth-of-type(even){
                 background: rgba(255, 176, 57, 0.19);
               }
            }
@@ -245,6 +275,10 @@ input[type="submit"]{
   padding:10px;
   max-width: 90%;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.header_logo{
+  margin-left: 10%;
 }
 
 .header_logo:hover{
@@ -290,5 +324,30 @@ input[type="submit"]{
 }
 
 .previous_commment_icon{
-  margin-left: 100%
+  margin-left: 100%;
+}
+
+.header .top-bar-right .menu.medium-horizontal {
+    float: left;
+    background: transparent;
+}
+.header .top-bar-right .search-box {
+    float: right;
+    margin-right: 50px;
+    background: transparent;
+}
+.header .top-bar-right .search-box input {
+    margin-right: 0px;
+    width: 32px;
+    height: 32px;
+    box-shadow: none;
+    border-radius: 50%;
+    background: #fff image-url("search_icon.png") no-repeat 9px 7px;
+    background-size: 22px;
+}
+
+.header .top-bar-right .search-box input:focus { 
+  width:200px; 
+  border-radius: 10px;
+  background-position: 169px 7px; 
 }

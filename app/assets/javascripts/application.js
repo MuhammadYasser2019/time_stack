@@ -14,7 +14,9 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require dataTables/jquery.dataTables
-//= require foundation
+//= require foundation.min
+//= require what-input
+//= require ckeditor/init
 //= require foundation-datetimepicker
 //= require turbolinks
 //= require turbolinks-compatibility

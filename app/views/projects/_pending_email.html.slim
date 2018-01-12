@@ -12,5 +12,5 @@ table
       = @user.invitation_start_date
     td
       = EmploymentType.find(@user.employment_type).name if @user.employment_type
-  a class="close-reveal-modal" aria-label="Close"
-    | &#215;
+button.close-button aria-label=("Close modal") data-close="" type="button" 
+  span aria-hidden="true"  &times;
