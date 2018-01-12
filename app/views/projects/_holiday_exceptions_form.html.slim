@@ -1,14 +1,16 @@
-h2.text-center(Holidays Setup)
+h2.text-center Holidays Setup
 br
 br
 - if @holidays.any?
+	- if @holiday_exceptions.present?
+		h4.text-center Holiday Exceptions
+		- @holiday_exceptions.each do |h|
+	  		.row
+ 				.small-3.columns.text-center =("#{User.find(h.user_id).first_name} #{User.find(h.user_id).last_name}")
+				.small-3.columns.text-center = h.holiday_ids.count
+				.small-3.columns.text-center = link_to "Edit", edit_holiday_exception_path(h)
+				.small-1.columns
 
-	- @holiday_exceptions.each do |h|
-	  h4.text-center Holiday Exceptions
-	 		.small-3.cell.text-center =("#{User.find(h.user_id).first_name} #{User.find(h.user_id).last_name}")
-			.small-6.cell.text-center = h.holiday_ids.count
-			.small-2.cell.text-center = link_to "Edit", edit_holiday_exception_path(h)
-			.small-1.cell
 h4.text-center New Holiday Exception
 = form_for @holiday_exception, remote: true do |f|
 		= f.select :user_id, @users_on_project.collect { |m| [ m.first_name, m.id ] }, {include_blank: true}, {required: "required"}
