@@ -137,7 +137,7 @@
 					<td><%= text_field_tag :name, nil, placeholder: "Logo Name", class: "report_logo",required: "required" %></td>
 					<td><%= label_tag(:report_logo, "Upload Logo", for: "report-logo-upload")%></td>
 					<td><%= file_field_tag(:report_logo, id: "report-logo-upload") %></td>
-					<td><%= button_tag "Save Logo", class: "tiny orange-buton"%></td>
+					<td><%= button_tag "Save Logo", class: "tiny orange-button"%></td>
 				</tr>
 			</tbody>
 		</table>
@@ -156,7 +156,7 @@
 				<tr>
 					<td><%= select_tag :report_logo, options_from_collection_for_select(@all_report_logos, "id", "name", params[:report_logo]), :include_blank => true%></td>
 					<td><%= select_tag :user, options_from_collection_for_select(@users, "id", "email", params[:user]), :include_blank => true %></td>
-					<td><%= button_tag "Assign Logo", class: "tiny orange-buton" %></td>
+					<td><%= button_tag "Assign Logo", class: "tiny orange-button" %></td>
 					<td><%= %></td>
 				</tr>
 			</tbody>
