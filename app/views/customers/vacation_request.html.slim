@@ -1,26 +1,27 @@
 div.report
-  h1 Reports for Users #{consultant_name(@user.first_name, @user.last_name)}
-  = form_tag "/vacation_request", method: :get
-  table
-    thead
-      tr
-        th Vacation Start Date
-        th Vacation End Date
-        th Sick Leave
-        th Personal Vacation
-        th Description
-        th
+  div.vacation_request
+    h1 Reports for Users #{consultant_name(@user.first_name, @user.last_name)}
+    = form_tag "/vacation_request", method: :get, id: 'vacation_request_form'
+    table
+      thead
+        tr
+          th Vacation Start Date
+          th Vacation End Date
+          th Sick Leave
+          th Personal Vacation
+          th Description
+          th
 
-    tbody
-      tr
-        = hidden_field_tag 'hidden_print_report', false
-        td = date_field_tag 'vacation_start_date', params[:vacation_start_date], {required: "required"}
-        /= hidden_field_tag 'id', @user.id
-        td = date_field_tag 'vacation_end_date', params[:vacation_end_date], {required: "required"}
-        td = check_box_tag "sick_leave", params[:sick_leave]
-        td = check_box_tag "personal_leave", params[:personal_leave]
-        td = text_area_tag "vacation_comment",nil, {required: "required"}
-        td = button_tag "Request Vacation", class: "button primary"
+      tbody
+        tr
+          = hidden_field_tag 'hidden_print_report', false
+          td = date_field_tag 'vacation_start_date', params[:vacation_start_date], {required: "required"}
+          /= hidden_field_tag 'id', @user.id
+          td = date_field_tag 'vacation_end_date', params[:vacation_end_date], {required: "required"}
+          td = check_box_tag "sick_leave", params[:sick_leave]
+          td = check_box_tag "personal_leave", params[:personal_leave]
+          td = text_area_tag "vacation_comment",nil, {required: "required"}
+          td = button_tag "Request Vacation", class: "button primary orange-button vacation_request_submit"
   div class = "vacation_resend_msg"
   h1 Your Vacation Requests
   table
