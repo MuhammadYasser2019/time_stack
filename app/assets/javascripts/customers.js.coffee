@@ -209,3 +209,22 @@ jQuery ($) ->
     else
       $("vacation_request_form").submit()
   )
+
+  $(document).on('click', '#current_month', ->
+    if $(this).is(":checked")
+      $('#proj_report_start_date').attr('readonly', true)
+      $('#proj_report_end_date').attr('readonly', true)
+    else
+      $('#proj_report_start_date').attr('readonly', false)
+      $('#proj_report_end_date').attr('readonly', false)
+  )
+
+  $(document).on('click', '#current_week', ->
+    if $(this).is(":checked")
+      $('#proj_report_start_date').attr('readonly', true)
+      $('#proj_report_end_date').attr('readonly', true)
+      
+    else
+      $('#proj_report_start_date').attr('readonly', false)
+      $('#proj_report_end_date').attr('readonly', false)
+  )

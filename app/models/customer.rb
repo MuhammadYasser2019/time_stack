@@ -69,14 +69,18 @@ class Customer < ApplicationRecord
     return hash_report_data
   end
 
-  def find_dates_to_print(proj_report_start_date = nil, proj_report_end_date = nil)
-    if proj_report_start_date.nil?
+  def find_dates_to_print(proj_report_start_date = nil, proj_report_end_date = nil, current_week = nil, current_month = nil) 
+    if current_month == "true"
+      start_day = Time.now.beginning_of_month
+    elsif proj_report_start_date.nil? || current_week == "true"
       start_day = Time.now.beginning_of_week
     else
       start_day = Date.parse(proj_report_start_date)
     end
 
-    if proj_report_end_date.nil?
+    if current_month == "true"
+      last_day = Time.now.end_of_month
+    elsif proj_report_end_date.nil? || current_week == "true"
       last_day = start_day.end_of_week
     else
       last_day = Date.parse(proj_report_end_date).end_of_day
