@@ -210,9 +210,9 @@ end
     @user_array = @users.pluck(:id)
     @dates_array = @p.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date], params["current_week"], params["current_month"])
     if params[:user] == "" || params[:user] == nil
-      @consultant_hash = @p.build_consultant_hash(@project_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @user_array)
+      @consultant_hash = @p.build_consultant_hash(@project_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @user_array, params["current_week"], params["current_month"])
     else
-      @consultant_hash = @p.build_consultant_hash(@project_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]])
+      @consultant_hash = @p.build_consultant_hash(@project_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], params["current_week"], params["current_month"])
     end
 
     respond_to do |format|

@@ -57,9 +57,24 @@ class Project < ApplicationRecord
     return dates_array
   end
   
-  def build_consultant_hash(project_id, dates_array, start_date, end_date, users)
+  def build_consultant_hash(project_id, dates_array, start_date, end_date, users, current_week=nil, current_month=nil)
     hash_report_data = Hash.new
     consultant_ids = users
+    if current_month == "true"
+      start_date = Time.now.beginning_of_month.to_date.to_s
+    elsif start_date.nil? || current_week == "true"
+      start_date = Time.now.beginning_of_week.to_date.to_s
+    else
+      start_date = start_date
+    end
+
+    if current_month == "true"
+      end_date = Time.now.end_of_month.to_date.to_s
+    elsif end_date.nil? || current_week == "true"
+      end_date = Time.now.end_of_week.to_date.to_s
+    else
+      end_date = end_date
+    end
     consultant_ids.each do |c|
       time_entries = TimeEntry.where(user_id: c, project_id: project_id, date_of_activity: start_date..end_date).order(:date_of_activity)
       logger.debug "consultant is #{c}"

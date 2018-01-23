@@ -5,10 +5,26 @@ class Customer < ApplicationRecord
   has_many :vacation_requests
   mount_uploader :logo, LogoUploader
 
-  def build_consultant_hash(customer_id, dates_array, start_date, end_date, users, projects)
+  def build_consultant_hash(customer_id, dates_array, start_date, end_date, users, projects, current_week=nil, current_month=nil)
     hash_report_data = Hash.new
     consultant_ids = users
     customer = Customer.find(customer_id)
+    if current_month == "true"
+      start_date = Time.now.beginning_of_month.to_date.to_s
+    elsif start_date.nil? || current_week == "true"
+      start_date = Time.now.beginning_of_week.to_date.to_s
+    else
+      start_date = start_date
+    end
+
+    if current_month == "true"
+      end_date = Time.now.end_of_month.to_date.to_s
+    elsif end_date.nil? || current_week == "true"
+      end_date = Time.now.end_of_week.to_date.to_s
+    else
+      end_date = end_date
+    end
+
     logger.debug "consultant_ids: #{consultant_ids}"
     if (projects.is_a? Integer) || (projects.is_a? String)
       project_list = Project.where(id: projects)

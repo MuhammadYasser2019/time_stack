@@ -211,18 +211,20 @@ jQuery ($) ->
   )
 
   $(document).on('click', '#current_month', ->
-    if $(this).is(":checked")
+    if $(this).is(":checked") || $('#current_week').is(":checked")
       $('#proj_report_start_date').attr('readonly', true)
       $('#proj_report_end_date').attr('readonly', true)
+      $('#current_week').attr('checked', false)
     else
       $('#proj_report_start_date').attr('readonly', false)
       $('#proj_report_end_date').attr('readonly', false)
   )
 
   $(document).on('click', '#current_week', ->
-    if $(this).is(":checked")
+    if $(this).is(":checked") || $('#current_month').is(":checked")
       $('#proj_report_start_date').attr('readonly', true)
       $('#proj_report_end_date').attr('readonly', true)
+      $('#current_month').attr('checked', false)
       
     else
       $('#proj_report_start_date').attr('readonly', false)
