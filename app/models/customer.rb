@@ -4,6 +4,7 @@ class Customer < ApplicationRecord
   accepts_nested_attributes_for :projects, allow_destroy: true, reject_if: proc { |projects| projects[:name].blank? }
   has_many :vacation_requests
   mount_uploader :logo, LogoUploader
+  has_many :vacation_types
 
   def build_consultant_hash(customer_id, dates_array, start_date, end_date, users, projects, current_week=nil, current_month=nil)
     hash_report_data = Hash.new
