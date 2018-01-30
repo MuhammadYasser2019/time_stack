@@ -202,14 +202,6 @@ jQuery ($) ->
       "user_id": $("#pm_user_id_"+project_id).val(),
   )
     
-  $(document).on('click', '.vacation_request_submit', (event) ->
-    if($('.vacation_request').find("input:checked").length == 0)
-     alert("Please select atleast one vacation type")
-     return false;
-    else
-      $("vacation_request_form").submit()
-  )
-
   $(document).on('click', '#current_month', ->
     if $(this).is(":checked") || $('#current_week').is(":checked")
 

@@ -160,6 +160,35 @@ jQuery ($) ->
       tr.find("a").show()
   )
 
+  $("tbody").on("change", ".vacation-change", ->
+    orig = $(this)
+    tr = $(this).parent().parent("tr")
+    label = tr.find(".date1").children("label")
+    console.log(label.text())
+    date = label.text()
+    console.log("count: " + tr.siblings().length)
+    if (orig.val() != "")
+      console.log("already checked")
+      console.log("non-date: " + tr.next().next().next().find(".date1").children("label").text())
+      console.log("date: " + date)
+      result = confirm("This will remove any added rows to from this day. Proceed?");
+      if result
+       tr.find(".hours-input,button,textarea,select:not(.vacation-change)").attr("disabled", "disabled");
+       tr.find(".hours-input").val(0)
+       tr.find("a").hide()
+       tr.siblings().each ->
+        console.log("sibling")
+        if $(this).find(".date1").children("label").text() == date
+         $(this).remove()
+      else
+       orig.prop("checked", false)
+       orig.removeAttr("disabled")
+    else
+      console.log("not checked")
+      tr.find(".hours-input,button,textarea,select").removeAttr("disabled");
+      tr.find("a").show()
+  )
+
 
   $("tbody").on("keydown", ".input-lg", ->
     text_length = $(this).val().length

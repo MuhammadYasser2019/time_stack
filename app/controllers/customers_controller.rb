@@ -269,9 +269,10 @@ class CustomersController < ApplicationController
     logger.debug("THE PARAMETERS ARE:  #{params.inspect}")
     @user = current_user
     @users_vacations = VacationRequest.where("user_id = ?",@user.id)
+    @vacation_types = VacationType.where(customer_id: @user.customer_id)
     user_customer = @user.customer_id 
-    sick_leave = params[:sick_leave]
-    personal_leave = params[:personal_leave]
+    #sick_leave = params[:vacation_type_id]
+    #personal_leave = params[:personal_leave]
     vacation_start_date = params[:vacation_start_date]
     vacetion_end_date = params[:vacation_end_date]
     reason_for_vacation = params[:vacation_comment]
@@ -283,16 +284,10 @@ class CustomersController < ApplicationController
       new_vr.customer_id = @user.customer_id
       new_vr.comment = reason_for_vacation
       new_vr.status = "Requested"
-    
-      if !sick_leave.blank?
-        new_vr.sick = true
-      end
-      if !personal_leave.blank?
-        new_vr.personal = true
-      end
+      new_vr.vacation_type_id = params[:vacation_type_id]
       new_vr.save
     end
-    logger.debug("sick_leave: #{sick_leave}******personal_leave: #{personal_leave} ")
+    #logger.debug("sick_leave: #{sick_leave}******personal_leave: #{personal_leave} ")
     customer_manager = Customer.find(user_customer).user_id
     logger.debug("customer manager id IS : #{customer_manager}")
 

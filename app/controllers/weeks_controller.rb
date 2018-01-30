@@ -69,6 +69,7 @@ class WeeksController < ApplicationController
     @week.save!
 
     @week_user = User.find(@week.user_id)
+    @vacation_types = VacationType.where(customer_id: @week_user.customer_id)
     vacation(@week)
     @upload_timesheet = @week.upload_timesheets.build
 
@@ -130,6 +131,7 @@ class WeeksController < ApplicationController
     @week.end_date = Week.find(params[:id]).end_date.strftime('%Y-%m-%d')
     status_ids = [1,2]
     @statuses = Status.find(status_ids)
+    @vacation_types = VacationType.where(customer_id: @week_user.customer_id)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
     @week.upload_timesheets.build if @week.upload_timesheets.blank?
     vacation(@week)
@@ -142,14 +144,9 @@ class WeeksController < ApplicationController
     week.time_entries.each do |wtime|
       @user_vacation_requests.each do |v|
         if wtime.date_of_activity >= v.vacation_start_date && wtime.date_of_activity <= v.vacation_end_date 
-          if v.sick == 1
-            wtime.sick = true
+          if v.vacation_type_id.present?
+            wtime.vacation_type_id =  v.vacation_type_id
             wtime.activity_log = v.comment 
-            wtime.save
-          end
-          if v.personal == 1
-            wtime.personal_day = true
-            wtime.activity_log = v.comment
             wtime.save
           end
         end
@@ -413,6 +410,6 @@ class WeeksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
       params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
-      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out])
+      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id])
     end
 end
