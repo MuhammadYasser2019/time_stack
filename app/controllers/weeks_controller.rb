@@ -133,6 +133,7 @@ class WeeksController < ApplicationController
     @statuses = Status.find(status_ids)
     @vacation_types = VacationType.where(customer_id: @week_user.customer_id)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
+    @expenses = ExpenseRecord.where(week_id: @week.id)
     @week.upload_timesheets.build if @week.upload_timesheets.blank?
     vacation(@week)
     # vr.where("status = ? && vacation_start_date >= ?", "Approved", @week.start_date)
@@ -365,6 +366,25 @@ class WeeksController < ApplicationController
       format.html { redirect_to weeks_url, notice: 'Week was successfully destroyed.' }
       format.json { head :no_content }
     end
+  end
+
+  def expense_records
+    #@expense_records = ExpenseRecord.find(params[:id])
+    logger.debug("EXPENSE RECORD- #{params.inspect}")
+    @expense = ExpenseRecord.new
+    @expense.expense_type = params[:expense_type]
+    @expense.date = params[:date]
+    @expense.description = params[:description]
+    @expense.amount = params[:amount]
+    @expense.week_id = params[:week_id]
+    logger.debug("EXPENSE FOUND #{@expense.inspect}")
+    @week = Week.find(params[:week_id])
+    @expense.save
+    @expenses = ExpenseRecord.where(week_id: @week.id)
+    respond_to do |format|
+      format.js
+    end
+
   end
 
   def time_reject

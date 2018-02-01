@@ -224,6 +224,16 @@ jQuery ($) ->
     return
   )
 
+  $("tbody").on("click", ".expense_record", ->
+    user_id = parse_user_id($(this).attr('id'))
+    week_id = $(this).attr('id').split("_")[3]
+    console.log("THE USER ID IS: " + user_id)
+    $.post '/expense_records',
+      user_id: user_id,
+      week_id: week_id
+    return
+  )
+
   $("tbody").on("click", ".add_button", ->
     console.log("BEFORE REVEAL")
     $("#userPreviousComments").foundation('reveal', 'close')

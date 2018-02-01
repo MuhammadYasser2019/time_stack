@@ -40,10 +40,14 @@
       - @week.upload_timesheets.each do |t|
         - if t.time_sheet.present?
           div = link_to "You have attached: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+  
     .actions
      = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3)
      = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"}
 
-
+.field
+    h5(style= "text-align: center;") Expenses
+    div(class="expense_record")
+      == render 'expense'
 
 div(id="userPreviousComments" class="reveal" aria-hidden="true" role="dialog" data-reveal)
