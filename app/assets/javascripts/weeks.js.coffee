@@ -80,7 +80,7 @@ jQuery ($) ->
     else
       value += 1
     if count == 0
-      count = $("tbody tr").length - 1
+      count = $("tbody tr").length
     else
       count += 1
     console.log("VALUEEEEEE: " + count)
