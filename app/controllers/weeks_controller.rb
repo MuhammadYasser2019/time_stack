@@ -305,21 +305,6 @@ class WeeksController < ApplicationController
           ApprovalMailer.mail_to_manager(@week, User.find(@week.user_id)).deliver
         end
 
-        @week.time_entries.each do |t|
-          u = User.find t.user_id
-          if u.customer_id.present?
-            c = Customer.find u.customer_id
-            if t.sick?
-              v = c.vacation_types.where("vacation_title =?", "Sick").first
-              t.vacation_type_id = v.id
-            elsif t.personal_day?
-              v = c.vacation_types.where("vacation_title =?", "Personal").first
-              t.vacation_type_id = v.id
-            end
-            t.save!
-          end
-        end
-
         format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
         format.json { render :show, status: :ok, location: @week }
       else
