@@ -106,7 +106,9 @@ Rails.application.routes.draw do
   post "assign_pm/:id" => "customers#assign_pm", as: :assign_pm
   get "/clear_timesheet/:id" => "weeks#clear_timesheet"
   post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments
-  post "/expense_records" => "weeks#expense_records", as: :expense_records
+  post "/expense_records" => "weeks#expense_records"
+  get '/delete_expense' => "weeks#delete_expense"
+  post "/add_expense_records" => "weeks#add_expense_records"
 
 
   #mount Ckeditor::Engine => '/ckeditor'

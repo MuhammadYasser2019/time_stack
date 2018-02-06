@@ -303,7 +303,7 @@ class WeeksController < ApplicationController
           logger.debug("USER IS UPDATED ***************")
         end
         if @week.status_id == 2
-          ApprovalMailer.mail_to_manager(@week, User.find(@week.user_id)).deliver
+          ApprovalMailer.mail_to_manager(@week, @expenses, User.find(@week.user_id)).deliver
         end
 
         format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
@@ -377,14 +377,34 @@ class WeeksController < ApplicationController
     @expense.description = params[:description]
     @expense.amount = params[:amount]
     @expense.week_id = params[:week_id]
+    #@expense.project_id = Project.find_by_name(params[:project_id]).id
     logger.debug("EXPENSE FOUND #{@expense.inspect}")
     @week = Week.find(params[:week_id])
+    @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
+    logger.debug("The PROJECTS ARE #{@projects.inspect}")
+    #@project = @projects.name
+    #logger.debug("The PROJECT NAMES ARE #{@project.inspect}")
+    #@project = Project.find(params[:project_id])
     @expense.save
     @expenses = ExpenseRecord.where(week_id: @week.id)
     respond_to do |format|
       format.js
     end
 
+  end
+
+  def delete_expense
+    @expense_row = ExpenseRecord.find(params[:expense].to_i)
+    logger.debug("DELETING THE ROW #{@expense_row.inspect}")
+    #if !user.blank?
+      #user.@expense.id = nil
+      #user.save
+    @expense_row.destroy
+    logger.debug("DELETING THE EXPENSE*******")
+      #@verb = "Removed" 
+    respond_to do |format|
+     format.js
+    end
   end
 
   def time_reject
@@ -415,6 +435,6 @@ class WeeksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
       params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
-      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id])
+      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id],expense_records_attributes:[:id, :expense_type, :description, :date, :amount])
     end
 end
