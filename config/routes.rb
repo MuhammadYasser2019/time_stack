@@ -14,6 +14,7 @@ Rails.application.routes.draw do
   resources :report_logos
   resources :features
   resources :case_studies
+  resources :vacation_types
   devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
@@ -103,6 +104,7 @@ Rails.application.routes.draw do
   post "project/:project_id/add_adhoc_pm" => "projects#add_adhoc_pm", as: :add_adhoc_pm
   post "customer/:customer_id/add_adhoc_pm_by_cm" => "customers#add_adhoc_pm_by_cm", as: :add_adhoc_pm_by_cm
   get "/copy_timesheet/:id" => "weeks#copy_timesheet"
+  post "assign_employment_types/" => "customers#assign_employment_types", as: :assign_employment_types
   post "assign_pm/:id" => "customers#assign_pm", as: :assign_pm
   get "/clear_timesheet/:id" => "weeks#clear_timesheet"
   post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments

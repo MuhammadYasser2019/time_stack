@@ -6,5 +6,13 @@ class CreateEmploymentTypesVacationTypes < ActiveRecord::Migration[5.0]
       
       t.timestamps
     end
+
+    Customer.all.each do |c|
+    	c.vacation_types.each do |v|
+    		c.employment_types.each do |e|
+    			EmploymentTypesVacationType.create(employment_type_id: e.id, vacation_type_id: v.id)
+    		end
+    	end
+    end
   end
 end

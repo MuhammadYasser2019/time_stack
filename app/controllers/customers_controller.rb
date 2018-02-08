@@ -25,6 +25,7 @@ class CustomersController < ApplicationController
       logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
       @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
       @adhoc_projects = Project.where("adhoc_pm_id is not null")
+      @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
       logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
       logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
     end
@@ -103,6 +104,7 @@ class CustomersController < ApplicationController
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
     @adhoc_projects = Project.where("adhoc_pm_id is not null")
     @customer.save
+    @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
     logger.debug("CHECK FOR CUSTOMER params#{@cutomer.inspect}")
     respond_to do |format|
       if @customer.update(customer_params)
@@ -269,7 +271,7 @@ class CustomersController < ApplicationController
     logger.debug("THE PARAMETERS ARE:  #{params.inspect}")
     @user = current_user
     @users_vacations = VacationRequest.where("user_id = ?",@user.id)
-    @vacation_types = VacationType.where(customer_id: @user.customer_id)
+    @vacation_types = VacationType.where("customer_id=? && active", @user.customer_id, true)
     user_customer = @user.customer_id 
     #sick_leave = params[:vacation_type_id]
     #personal_leave = params[:personal_leave]
@@ -420,6 +422,25 @@ class CustomersController < ApplicationController
     end
   end
 
+  def assign_employment_types
+
+    @customer = Customer.find params[:customer_id]
+    @employment_type = EmploymentType.where(customer_id: params[:customer_id])
+    @employment_type.each do |e|
+      etype_vtype = EmploymentTypesVacationType.where("employment_type_id=? and vacation_type_id=?", e.id, params[:vacation_type_id])
+      if etype_vtype.blank? && params["employment_type_#{e.id}"] == "1"
+        etype_vtype = EmploymentTypesVacationType.new
+        etype_vtype.vacation_type_id = params[:vacation_type_id]
+        etype_vtype.employment_type_id = e.id
+        etype_vtype.save
+      end
+    end
+    @vacation_types = VacationType.where("customer_id=? && active=?", params[:customer_id], true)
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def assign_pm
     @customer = Customer.find params[:id]
     @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
@@ -467,6 +488,7 @@ class CustomersController < ApplicationController
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
     @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
     @adhoc_projects = Project.where("adhoc_pm_id is not null")
+    @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
     logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
 	

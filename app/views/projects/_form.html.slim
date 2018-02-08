@@ -3,7 +3,7 @@
   h1 #{@adhoc_pm_project.name}
 - elsif @projects.present?
   h1 #{@project.name}
-ul(class="tabs" data-tabs id="projects-tab" style="margin: 0 15% 0 18%;")
+ul(class="tabs" data-tabs id="projects-tab" style="margin: 0 25% 0 22%;")
   	- if !(@adhoc && user_have_adhoc_permission(current_user))
     - unless current_page?(action: 'new')
      li class="tabs-title is-active"
