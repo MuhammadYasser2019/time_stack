@@ -228,7 +228,7 @@ jQuery ($) ->
     user_id = parse_user_id($(this).attr('id'))
     week_id = $(this).attr('id').split("_")[3]
     console.log("THE EXPENSE recorD USER ID IS: " + user_id)
-    $.post '/expense_records',
+    $.get '/expense_records',
       user_id: user_id,
       week_id: week_id
     return
