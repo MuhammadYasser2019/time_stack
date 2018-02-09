@@ -17,5 +17,5 @@ table
 			td = Project.find(e.project_id).name if e.project_id.present?  
 			td = e.description 
 			td = e.amount
-			td = link_to "Attachment:#{e.attachment_identifier} on #{e.created_at.to_date}", e.attachment.url, :target => "_blank" 
-			td = button_tag "Delete", id: "delete_#{@week.id}_#{e.id}", class: "button alert delete_expense orange-button" if @week.status_id != 2 
+			td = link_to "Attachment:#{e.attachment_identifier} on #{e.created_at.to_date}", e.attachment.url, :target => "_blank" if e.attachment_identifier.present?
+			td = button_tag "Delete", id: "delete_#{@week.id}_#{e.id}", class: "button alert delete_expense" if @week.status_id != 2 
