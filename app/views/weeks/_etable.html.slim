@@ -7,15 +7,15 @@ table
 			th Description
 			th Amount
 			th Attachment
-			th Delete Expense
+			th 
 
 	- @expenses.each do |e|
 		tbody
 
 			td = e.expense_type
 			td = e.date
-			td = Project.find(e.project_id).name if e.project_id > 0  
+			td = Project.find(e.project_id).name if e.project_id.present?  
 			td = e.description 
 			td = e.amount
-			td = link_to "You have attached:#{e.attachment_identifier} on #{e.created_at.to_date}", e.attachment.url, :target => "_blank" 
-			td = button_tag "Delete", id: "delete_#{@week.id}_#{e.id}", class: "button alert delete_expense orange-button"
+			td = link_to "Attachment:#{e.attachment_identifier} on #{e.created_at.to_date}", e.attachment.url, :target => "_blank" 
+			td = button_tag "Delete", id: "delete_#{@week.id}_#{e.id}", class: "button alert delete_expense orange-button" if @week.status_id != 2 

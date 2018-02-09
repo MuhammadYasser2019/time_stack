@@ -6,6 +6,7 @@ class CreateExpenseRecords < ActiveRecord::Migration
       t.date :date
       t.integer :amount
       t.string :attachment
+      t.integer :project_id
       t.belongs_to :week
 
       t.timestamps 
