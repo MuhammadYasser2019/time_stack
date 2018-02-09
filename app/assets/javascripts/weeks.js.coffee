@@ -80,7 +80,7 @@ jQuery ($) ->
     else
       value += 1
     if count == 0
-      count = $("tbody tr").length - 1
+      count = $("tbody tr").length
     else
       count += 1
     console.log("VALUEEEEEE: " + count)
@@ -223,6 +223,31 @@ jQuery ($) ->
       week_id: week_id
     return
   )
+
+  $(document).on("click", ".expense_record_icon", ->
+    user_id = parse_user_id($(this).attr('id'))
+    week_id = $(this).attr('id').split("_")[3]
+    console.log("THE EXPENSE recorD USER ID IS: " + user_id)
+    $.get '/expense_records',
+      user_id: user_id,
+      week_id: week_id
+    return
+  )
+
+
+  $(document).on('click', '.delete_expense', ->
+    console.log("weeks.js- Delete Expense")
+    week_id = $(this).attr('id').split("_")[1]
+    console.log("THE DELETE EXPENSE Week ID IS: " + week_id)
+    expense = $(this).attr('id').split("_")[2]
+    console.log("Weeks.js- DELETE ROW "+"expense-
+    row_id: "+ expense )
+    $.get "/delete_expense",
+      week_id: week_id,
+      expense: expense
+    return
+  )
+
 
   $("tbody").on("click", ".add_button", ->
     console.log("BEFORE REVEAL")

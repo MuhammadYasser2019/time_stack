@@ -50,7 +50,6 @@ td.activity_log
 
 td.vacation_type
   - if f.object.vacation_type_id.present? || f.object.week.status_id == 2 || f.object.week.status_id == 3
-    - debugger 
     = f.select(:vacation_type_id, options_from_collection_for_select(@vacation_types, "id", "vacation_title", selected: f.object.vacation_type_id), {include_blank: true}, disabled: true, class: "vacation-change")
   - else
     = f.select(:vacation_type_id, options_from_collection_for_select(@vacation_types, "id", "vacation_title", selected: f.object.vacation_type_id), {include_blank: true}, class: "vacation-change")

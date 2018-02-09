@@ -109,6 +109,9 @@ Rails.application.routes.draw do
   get "/clear_timesheet/:id" => "weeks#clear_timesheet"
   post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments
   get 'remove_emp_from_vacation' => "customers#remove_emp_from_vacation"
+  match "/expense_records" => 'weeks#expense_records', via: [:get, :post]
+  get '/delete_expense' => "weeks#delete_expense"
+  post "/add_expense_records" => "weeks#add_expense_records"
 
   #mount Ckeditor::Engine => '/ckeditor'
 
