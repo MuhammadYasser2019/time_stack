@@ -183,6 +183,19 @@ class CustomersController < ApplicationController
    end
   end
 
+  def remove_emp_from_vacation
+    #customer_id = params[:customer_id]
+    etype = EmploymentTypesVacationType.where("employment_type_id=? && vacation_type_id=?", params[:emp_id], params[:vacation_id]).first
+    @row_id = params[:row]
+    #logger.debug("CUSTOMER ID: #{customer_id}***********AND USER CUSTOMER ID: #{user.customer_id}")
+    if etype
+      etype.destroy 
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def shared_user
     @shuser = User.find params[:user_id]
     @customer = Customer.where("id != ?", params[:customer_id])
@@ -271,7 +284,8 @@ class CustomersController < ApplicationController
     logger.debug("THE PARAMETERS ARE:  #{params.inspect}")
     @user = current_user
     @users_vacations = VacationRequest.where("user_id = ?",@user.id)
-    @vacation_types = VacationType.where("customer_id=? && active", @user.customer_id, true)
+    emp_type = EmploymentType.find current_user.employment_type
+    @vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", @user.customer_id, true)
     user_customer = @user.customer_id 
     #sick_leave = params[:vacation_type_id]
     #personal_leave = params[:personal_leave]

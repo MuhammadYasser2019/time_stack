@@ -69,7 +69,8 @@ class WeeksController < ApplicationController
     @week.save!
 
     @week_user = User.find(@week.user_id)
-    @vacation_types = VacationType.where("customer_id=? && active=?", @week_user.customer_id, true)
+    emp_type = EmploymentType.find current_user.employment_type
+    @vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", @week_user.customer_id, true)
     vacation(@week)
     @upload_timesheet = @week.upload_timesheets.build
 
@@ -131,7 +132,8 @@ class WeeksController < ApplicationController
     @week.end_date = Week.find(params[:id]).end_date.strftime('%Y-%m-%d')
     status_ids = [1,2]
     @statuses = Status.find(status_ids)
-    @vacation_types = VacationType.where("customer_id=? && active=?", @week_user.customer_id, true)
+    emp_type = EmploymentType.find current_user.employment_type
+    @vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", @week_user.customer_id, true)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
     @week.upload_timesheets.build if @week.upload_timesheets.blank?
     vacation(@week)

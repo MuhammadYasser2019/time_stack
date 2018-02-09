@@ -19,19 +19,23 @@
 
 
 .right-row-adhoc
-	h1 Vacation With Employment Tpye
+	h1 Vacation With Employment Type
 	table
 		thead
 			tr
 				th Vacation Type
 				th Employment Type
-				 
-		- @vacation_types.each do |p|
-			tbody
+				th
+		tbody	 
+			- count = 0
+			- @vacation_types.each do |p|
 				- p.employment_types.each do |e|
-				  tr 	
+				  
+				  tr (id = "emp_#{count}")
 					td = p.vacation_title		
 					td = e.name
+					td = td = button_tag "Remove", id: "#{p.id}_#{e.id}", class: "button alert remove-emp-type orange-button"
+				  - count += 1
 
 
 				

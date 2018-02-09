@@ -107,6 +107,22 @@ jQuery ($) ->
     return
   )
 
+  $(document).on('click', '.remove-emp-type', ->
+    console.log("customers.js- romove employment")
+    v_id = $(this).attr('id').split("_")[0]
+    e_id = $(this).attr('id').split("_")[1]
+    console.log("customer.js- remove form customer "+"v: "+ $(this).attr('id'))
+    row = $(this).parent().parent().attr('id')
+    console.log("customer.js- remove from customer "+"row_id: "+ row )
+    customer_url=$(location).attr('href')
+    customer_id = parse_customer_id(customer_url)
+    $.get "/remove_emp_from_vacation",
+      emp_id: e_id,
+      vacation_id: v_id,
+      row: row
+    return
+  )
+
   parse_customer_id = (attr_val) ->
    customer_id = attr_val.split("_")[2]
    return customer_id
