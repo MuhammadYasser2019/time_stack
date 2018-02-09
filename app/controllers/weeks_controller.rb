@@ -302,6 +302,8 @@ class WeeksController < ApplicationController
           we.update(user_id: week_user)  
           logger.debug("USER IS UPDATED ***************")
         end
+        @expenses = ExpenseRecord.where(week_id: @week.id)
+        logger.debug "THE EXPENSES IN WEEKS-UPDATE #{@expenses.inspect}"
         if @week.status_id == 2
           ApprovalMailer.mail_to_manager(@week, @expenses, User.find(@week.user_id)).deliver
         end
@@ -330,6 +332,7 @@ class WeeksController < ApplicationController
     @print_report = "false"
     @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?
     @week = Week.find(params[:id])
+    @expenses = ExpenseRecord.where(week_id: @week.id)
     @user_name = User.find(@week.user_id)
     @projects = @user_name.projects
     logger.debug "PROJECT quotes: #{!params[:project] == ''}"
@@ -377,16 +380,25 @@ class WeeksController < ApplicationController
     @expense.description = params[:description]
     @expense.amount = params[:amount]
     @expense.week_id = params[:week_id]
-    #@expense.project_id = Project.find_by_name(params[:project_id]).id
+    @expense.attachment = params[:attachment]
+    if !params[:project_id].nil?
+      @expense.project_id = Project.find_by_name(params[:project_id]).id
+    end
     logger.debug("EXPENSE FOUND #{@expense.inspect}")
     @week = Week.find(params[:week_id])
     @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
     logger.debug("The PROJECTS ARE #{@projects.inspect}")
-    #@project = @projects.name
-    #logger.debug("The PROJECT NAMES ARE #{@project.inspect}")
-    #@project = Project.find(params[:project_id])
+    @start_date = @week.start_date.strftime('%Y-%m-%d')
+    @end_date = @week.end_date.strftime('%Y-%m-%d')
+    logger.debug("The WEEK STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
+    @week_dates = (@start_date..@end_date)
+    logger.debug("The 7 DATES ARE #{@week_dates.inspect}")
     @expense.save
+    @expense.attachment.url
+    @expense.attachment.current_path
+    @expense.attachment_identifier
     @expenses = ExpenseRecord.where(week_id: @week.id)
+    logger.debug("EXPENSES COUNT #{@expenses.count}")
     respond_to do |format|
       format.js
     end
@@ -394,16 +406,14 @@ class WeeksController < ApplicationController
   end
 
   def delete_expense
+    @week = Week.find(params[:week_id])
     @expense_row = ExpenseRecord.find(params[:expense].to_i)
     logger.debug("DELETING THE ROW #{@expense_row.inspect}")
-    #if !user.blank?
-      #user.@expense.id = nil
-      #user.save
     @expense_row.destroy
     logger.debug("DELETING THE EXPENSE*******")
       #@verb = "Removed" 
     respond_to do |format|
-     format.js
+      format.js
     end
   end
 
@@ -435,6 +445,6 @@ class WeeksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
       params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
-      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id],expense_records_attributes:[:id, :expense_type, :description, :date, :amount])
+      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id],expense_records_attributes:[:id, :expense_type, :description, :date, :amount, :attachment, :project_id])
     end
 end

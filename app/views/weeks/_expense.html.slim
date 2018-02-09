@@ -1,4 +1,4 @@
-= form_tag expense_records_path,method: :post, remote: true do 
+= form_tag expense_records_path, :multipart => true, method: :post, remote: true do 
 	= hidden_field_tag :week_id, @week.id
 	table
 		thead
@@ -13,11 +13,13 @@
 		tbody
 
 			td = select_tag :expense_type, options_for_select(::Week::EXPENSE_TYPE)
-			td = date_field_tag :date
+			td = select_tag :date, options_for_select(@week_dates)
 			td = select_tag :project_id, options_for_select(@projects.pluck(:name))
 			td = text_field_tag :description 
 			td = number_field_tag :amount
-			td = label_tag(:attachment, "Attach Bills", class: 'attach_bills', for: 'file-upload')
+			/td = label_tag(:attachment, "Attach Bills", class: 'action', for: 'file-upload')
+			/td = file_field_tag :attachment
+			td = file_field_tag "attachment", type: :file, accept: 'image/png,image/gif,image/jpeg,application/pdf', class: "doc-upload-file",  :multiple => true, value: "Upload Documents"
 			td = submit_tag "Save Expense"
 end 
 
@@ -37,8 +39,10 @@ table
 
 			td = e.expense_type
 			td = e.date
-			td = e.project_id 
+			td = Project.find(e.project_id).name if e.project_id > 0  
 			td = e.description 
 			td = e.amount
-			td = link_to "You have attached:#{e.attachment_identifier} on #{e.created_at.to_date}", e.attachment.url, :target => "_blank" 
-			td = button_tag "Delete", id: "#{@week.id}_#{e.id}", class: "button alert delete_expense orange-button"
+			/td = e.file_field :attachment
+			td = file_field(e.attachment, id: "file-upload")
+			/td = link_to "You have attached: #{e.attachment_identifier} on #{e.created_at.to_date}", e.attachment.url, :target => "_blank" 
+			td = button_tag "Delete", id: "delete_#{@week.id}_#{e.id}", class: "button alert delete_expense orange-button"

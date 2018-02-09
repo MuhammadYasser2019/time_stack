@@ -237,9 +237,9 @@ jQuery ($) ->
 
   $(document).on('click', '.delete_expense', ->
     console.log("weeks.js- Delete Expense")
-    week_id = $(this).attr('id').split("_")[0]
+    week_id = $(this).attr('id').split("_")[1]
     console.log("THE DELETE EXPENSE Week ID IS: " + week_id)
-    expense = $(this).attr('id').split("_")[1]
+    expense = $(this).attr('id').split("_")[2]
     console.log("Weeks.js- DELETE ROW "+"expense-
     row_id: "+ expense )
     $.get "/delete_expense",

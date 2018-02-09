@@ -1,0 +1,21 @@
+table
+	thead
+		tr
+			th Expense Type
+			th Date
+			th Project
+			th Description
+			th Amount
+			th Attachment
+			th Delete Expense
+
+	- @expenses.each do |e|
+		tbody
+
+			td = e.expense_type
+			td = e.date
+			td = Project.find(e.project_id).name if e.project_id > 0  
+			td = e.description 
+			td = e.amount
+			td = link_to "You have attached:#{e.attachment_identifier} on #{e.created_at.to_date}", e.attachment.url, :target => "_blank" 
+			td = button_tag "Delete", id: "delete_#{@week.id}_#{e.id}", class: "button alert delete_expense orange-button"

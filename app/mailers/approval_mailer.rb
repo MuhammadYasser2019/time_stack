@@ -1,6 +1,6 @@
 class ApprovalMailer < ActionMailer::Base
 
-  def mail_to_manager(week, user)
+  def mail_to_manager(week, expense, user)
     te = TimeEntry.where("week_id = ? AND user_id = ? and project_id IS NOT NULL", week.id, week.user_id).first
     unless te.nil?
       use = Project.find(te.project_id).user_id
@@ -10,6 +10,7 @@ class ApprovalMailer < ActionMailer::Base
         @manager = "sameer.sharma@resourcestack.com"
       end
       @week = week
+      @expenses = expense
       @sender = user.email
       mail(to: @manager , subject:"Time sheet submitted for approval" , from: @sender )
     end

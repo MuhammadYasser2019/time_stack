@@ -47,7 +47,12 @@
 
 .field
     = button_tag "ADD EXPENSES", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon", data: {toggle: "expenseRecordManagement", target: "#expenseRecordManagement"}
+- if @expenses.present?
+  == render "etable"
 
+    .actions
+     = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3)
+     = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"}
 
 div(id="userPreviousComments" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 div(id="expenseRecordManagement" class="large reveal" aria-hidden="true" role="dialog" data-reveal)
