@@ -15,7 +15,7 @@
 					td = check_box_tag "employment_type_#{e.id}"
 						
 		.actions = submit_tag 'Assign to Employment'
-	= link_to "Manage Vacation", vacation_types_path, id: "#{@customer.id}", class: "orange-button", style: "margin-top:30px;"
+	= link_to "Manage Vacation Type", vacation_types_path(:customer_id => @customer.id), id: "#{@customer.id}", class: "orange-button", style: "margin-top:30px;"
 
 
 .right-row-adhoc

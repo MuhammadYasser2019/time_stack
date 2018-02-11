@@ -483,6 +483,15 @@ class CustomersController < ApplicationController
     
   end
 
+  def get_employment
+    logger.debug "available_emp - starting to process, params passed  are #{params[:vacation_id]}"
+    vacation_id  = params[:vacation_id]
+    vacation = VacationType.find vacation_id  
+    
+    @emp = vacation.employment_types
+    logger.debug "available_emp - leaving  @emp is #{@emp}"
+  end
+
   def dynamic_customer_update
 
     logger.debug("customer-dynamic_customer_update- CUSTOMER ID IS #{params.inspect}")

@@ -266,3 +266,23 @@ jQuery ($) ->
       $('#proj_report_start_date').attr('readonly', false)
       $('#proj_report_end_date').attr('readonly', false)
   )
+
+  $(document).on("change", '#vacation_type_id', ->
+    console.log("You changed the vacation "+ $(this).attr('id') + "the value is " + $(this).val())
+    emp_id = "employment_type_"
+    build_task(emp_id, $(this).val())
+  )
+
+  build_task = (content_id, vacation_id) ->
+    my_url = '/get_employment'
+    $.ajax my_url,
+    data: {
+      vacation_id: vacation_id,
+    }
+    type: 'GET'
+    dataType: 'json'
+    success: (data, textStatus, jqXHR) ->
+      $my_data = data
+      for item in $my_data
+        console.log "data is "+ item.name
+        $('#employment_type_'+item.id).attr('checked', true)

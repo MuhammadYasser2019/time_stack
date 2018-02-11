@@ -112,6 +112,7 @@ Rails.application.routes.draw do
   match "/expense_records" => 'weeks#expense_records', via: [:get, :post]
   get '/delete_expense' => "weeks#delete_expense"
   post "/add_expense_records" => "weeks#add_expense_records"
+  get 'get_employment/' => 'customers#get_employment'
 
   #mount Ckeditor::Engine => '/ckeditor'
 
