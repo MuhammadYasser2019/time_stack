@@ -377,16 +377,16 @@ class WeeksController < ApplicationController
     @week = Week.find(params[:week_id])
     if request.get?
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
-      @start_date = @week.start_date.strftime('%Y-%m-%d')
-      @end_date = @week.end_date.strftime('%Y-%m-%d')
-      logger.debug("The WEEK STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
-      @week_dates = (@start_date..@end_date)
+      @week_time_entries = TimeEntry.where(project_id: params[:project], week_id: @week.id).order(:date_of_activity)
+      @start_date = @week.start_date.to_date
+      @end_date = @week.end_date.to_date
+      logger.debug("The IN REQUEST GET WEEK STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
+      @week_dates = @start_date.upto(@end_date)
       @expenses = ExpenseRecord.where(week_id: @week.id)
       respond_to do |format|
         format.js
       end
     else
-      #@expense_records = ExpenseRecord.find(params[:id])
       logger.debug("EXPENSE RECORD- #{params.inspect}")
       @expense = ExpenseRecord.new
       @expense.expense_type = params[:expense_type]
@@ -396,16 +396,16 @@ class WeeksController < ApplicationController
       @expense.week_id = params[:week_id]
       @expense.attachment = params[:attachment]
       if !params[:project_id].nil?
-        #@expense.project_id = Project.find_by_name(params[:project_id]).id
+        @expense.project_id = Project.find_by_name(params[:project_id]).id
       end
       #logger.debug("EXPENSE FOUND #{@expense.inspect}")
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
       logger.debug("The PROJECTS ARE #{@projects.inspect}")
-      #@start_date = @week.start_date.strftime('%Y-%m-%d')
-      #@end_date = @week.end_date.strftime('%Y-%m-%d')
-      #logger.debug("The WEEK STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
-      #@week_dates = (@start_date..@end_date)
-      #logger.debug("The 7 DATES ARE #{@week_dates.inspect}")
+      @start_date = @week.start_date.to_date
+      @end_date = @week.end_date.to_date
+      logger.debug("The WEEK AFTER GET ----------- STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
+      @week_dates = @start_date.upto(@end_date)
+      logger.debug("The 7 DATES ARE #{@week_dates.inspect}")
       @expense.save
       @expense.attachment.url
       @expense.attachment.current_path

@@ -22,7 +22,7 @@
 		    <td><%= e.date %>  </td>
     		<td><%= e.expense_type %> </td>
     		<td><%= e.description %>  </td>
-    		<td><%= Project.find(e.project_id).name %>  </td>
+    		<td><%= Project.find(e.project_id).name if e.project_id.present? %>  </td>
     		<td><%= e.amount %>  </td>
 		</tr>
 	<% end %>
