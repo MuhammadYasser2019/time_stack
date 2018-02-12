@@ -489,7 +489,7 @@ class CustomersController < ApplicationController
     vacation = VacationType.find vacation_id  
     
     @emp = vacation.employment_types
-    logger.debug "available_emp - leaving  @emp is #{@emp}"
+    logger.debug "available_emp - leaving  @emp is #{@emp.inspect}"
   end
 
   def dynamic_customer_update

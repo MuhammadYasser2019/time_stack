@@ -270,6 +270,11 @@ jQuery ($) ->
   $(document).on("change", '#vacation_type_id', ->
     console.log("You changed the vacation "+ $(this).attr('id') + "the value is " + $(this).val())
     emp_id = "employment_type_"
+
+    $("input[id^='employment_type_']").each ->
+      console.log(this.id)
+      $('#'+this.id).removeAttr('checked')    
+
     build_task(emp_id, $(this).val())
   )
 
@@ -278,11 +283,12 @@ jQuery ($) ->
     $.ajax my_url,
     data: {
       vacation_id: vacation_id,
-    }
-    type: 'GET'
-    dataType: 'json'
+    },
+    type: 'GET',
+    dataType: 'json',
     success: (data, textStatus, jqXHR) ->
       $my_data = data
+
       for item in $my_data
         console.log "data is "+ item.name
-        $('#employment_type_'+item.id).attr('checked', true)
+        $('#'+content_id+item.id).prop('checked', true)
