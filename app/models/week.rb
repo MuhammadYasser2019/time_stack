@@ -3,9 +3,10 @@ class Week < ApplicationRecord
   has_many :user_week_statuses
   accepts_nested_attributes_for :time_entries, allow_destroy: true, reject_if: proc { |time_entries| time_entries[:date_of_activity].blank? }
   has_many :upload_timesheets
+  has_many :expense_records
   accepts_nested_attributes_for :upload_timesheets
   #mount_uploader :time_sheet, TimeSheetUploader
-
+  EXPENSE_TYPE = ["Travel", "Stay","Food", "Gas", "Misc"]
   def self.current_user_time_entries(current_user)
     logger.debug "Week - current_user_time_entries entering"
     TimeEntry.where(week_id: id, user_id: current_user.id).take

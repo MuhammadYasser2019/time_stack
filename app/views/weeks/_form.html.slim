@@ -13,7 +13,7 @@
     = f.label :end_date
     = f.text_field :end_date, readonly: true
 
-  table border="1" id="mytable"
+  table border="1" id="mytable" style="width:100%;"
     thead
       tr
         td Date
@@ -22,7 +22,7 @@
         td Task
         td Hours/Time Enter
         td Description
-        td
+        td Vacation Types
         td
     tbody
     - @count = 0
@@ -40,10 +40,19 @@
       - @week.upload_timesheets.each do |t|
         - if t.time_sheet.present?
           div = link_to "You have attached: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+  
     .actions
      = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3)
      = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"}
 
+.field
+    = button_tag "ADD EXPENSES", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon", data: {toggle: "expenseRecordManagement", target: "#expenseRecordManagement"}
+- if @expenses.present?
+  == render "etable"
 
+    .actions
+     = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3)
+     = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"}
 
 div(id="userPreviousComments" class="reveal" aria-hidden="true" role="dialog" data-reveal)
+div(id="expenseRecordManagement" class="large reveal" aria-hidden="true" role="dialog" data-reveal)

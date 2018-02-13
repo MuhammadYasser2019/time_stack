@@ -1,0 +1,26 @@
+= form_tag expense_records_path, :multipart => true, method: :post, remote: true, authenticity_token: true do 
+	= hidden_field_tag :week_id, @week.id
+	table
+		thead
+			tr
+				th Expense Type
+				th Date
+				th Project
+				th Description
+				th Amount
+				th Attachment
+				th
+		tbody
+			tr
+
+				td = select_tag :expense_type, options_for_select(::Week::EXPENSE_TYPE)
+				td = select_tag :date, options_for_select(@week_dates)
+				td = select_tag :project_id, options_for_select(@projects.pluck(:name))
+				td = text_field_tag :description 
+				td = number_field_tag :amount
+				td 
+					= label_tag(:attachment, "Attach Bills", for: "attachment-upload")
+					= file_field_tag(:attachment, id: "attachment-upload")
+				
+				td = submit_tag "Save Expense"
+

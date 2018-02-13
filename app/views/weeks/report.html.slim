@@ -23,8 +23,7 @@ div.report
         td Task
         td Hours
         td Description
-        td Sick
-        td Personal
+        td Vacation Type
         td Approved By
     tbody
     - @time_entries.each do |t|
@@ -37,16 +36,11 @@ div.report
           = t.hours
         td.active_log
           = t.activity_log
-        td.sick
-         - if t.sick == true
-           span Yes
+        td.vacation_type
+         - if t.vacation_type.present?
+           = t.vacation_type.vacation_title
          - else
-           span No
-        td.personal
-         - if t.personal_day == true
-           span Yes
-         - else
-           span No
+           = ""
         td.approved_by
          - if t.approved_by?
           span = "#{User.find(t.approved_by).first_name} #{User.find(t.approved_by).last_name}"
@@ -63,6 +57,9 @@ div.report
     - @week.upload_timesheets.each do |t|
       - if t.time_sheet.present?
         div = link_to "You have attached: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+  - if @expenses.present?
+    == render "etable"
+
     = button_tag "Print", class: "print-report secondary tiny", type: "button"
 
   - if @week.status_id == 2

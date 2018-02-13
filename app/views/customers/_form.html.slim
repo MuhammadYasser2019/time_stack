@@ -1,6 +1,6 @@
-ul(class="tabs" data-tabs id="customer-tabs" style="margin: 0 64px 0 5%;")
+ul(class="tabs" data-tabs id="customer-tabs" style="margin: 0 55px 0 64px;")
  - unless current_page?(action: 'new')
-  li class="tabs-title is-active"
+  li class="tabs-title is-active" style="margin: 0px;"
   	a aria-selected="true" href="#information" Customer Information
   li class="tabs-title"
   	a data-tabs-target="holidays" href="#holidays" Holidays
@@ -16,6 +16,8 @@ ul(class="tabs" data-tabs id="customer-tabs" style="margin: 0 64px 0 5%;")
   	 a data-tabs-target="adhoc_pm" href="#adhoc_pm" Assign Adhoc PM
   li class="tabs-title"
   	 a data-tabs-target="assign_pm" href="#assign_pm" Projects
+  li class="tabs-title"
+  	 a data-tabs-target="vacation_types" href="#vacation_types" Vacation Types
 
 div.tabs-content.white-background data-tabs-content="customer-tabs"
   div class="tabs-panel is-active" id="information"
@@ -138,7 +140,7 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
                       = label_tag "Select Start Date",nil, :style=>"text-align: left;"
                       = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
                       = label_tag "Employment Type",nil, :style=>"text-align: left;"
-                      = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type"
+                      = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type", required: "required"
                       = label_tag "Project",nil, :style=>"text-align: left;"
                       = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
                       = hidden_field_tag :invited_by_id, current_user.id
@@ -181,4 +183,8 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
   div class="tabs-panel" id="assign_pm"
 			 div(id="dynamic_assign_pm")
 				== render partial: 'assign_pm_form'
-		
+
+  div class="tabs-panel" id="vacation_types"
+			 div(id="dynamic_add_vacation_types")
+			 	== render partial: 'add_vacation_types'
+				

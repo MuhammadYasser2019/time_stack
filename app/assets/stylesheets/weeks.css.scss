@@ -45,7 +45,7 @@ table{
   border-collapse: separate;
   /*box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);*/
   margin-left: auto;
-  width: 70%;
+  width: auto;
   margin-right: auto;
 }
 
@@ -305,6 +305,15 @@ input[type="submit"]{
 
 .enter_time {
   display: none;
+}
+
+.expense_record_icon{
+  margin-left: 35%;
+  padding: 9px;
+}
+
+.delete_expense{
+  padding: 7px;
 }
 
 .hours-input {

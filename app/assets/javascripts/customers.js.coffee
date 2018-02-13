@@ -107,6 +107,22 @@ jQuery ($) ->
     return
   )
 
+  $(document).on('click', '.remove-emp-type', ->
+    console.log("customers.js- romove employment")
+    v_id = $(this).attr('id').split("_")[0]
+    e_id = $(this).attr('id').split("_")[1]
+    console.log("customer.js- remove form customer "+"v: "+ $(this).attr('id'))
+    row = $(this).parent().parent().attr('id')
+    console.log("customer.js- remove from customer "+"row_id: "+ row )
+    customer_url=$(location).attr('href')
+    customer_id = parse_customer_id(customer_url)
+    $.get "/remove_emp_from_vacation",
+      emp_id: e_id,
+      vacation_id: v_id,
+      row: row
+    return
+  )
+
   parse_customer_id = (attr_val) ->
    customer_id = attr_val.split("_")[2]
    return customer_id
@@ -202,14 +218,6 @@ jQuery ($) ->
       "user_id": $("#pm_user_id_"+project_id).val(),
   )
     
-  $(document).on('click', '.vacation_request_submit', (event) ->
-    if($('.vacation_request').find("input:checked").length == 0)
-     alert("Please select atleast one vacation type")
-     return false;
-    else
-      $("vacation_request_form").submit()
-  )
-
   $(document).on('click', '#current_month', ->
     if $(this).is(":checked") || $('#current_week').is(":checked")
 
@@ -258,3 +266,29 @@ jQuery ($) ->
       $('#proj_report_start_date').attr('readonly', false)
       $('#proj_report_end_date').attr('readonly', false)
   )
+
+  $(document).on("change", '#vacation_type_id', ->
+    console.log("You changed the vacation "+ $(this).attr('id') + "the value is " + $(this).val())
+    emp_id = "employment_type_"
+
+    $("input[id^='employment_type_']").each ->
+      console.log(this.id)
+      $('#'+this.id).removeAttr('checked')    
+
+    build_task(emp_id, $(this).val())
+  )
+
+  build_task = (content_id, vacation_id) ->
+    my_url = '/get_employment'
+    $.ajax my_url,
+    data: {
+      vacation_id: vacation_id,
+    },
+    type: 'GET',
+    dataType: 'json',
+    success: (data, textStatus, jqXHR) ->
+      $my_data = data
+
+      for item in $my_data
+        console.log "data is "+ item.name
+        $('#'+content_id+item.id).prop('checked', true)

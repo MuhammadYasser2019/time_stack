@@ -69,6 +69,8 @@ class WeeksController < ApplicationController
     @week.save!
 
     @week_user = User.find(@week.user_id)
+    emp_type = EmploymentType.find current_user.employment_type
+    @vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", @week_user.customer_id, true)
     vacation(@week)
     @upload_timesheet = @week.upload_timesheets.build
 
@@ -130,7 +132,10 @@ class WeeksController < ApplicationController
     @week.end_date = Week.find(params[:id]).end_date.strftime('%Y-%m-%d')
     status_ids = [1,2]
     @statuses = Status.find(status_ids)
+    emp_type = EmploymentType.find current_user.employment_type
+    @vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", @week_user.customer_id, true)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
+    @expenses = ExpenseRecord.where(week_id: @week.id)
     @week.upload_timesheets.build if @week.upload_timesheets.blank?
     vacation(@week)
     # vr.where("status = ? && vacation_start_date >= ?", "Approved", @week.start_date)
@@ -142,14 +147,9 @@ class WeeksController < ApplicationController
     week.time_entries.each do |wtime|
       @user_vacation_requests.each do |v|
         if wtime.date_of_activity >= v.vacation_start_date && wtime.date_of_activity <= v.vacation_end_date 
-          if v.sick == 1
-            wtime.sick = true
+          if v.vacation_type_id.present?
+            wtime.vacation_type_id =  v.vacation_type_id
             wtime.activity_log = v.comment 
-            wtime.save
-          end
-          if v.personal == 1
-            wtime.personal_day = true
-            wtime.activity_log = v.comment
             wtime.save
           end
         end
@@ -225,7 +225,6 @@ class WeeksController < ApplicationController
     test_array = []
     week_user = week.user_id
     logger.debug("THE USER ON THE WEEK IS: #{week_user}")
-
     prev_date_of_activity =""
     week_params["time_entries_attributes"].permit!.to_h.each do |t|
       # store the date of activity from previous row
@@ -245,7 +244,6 @@ class WeeksController < ApplicationController
         
         @week.time_entries.push(new_day)
       end
-      
       logger.debug "#{t[0]}"
       if t[1]["project_id"] == ""
        t[1]["project_id"] = nil
@@ -306,8 +304,10 @@ class WeeksController < ApplicationController
           we.update(user_id: week_user)  
           logger.debug("USER IS UPDATED ***************")
         end
+        @expenses = ExpenseRecord.where(week_id: @week.id)
+        logger.debug "THE EXPENSES IN WEEKS-UPDATE #{@expenses.inspect}"
         if @week.status_id == 2
-          ApprovalMailer.mail_to_manager(@week, User.find(@week.user_id)).deliver
+          ApprovalMailer.mail_to_manager(@week, @expenses, User.find(@week.user_id)).deliver
         end
 
         format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
@@ -334,6 +334,7 @@ class WeeksController < ApplicationController
     @print_report = "false"
     @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?
     @week = Week.find(params[:id])
+    @expenses = ExpenseRecord.where(week_id: @week.id)
     @user_name = User.find(@week.user_id)
     @projects = @user_name.projects
     logger.debug "PROJECT quotes: #{!params[:project] == ''}"
@@ -372,6 +373,64 @@ class WeeksController < ApplicationController
     end
   end
 
+  def expense_records
+    @week = Week.find(params[:week_id])
+    if request.get?
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
+      @week_time_entries = TimeEntry.where(project_id: params[:project], week_id: @week.id).order(:date_of_activity)
+      @start_date = @week.start_date.to_date
+      @end_date = @week.end_date.to_date
+      logger.debug("The IN REQUEST GET WEEK STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
+      @week_dates = @start_date.upto(@end_date)
+      @expenses = ExpenseRecord.where(week_id: @week.id)
+      respond_to do |format|
+        format.js
+      end
+    else
+      logger.debug("EXPENSE RECORD- #{params.inspect}")
+      @expense = ExpenseRecord.new
+      @expense.expense_type = params[:expense_type]
+      @expense.date = params[:date]
+      @expense.description = params[:description]
+      @expense.amount = params[:amount]
+      @expense.week_id = params[:week_id]
+      @expense.attachment = params[:attachment]
+      if !params[:project_id].nil?
+        @expense.project_id = Project.find_by_name(params[:project_id]).id
+      end
+      #logger.debug("EXPENSE FOUND #{@expense.inspect}")
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
+      logger.debug("The PROJECTS ARE #{@projects.inspect}")
+      @start_date = @week.start_date.to_date
+      @end_date = @week.end_date.to_date
+      logger.debug("The WEEK AFTER GET ----------- STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
+      @week_dates = @start_date.upto(@end_date)
+      logger.debug("The 7 DATES ARE #{@week_dates.inspect}")
+      @expense.save
+      @expense.attachment.url
+      @expense.attachment.current_path
+      @expense.attachment_identifier
+      @expenses = ExpenseRecord.where(week_id: @week.id)
+      logger.debug("EXPENSES COUNT #{@expenses.count}")
+      redirect_to edit_week_path(@week)
+    end
+    
+    
+
+  end
+
+  def delete_expense
+    @week = Week.find(params[:week_id])
+    @expense_row = ExpenseRecord.find(params[:expense].to_i)
+    logger.debug("DELETING THE ROW #{@expense_row.inspect}")
+    @expense_row.destroy
+    logger.debug("DELETING THE EXPENSE*******")
+      #@verb = "Removed" 
+    respond_to do |format|
+      format.js
+    end
+  end
+
   def time_reject
     logger.debug "time_reject - entering #{params.inspect}"
     @week = Week.find(params[:id])
@@ -400,6 +459,6 @@ class WeeksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
       params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
-      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out])
+      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id],expense_records_attributes:[:id, :expense_type, :description, :date, :amount, :attachment, :project_id])
     end
 end
