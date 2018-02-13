@@ -114,7 +114,8 @@ div.tabs-content.white-background data-tabs-content="projects-tab"
 							    = f.hidden_field :invited_by_id, value:  @current_user_id
 							    = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
 							    = f.label :body, label: 'Employment Type', :style=>"text-align: left;" 
-							    = f.select :employment_type, options_from_collection_for_select(EmploymentType.all, :id, :name),include_blank: "Select Employment Type"
+							    = select_tag :employment_type, options_from_collection_for_select(EmploymentType.where(customer_id: @customer.id),:id, :name ), include_blank: "Select Employment Type", required: "required"
+							    	
 							    .actions = f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'
 
 				h1.pending-right-row Pending Users 
