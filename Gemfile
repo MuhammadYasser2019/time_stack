@@ -45,7 +45,7 @@ gem 'spring',        group: :development
 gem 'devise'
 gem 'devise_invitable'
 gem 'cocoon'
-gem 'foundation-rails', '~> 5.5'
+gem 'foundation-rails'
 gem 'foundation-datetimepicker-rails'
 gem 'high_voltage'
 gem 'mysql2', '~> 0.3.18'
