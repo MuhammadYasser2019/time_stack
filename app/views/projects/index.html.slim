@@ -3,7 +3,7 @@
 		- if params["adhoc"] == "true" && user_have_adhoc_permission(current_user)
 			.left-row
 				h1 Listing projects				
-				table{class="project_table"}
+				table{id= "project_left_table", class="project_table"}
 					thead
 						tr
 						  th Name
@@ -30,28 +30,13 @@
 		- else
 			.left-row
 				h1 Listing projects
-				table{class="project_table"}
-					thead
-						tr
-							th Name
-							th Customer
-							th Inactive?
-							th
-							
-					tbody
-						- @projects.each_with_index do |project,i|
-							tr
-								td = project.name
-								td = project.customer.name if !project.customer.nil?
-								td
-									- if project.inactive == true
-										span Yes
-									- elsif project.inactive == false || project.inactive == nil
-										span No
-								- if "#{i}" == "0"
-									td = radio_button_tag("project",project.id, true, class:"select-project")
-								- else
-									td = radio_button_tag("project",project.id, false,class:"select-project")
+				.field
+					= check_box_tag("show_all_projects", @project.id, false, class:"show_all_projects")
+					= label_tag "all_Projects"
+
+				.(id="show_all_projects")
+					== render partial: 'show_all_projects_form'
+
 				br
 					= link_to(image_tag("plus.jpg", :width => 50, :height => 50), new_project_path, title: "Create New Project")					
 			.right-row	

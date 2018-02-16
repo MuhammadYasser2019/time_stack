@@ -5,6 +5,7 @@ class ProjectsController < ApplicationController
   # GET /projects.json
   def index
     logger.debug("project-index- PROJECT ID IS #{params.inspect}")
+    @projectsss = Project.where(user_id: current_user.id, inactive: [false, nil])
     @projects = Project.where(user_id: current_user.id)
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     @adhoc_pm_projects = Project.where(adhoc_pm_id: current_user.id)
@@ -227,6 +228,9 @@ end
     @user_id = params[:user_id]
     @project_id = params[:project_id]
     @week_id = params[:week_id]
+    #@hours_expense_record = ExpenseRecord.where("week_id= ? and project_id= ?", @week_id ,@project_id)
+    #@hours_expense_record_id = @hours_expense_record.id
+    #logger.debug "SHOW HOURS TIME ENRY #{@hours_expense_record_id}"
 
     @applicable_hours = TimeEntry.where("week_id= ? and project_id= ?", @week_id ,@project_id)
 
@@ -346,6 +350,21 @@ end
     end
   end
 
+  def show_all_projects
+    logger.debug("PROJECT CONTROLLER -> SHOW ALL REPORTS #{params.inspect}" )
+    if params[:checked] == "true"
+      @projectsss = Project.where(user_id: current_user.id)
+      @checked = "true"
+      logger.debug("IF BLOCK #{@projects.inspect}---- count: #{@projects.count}")
+    else
+      @projectsss = Project.where(user_id: current_user.id, inactive: [false, nil])
+      @checked = "false"
+      logger.debug("ELSE BLOCK #{@projects.inspect}     9999      count: #{@projects.count}")
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
 
   def dynamic_project_update
     logger.debug("project-dynamic_project_update- PROJECT ID IS #{params.inspect}")
