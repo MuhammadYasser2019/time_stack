@@ -108,6 +108,7 @@ Rails.application.routes.draw do
   post "assign_employment_types/" => "customers#assign_employment_types", as: :assign_employment_types
   post "assign_pm/:id" => "customers#assign_pm", as: :assign_pm
   get "/clear_timesheet/:id" => "weeks#clear_timesheet"
+  get "/show_old_timesheets" => "projects#show_old_timesheets"
   post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments
   get 'remove_emp_from_vacation' => "customers#remove_emp_from_vacation"
   match "/expense_records" => 'weeks#expense_records', via: [:get, :post]

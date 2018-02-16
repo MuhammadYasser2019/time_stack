@@ -236,6 +236,51 @@ end
 
   end
 
+  def show_old_timesheets
+    logger.debug("PROJECTS CONTROLLER -> SHOW OLD TIMESHEETS #{params.inspect}")
+    @projects = Project.where(user_id: current_user.id)
+    @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc)
+    @adhoc_pm_projects = Project.where(adhoc_pm_id: current_user.id)
+    @adhoc_pm_project = @adhoc_pm_projects.first
+    @adhoc = params["adhoc"]
+    if @projects.present?
+      params[:project_id] = @project_id = @projects.first.id
+      logger.debug("project-index- @project_id #{@project_id}")
+ 
+      @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+      @tasks_on_project = Task.where(project_id: @project_id)
+      @user_projects = Project.where(user_id: current_user.id)
+      @customers = Customer.all
+      @project = Project.includes(:tasks).find(@project_id)
+      @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+      available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id) 
+      shared_users = SharedEmployee.where(customer_id: @project.customer.id).collect{|u| u.user_id}
+      shared_user_array = Array.new
+      shared_users.each do |su|
+        u = User.find(su)
+        shared_user_array.push(u)
+      end
+      logger.debug("AVAIALABLE SHARED USERS #{shared_users.inspect}, The USER IS #{shared_user_array.inspect}")
+      @available_users = available_users + shared_user_array
+      @users = User.all
+      @invited_users = User.where("invited_by_id = ?", current_user.id)
+      @proxies = User.where("customer_id =? and proxy = ?", @project.customer.id, true)
+      @customer = Customer.find(@project.customer_id)
+      customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
+      @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+      @holiday_exception = HolidayException.new
+      @holiday_exceptions = @project.holiday_exceptions
+      @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
+    elsif @adhoc_pm_project.present?
+      @project = @adhoc_pm_project
+      @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@adhoc_pm_project.id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+    end
+
+  respond_to do |format|  
+    format.html{}
+  end    
+  end
+
   def pending_email
     @user = User.find(params[:user_id])
 
