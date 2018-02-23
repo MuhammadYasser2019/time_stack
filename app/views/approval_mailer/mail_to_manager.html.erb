@@ -15,7 +15,7 @@
 </table>
 <% if @expenses.present? %>
 <% if !@expenses.blank? %>
-	<%= usr.first_name %> has submitted EXPENSES for Week %><br/>
+	<%= usr.first_name %> has submitted EXPENSES for Week <br/>
 	<table border='2'>
 	<tr><th>Date</th><th>Expense Type</th><th>Description</th><th>Project</th><th>Amount</th></tr>
 	<% @expenses.each do |e| %>
