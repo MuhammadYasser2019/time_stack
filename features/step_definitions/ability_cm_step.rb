@@ -157,3 +157,56 @@ end
 Then(/^the shared checkbox should be checked$/) do
   find('#shared_user_id').checked?
 end
+
+Given(/^page to have signin "([^"]*)"$/) do |arg1|
+  visit (root_path)
+  expect(page).to have_content(arg1) 
+end
+
+Given(/^click on signin "([^"]*)"$/) do |arg1|
+  click_link arg1 
+end
+
+Then(/^Expect page to have add "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^User clicks on the new "([^"]*)" link$/) do |arg1|
+  click_link arg1
+end
+
+Then(/^click on add expenses "([^"]*)"$/) do |arg1|
+  click_button arg1
+end
+
+Then(/^Expect page to have save "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^Expect page to have change share status "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^CM should see the entire weeks report and the status as "([^"]*)"$/) do |arg1|
+ expect(page).to have_content(arg1) 
+end
+
+Then(/^click on the button change share status "([^"]*)"$/) do |arg1|
+  click_link arg1
+end
+
+Then(/^Expect page to have delete "([^"]*)" button$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^Expect page to have text "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^I wait for the ajax request to finish$/) do
+  start_time = Time.now
+  page.evaluate_script('jQuery.isReady&&jQuery.active==0').class.should_not eql(String) until page.evaluate_script('jQuery.isReady&&jQuery.active==0') or (start_time + 5.seconds) < Time.now do
+    sleep 1
+  end
+end
+

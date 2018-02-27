@@ -12,9 +12,12 @@ Feature: Testing abilities of a User with CM role
    Given If "Enter Time for Current Week" is clicked
    Then HE should go to new time entries
    And click "Save Timesheet"
-   And he should see Reports page
-   And when user goes to projects reports page
-   And he should see "Reports for Project "
+   And Go to the index page
+   And Expect page to have "NEW" link
+   And click on the "NEW" link
+   And Expect page to have link "Save Timesheet" and "Submit Timesheet"
+   And click on "Submit Timesheet"
+   Then CM should see the entire weeks report and the status as "Status: SUBMITTED"
 
   Scenario: 9) With CM roles user should be able to Add projects
     Given I am a customer manager
@@ -44,13 +47,13 @@ Feature: Testing abilities of a User with CM role
     Then User should see "Reports for Users CM user" 
     And User should see "Your Vacation Requests"
 
-  Scenario: 18) With CM role user should able to create New Holiday
-    Given I am a customer manager
-    Given CM logs in with "Email" and "Password"
-    Given User is on Weeks index
-    And click on "Holidays" link
-    Then click the button "Create New Holiday"
-    And Enter "Name" and "Date of holiday this year"
+  #Scenario: 18) With CM role user should able to create New Holiday
+    #Given I am a customer manager
+    #Given CM logs in with "Email" and "Password"
+    #Given User is on Weeks index
+    #And click on "Holidays" link
+    #Then click the button "Create New Holiday"
+    #And Enter "Name" and "Date of holiday this year"
    
   Scenario: 21) With CM role user should be able to create Employment Types
     Given I am a customer manager
@@ -80,6 +83,10 @@ Feature: Testing abilities of a User with CM role
     And click on new "NEW"
     And should see "" in "Hours" 
     And should see "" in "Description"
+    And Expect page to have add "ADD EXPENSES"
+    And Expect page to have text "Travel"
+    And Expect page to have delete "Delete" button
+
 
   Scenario: 27) When the TimeSheet is submitted, there should be no COPY Link for that week
     Given I am a customer manager
@@ -101,6 +108,42 @@ Feature: Testing abilities of a User with CM role
     Given User is on customers index
     Then page should have "Customer Employees" link
     Then click on "Customer Employees" link
-    Then click on the shared checkbox
-    Then go to customer index page
-    Then the shared checkbox should be checked
+    Then Expect page to have change share status "Change Share Status"
+    And click on the button change share status "Change Share Status"
+    #Then Expect modal window has content "CUSTOMERS LIST"
+    #Then click on the shared checkbox
+    #Then go to customer index page
+    #Then the shared checkbox should be checked
+
+  Scenario: 30) With CM role user should able to add Expenses
+    Given I am a customer manager
+    Given page to have signin "Deploy in Minutes"
+    Given click on signin "Sign In"
+    Given CM logs in with "Email" and "Password"
+    Given If "Enter Time for Current Week" is clicked
+    Then HE should go to new time entries
+    And click "Save Timesheet"
+    And Go to the index page
+    Then User clicks on the new "NEW" link
+    And Expect page to have add "ADD EXPENSES"
+    Then click on add expenses "ADD EXPENSES"
+    #AfterStep('@javascript') do
+    #    begin
+    #        And I wait for the ajax request to finish
+    #    rescue
+    #    end
+    #end
+    #And Expect page to have save "Save Expense"
+    #Then fill in Expense Type column wih "Travel"
+    #And select a date from date dropdown
+    #And select a project from project dropdown
+    #And click on Save Expense
+    #An
+    #And Expect page to have delete "Delete" button
+
+  Scenario: 31) With the CM role user should able to create a new Vacation type
+    Given I am a customer manager
+    Given page to have signin "Deploy in Minutes"
+    Given click on signin "Sign In"
+    Given CM logs in with "Email" and "Password"
+    

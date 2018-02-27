@@ -10,6 +10,23 @@ module TestDataSetupHelper
     t.save!
   end
 
+  def create_expense_record
+    r = ExpenseRecord.new
+    r.id = 1
+    r.expense_type = "Travel"
+    r.description = "testing"
+    r.amount = "100"
+    r.save 
+  end
+
+  def create_employment_type
+    e = EmploymentType.new
+    e.id = 1
+    e.name = "Contractor"
+    e.customer_id = 1
+    e.save
+  end
+
   def create_week
     w = Week.new
     w.id = 1
@@ -61,9 +78,11 @@ module TestDataSetupHelper
     t.hours = 8
     t.date_of_activity = Date.today.beginning_of_week- 7.days
     t.save
+
+    create_expense_records
   end
 
-    def create_second_time_sheet
+  def create_second_time_sheet
     t = TimeEntry.new
     t.project_id = 1
     t.week_id = 3
@@ -111,7 +130,7 @@ module TestDataSetupHelper
 
   def create_adhoc_pm
     p = Project.new
-    p.id = 1
+    p.id = 2
     p.name = "Time Entries"
     p.user_id = 1
     p.adhoc_pm_id = 1
@@ -143,17 +162,25 @@ module TestDataSetupHelper
     u.encrypted_password
     u.user = 1
     u.cm = 1
+    u.employment_type = 1
     u.save!
 
     create_task
     create_week
+    create_expense_records
     create_status
     create_customers
     create_project
+    create_employment_type
+    pu1 = ProjectsUser.new
+    pu1.project_id = 1
+    pu1.user_id =  1
+    pu1.save
 
   end
 
   def create_project_manager
+    create_employment_type
     u = User.new
     u.id = 1
     u.customer_id = 1
@@ -164,6 +191,7 @@ module TestDataSetupHelper
     u.encrypted_password
     u.user = 1
     u.pm = 1
+    u.employment_type = 1
     u.save!
 
     create_task
@@ -184,6 +212,15 @@ module TestDataSetupHelper
     h.save
   end
 
+  def create_expense_records
+    ex = ExpenseRecord.new
+    ex.id = 1
+    ex.expense_type = "Travel"
+    ex.project_id = 1
+    ex.week_id = 3
+    ex.save
+  end
+
   def create_customer_holidays
     create_holidays
     ch = CustomerHoliday.new
@@ -199,10 +236,12 @@ module TestDataSetupHelper
     u.password = "1234567"
     u.encrypted_password
     u.user = 1
+    u.employment_type = 1
 
 
     u.save!
     create_customers
+    create_employment_type
     create_task
     create_status
     create_week

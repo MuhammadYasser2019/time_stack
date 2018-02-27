@@ -177,5 +177,16 @@ Then(/^Submit the timesheet$/) do
 
 end
 
+Then(/^PM should see the entire weeks report$/) do
+  visit ('/weeks/1/report')
+end
+
+Then(/^PM should see the entire weeks report and the status as "([^"]*)"$/) do |arg1|
+ expect(page).to have_content(arg1) 
+end
+
+Given(/^If enter "([^"]*)" is clicked$/) do |arg1|
+  click_link arg1
+end
 
 
