@@ -46,7 +46,7 @@
      = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"}
 
 .field
-    = button_tag "ADD EXPENSES", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon", data: {toggle: "expenseRecordManagement", target: "#expenseRecordManagement"}
+    = button_tag "ADD EXPENSES", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon", data: {toggle: "expenseRecordManagement", target: "#expenseRecordManagement"}, disabled: (@week.status_id == 3)
 - if @expenses.present?
   == render "etable"
 
