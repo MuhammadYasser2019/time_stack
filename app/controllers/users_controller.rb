@@ -71,7 +71,7 @@ class UsersController < ApplicationController
     @proxy = Project.find(params[:proxy_id])
     @proxy_users = @proxy.users
   end
-  
+
   def invite_customer
     @user = User.invite!(email: params[:email], invitation_start_date: params[:invite_start_date], invited_by_id: params[:invited_by_id])
     @user.update(invited_by_id: params[:invited_by_id])
@@ -97,9 +97,9 @@ class UsersController < ApplicationController
     time_period = params[:proj_report_start_date]..params[:proj_report_end_date]
     if !params[:project].blank?
       logger.debug "getting here?"
-      @time_entries = TimeEntry.where(project_id: params[:project],user_id: @user, date_of_activity: time_period).order(:date_of_activity)
+      @time_entries = TimeEntry.where(project_id: params[:project],user_id: @user.id, date_of_activity: time_period).order(:date_of_activity)
     else
-      @time_entries = TimeEntry.where(user_id: @user,date_of_activity: time_period).order(:date_of_activity)
+      @time_entries = TimeEntry.where(user_id: @user.id,date_of_activity: time_period).order(:date_of_activity)
     end
     @dates_array = @user.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
     @daily_totals = Array.new
