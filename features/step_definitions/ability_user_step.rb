@@ -83,7 +83,7 @@ end
 Then(/^should see the "([^"]*)" in "([^"]*)" field$/) do |arg1,arg2|
    visit('/weeks/3/edit')
    page.find('#week_time_entries_attributes_0_hours')
-   save_and_open_page
+   #save_and_open_page
    #find_field('Hours').should have_content('8')
    #expect(find_field('week_time_entries_attributes_0_hours'))
 end

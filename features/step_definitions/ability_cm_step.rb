@@ -3,10 +3,15 @@ Given(/^I am a customer manager$/) do
 end
 
 Given(/^CM logs in with "([^"]*)" and "([^"]*)"$/) do |arg1, arg2|
-  visit (user_session_path)
+  #visit (user_session_path)
+  visit (root_path)
   page.fill_in "Email", :with => "cm.user@test.com"
   page.fill_in "Password", :with => "123456"
   page.click_button "Log in"
+end
+
+Given(/^expect page to have "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
 end
 
 Then(/^I should see contentsss and "([^"]*)"$/) do |arg1|
@@ -201,6 +206,78 @@ end
 
 Then(/^Expect page to have text "([^"]*)"$/) do |arg1|
   expect(page).to have_content(arg1)
+end
+
+When(/^the CM clicks on old "([^"]*)"$/) do |arg1|
+  click_link arg1
+end
+
+Then(/^it should redirects to show old timesheets page$/) do
+  expect(page).to have_content("OLD TIMESHEETS")
+end
+
+Then(/^Expect page to have add new "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+When(/^the CM clicks on link "([^"]*)"$/) do |arg1|
+  click_link arg1
+end
+Then(/^expect page to have heading "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^click on manage "([^"]*)"$/) do |arg1|
+  click_link arg1
+end
+
+Then(/^Expect page to have heading vacation "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^click on add new vacation "([^"]*)"$/) do |arg1|
+  click_link arg1
+end
+
+Then(/^Expect page to have heading create "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^fill in "([^"]*)" with "([^"]*)"$/) do |arg1, arg2|
+  page.fill_in "Vacation title", :with => "vacation days"
+end
+
+Then(/^click on the Active checkbox$/) do
+  find('#vacation_type_active').click
+end
+
+Then(/^click on update vacation "([^"]*)"$/) do |arg1|
+  find('[name=commit]').click
+end
+
+Then(/^Expect page to have text testing "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+When(/^Expect page to have heading assign employment "([^"]*)"$/) do |arg1|
+  expect(page).to have_content(arg1)
+end
+
+Then(/^Select "([^"]*)" from "([^"]*)"\.$/) do |arg1, arg2|
+  #find('#vacation_type_id').find(:xpath, 'vacation days').select_option
+  select("vacation days", from: "vacation_type_id").select_option
+end
+
+Then(/^click on the employment type checkbox$/) do
+  find('#employment_type_1').click
+end
+
+Then(/^Expect page to have assign "([^"]*)"$/) do |arg1|
+  expect(page).to have_button(arg1)
+end
+
+Then(/^click on assign "([^"]*)"$/) do |arg1|
+  click_button "Assign to Employment"
 end
 
 Then(/^I wait for the ajax request to finish$/) do

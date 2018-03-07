@@ -27,6 +27,14 @@ module TestDataSetupHelper
     e.save
   end
 
+  def create_vacation_types
+    v = VacationType.new
+    v.id = 1
+    v.customer_id = 1
+    v.employment_type =""
+  end
+
+
   def create_week
     w = Week.new
     w.id = 1
