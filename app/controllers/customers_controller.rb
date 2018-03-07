@@ -397,8 +397,11 @@ class CustomersController < ApplicationController
     end
     @users = @users.flatten.uniq
     @users_array = @users.pluck(:id)
+    logger.debug("THE USER IDS ARE: #{@users_array}")
     @projects = @customer.projects
     @dates_array = @customer.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date], params["current_week"], params["current_month"])
+    @week_array = @customer.find_week_id(params[:proj_report_start_date], params[:proj_report_end_date],@users_array)
+    logger.debug("THE WEEK ID YOU ARE LOOKING FOR ARE :  #{@week_array}")
     if params[:user] == "" || params[:user] == nil
       if params[:project] == "" || params[:project] == nil
         @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, @projects, params["current_week"], params["current_month"])
