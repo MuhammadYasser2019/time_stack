@@ -127,13 +127,14 @@ Feature: Testing abilities of a User with CM role
     Then User clicks on the new "NEW" link
     And Expect page to have add "ADD EXPENSES"
     Then click on add expenses "ADD EXPENSES"
+    And Expect page to have add new "Add New Expense"
     #AfterStep('@javascript') do
     #    begin
     #        And I wait for the ajax request to finish
     #    rescue
     #    end
     #end
-    #And Expect page to have save "Save Expense"
+    And Expect page to have save "Save Expense"
     #Then fill in Expense Type column wih "Travel"
     #And select a date from date dropdown
     #And select a project from project dropdown
@@ -145,5 +146,33 @@ Feature: Testing abilities of a User with CM role
     Given I am a customer manager
     Given page to have signin "Deploy in Minutes"
     Given click on signin "Sign In"
+    Given expect page to have "LOGIN"
     Given CM logs in with "Email" and "Password"
-    
+    When the CM clicks on link "Vacation Types"
+    Then expect page to have heading "Assign Employment"
+    And click on manage "Manage Vacation Type"
+    Then Expect page to have heading vacation "Vacation Type"
+    And click on add new vacation "Add New Vacation"
+    Then Expect page to have heading create "Create New Vacation Type"
+    And fill in "Vacation title" with "vacation days"
+    And click on the Active checkbox
+    Then click on update vacation "Update Vacation type"
+    Then Expect page to have text testing "vacation days"
+    When User is on Weeks index
+    When the CM clicks on link "Vacation Types"
+    And Expect page to have heading assign employment "Assign Employment"
+    Then Select "vacation days" from "vacation type".
+    And click on the employment type checkbox 
+    Then Expect page to have assign "Assign to Employment"
+    Then click on assign "Assign to Employment"
+
+
+  Scenario: 32) With the CM role user should able to see all the timesheets
+    Given I am a customer manager
+    Given page to have signin "Deploy in Minutes"
+    Given click on signin "Sign In"
+    Given CM logs in with "Email" and "Password"
+    When the CM clicks on old "Show Old Timesheets"
+    Then it should redirects to show old timesheets page
+
+ 
