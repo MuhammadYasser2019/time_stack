@@ -1,6 +1,6 @@
 - projects.each_with_index do |project,i|
 	tr
-		td = project.name
+		td{id="project_name_#{project.id}"} = project.name
 		td = project.customer.name if !project.customer.nil?
 		td
 			- if project.inactive == true
