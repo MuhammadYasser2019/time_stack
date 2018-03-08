@@ -116,6 +116,9 @@ end
   def update
     params[:project_id] = @project_id = params[:id]
     @project = Project.includes(:tasks).find(params[:id])
+    pname = params[:project][:name]
+    logger.debug "NAME----------------------- #{pname.inspect}"
+    @project.update_attributes(name: pname)
     task_attributes = params[:project][:tasks_attributes] if params[:project]
     #previous_codes = Project.previous_codes(@project)
     #task_code = Project.task_value(task_attributes, previous_codes)

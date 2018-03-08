@@ -70,7 +70,12 @@ div.tabs-content.white-background data-tabs-content="projects-tab"
 					      li = message
 			
 				= f.hidden_field :customer_id, value: @project.customer_id	
-				
+
+				h1 class="project-center-row" Edit Project
+				.field
+					= f.label :name
+					= f.text_field :name
+
 				h1 class="task-center-row" Tasks
 				table class="center-row " id="tasklist"
 					thead
