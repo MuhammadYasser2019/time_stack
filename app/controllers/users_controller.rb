@@ -71,6 +71,114 @@ class UsersController < ApplicationController
     @proxy = Project.find(params[:proxy_id])
     @proxy_users = @proxy.users
   end
+
+  def enter_timesheets
+    @project_id = params[:proxy_id]
+    @p = Project.find(@project_id)
+    @users = @p.users
+    @user_array = @users.pluck(:id)
+    @dates_array = @p.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date], params["current_week"], params["current_month"])
+  end
+
+  def show_timesheet_dates  
+    @project_id = params[:proxy_id]
+    @p = Project.find(@project_id)
+    @users = @p.users
+    @user_array = @users.pluck(:id)
+    @dates_array = @p.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date], params["current_week"], params["current_month"])
+  end
+
+  def add_proxy_row
+    @project_id = params[:proxy_id]
+    @p = Project.find(@project_id)
+    @dates_array = @p.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date], params["current_week"], params["current_month"])
+    @count = params[:count].to_i + 1
+    @consultant = User.find params[:user_id]
+    respond_to do |format|
+      format.js
+    end
+
+  end
+
+  def fill_timesheet
+    @project_id = params[:proxy_id]
+    @p = Project.find(@project_id)
+    @users = @p.users
+    @dates_array = @p.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date], params["current_week"], params["current_month"])
+    @users.each do |u|
+
+      week_array = []
+      (0..5).each do |count|
+        @dates_array.each do |d|
+          if params["task_id_#{u.id}_#{count}"].present?
+            week = Week.where("start_date=? && user_id=?", d.to_date.beginning_of_week.strftime('%Y-%m-%d'),u.id).first
+            if week.blank?
+              week = Week.new
+              week.start_date = d.to_date.beginning_of_week.strftime('%Y-%m-%d')
+              week.end_date = d.to_date.end_of_week.strftime('%Y-%m-%d') 
+              week.user_id = u.id
+              week.status_id = Status.find_by_status("EDIT").id
+              week.proxy_user_id = current_user.id
+              week.save!
+              7.times {  week.time_entries.build( user_id: week.user_id, status_id: 5 )}
+              week.save
+            end
+            week_array << week.id
+          end
+        end
+        week_array.uniq.each do |w|
+          week = Week.find w 
+          @dates_array.each_with_index do |d, p|
+            logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
+            logger.debug "year: #{week.start_date.year}, month: #{week.start_date.month}, day: #{week.start_date.day}"
+            
+            wday = d.to_date.wday-1
+            if count != 0 && params["task_id_#{u.id}_#{count}"].present? && week.time_entries[wday].task_id.to_i != params["task_id_#{u.id}_#{count}"].to_i
+              new_day = TimeEntry.new
+              new_day.date_of_activity = @dates_array[p].to_date.to_s
+              new_day.project_id = @p.id
+              new_day.task_id = params["task_id_#{u.id}_#{count}"]
+              new_day.hours = params["hours_#{u.id}_#{count}_#{d}"]
+              new_day.updated_by = current_user.id
+              new_day.user_id = week.user_id
+              new_day.status_id = 5
+              
+              week.time_entries.push(new_day)
+
+            elsif params["task_id_#{u.id}_#{count}"].present?
+              week.time_entries[wday].date_of_activity = @dates_array[p].to_date.to_s
+              week.time_entries[wday].hours = week.time_entries[wday].hours.present? ? week.time_entries[wday].hours.to_i + params["hours_#{u.id}_#{count}_#{d}"].to_i : params["hours_#{u.id}_#{count}_#{d}"]
+              week.time_entries[wday].user_id = week.user_id
+              week.time_entries[wday].updated_by = current_user.id
+              week.time_entries[wday].project_id = @p.id
+              week.time_entries[wday].task_id = params["task_id_#{u.id}_#{count}"]
+              week.time_entries[wday].status_id = 5
+            end
+            week.save
+            vacation(week)
+          end
+        end
+      end
+    end
+    redirect_to "/users/#{params[:id]}/proxies/#{params[:proxy_id]}/enter_timesheets  "
+  end
+
+  def vacation(week)
+    @user_vacation_requests = VacationRequest.where("status = ? and vacation_start_date >= ? and user_id = ?", "Approved", week.start_date, current_user.id)
+    logger.debug("@@@@@@@@@@@@user_vacation_requests: #{@user_vacation_requests.inspect}")
+    week.time_entries.each do |wtime|
+      @user_vacation_requests.each do |v|
+        if wtime.date_of_activity >= v.vacation_start_date && wtime.date_of_activity <= v.vacation_end_date 
+          if v.vacation_type_id.present?
+            wtime.vacation_type_id =  v.vacation_type_id
+            wtime.activity_log = v.comment 
+            wtime.hours = nil
+            wtime.save
+          end
+        end
+      end
+    end
+  end
   
   def invite_customer
     @user = User.invite!(email: params[:email], invitation_start_date: params[:invite_start_date], invited_by_id: params[:invited_by_id])
