@@ -1,3 +1,4 @@
+= hidden_field_tag :week_id, @week_id
 table
   tr
     td Date
@@ -13,6 +14,9 @@ table
           = ah.hours
         td
           = ah.activity_log
+
+= link_to "WEEK","/weeks/#{@week_id}/report", class: "show_weeks orange-button", type: "button", target: :_blank
+
 
 button.close-button aria-label=("Close modal") data-close="" type="button" 
   span aria-hidden="true"  &times;

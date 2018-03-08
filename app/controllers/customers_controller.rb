@@ -392,8 +392,14 @@ class CustomersController < ApplicationController
     @customer_id = params[:id]
     @customer = Customer.find(@customer_id)
     @users = Array.new
-    @customer.projects.each do |p|
-      @users << p.users
+    if params[:exclude_pending_users].present?
+      @customer.projects.each do |p|
+        @users << p.users.where.not(invitation_accepted_at: nil)
+      end
+    else
+      @customer.projects.each do |p|
+        @users << p.users
+      end
     end
     @users = @users.flatten.uniq
     @users_array = @users.pluck(:id)

@@ -91,7 +91,25 @@ jQuery ($) ->
     return
 
 
+  $('#project_left_table').dataTable({
+    dom: 'lfrtip',
+    "info": false,
+    "bLengthChange": false,
+    "bFilter": false,
+    "paging": false,
+    "order" : [[0, 'desc']]
+  })
 
+  $('.show_all_projects').click ->
+    ckbox = $("#show_all_projects")
+    if ckbox.is(':checked')
+        check = "true"
+    else
+        check ="false"
+    console.log("click Show all Projects Your CHECK is:" + check)
+    $.get '/show_all_projects',
+      checked: check
+    return
 
 
   #$('.invite_user_button').click ->

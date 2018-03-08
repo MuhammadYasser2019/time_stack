@@ -54,6 +54,8 @@
 								td = link_to "CLEAR", "/clear_timesheet/#{week.id}"
 	
 				= link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
+				br
+				= link_to "Show Old Timesheets","show_old_timesheets", target: :_blank
 
 -if @customers.present?
 	== render partial: 'projects/timesheets_for_approval', locals: {projects: @pm_projects}

@@ -29,6 +29,11 @@
 	      td
 	      td
 	    tr
+	      td = link_to "Show Old Timesheets","show_old_timesheets", target: :_blank
+	      td
+	      td
+	      td	      
+	    tr
 	      td = link_to "Manage Customers", "customers" if user_represents_customers(current_user) || (can? :manage, Customer)
 	      td
 	      td
