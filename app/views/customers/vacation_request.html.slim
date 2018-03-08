@@ -1,6 +1,6 @@
 div.report
   div.vacation_request
-    h1 Reports for Users #{consultant_name(@user.first_name, @user.last_name)}
+    h1 Reports for Users #{consultant_name(@user.first_name, @user.last_name, @user.email)}
     = form_tag "/vacation_request", method: :get, id: 'vacation_request_form'
     table
       thead

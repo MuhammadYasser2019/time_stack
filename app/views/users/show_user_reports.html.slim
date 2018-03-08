@@ -1,6 +1,6 @@
 div.report
 
-  h1 Reports for User #{consultant_name(@user.first_name, @user.last_name)}
+  h1 Reports for User #{consultant_name(@user.first_name, @user.last_name, @user.email)}
   = form_tag "/show_user_reports/#{params[:id]}",id: "user_report_form", method: :get
   table
     -if @print_report == "true"
