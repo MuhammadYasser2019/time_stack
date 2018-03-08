@@ -113,4 +113,23 @@ class Customer < ApplicationRecord
     logger.debug "DATE ARRAAAAAAAAAAAAAAAAY: #{dates_array}"
     return dates_array
   end
+
+  def find_week_id(start_date, end_date,user_array)
+    week_array = []
+
+    user_array.each do |u|
+      t = TimeEntry.where(user_id: u, date_of_activity: start_date..end_date)
+      logger.debug("THE T ARE : #{t} and the user is #{u}")
+      t.each do |tw|
+        week_array << tw.week_id
+      end
+    end
+    week_with_attachment_array = []
+    week_array.uniq.each do |w|
+      week_with_attachment_array << Week.find(w) if UploadTimesheet.find_by_week_id(w).present?
+    end
+    return week_with_attachment_array
+
+  end
+
 end

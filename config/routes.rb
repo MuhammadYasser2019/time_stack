@@ -95,6 +95,10 @@ Rails.application.routes.draw do
   get "/users/:id/proxies/" => "users#proxies"
   
   get "/users/:id/proxies/:proxy_id" => "users#proxy_users"
+  get "/users/:id/proxies/:proxy_id/enter_timesheets" => "users#enter_timesheets"
+  get "/users/:id/proxies/:proxy_id/show_timesheet_dates" => "users#show_timesheet_dates"
+  get "/users/:id/proxies/:proxy_id/fill_timesheet" => "users#fill_timesheet"
+  get "/users/:id/proxies/:proxy_id/add_proxy_row" => "users#add_proxy_row", as: :add_proxy_row
   
   get "/users/:user_id/proxies/:proxy_id/proxy_users/:proxy_user" => "weeks#proxy_week"
   

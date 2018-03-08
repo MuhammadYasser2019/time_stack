@@ -163,4 +163,21 @@ class User < ApplicationRecord
      end
     return hash_report_data
   end
+
+  def find_week_id(start_date, end_date,user)
+    week_array = []
+      t = TimeEntry.where(user_id: user.id, date_of_activity: start_date..end_date)
+      logger.debug("THE T ARE : #{t} and the user is #{user}")
+      t.each do |tw|
+        week_array << tw.week_id
+      end
+
+    week_with_attachment_array = []
+    week_array.uniq.each do |w|
+      week_with_attachment_array << Week.find(w) if UploadTimesheet.find_by_week_id(w).present?
+    end
+    return week_with_attachment_array
+
+  end
+
 end

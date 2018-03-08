@@ -48,3 +48,7 @@ table id="show_reports" class="display" width="100%" cellspacing="0"
           td = @consultant_hash[c][:total_hours]
       end
   br
+-@week_array.each do |w|
+  - w.upload_timesheets.each do |t|
+    - if t.time_sheet.present?
+      div = link_to "Attached Files are: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
