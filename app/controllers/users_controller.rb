@@ -205,9 +205,9 @@ class UsersController < ApplicationController
     time_period = params[:proj_report_start_date]..params[:proj_report_end_date]
     if !params[:project].blank?
       logger.debug "getting here?"
-      @time_entries = TimeEntry.where(project_id: params[:project],user_id: @user, date_of_activity: time_period).order(:date_of_activity)
+      @time_entries = TimeEntry.where(project_id: params[:project],user_id: @user.id, date_of_activity: time_period).order(:date_of_activity)
     else
-      @time_entries = TimeEntry.where(user_id: @user,date_of_activity: time_period).order(:date_of_activity)
+      @time_entries = TimeEntry.where(user_id: @user.id,date_of_activity: time_period).order(:date_of_activity)
     end
     @dates_array = @user.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
     @daily_totals = Array.new
@@ -241,7 +241,9 @@ class UsersController < ApplicationController
         @hours_sum += t.hours
       end
     end
-    @week = Week.where("start_date >=? and end_date <=? and user_id=?", params["proj_report_start_date"], params["proj_report_end_date"], @user.id)
+    # @week = Week.where("start_date >=? and end_date <=? and user_id=?", params["proj_report_start_date"], params["proj_report_end_date"], @user.id)
+    @week = @user.find_week_id(params[:proj_report_start_date], params[:proj_report_end_date], @user)
+    logger.debug("THE WEEKS IN USER ARE : #{@week}")
     split_url = request.original_url.split("/")
     period_url = split_url[4].split("?")
     logger.debug "PERIOD DEBUG #{period_url}"
