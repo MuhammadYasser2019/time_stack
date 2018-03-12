@@ -7,4 +7,4 @@ td = select_tag "task_id_#{user.id}_#{count}", options_for_select(@p.tasks.colle
 - @dates_array.each_with_index do |d, i|
 	td = text_field_tag "hours_#{user.id}_#{count}_#{d}", ''
 end
-td =link_to "Add row", add_proxy_row_path(count: count, user_id: user.id), remote: true
+td =link_to "Add row", add_proxy_row_path(count: count, user_id: user.id, proj_report_start_date: params[:proj_report_start_date], proj_report_end_date: params[:proj_report_end_date]), remote: true
