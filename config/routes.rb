@@ -85,6 +85,7 @@ Rails.application.routes.draw do
   get 'available_tasks/:id' => 'tasks#available_tasks'
   get 'available_data/:id' => 'features#available_data'
   get 'available_users/:id' => 'customers#available_users'
+  get '/default_comment' => 'tasks#default_comment'
   
   get 'check_holidays/:id' => "holidays#check_holidays"
 

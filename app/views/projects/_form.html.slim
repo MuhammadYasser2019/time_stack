@@ -82,6 +82,8 @@ div.tabs-content.white-background data-tabs-content="projects-tab"
 					  tr 
 					    td Code
 					    td Description
+					    td Default Comment
+					    td Active Flag
 					tbody
 					  = f.fields_for :tasks do |tf|
 					    == render 'task_fields', f: tf

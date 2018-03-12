@@ -3,6 +3,21 @@
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ($) ->
 
+  $("tbody").on("change", ".task_id", ->
+    console.log "Inside Task change" + $(this).attr('id') +  " the Task value selected is " + $(this).val()
+    tokens = $(this).attr('id').split('_')
+    task_id = $(this).val()
+    console.log "token  sequence is  " + tokens[4]
+    comment_select_id = "week_time_entries_attributes_" + tokens[4] + "_activity_log"
+    tr = $(this).parent().parent("tr")
+    console.log("tr: " + tr)
+    $.get '/default_comment',
+      id: task_id,
+      row_id: tokens[4]
+    return
+  )
+
+
   $("tbody").on("change", ".project_id", ->
     console.log "Inside project change" + $(this).attr('id') +  " the value selected is " + $(this).val()
     tokens = $(this).attr('id').split('_')

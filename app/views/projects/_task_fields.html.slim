@@ -4,3 +4,8 @@ tr.task-row
    = f.text_field :code, class: 'form-control task-code'
   td.desc
    = f.text_field :description, :class =>'form-control task-description'
+  td.default
+   = f.text_field :default_comment, :class =>'form-control default-comment'
+  td.flag
+   = f.check_box 'active', :class =>'form-control active-flag'
+
