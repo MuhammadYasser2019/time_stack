@@ -12,6 +12,13 @@
 
 ActiveRecord::Schema.define(version: 20180312153753) do
 
+  create_table "case_studies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "case_study_name"
+    t.text     "case_study_data", limit: 65535
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+  end
+
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
     t.string   "address"
@@ -56,6 +63,13 @@ ActiveRecord::Schema.define(version: 20180312153753) do
     t.integer  "week_id"
     t.datetime "created_at"
     t.datetime "updated_at"
+  end
+
+  create_table "features", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "feature_type"
+    t.text     "feature_data", limit: 65535
+    t.datetime "created_at",                 null: false
+    t.datetime "updated_at",                 null: false
   end
 
   create_table "holiday_exceptions", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
