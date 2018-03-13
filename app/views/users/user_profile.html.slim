@@ -9,6 +9,13 @@ div.report
 			p <b>Employment Type:</b> #{EmploymentType.find(@user.employment_type).name}
 		else
 		p <b>Projects:</b> #{@user.projects.collect {|n| n.name}.join(",")}
+
+		table
+			- @user.projects.each do |project| 
+				<tr><td>#{project.name}</td></tr>
+			
+				
+
 		= link_to "Change Password and User Information", edit_user_registration_path
 	h4 Set Default Project
 	= form_tag "/set_default_project", method: :get do
