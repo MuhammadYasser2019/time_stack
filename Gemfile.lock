@@ -61,6 +61,7 @@ GEM
       rack (>= 0.9.0)
     bower-rails (0.11.0)
     builder (3.2.3)
+    byebug (10.0.0)
     cancancan (1.16.0)
     capistrano (3.8.0)
       airbrussh (>= 1.0.0)
@@ -84,6 +85,12 @@ GEM
     childprocess (0.6.3)
       ffi (~> 1.0, >= 1.0.11)
     chronic (0.10.2)
+    ckeditor (4.2.4)
+      cocaine
+      orm_adapter (~> 0.5.0)
+    climate_control (0.2.0)
+    cocaine (0.6.0)
+      terrapin (= 0.6.0)
     cocoon (1.2.9)
     coderay (1.1.1)
     coffee-rails (4.2.1)
@@ -390,6 +397,8 @@ GEM
       net-scp (>= 1.1.2)
       net-ssh (>= 2.8.0)
     temple (0.7.7)
+    terrapin (0.6.0)
+      climate_control (>= 0.0.3, < 1.0)
     therubyracer (0.12.3)
       libv8 (~> 3.16.14.15)
       ref
@@ -428,11 +437,13 @@ DEPENDENCIES
   axlsx_styler
   better_errors
   bower-rails
+  byebug
   cancancan (~> 1.10)
   capistrano
   capybara
   capybara-email
   carrierwave
+  ckeditor
   cocoon
   coffee-rails
   cucumber-rails
@@ -444,7 +455,7 @@ DEPENDENCIES
   faker
   fastimage
   foundation-datetimepicker-rails
-  foundation-rails (~> 5.5)
+  foundation-rails
   guard-bundler
   guard-rails
   guard-rspec
@@ -493,4 +504,4 @@ RUBY VERSION
    ruby 2.3.0p0
 
 BUNDLED WITH
-   1.14.3
+   1.16.1
