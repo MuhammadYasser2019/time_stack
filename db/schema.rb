@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180130103620) do
+ActiveRecord::Schema.define(version: 20180312153753) do
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.string   "name"
@@ -130,8 +130,10 @@ ActiveRecord::Schema.define(version: 20180130103620) do
     t.string   "code"
     t.string   "description"
     t.integer  "project_id"
-    t.datetime "created_at",  null: false
-    t.datetime "updated_at",  null: false
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
+    t.text     "default_comment", limit: 65535
+    t.boolean  "active"
     t.index ["project_id"], name: "index_tasks_on_project_id", using: :btree
   end
 
@@ -257,6 +259,7 @@ ActiveRecord::Schema.define(version: 20180130103620) do
     t.boolean  "active"
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
+    t.boolean  "paid"
   end
 
   create_table "weeks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
