@@ -123,7 +123,7 @@ class UsersController < ApplicationController
               7.times {  week.time_entries.build( user_id: week.user_id, status_id: 5 )}
               week.save
             end
-            week_array << week.id
+            week_array << week.id if week.status_id ==1 || week.status_id ==5 
           end
         end
         week_array.uniq.each do |w|
@@ -133,7 +133,7 @@ class UsersController < ApplicationController
             logger.debug "year: #{week.start_date.year}, month: #{week.start_date.month}, day: #{week.start_date.day}"
             
             wday = d.to_date.wday-1
-            if count != 0 && params["task_id_#{u.id}_#{count}"].present? && week.time_entries[wday].task_id.to_i != params["task_id_#{u.id}_#{count}"].to_i
+            if count != 0 && params["task_id_#{u.id}_#{count}"].present? && week.time_entries[wday].task_id.present? && week.time_entries[wday].task_id.to_i != params["task_id_#{u.id}_#{count}"].to_i
               new_day = TimeEntry.new
               new_day.date_of_activity = @dates_array[p].to_date.to_s
               new_day.project_id = @p.id
