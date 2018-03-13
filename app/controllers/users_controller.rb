@@ -127,35 +127,36 @@ class UsersController < ApplicationController
           end
         end
         week_array.uniq.each do |w|
-          week = Week.find w 
+          week = Week.find w
           @dates_array.each_with_index do |d, p|
+            week_date = Week.where("start_date=? && user_id=?", d.to_date.beginning_of_week.strftime('%Y-%m-%d'),u.id).first
             logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
             logger.debug "year: #{week.start_date.year}, month: #{week.start_date.month}, day: #{week.start_date.day}"
-            
-            wday = d.to_date.wday-1
-            if count != 0 && params["task_id_#{u.id}_#{count}"].present? && week.time_entries[wday].task_id.present? && week.time_entries[wday].task_id.to_i != params["task_id_#{u.id}_#{count}"].to_i
-              new_day = TimeEntry.new
-              new_day.date_of_activity = @dates_array[p].to_date.to_s
-              new_day.project_id = @p.id
-              new_day.task_id = params["task_id_#{u.id}_#{count}"]
-              new_day.hours = params["hours_#{u.id}_#{count}_#{d}"]
-              new_day.updated_by = current_user.id
-              new_day.user_id = week.user_id
-              new_day.status_id = 5
-              
-              week.time_entries.push(new_day)
+            if week_date.id == week.id && params["task_id_#{u.id}_#{count}"].present?
+              te = week.time_entries.where("date_of_activity =? && task_id=?", d.to_date, params["task_id_#{u.id}_#{count}"]).first
+              #wday = d.to_date.wday-1
+              if te.blank?  
+                new_day = TimeEntry.new
+                new_day.date_of_activity = @dates_array[p].to_date.to_s
+                new_day.project_id = @p.id
+                new_day.task_id = params["task_id_#{u.id}_#{count}"]
+                new_day.hours = params["hours_#{u.id}_#{count}_#{d}"]
+                new_day.updated_by = current_user.id
+                new_day.user_id = week.user_id
+                new_day.status_id = 5
+                
+                week.time_entries.push(new_day)
 
-            elsif params["task_id_#{u.id}_#{count}"].present?
-              week.time_entries[wday].date_of_activity = @dates_array[p].to_date.to_s
-              week.time_entries[wday].hours = week.time_entries[wday].hours.present? ? week.time_entries[wday].hours.to_i + params["hours_#{u.id}_#{count}_#{d}"].to_i : params["hours_#{u.id}_#{count}_#{d}"]
-              week.time_entries[wday].user_id = week.user_id
-              week.time_entries[wday].updated_by = current_user.id
-              week.time_entries[wday].project_id = @p.id
-              week.time_entries[wday].task_id = params["task_id_#{u.id}_#{count}"]
-              week.time_entries[wday].status_id = 5
+              else 
+                te.date_of_activity = @dates_array[p].to_date.to_s
+                te.hours = te.hours.present? ? te.hours.to_i + params["hours_#{u.id}_#{count}_#{d}"].to_i : params["hours_#{u.id}_#{count}_#{d}"]
+                te.user_id = week.user_id
+                te.updated_by = current_user.id
+                te.status_id = 5
+              end
+              week.save
+              vacation(week)
             end
-            week.save
-            vacation(week)
           end
         end
       end
