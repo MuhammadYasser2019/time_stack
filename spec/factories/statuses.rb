@@ -1,4 +1,4 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :status do
     id ""
     status "MyString"
