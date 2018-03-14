@@ -3,7 +3,7 @@
   - count = @count
 
 td = consultant_name(user.first_name, user.last_name, user.email)
-td = select_tag "task_id_#{user.id}_#{count}", options_for_select(@p.tasks.collect{ |u| [u.code, u.id]}, params["task_id_#{user.id}"]), include_blank: true, style:"width:100px;"
+td = select_tag "task_id_#{user.id}_#{count}", options_for_select(@p.tasks.collect{ |u| [u.description, u.id]}, params["task_id_#{user.id}"]), include_blank: true, style:"width:100px;"
 - @dates_array.each_with_index do |d, i|
 	td = text_field_tag "hours_#{user.id}_#{count}_#{d}", ''
 end
