@@ -19,9 +19,10 @@
 				</thead>
 				<tbody>
 				 
-					  <% @users.each do |u| %>
+					  <% @users.each do |u| %> 
 					   <%= fields_for "user[]", u do |uu|%>
 						<tr>
+							
 							<td> <%= u.first_name %> <%= u.last_name %> </td>
 							<td><%= uu.check_box :user %></td>
 							<td><%= uu.check_box :pm %></td>

@@ -54,7 +54,7 @@ RSpec.describe CustomersController, type: :controller do
 
   describe "GET #new" do
     it "assigns a new customer as @customer" do
-      get :new, {}, valid_session
+      get :new, params: {id: 1}
       expect(assigns(:customer)).to be_a_new(Customer)
     end
   end
