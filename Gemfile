@@ -107,6 +107,7 @@ group :development, :test do
   gem 'rubocop'
   gem 'thin'
   gem 'letter_opener'
+  gem 'rails-controller-testing'
 end
 
 group :test do
