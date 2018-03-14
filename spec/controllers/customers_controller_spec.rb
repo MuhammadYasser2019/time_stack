@@ -48,12 +48,12 @@ RSpec.describe CustomersController, type: :controller do
     it "assigns the requested customer as @customer" do
       customer = Customer.create! valid_attributes
       get :show, {:id => customer.to_param}, valid_session
-      expect(assigns(:customer)).to eq(customer)
+      expect(assigns(:customer)).to eq(Customer)
     end
   end
 
   describe "GET #new" do
-    it "assigns a new customer as @customer" do
+      it "assigns a new customer as @customer" do
       get :new, params: {id: 1}
       expect(assigns(:customer)).to be_a_new(Customer)
     end
@@ -63,7 +63,7 @@ RSpec.describe CustomersController, type: :controller do
     it "assigns the requested customer as @customer" do
       customer = Customer.create! valid_attributes
       get :edit, {:id => customer.to_param}, valid_session
-      expect(assigns(:customer)).to eq(customer)
+      expect(assigns(:customer)).to eq(Customer)
     end
   end
 
