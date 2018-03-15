@@ -1,0 +1,22 @@
+h1 Listing archive_weeks
+
+table
+  thead
+    tr
+      th
+      th
+      th
+
+  tbody
+    - @archive_weeks.each do |archive_week|
+      tr
+        td = link_to 'Show', archive_week
+        td = link_to 'Edit', edit_archive_week_path(archive_week)
+        td = link_to 'Destroy', archive_week, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Archive week', new_archive_week_path
+
+
+

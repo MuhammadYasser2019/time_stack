@@ -1,0 +1,2 @@
+class ArchiveWeek < ApplicationRecord
+end

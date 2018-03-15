@@ -20,7 +20,9 @@
 //= require foundation-datetimepicker
 //= require turbolinks
 //= require turbolinks-compatibility
+//= require.archive_weeks
 //= require_tree .
+
 
 
 $(function(){ $(document).foundation(); });

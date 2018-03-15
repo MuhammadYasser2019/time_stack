@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :archive_weeks
+  resources :clones
   resources :holiday_exceptions
   resources :time_entries
   resources :weeks
