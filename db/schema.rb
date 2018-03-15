@@ -13,8 +13,24 @@
 ActiveRecord::Schema.define(version: 20180315185547) do
 
   create_table "archive_weeks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "date_of_activity"
+    t.float    "hours",            limit: 24
+    t.string   "activity_log"
+    t.integer  "task_id"
+    t.integer  "week_id"
+    t.integer  "user_id"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "project_id"
+    t.boolean  "sick"
+    t.boolean  "personal_day"
+    t.integer  "updated_by"
+    t.integer  "status_id"
+    t.integer  "approved_by"
+    t.datetime "approved_date"
+    t.time     "time_in"
+    t.time     "time_out"
+    t.integer  "vacation_type_id"
   end
 
   create_table "case_studies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
