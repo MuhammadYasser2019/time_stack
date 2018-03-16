@@ -35,6 +35,12 @@ class TimeEntriesController < ApplicationController
   def show
   end
 
+  def copy
+      @source = Week.find(params[:id])
+      #create new object with attributes of existing record
+      ArchiveWeek.new = @source.dup
+  end
+
   # GET /time_entries/new
   def new
     @time_entry = TimeEntry.new

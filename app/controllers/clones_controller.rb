@@ -7,9 +7,13 @@ class ClonesController < ApplicationController
     @clones = Clone.all
   end
 
+
+
   # GET /clones/1
   # GET /clones/1.json
   def show
+    @clone = Clone.find(params[:id])
+    
   end
 
   # GET /clones/new

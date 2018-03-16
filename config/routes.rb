@@ -1,6 +1,6 @@
 Rails.application.routes.draw do
 
-  resources :archive_weeks
+  resources :archive_weeks 
   resources :clones
   resources :holiday_exceptions
   resources :time_entries
@@ -35,6 +35,8 @@ Rails.application.routes.draw do
   #root 'weeks#index'
   root 'static_pages#home'
   get 'weeks/:id/report' => 'weeks#report'
+  
+
 
   get '/dynamic_project_update' => 'projects#dynamic_project_update'
   get '/dynamic_customer_update' => 'customers#dynamic_customer_update'
@@ -78,6 +80,7 @@ Rails.application.routes.draw do
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
   get 'customers/:id/theme' => 'customers#set_theme'
+  get 'customers/:id/reset_timesheet' => 'customers#reset'
 
   get 'assign_report_logo_to_user' => "users#assign_report_logo_to_user"
 

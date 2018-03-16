@@ -30,7 +30,13 @@ class CustomersController < ApplicationController
       logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
     end
   end
-
+#Reset Customer Timesheet 
+  def reset
+    @user = User.where(params[:customer_id])
+    @time_entries = TimeEntry.all
+    @weeks = Week.all
+    @print_report = "false"
+  end 
   # GET /customers/1
   # GET /customers/1.json
   def show

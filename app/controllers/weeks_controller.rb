@@ -361,7 +361,7 @@ class WeeksController < ApplicationController
     if @week.status_id == 3
       @approved_by = User.find(@week.approved_by)
     end
-    render json: TimeEntry.all
+    
   end
 
   def print_report
@@ -454,6 +454,7 @@ class WeeksController < ApplicationController
       format.js
     end
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

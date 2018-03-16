@@ -7,14 +7,17 @@ class ArchiveWeeksController < ApplicationController
     @archive_weeks = ArchiveWeek.all
   end
 
+
   # GET /archive_weeks/1
   # GET /archive_weeks/1.json
   def show
+    @archive_weeks = ArchiveWeek.find(params[:id])
   end
 
   # GET /archive_weeks/new
   def new
     @archive_week = ArchiveWeek.new
+
   end
 
   # GET /archive_weeks/1/edit
@@ -69,6 +72,6 @@ class ArchiveWeeksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def archive_week_params
-      params.fetch(:archive_week, {})
+      params.fetch(:archive_week).permit(:date, :hours, :activity_log, :task_id, :week_id, :user_id, :sick, :personal_day, :updated_by)
     end
 end
