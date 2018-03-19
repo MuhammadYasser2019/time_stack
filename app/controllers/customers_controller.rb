@@ -30,6 +30,13 @@ class CustomersController < ApplicationController
       logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
     end
   end
+# Will Copy The Selected User and Time Frame
+  def copy
+      @archiveWeek = ArchiveWeek.new
+      @source = Week.find(params[:id])
+      #create new object with attributes of existing record
+      ArchiveWeek.new = @source.dup
+  end
 #Reset Customer Timesheet 
   def reset
     @user = User.where(params[:customer_id])

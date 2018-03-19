@@ -33,7 +33,21 @@
 		        td = "Reset"
 
 	h1 Approved Weeks
-		
+	table
+		thead
+			tr
+			  th Email
+			  th Period Start Date
+	          th Period End Date
+	          th
+		thead
+			tr
+			- @weeks.where("user_id = ? AND status_id = ?", 1,3).each do |x|
+				td = x.user_id
+				td = x.start_date
+				td = x.end_date
+
+		 
 							
 
 
