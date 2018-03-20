@@ -53,4 +53,9 @@ module WeeksHelper
       return false
     end
   end
+
+  def check_for_vacation(date, user_id)
+    user_vacation_requests = VacationRequest.where("status = ? and user_id = ? and DATE(?) BETWEEN vacation_start_date and vacation_end_date", "Approved", user_id, date)
+    return user_vacation_requests.present?
+  end
 end

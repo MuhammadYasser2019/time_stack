@@ -86,6 +86,7 @@ class UsersController < ApplicationController
     @users = @p.users
     @user_array = @users.pluck(:id)
     @dates_array = @p.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date], params["current_week"], params["current_month"])
+    
   end
 
   def add_proxy_row
@@ -120,50 +121,14 @@ class UsersController < ApplicationController
               week.status_id = Status.find_by_status("EDIT").id
               week.proxy_user_id = current_user.id
               week.save!
-              #7.times {  week.time_entries.build( user_id: week.user_id, status_id: 5 )}
-              #week.save
             end
             if week.status_id ==1 || week.status_id ==5 
               week.status_id = Status.find_by_status("EDIT").id
-              time_entry = week.time_entries.where("date_of_activity =?", d.to_date)
-              
-              if time_entry.present?
-
-                time_entry.each do |te|
-                  if te.task_id.present? && te.task_id.to_i == params["task_id_#{u.id}_#{count}"].to_i
-                    te.hours = te.hours.present? ? te.hours.to_i + params["hours_#{u.id}_#{count}_#{d}"].to_i : params["hours_#{u.id}_#{count}_#{d}"]
-                    te.user_id = week.user_id
-                    te.updated_by = current_user.id
-                    te.status_id = 5
-                  elsif te.task_id.present? && te.task_id.to_i != params["task_id_#{u.id}_#{count}"].to_i && te.hours.blank?
-                    te.hours = params["hours_#{u.id}_#{count}_#{d}"]
-                    te.user_id = week.user_id
-                    te.task_id = params["task_id_#{u.id}_#{count}"]
-                    te.updated_by = current_user.id
-                    te.status_id = 5
-                  elsif te.task_id.present? && !time_entry.collect(&:task_id).include?(params["task_id_#{u.id}_#{count}"].to_i) && te.task_id.to_i != params["task_id_#{u.id}_#{count}"].to_i && te.hours.present?
-                    new_day = TimeEntry.new
-                    new_day.date_of_activity = d.to_date.to_s
-                    new_day.project_id = @p.id
-                    new_day.task_id = params["task_id_#{u.id}_#{count}"]
-                    new_day.hours = params["hours_#{u.id}_#{count}_#{d}"]
-                    new_day.updated_by = current_user.id
-                    new_day.user_id = week.user_id
-                    new_day.status_id = 5
-                
-                    week.time_entries.push(new_day)
-                    week.save
-                  elsif te.task_id.blank?
-                    te.date_of_activity = d.to_date.to_s
-                    te.project_id = @p.id
-                    te.task_id = params["task_id_#{u.id}_#{count}"]
-                    te.hours = params["hours_#{u.id}_#{count}_#{d}"]
-                    te.updated_by = current_user.id
-                    te.user_id = week.user_id
-                    te.status_id = 5
-                  end
-                  te.save
-                end
+              if params["time_entry_#{u.id}_#{count}_#{d}"].present?
+                te = TimeEntry.find (params["time_entry_#{u.id}_#{count}_#{d}"])
+                te.hours = params["hours_#{u.id}_#{count}_#{d}"]
+                te.task_id = params["task_id_#{u.id}_#{count}"]
+                te.save
               else
                 new_day = TimeEntry.new
                 new_day.date_of_activity = d.to_date.to_s
@@ -173,9 +138,8 @@ class UsersController < ApplicationController
                 new_day.updated_by = current_user.id
                 new_day.user_id = week.user_id
                 new_day.status_id = 5
-                new_day.week_id = week.id
-                
-                week.time_entries.push(new_day)                
+            
+                week.time_entries.push(new_day)
               end
               week.save
               vacation(week)

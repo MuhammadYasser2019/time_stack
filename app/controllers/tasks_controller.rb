@@ -70,7 +70,7 @@ class TasksController < ApplicationController
     project_id  = params[:id]
     
     #@tasks = Task.where(project_id: project_id)
-    @tasks = Task.where(["project_id =? AND active= ?", project_id, true])
+    @tasks = Task.where(["project_id =?", project_id])
     logger.debug "available_tasks - leaving  @tasks is #{@tasks}"
     
   end
