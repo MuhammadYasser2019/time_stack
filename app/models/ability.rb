@@ -9,7 +9,7 @@ class Ability
       can [:user_account, :edit, :update, :show_user_reports, :user_profile,:set_default_project], User
       can [:read, :available_tasks], Task
       can [:read, :edit, :create, :update, :new, :report, :copy_timesheet, :clear_timesheet, :previous_comments, :add_previous_comments, :expense_records, :delete_expense], Week
-      can [:read, :permission_denied], Project
+      can [:read, :permission_denied, :show_old_timesheets], Project
       can [:vacation_request], Customer
 
       if user.admin

@@ -14,6 +14,22 @@
 <% end %>
 </table>
 <% if @expenses.present? %>
+    <% if !@expenses.nil? %>
+    	<%= usr.first_name %> has submitted EXPENSES for Week <br/>
+    	<table border='2'>
+    	<tr><th>Date</th><th>Expense Type</th><th>Description</th><th>Project</th><th>Amount</th></tr>
+    	<% @expenses.each do |e| %>
+    		<tr>
+    		    <td><%= e.date %>  </td>
+        		<td><%= e.expense_type %> </td>
+        		<td><%= e.description %>  </td>
+        		<td><%= Project.find(e.project_id).name if e.project_id.present? %>  </td>
+        		<td><%= e.amount %>  </td>
+    		</tr>
+    	<% end %>
+    	</table>
+    <% end %>
+<% end %>   
 <% if !@expenses.blank? %>
 	<%= usr.first_name %> has submitted EXPENSES for Week <br/>
 	<table border='2'>
@@ -28,7 +44,6 @@
 		</tr>
 	<% end %>
 	</table>
-<% end %>
 <% end %> 
 <br>
 <%= link_to 'CLICK HERE -> To Approve/Reject Timesheet', root_url %>

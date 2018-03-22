@@ -12,7 +12,11 @@ Feature: Testing the ability of a User with user role
     Given If "Enter Time for Current Week" is clicked
     Then HE should go to new time entries
     And click "Save Timesheet"
-    And he should see Reports page
+    And Go to the index page
+    And Expect page to have "NEW" link
+    And click on the "NEW" link
+    And Expect page to have link "Save Timesheet" and "Submit Timesheet"
+    And click on "Submit Timesheet"
   
   Scenario: 23) User should able to copy the timesheet from previous week
     Given I am a user

@@ -10,7 +10,7 @@ end
 if !@user.report_logo.nil?
   logo = File.expand_path("#{Dir.pwd}/public/#{ReportLogo.find(@user.report_logo).report_logo}", __FILE__)
   size = FastImage.size("#{Dir.pwd}/public/#{ReportLogo.find(@user.report_logo).report_logo}")
-elsif !customer.nil? && !customer.logo.nil?
+elsif !customer.nil? && customer.logo.present?
   logo = File.expand_path("#{Dir.pwd}/public/#{customer.logo}", __FILE__)
   size = FastImage.size("#{Dir.pwd}/public/#{customer.logo}")
 else

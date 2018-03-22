@@ -19,3 +19,7 @@ Then(/^user should see link to "([^"]*)" and "([^"]*)"$/) do |arg1, arg2|
   expect(page).to have_link(arg2, href: '/projects?adhoc=true')
 end
 
+Then(/^user should see link to "([^"]*)"$/) do |arg1|
+  expect(page).to have_link(arg1)
+end
+

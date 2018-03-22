@@ -11,12 +11,15 @@ Feature: Testing abilities of a User with PM role
   Scenario: 3) 6) With PM roles user should be able to submit time sheet and View Project Reports
     Given I am a project manager
     Given PM logs in with "Email" and "Password"
-    Given If "Enter Time for Current Week" is clicked
+    Given If enter "Enter Time for Current Week" is clicked
     Then HE should go to new time entries
     And click "Save Timesheet"
-    And he should see Reports page
-    And when user goes to projects reports page
-    And he should see "Reports for Project "
+    And Go to the index page
+    And Expect page to have "NEW" link
+    And click on the "NEW" link
+    And Expect page to have link "Save Timesheet" and "Submit Timesheet"
+    And click on "Submit Timesheet"
+    Then PM should see the entire weeks report and the status as "Status: SUBMITTED"
 
   Scenario: 13) 14) 4) With PM roles user should be able to Approve/Reject timesheets.
     Given I am a user

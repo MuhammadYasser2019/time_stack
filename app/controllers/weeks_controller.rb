@@ -309,9 +309,13 @@ class WeeksController < ApplicationController
         if @week.status_id == 2
           ApprovalMailer.mail_to_manager(@week, @expenses, User.find(@week.user_id)).deliver
         end
-
-        format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
-        format.json { render :show, status: :ok, location: @week }
+        if @week.status_id == 2
+          format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
+          format.json { render :show, status: :ok, location: @week }
+        else
+          format.html { redirect_to "/weeks/#{@week.id}/edit", notice: 'Week was successfully updated.' }
+          format.json { render :show, status: :ok, location: @week }
+        end
       else
         format.html { render :edit }
         format.json { render json: @week.errors, status: :unprocessable_entity }

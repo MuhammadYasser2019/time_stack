@@ -85,6 +85,7 @@ Rails.application.routes.draw do
   get 'available_tasks/:id' => 'tasks#available_tasks'
   get 'available_data/:id' => 'features#available_data'
   get 'available_users/:id' => 'customers#available_users'
+  get '/default_comment' => 'tasks#default_comment'
   
   get 'check_holidays/:id' => "holidays#check_holidays"
 
@@ -95,6 +96,10 @@ Rails.application.routes.draw do
   get "/users/:id/proxies/" => "users#proxies"
   
   get "/users/:id/proxies/:proxy_id" => "users#proxy_users"
+  get "/users/:id/proxies/:proxy_id/enter_timesheets" => "users#enter_timesheets"
+  get "/users/:id/proxies/:proxy_id/show_timesheet_dates" => "users#show_timesheet_dates"
+  post "/users/:id/proxies/:proxy_id/fill_timesheet" => "users#fill_timesheet"
+  get "/users/:id/proxies/:proxy_id/add_proxy_row" => "users#add_proxy_row", as: :add_proxy_row
   
   get "/users/:user_id/proxies/:proxy_id/proxy_users/:proxy_user" => "weeks#proxy_week"
   
@@ -104,9 +109,11 @@ Rails.application.routes.draw do
   post "project/:project_id/add_adhoc_pm" => "projects#add_adhoc_pm", as: :add_adhoc_pm
   post "customer/:customer_id/add_adhoc_pm_by_cm" => "customers#add_adhoc_pm_by_cm", as: :add_adhoc_pm_by_cm
   get "/copy_timesheet/:id" => "weeks#copy_timesheet"
+  get "/show_all_projects" => "projects#show_all_projects"
   post "assign_employment_types/" => "customers#assign_employment_types", as: :assign_employment_types
   post "assign_pm/:id" => "customers#assign_pm", as: :assign_pm
   get "/clear_timesheet/:id" => "weeks#clear_timesheet"
+  get "/show_old_timesheets" => "projects#show_old_timesheets"
   post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments
   get 'remove_emp_from_vacation' => "customers#remove_emp_from_vacation"
   match "/expense_records" => 'weeks#expense_records', via: [:get, :post]

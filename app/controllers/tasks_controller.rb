@@ -69,9 +69,20 @@ class TasksController < ApplicationController
     logger.debug "available_tasks - starting to process, params passed  are #{params[:id]}"
     project_id  = params[:id]
     
-    @tasks = Task.where(project_id: project_id)
+    #@tasks = Task.where(project_id: project_id)
+    @tasks = Task.where(["project_id =? AND active=?", project_id, true])
     logger.debug "available_tasks - leaving  @tasks is #{@tasks}"
     
+  end
+
+  def default_comment
+    logger.debug "DEFAULT COMMENT - TASK CONTROLLER, params passed  are #{params[:id]}"
+    task_id = params[:id]
+    @row_id = params[:row_id]
+
+    @comment = Task.find(task_id).default_comment
+
+    logger.debug "default_comment - comment is #{@comment}"
   end
 
   private
@@ -82,6 +93,6 @@ class TasksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def task_params
-      params.require(:task).permit(:code, :description, :project_id)
+      params.require(:task).permit(:code, :description, :project_id, :default_comment, :active)
     end
 end
