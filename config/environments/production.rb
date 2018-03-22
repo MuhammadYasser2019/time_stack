@@ -15,8 +15,21 @@ Rails.application.configure do
   config.action_controller.perform_caching = true
 
   # Disable serving static files from the `/public` folder by default since
+
+
+  # Disable Rails’s static asset server (Apache or nginx will already do this)
+  config.serve_static_assets = false
+  # Compress JavaScripts and CSS
+  config.assets.compress = true
+  # Generate digests for assets URLs
+  config.assets.digest = true
+  #config.assets.initialize_on_precompile = false
+  #config.assets.precompile += [“*.js”, “*.css”]
+  config.assets.precompile += %w( *.js *.scss *.coffee *.css )
+
   # Apache or NGINX already handles this.
-  config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  #config.public_file_server.enabled = ENV['RAILS_SERVE_STATIC_FILES'].present?
+  config.public_file_server.enabled = true
 
   # Compress JavaScripts and CSS.
   config.assets.js_compressor = :uglifier
@@ -56,6 +69,7 @@ Rails.application.configure do
   # config.active_job.queue_adapter     = :resque
   # config.active_job.queue_name_prefix = "time_stack_#{Rails.env}"
   config.action_mailer.perform_caching = false
+  config.action_mailer.default_url_options = { :host => 'https://chronstack.com' }
 
   # Ignore bad email addresses and do not raise email delivery errors.
   # Set this to true and configure the email server for immediate delivery to raise delivery errors.
@@ -70,6 +84,7 @@ Rails.application.configure do
 
   # Use default logging formatter so that PID and timestamp are not suppressed.
   config.log_formatter = ::Logger::Formatter.new
+  config.logger = Logger.new('log/production.log', 'daily')
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
@@ -81,6 +96,20 @@ Rails.application.configure do
     config.logger = ActiveSupport::TaggedLogging.new(logger)
   end
 
+  ###adding for production
+  config.action_mailer.delivery_method = :smtp
+  config.action_mailer.perform_deliveries = true
+
+  config.action_mailer.smtp_settings = {
+   address:              'smtp.gmail.com',
+   port:                 587,
+   domain:               'chronstack.com',
+   user_name:            'timestackrsi@gmail.com',
+   password:           'Sameer1111$',
+   authentication:     :plain,
+  enable_starttls_auto: true
+
+  }
   # Do not dump schema after migrations.
   config.active_record.dump_schema_after_migration = false
 end
