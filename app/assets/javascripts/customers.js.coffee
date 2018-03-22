@@ -2,6 +2,7 @@
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
 jQuery ($) ->
+  
   $(document).on("change", ".pm_project_id", ->
     console.log "Inside project change" + $(this).attr('id') +  " the value selected is " + $(this).val()    
     user_select_id = "adhoc_pm_id"

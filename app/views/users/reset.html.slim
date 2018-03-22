@@ -1,0 +1,45 @@
+.white-background  
+	.grid-x
+		.left-row
+		h1 Reset User Timesheet
+		= form_tag "/approved_week",id: "show_approved_form", method: :get, remote: true
+		table
+			thead
+			  tr 
+				th E-mail
+				th Week Start Date
+				th Click To Show 
+
+			tbody
+			  tr 
+				td = select_tag :email, options_from_collection_for_select(@user, "id", "email",params[:email]), {required: "required"}
+				td = select_tag :start_date, options_from_collection_for_select(@weeks, "id", "start_date",params[:start_date])
+				td = button_tag "Show Approved Weeks", class: "orange-button"
+
+		h1 Approved Weeks
+		table
+			thead
+			  tr
+				th User ID
+				th Period Start Date
+				th Period End Date
+				th Status
+				
+				#reset_view 
+
+				
+									 
+							
+						
+
+
+
+
+
+
+
+
+		 
+							
+
+

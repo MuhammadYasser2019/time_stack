@@ -80,8 +80,12 @@ Rails.application.routes.draw do
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
   get 'customers/:id/theme' => 'customers#set_theme'
-  # Form to reset and also clone
-  get 'customers/:id/reset_timesheet' => 'customers#reset'
+  # Form to reset and also clone MASON MASON MASON
+  get '/reset_timesheet/:id' => 'users#reset'
+  post '/reset_timesheet/:id' => 'users#reset'
+  get 'approved_week' => 'users#approved_week'
+  post 'approved_week' => 'users#approved_week'
+ 
 
   get 'assign_report_logo_to_user' => "users#assign_report_logo_to_user"
 

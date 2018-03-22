@@ -1,8 +1,31 @@
-class UsersController < ApplicationController
-  load_and_authorize_resource
+class UsersController < ApplicationController 
+  load_and_authorize_resource 
+  
+    # COPY Existing week.
+  def copy
+      @archiveWeek = ArchiveWeek.new
+      @source = Week.find(params[:id])
+      #create new object with attributes of existing record
+      ArchiveWeek.new = @source.dup
+  end
+#Choose Approved Timesheet to Reset
+  def reset
+    logger.debug("YOU ARE WATCHING: #{params.inspect}")
+    @user = User.all
+    @weeks = Week.all
+    logger.debug("USER EMAIL: #{params[:email]}")
+    logger.debug "USER START DATE #{params[:start_date]}"
+  end 
+
+  def approved_week
+      #@approved_week = Week.where(:status_id => 3, :start_date => params[:start_date], :user_id => params[:email])
+      @approved_week = Week.all
+   end 
+
   def user_account
     @user = current_user
   end
+
   
   def show
     @user = User.find(params[:id])
@@ -22,6 +45,7 @@ class UsersController < ApplicationController
   def new
     @user = User.find(params[:id])
   end
+
   
   def create
     logger.debug "PARAMS: #{params[:users]}"

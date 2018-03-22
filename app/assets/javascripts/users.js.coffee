@@ -1,4 +1,6 @@
 jQuery ($) ->	
+  $('#show_approved_form').click
+
 	$('.print-user-report').click ->
 	  console.log("in here")
 	  $('#hidden_print_report').val("true")
