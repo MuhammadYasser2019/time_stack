@@ -4,7 +4,7 @@ Rails.application.routes.draw do
   resources :clones
   resources :holiday_exceptions
   resources :time_entries
-  resources :weeks
+  resources :weeks 
   resources :tasks
   resources :projects
   resources :customers
@@ -34,10 +34,11 @@ Rails.application.routes.draw do
   end
   #root 'weeks#index'
   root 'static_pages#home'
+
+  get 'change_status' => 'weeks#change_status', as: :change_status
+  get 'duplicate' => 'weeks#duplicate'
   get 'weeks/:id/report' => 'weeks#report'
   
-
-
   get '/dynamic_project_update' => 'projects#dynamic_project_update'
   get '/dynamic_customer_update' => 'customers#dynamic_customer_update'
 

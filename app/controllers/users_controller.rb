@@ -13,13 +13,18 @@ class UsersController < ApplicationController
     logger.debug("YOU ARE WATCHING: #{params.inspect}")
     @user = User.all
     @weeks = Week.all
-    logger.debug("USER EMAIL: #{params[:email]}")
-    logger.debug "USER START DATE #{params[:start_date]}"
   end 
 
+  #finds the week with a users email, & Week start date/APPROVED status
   def approved_week
-      #@approved_week = Week.where(:status_id => 3, :start_date => params[:start_date], :user_id => params[:email])
-      @approved_week = Week.all
+    @approved_week = Week.where(:user_id => params[:email])
+    @time_entry = TimeEntry.where(:week_id => @approved_week)
+    logger.debug("TimeEntry ID #{@time_entry.inspect}")
+    #:status_id => 3, :id => params[:start_date],
+    logger.debug("USER ID #{params[:email]}")
+    logger.debug "Week ID #{params[:start_date]}"
+    session[:change_week] = params[:start_date]
+    logger.debug "TimeEntry ID #{session[:change_week]}"
    end 
 
   def user_account

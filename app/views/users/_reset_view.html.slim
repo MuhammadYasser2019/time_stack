@@ -1,8 +1,17 @@
-.white-background  
-	.grid-x
-		.left-row	
-		tbody
-			tr
-			 - @approved_week.each do |x|
-			 	td = x.user_id
-			 	td = x.start_date
+tbody
+	tr
+	 - @approved_week.each do |x|
+	 	td = x.user_id
+	 	td = x.start_date.strftime('%Y-%m-%d')
+	 	td = "one"
+	 	td = "two"
+	 	td = link_to 'Reset Week', change_status_path(:week_id => x.id), style: "margin-left: 20%;"
+
+
+
+					
+
+
+
+				 
+ 

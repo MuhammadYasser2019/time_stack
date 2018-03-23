@@ -30,10 +30,32 @@ class WeeksController < ApplicationController
     status_ids = [1,2] 
     @statuses = Status.find(status_ids)
     @tasks = Task.all
-
-
-    
   end
+
+  def change_status
+    aw = ArchiveWeek.new 
+    logger.debug" PARAMTER ARE #{params}"
+    @week = Week.find(params[:week_id])
+    @time_entry = TimeEntry.find(params[:week_id])
+    @time_entry.dup = aw
+    logger.debug("THIS IS DUP#{aw}")
+    logger.debug("THIS IS THE WEEK BEFORE#{@week.inspect}")
+    @week.status_id = 5
+    @week.save 
+    logger.debug("THIS IS THE WEEK CHANGED #{@week.inspect}")
+    duplicate(params[:week_id])
+  end 
+
+  def duplicate(week_id)
+    logger.debug "TIME ENTRY SELECTION #{@time_entry.inspect}"
+    @duplicate = ArchiveWeek.new
+    @time_entry = TimeEntry.where(:week_id => week_id)
+    @duplicate = @time_entry.dup 
+    #@time_entry.each do
+    #  @duplicate.evaluations.build
+    #end
+    redirect_to new_archive_week_path
+  end 
 
   # GET /weeks/new
   def new
