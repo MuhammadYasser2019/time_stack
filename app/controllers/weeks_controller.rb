@@ -33,29 +33,56 @@ class WeeksController < ApplicationController
   end
 
   def change_status
-    aw = ArchiveWeek.new 
     logger.debug" PARAMTER ARE #{params}"
     @week = Week.find(params[:week_id])
-    @time_entry = TimeEntry.find(params[:week_id])
-    @time_entry.dup = aw
-    logger.debug("THIS IS DUP#{aw}")
+     @weeks.each do |w|
+      cw= Clone.new
+      cw.start_date = w.start_date           
+      cw.end_date =w.end_date         
+      cw.created_at =w.created_at                            
+      cw.updated_at= w.updated_at                      
+      cw.user_id = w.user_id
+      cw.status_id =w.status_id    
+      cw.approved_date = w.approved_date        
+      cw.approved_by = w.approved_by      
+      cw.comments = w.comments         
+      cw.time_sheet = w.time_sheet       
+      cw.proxy_user_id = w.proxy_user_id        
+      cw.proxy_updated_date =w.proxy_updated_date 
+      cw.save
+    end 
+    @time_entry = TimeEntry.where(:week_id => params[:week_id])
+     @time_entry.each do |t|
+      aw = ArchiveWeek.new 
+      aw.date_of_activity = t.date_of_activity
+      aw.hours  = t.hours
+      aw.activity_log = t.activity_log
+      aw.task_id = t.task_id
+      aw.week_id = t.week_id
+      aw.user_id = t.user_id
+      aw.created_at = t.created_at
+      aw.updated_at = t.updated_at
+      aw.project_id = t.project_id
+      aw.sick = t.sick
+      aw.personal_day = t.personal_day
+      aw.updated_by = t.updated_by
+      aw.status_id = t.status_id
+      aw.approved_by = t.approved_by
+      aw.approved_date = t.approved_date
+      aw.time_in = t.time_in
+      aw.time_out = t.time_out
+      aw.vacation_type_id = t.vacation_type_id
+      aw.save
+    end 
+
     logger.debug("THIS IS THE WEEK BEFORE#{@week.inspect}")
     @week.status_id = 5
     @week.save 
     logger.debug("THIS IS THE WEEK CHANGED #{@week.inspect}")
-    duplicate(params[:week_id])
+    redirect_to root_path
   end 
 
-  def duplicate(week_id)
-    logger.debug "TIME ENTRY SELECTION #{@time_entry.inspect}"
-    @duplicate = ArchiveWeek.new
-    @time_entry = TimeEntry.where(:week_id => week_id)
-    @duplicate = @time_entry.dup 
-    #@time_entry.each do
-    #  @duplicate.evaluations.build
-    #end
-    redirect_to new_archive_week_path
-  end 
+
 
   # GET /weeks/new
   def new

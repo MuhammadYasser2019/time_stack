@@ -1,5 +1,41 @@
 p#notice = notice
 
+p
+  strong Start Date
+  = @clone.start_date           
+p
+  strong End Date
+  = @clone.end_date         
+p
+  strong Create At
+  = @clone.created_at                            
+p
+  strong Update at
+  = @clone.updated_at                      
+p
+  strong User ID
+  = @clone.user_id
+p
+  strong Status ID
+  = @clone.status_id    
+p
+  strong Approved Date
+  = @clone.approved_date        
+p
+  strong Approved By
+  = @clone.approved_by      
+p
+  strong Comments
+  = @clone.comments         
+p
+  strong Time Sheet
+  = @clone.time_sheet       
+p
+  strong Proxy User ID
+  = @clone.proxy_user_id        
+p
+  strong Proxy Update Date
+  = @clone.proxy_updated_date 
 
 = link_to 'Edit', edit_clone_path(@clone)
 '  |
