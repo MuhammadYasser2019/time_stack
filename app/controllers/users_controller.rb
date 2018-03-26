@@ -130,6 +130,7 @@ class UsersController < ApplicationController
                 te.task_id = params["task_id_#{u.id}_#{count}"]
                 te.save
               else
+                TimeEntry.where("user_id=? && date_of_activity=? && task_id is null", u.id, d.to_date.to_s ).delete_all
                 new_day = TimeEntry.new
                 new_day.date_of_activity = d.to_date.to_s
                 new_day.project_id = @p.id

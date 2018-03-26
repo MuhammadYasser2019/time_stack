@@ -34,7 +34,7 @@ class Ability
        can [:new, :create, :edit, :update, :time_reject], Week
       end
       if user.proxy
-        can [:proxies, :proxy_users], User
+        can [:proxies, :proxy_users, :enter_timesheets, :show_timesheet_dates, :add_proxy_row, :fill_timesheet], User
         can :proxy_week, Week
       end
      
