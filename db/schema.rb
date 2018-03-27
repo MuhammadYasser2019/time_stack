@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180326190445) do
+ActiveRecord::Schema.define(version: 20180327175904) do
 
   create_table "archived_time_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "date_of_activity"
@@ -47,6 +47,7 @@ ActiveRecord::Schema.define(version: 20180326190445) do
     t.integer  "proxy_user_id"
     t.datetime "proxy_updated_date"
     t.string   "reset_reason"
+    t.integer  "week_id"
   end
 
   create_table "case_studies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

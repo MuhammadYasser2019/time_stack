@@ -73,6 +73,7 @@ class WeeksController < ApplicationController
       cw.time_sheet = w.time_sheet       
       cw.proxy_user_id = w.proxy_user_id        
       cw.proxy_updated_date = w.proxy_updated_date 
+      cw.week_id = w.id
       cw.save
     end 
 

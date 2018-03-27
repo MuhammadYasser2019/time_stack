@@ -4,7 +4,7 @@ class TimeEntry < ApplicationRecord
   belongs_to :week
   belongs_to :user
   belongs_to :vacation_type
-  has_many :archive_week
+  has_many :archived_time_entry
 
 
   before_save :calculate_hours

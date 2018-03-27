@@ -4,6 +4,7 @@ class Week < ApplicationRecord
   accepts_nested_attributes_for :time_entries, allow_destroy: true, reject_if: proc { |time_entries| time_entries[:date_of_activity].blank? }
   has_many :upload_timesheets
   has_many :expense_records
+  has_many :archived_weeks
   accepts_nested_attributes_for :upload_timesheets
   #mount_uploader :time_sheet, TimeSheetUploader
   EXPENSE_TYPE = ["Travel", "Stay","Food", "Gas", "Misc"]
