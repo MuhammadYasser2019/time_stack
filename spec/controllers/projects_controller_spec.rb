@@ -54,6 +54,7 @@ RSpec.describe ProjectsController, type: :controller do
 
   describe "GET #new" do
     it "assigns a new project as @project" do
+      project :create, {:project => valid_attributes}
       get :new, {}, valid_session
       expect(assigns(:project)).to be_a_new(Project)
     end

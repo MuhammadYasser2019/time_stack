@@ -1,15 +1,15 @@
 require 'rails_helper'
 
 # Specs in this file have access to a helper object that includes
-# the ArchiveWeeksHelper. For example:
+# the ArchivedWeeksHelper. For example:
 #
-# describe ArchiveWeeksHelper do
+# describe ArchivedWeeksHelper do
 #   describe "string concat" do
 #     it "concats two strings with spaces" do
 #       expect(helper.concat_strings("this","that")).to eq("this that")
 #     end
 #   end
 # end
-RSpec.describe ArchiveWeeksHelper, type: :helper do
-
+RSpec.describe ArchivedWeeksHelper, type: :helper do
+  pending "add some examples to (or delete) #{__FILE__}"
 end

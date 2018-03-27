@@ -53,9 +53,13 @@ RSpec.describe CustomersController, type: :controller do
   end
 
   describe "GET #new" do
-      it "assigns a new customer as @customer" do
-      get :new, params: {id: 1}
-      expect(assigns(:customer)).to be_a_new(Customer)
+      it "requires new customer to be signed in" do
+      user = FactoryBot.create(:user)
+      customer = FactoryBot.create(:customer)
+      sign_in user
+      
+      get :new
+      expect(response).to have_http_status(:success)
     end
   end
 

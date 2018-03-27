@@ -10,9 +10,9 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180315185547) do
+ActiveRecord::Schema.define(version: 20180326190445) do
 
-  create_table "archive_weeks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "archived_time_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "date_of_activity"
     t.float    "hours",            limit: 24
     t.string   "activity_log"
@@ -33,14 +33,7 @@ ActiveRecord::Schema.define(version: 20180315185547) do
     t.integer  "vacation_type_id"
   end
 
-  create_table "case_studies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
-    t.string   "case_study_name"
-    t.text     "case_study_data", limit: 65535
-    t.datetime "created_at",                    null: false
-    t.datetime "updated_at",                    null: false
-  end
-
-  create_table "clones", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+  create_table "archived_weeks", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "created_at",                       null: false
@@ -53,6 +46,14 @@ ActiveRecord::Schema.define(version: 20180315185547) do
     t.string   "time_sheet"
     t.integer  "proxy_user_id"
     t.datetime "proxy_updated_date"
+    t.string   "reset_reason"
+  end
+
+  create_table "case_studies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
+    t.string   "case_study_name"
+    t.text     "case_study_data", limit: 65535
+    t.datetime "created_at",                    null: false
+    t.datetime "updated_at",                    null: false
   end
 
   create_table "customers", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

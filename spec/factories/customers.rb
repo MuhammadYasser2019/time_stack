@@ -8,3 +8,5 @@ FactoryBot.define do
     zipcode "MyString"
   end
 end
+
+

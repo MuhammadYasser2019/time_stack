@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
-  resources :archive_weeks 
-  resources :clones
+  resources :archived_time_entries
+  resources :archived_weeks
   resources :holiday_exceptions
   resources :time_entries
   resources :weeks 
@@ -81,7 +81,7 @@ Rails.application.routes.draw do
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
   get 'customers/:id/theme' => 'customers#set_theme'
-  # Form to reset and also clone MASON MASON MASON
+  # Form to reset status_id and duplicate exist
   get '/reset_timesheet/:id' => 'users#reset'
   post '/reset_timesheet/:id' => 'users#reset'
   get 'approved_week' => 'users#approved_week'

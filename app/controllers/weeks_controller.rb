@@ -34,26 +34,9 @@ class WeeksController < ApplicationController
 
   def change_status
     logger.debug" PARAMTER ARE #{params}"
-    @week = Week.find(params[:week_id])
-     @weeks.each do |w|
-      cw= Clone.new
-      cw.start_date = w.start_date           
-      cw.end_date =w.end_date         
-      cw.created_at =w.created_at                            
-      cw.updated_at= w.updated_at                      
-      cw.user_id = w.user_id
-      cw.status_id =w.status_id    
-      cw.approved_date = w.approved_date        
-      cw.approved_by = w.approved_by      
-      cw.comments = w.comments         
-      cw.time_sheet = w.time_sheet       
-      cw.proxy_user_id = w.proxy_user_id        
-      cw.proxy_updated_date =w.proxy_updated_date 
-      cw.save
-    end 
     @time_entry = TimeEntry.where(:week_id => params[:week_id])
      @time_entry.each do |t|
-      aw = ArchiveWeek.new 
+      aw = ArchivedTimeEntry.new 
       aw.date_of_activity = t.date_of_activity
       aw.hours  = t.hours
       aw.activity_log = t.activity_log
@@ -74,6 +57,25 @@ class WeeksController < ApplicationController
       aw.vacation_type_id = t.vacation_type_id
       aw.save
     end 
+
+    @week = Week.find(params[:week_id])
+     @weeks.each do |w|
+      cw = ArchivedWeek.new
+      cw.start_date = w.start_date           
+      cw.end_date =w.end_date         
+      cw.created_at =w.created_at                            
+      cw.updated_at= w.updated_at                      
+      cw.user_id = w.user_id
+      cw.status_id =w.status_id    
+      cw.approved_date = w.approved_date        
+      cw.approved_by = w.approved_by      
+      cw.comments = w.comments         
+      cw.time_sheet = w.time_sheet       
+      cw.proxy_user_id = w.proxy_user_id        
+      cw.proxy_updated_date = w.proxy_updated_date 
+      cw.save
+    end 
+
 
     logger.debug("THIS IS THE WEEK BEFORE#{@week.inspect}")
     @week.status_id = 5

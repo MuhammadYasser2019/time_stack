@@ -54,8 +54,9 @@ RSpec.describe WeeksController, type: :controller do
 
   describe "GET #new" do
     it "assigns a new week as @week" do
+      week = Week.create! valid_attributes
       get :new, {}, valid_session
-      expect(assigns(:week)).to be_a_new(Week)
+      expect(assigns(:week)).to be_a_new(week)
     end
   end
 
