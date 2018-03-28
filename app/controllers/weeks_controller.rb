@@ -25,12 +25,12 @@ class WeeksController < ApplicationController
   # GET /weeks/1
   # GET /weeks/1.json
   def show
-    @projects =  Project.all
-    @week = Week.includes("user_week_statuses").find(params[:id])
-    status_ids = [1,2] 
-    @statuses = Status.find(status_ids)
-    @tasks = Task.all
-
+    #@projects =  Project.all
+    #@week = Week.includes("user_week_statuses").find(params[:id])
+    #status_ids = [1,2] 
+    #@statuses = Status.find(status_ids)
+    #@tasks = Task.all
+    redirect_to root_path
 
     
   end
