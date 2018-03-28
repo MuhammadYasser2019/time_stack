@@ -1,4 +1,4 @@
-tbody
+thead
   - @approved_week.each do |x|
 	tr id = "939"
 		td = x.user_id
@@ -7,8 +7,6 @@ tbody
 		td = Status
 		td = button_tag 'Reset Week', class: "reset_reason",  id: "week_id_#{x.id}", type: "button", remote: true
 		td = text_area_tag "reason", nil, size: "25x1", class: "r_comment", id: "reset_text", required: true, placeholder: "Enter reason for reset"
-
- 	h1.display-text
 
 
 

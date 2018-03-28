@@ -5,7 +5,8 @@ jQuery ($) ->
       $("#time_reject_").show() 
     return
   )
-
+ 
+  $(document).off('click', '.reset_reason');
   $(document).on('click', '.reset_reason', ->
     week_id = $(this).attr('id').split("_")[2]
     comment = $('#reset_text').val()
