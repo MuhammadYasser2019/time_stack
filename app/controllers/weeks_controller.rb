@@ -57,7 +57,6 @@ class WeeksController < ApplicationController
       aw.vacation_type_id = t.vacation_type_id
       aw.save
     end 
-
     @week = Week.find(params[:week_id])
      @weeks.each do |w|
       cw = ArchivedWeek.new
@@ -74,15 +73,13 @@ class WeeksController < ApplicationController
       cw.proxy_user_id = w.proxy_user_id        
       cw.proxy_updated_date = w.proxy_updated_date 
       cw.week_id = w.id
+      cw.reset_reason = params[:reason_for_reset]
       cw.save
     end 
-
-
     logger.debug("THIS IS THE WEEK BEFORE#{@week.inspect}")
     @week.status_id = 5
     @week.save 
     logger.debug("THIS IS THE WEEK CHANGED #{@week.inspect}")
-    redirect_to root_path
   end 
 
 
