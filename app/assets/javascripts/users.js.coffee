@@ -5,16 +5,17 @@ jQuery ($) ->
       $("#time_reject_").show() 
     return
   )
-  
+
   $(document).on('click', '.reset_reason', ->
-   week_id = $(this).attr('id').split("_")[2]
-   comment = $('#reset_text').val()
-   console.log("Testing Comment " + comment + "Week_id" + week_id)
-  $.get '/change_status',
-      reason_for_reset: comment,
-      week_id: week_id
+    week_id = $(this).attr('id').split("_")[2]
+    comment = $('#reset_text').val()
+    console.log("Testing Comment" + comment + "Week_id" + week_id)
+    $.get '/change_status',
+    reason_for_reset: comment,
+    week_id: week_id
     return
   )
+
   $('#show_approved_form').click
 
 	$('.print-user-report').click ->
