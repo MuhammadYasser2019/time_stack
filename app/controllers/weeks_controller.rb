@@ -80,6 +80,9 @@ class WeeksController < ApplicationController
     @week.status_id = 5
     @week.save 
     logger.debug("THIS IS THE WEEK CHANGED #{@week.inspect}")
+    respond_to do |format|
+      format.js
+    end 
   end 
 
 
