@@ -1,13 +1,6 @@
 class UsersController < ApplicationController 
   load_and_authorize_resource 
   
-    # COPY Existing week.
-  def copy
-      @archiveWeek = ArchiveWeek.new
-      @source = Week.find(params[:id])
-      #create new object with attributes of existing record
-      ArchiveWeek.new = @source.dup
-  end
 #Choose Approved Timesheet to Reset
   def reset
     logger.debug("YOU ARE WATCHING: #{params.inspect}")

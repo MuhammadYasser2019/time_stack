@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180328200344) do
+ActiveRecord::Schema.define(version: 20180329184854) do
 
   create_table "archived_time_entries", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|
     t.datetime "date_of_activity"
@@ -49,7 +49,7 @@ ActiveRecord::Schema.define(version: 20180328200344) do
     t.string   "reset_reason"
     t.integer  "week_id"
     t.integer  "reset_by"
-    t.integer  "reset_date"
+    t.datetime "reset_date"
   end
 
   create_table "case_studies", force: :cascade, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8" do |t|

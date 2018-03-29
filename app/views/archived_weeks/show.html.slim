@@ -39,6 +39,12 @@ p
 p
   strong Reason For Reset
   = @archived_week.reset_reason
+p
+  strong Reset By
+  = @archived_week.reset_by
+p
+  strong Date Of Reset
+  = @archived_week.reset_date
 
 
 = link_to 'Edit', edit_archived_week_path(@archived_week)
