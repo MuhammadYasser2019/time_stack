@@ -2,10 +2,9 @@ jQuery ($) ->
   $(document).on('change', '.r_comment',  ->
     console.log("In the comment")
     if $(this).val().length >= 8
-      $("#time_reject_").show() 
+      $("button").prop('disabled',false); 
     return
   )
- 
   $(document).off('click', '.reset_reason');
   $(document).on('click', '.reset_reason', ->
     week_id = $(this).attr('id').split("_")[2]

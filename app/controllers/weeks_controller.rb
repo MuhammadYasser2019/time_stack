@@ -74,6 +74,8 @@ class WeeksController < ApplicationController
       cw.proxy_updated_date = w.proxy_updated_date 
       cw.week_id = w.id
       cw.reset_reason = params[:reason_for_reset]
+      cw.reset_by = User.current_user
+      cw.reset_date = Date.today 
       cw.save
     end 
     logger.debug("THIS IS THE WEEK BEFORE#{@week.inspect}")

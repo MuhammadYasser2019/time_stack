@@ -5,8 +5,9 @@ thead
 		td = x.start_date.strftime('%Y-%m-%d')
 		td = x.end_date.strftime('%Y-%m-%d')
 		td = Status
-		td = button_tag 'Reset Week', class: "reset_reason",  id: "week_id_#{x.id}", type: "button", remote: true
-		td = text_area_tag "reason", nil, size: "25x1", class: "r_comment", id: "reset_text", required: true, placeholder: "Enter reason for reset"
+		td = text_area_tag "reason", nil, size: "25x1", class: "r_comment", id: "reset_text", required: true, placeholder: "Enter reason for reset" 
+		td = button_tag 'Reset Week', class: "reset_reason button",  id: "week_id_#{x.id}", type: "button", remote: true, disabled: true
+
 
 
 

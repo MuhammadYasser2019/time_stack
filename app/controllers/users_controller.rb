@@ -12,7 +12,9 @@ class UsersController < ApplicationController
   def reset
     logger.debug("YOU ARE WATCHING: #{params.inspect}")
     @user = User.all
-    @weeks = Week.all
+    #Do we want the customer or the user email listed ?  ?
+    @customers = Customer.where(user_id: current_user.id)
+    @weeks = Week.where("status_id =? ", 3)
   end 
 
   #finds the week with a users email, & Week start date/APPROVED status
