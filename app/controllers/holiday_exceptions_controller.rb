@@ -19,6 +19,7 @@ class HolidayExceptionsController < ApplicationController
 
   # GET /holiday_exceptions/1/edit
   def edit
+    @holiday_exceptions = HolidayException.all
     customer_holiday_ids = CustomersHoliday.where(customer_id: @holiday_exception.customer_id).pluck(:holiday_id)
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
   end
@@ -51,13 +52,22 @@ class HolidayExceptionsController < ApplicationController
   # PATCH/PUT /holiday_exceptions/1.json
   def update
     respond_to do |format|
-      if @holiday_exception.update(holiday_exception_params)
+      begin
+      status = @holiday_exception.update(holiday_exception_params)
+      rescue => e
+        status = false
+        customer_holiday_ids = CustomersHoliday.where(customer_id: @holiday_exception.customer_id).pluck(:holiday_id)
+        @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+        logger.debug"UPDATE #{e.inspect} , STATUS #{status}" 
+      end
+      if status
         format.html { redirect_to edit_holiday_exception_path(@holiday_exception), notice: 'Holiday exception was successfully updated.' }
         format.json { render :show, status: :ok, location: @holiday_exception }
       else
         format.html { render :edit }
         format.json { render json: @holiday_exception.errors, status: :unprocessable_entity }
       end
+
     end
   end
 
@@ -66,7 +76,7 @@ class HolidayExceptionsController < ApplicationController
   def destroy
     @holiday_exception.destroy
     respond_to do |format|
-      format.html { redirect_to holiday_exceptions_url, notice: 'Holiday exception was successfully destroyed.' }
+      format.html { redirect_to projects_url, notice: 'Holiday exception was successfully destroyed.' }
       format.json { head :no_content }
     end
   end
