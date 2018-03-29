@@ -1,10 +1,11 @@
 jQuery ($) ->	
-  $(document).on('change', '.r_comment',  ->
+  $(document).on('keyup', '.r_comment',  ->
     console.log("In the comment")
     if $(this).val().length >= 8
       $("button").prop('disabled',false); 
     return
   )
+
   $(document).off('click', '.reset_reason');
   $(document).on('click', '.reset_reason', ->
     week_id = $(this).attr('id').split("_")[2]

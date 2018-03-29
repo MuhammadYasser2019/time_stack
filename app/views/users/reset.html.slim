@@ -1,8 +1,8 @@
 .white-background  
 	.grid-x
 		.left-row
-		h1 Reset User Timesheet
 		= form_tag "/approved_week",id: "show_approved_form", method: :get, remote: true
+		h1 Reset User Timesheet
 		table
 			thead
 			  tr 
@@ -24,9 +24,11 @@
 				th Period Start Date
 				th Period End Date
 				th Status
+				th Reason
 				th Reset
-				
-#reset_view 
+			tbody{id = "reset_view"}
+
+			
 
 
 
