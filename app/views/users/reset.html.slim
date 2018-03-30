@@ -12,9 +12,11 @@
 
 			tbody
 			  tr 
-				td = select_tag :email, options_from_collection_for_select(@user, "id", "email",params[:email]), {required: "required"}
-				td = select_tag :start_date, options_from_collection_for_select(@weeks, "id", "start_date",params[:start_date])
-				td = button_tag "Show Approved Weeks", class: "orange-button"
+				td.user = select_tag :email, options_from_collection_for_select(@user, "id", "email",params[:email]), {required: "required", class: "default_user", include_blank: true}
+				td{id = "default_week"} = select_tag :start_date, options_from_collection_for_select(@weeks, "id", "start_date",params[:start_date]), include_blank: true
+				td = button_tag "Show Approved Weeks", class: "orange-button"  
+
+
 
 		h1 Approved Weeks
 		table
@@ -25,7 +27,7 @@
 				th Reason (Required)
 				th Reset
 			tbody{id = "reset_view"}
-
+ 
 			
 
 

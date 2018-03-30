@@ -86,6 +86,7 @@ Rails.application.routes.draw do
   post '/reset_timesheet/:id' => 'users#reset'
   get 'approved_week' => 'users#approved_week'
   post 'approved_week' => 'users#approved_week'
+  get 'default_week' => 'users#default_week'
  
 
   get 'assign_report_logo_to_user' => "users#assign_report_logo_to_user"

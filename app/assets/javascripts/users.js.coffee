@@ -1,19 +1,28 @@
 jQuery ($) ->	
-  $(document).on('keyup', '.r_comment',  ->
+  $(document).off("change", ".default_user");
+  $(document).on("change", ".default_user", -> 
+    user_email = $(this).val()
+    console.log("This show the value " + user_email )
+    $.get '/default_week',
+    user_email: user_email 
+    return
+  )
+
+  $(document).on("keyup", ".r_comment",  ->
     console.log("In the comment")
     if $(this).val().length >= 8
       $("button").prop('disabled',false); 
     return
   )
 
-  $(document).off('click', '.reset_reason');
-  $(document).on('click', '.reset_reason', ->
+  $(document).off("click", ".reset_reason");
+  $(document).on("click", ".reset_reason", ->
     week_id = $(this).attr('id').split("_")[2]
     comment = $('#reset_text').val()
     console.log("Testing Comment" + comment + "Week_id" + week_id)
     $.get '/change_status',
     reason_for_reset: comment,
-    week_id: week_id
+    week_id: week_id 
     return
   )
 
@@ -24,11 +33,6 @@ jQuery ($) ->
 	  $('#hidden_print_report').val("true")
 	  
 	  $('#user_report_form').submit()
-
-	$(".default_project_id").change ->
-		console.log("You changed the project "+ $(this).attr('id') + "the value is " + $(this).val())
-		task_select_id = "default_task_id"
-		build_tasks(task_select_id, $(this).val())
 
 	build_tasks = (field_id, project_id) ->
     $('#'+field_id).find('option').remove()
