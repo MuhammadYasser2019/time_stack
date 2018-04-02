@@ -1,13 +1,15 @@
-jQuery ($) ->	
-  $(document).off("keyup", ".r_comment")
-  $(document).on("keyup", ".r_comment",  ->
-    console.log("In the comment")
-    if $(this).val().length >= 8
-      $("button").prop('disabled',false); 
-      event.stopPropagation(".r_comment");
+jQuery ($) ->	 
+  $(document).off("click", ".reset_reason")
+  $(document).one("click", ".reset_reason", ->
+    week_id = $(this).attr('id').split("_")[2]
+    comment = $('#reset_text').val()
+    console.log("Testing Comment" + comment + "Week_id" + week_id)
+    $.get '/change_status',
+      async: false,
+      reason_for_reset: comment,
+      week_id: week_id 
     return
    )
-
   $(document).off("change", ".default_user")
   $(document).on("change", ".default_user", -> 
     user_email = $(this).val()
@@ -17,13 +19,11 @@ jQuery ($) ->
     return
    )
 
-  $(document).on("change", ".reset_reason", ->
-    week_id = $(this).attr('id').split("_")[2]
-    comment = $('#reset_text').val()
-    console.log("Testing Comment" + comment + "Week_id" + week_id)
-    $.get '/change_status',
-    reason_for_reset: comment,
-    week_id: week_id 
+  $(document).off("keyup", ".r_comment")
+  $(document).on("keyup", ".r_comment",  ->
+    console.log("In the comment")
+    if $(this).val().length >= 8
+      $("button").prop('disabled',false); 
     return
    )
 
