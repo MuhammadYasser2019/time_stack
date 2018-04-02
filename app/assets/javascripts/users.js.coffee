@@ -1,18 +1,19 @@
 jQuery ($) ->	
+  $(document).off("keyup", ".r_comment")
+  $(document).on("keyup", ".r_comment",  ->
+    console.log("In the comment")
+    if $(this).val().length >= 8
+      $("button").prop('disabled',false); 
+      event.stopPropagation(".r_comment");
+    return
+   )
 
+  $(document).off("change", ".default_user")
   $(document).on("change", ".default_user", -> 
     user_email = $(this).val()
     console.log("This show the value " + user_email )
     $.get '/default_week',
     user_email: user_email 
-    return
-   )
-
-
-  $(document).on("keyup", ".r_comment",  ->
-    console.log("In the comment")
-    if $(this).val().length >= 8
-      $("button").prop('disabled',false); 
     return
    )
 
