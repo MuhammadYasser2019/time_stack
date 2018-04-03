@@ -19,7 +19,7 @@ div.report
 		  - @user.projects.each_with_index do |project,index|
 		        <tr>
 		          - if index%2==0
-		               <td style='color: red'> #{project.name} </td>
+		               <td> #{project.name} </td>
 		          - else 
 		               <td> #{project.name} </td>
 		        </tr>
@@ -33,6 +33,7 @@ div.report
 				tr 
 					th Project
 					th Task
+					th Set Default
 			tbody	
 				tr
 					td = select_tag :default_project_id, options_from_collection_for_select(@user.projects,"id", "name",@default_project),class: "default_project_id", :include_blank => true
