@@ -34,6 +34,7 @@ class WeeksController < ApplicationController
 
   def change_status
     logger.debug" PARAMTER ARE #{params}"
+    #find for which user
     @time_entry = TimeEntry.where(:week_id => params[:week_id])
      @time_entry.each do |t|
       aw = ArchivedTimeEntry.new 
@@ -57,8 +58,10 @@ class WeeksController < ApplicationController
       aw.vacation_type_id = t.vacation_type_id
       aw.save
     end 
-    @week = Week.find(params[:week_id])
-     @weeks.each do |w|
+    #if archivedweek with start_date, end_date & user_id already present?
+    #do not create
+    w = Week.find(params[:week_id])
+    #if ArchivedWeek.where("start_date =? AND user_id =? AND week_id = ?", w.start_date,w.user_id,w.id).blank?
       cw = ArchivedWeek.new
       cw.start_date = w.start_date           
       cw.end_date =w.end_date         
@@ -77,10 +80,10 @@ class WeeksController < ApplicationController
       cw.reset_by = current_user.id
       cw.reset_date = Time.now 
       cw.save
-    end 
     logger.debug("THIS IS THE WEEK BEFORE#{@week.inspect}")
-    @week.status_id = 5
-    @week.save 
+   # end 
+    w.status_id = 5
+    w.save 
     logger.debug("THIS IS THE WEEK CHANGED #{@week.inspect}")
     respond_to do |format|
       format.js

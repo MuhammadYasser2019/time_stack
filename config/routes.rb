@@ -35,7 +35,7 @@ Rails.application.routes.draw do
   #root 'weeks#index'
   root 'static_pages#home'
 
-  get 'change_status' => 'weeks#change_status', as: :change_status
+  post 'change_status' => 'weeks#change_status', as: :change_status
   get 'duplicate' => 'weeks#duplicate'
   get 'weeks/:id/report' => 'weeks#report'
   

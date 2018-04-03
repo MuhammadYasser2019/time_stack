@@ -2,7 +2,7 @@ class UsersController < ApplicationController
   load_and_authorize_resource 
  
 #Choose Approved Timesheet to Reset
-  def reset
+  def reset 
     logger.debug("YOU ARE WATCHING: #{params.inspect}")
     @weeks = Week.where("status_id =? ", 3)
     @user = User.all
@@ -13,7 +13,6 @@ class UsersController < ApplicationController
    def default_week
     default_user = User.find(params[:user_email])
     @show_week = Week.where("status_id = ? and user_id = ?", 3, params[:user_email])
-
     logger.debug("The default user ID is #{params[:user_email]}") 
     respond_to do |format|
       format.js
@@ -23,7 +22,7 @@ class UsersController < ApplicationController
   #finds the week with a users email, & Week start date/APPROVED status
   def approved_week
     default_user = User.find_by_id(params[:email])
-    @approved_week = Week.where("user_id = ? and status_id =?", params[:email],3)
+    @approved_week = Week.where("user_id = ? and status_id =? and id = ?", params[:email],3,params[:start_date])
     @time_entry = TimeEntry.where(:week_id => @approved_week)
     logger.debug("TimeEntry ID #{@time_entry.inspect}")
     logger.debug("USER ID #{params[:email]}")

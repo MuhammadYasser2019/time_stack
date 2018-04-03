@@ -1,15 +1,15 @@
 jQuery ($) ->	 
-  $(document).off("click", ".reset_reason")
+  $(document).off("click",".reset_reason")
   $(document).one("click", ".reset_reason", ->
     week_id = $(this).attr('id').split("_")[2]
     comment = $('#reset_text').val()
     console.log("Testing Comment" + comment + "Week_id" + week_id)
-    $.get '/change_status',
+    $.post '/change_status',
       async: false,
       reason_for_reset: comment,
       week_id: week_id 
     return
-   )
+  )
   $(document).off("change", ".default_user")
   $(document).on("change", ".default_user", -> 
     user_email = $(this).val()
@@ -17,7 +17,7 @@ jQuery ($) ->
     $.get '/default_week',
     user_email: user_email 
     return
-   )
+  )
 
   $(document).off("keyup", ".r_comment")
   $(document).on("keyup", ".r_comment",  ->
@@ -25,7 +25,7 @@ jQuery ($) ->
     if $(this).val().length >= 8
       $("button").prop('disabled',false); 
     return
-   )
+  )
 
   $('#show_approved_form').click
 
