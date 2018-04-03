@@ -10,14 +10,14 @@ jQuery ($) ->
     $("#comment_text_"+row_id).show()
     return
    )
-
+   
   $(document).on('change', '.comment',  ->
     console.log("In the comment")
     if $(this).val().length >= 8
       row_id = parse_row_id($(this).attr('id'))
       $("#time_reject_" + row_id).show()
     return
-   )
+   ) 
   $(document).on('click', '.reject_class', ->
     row_id = parse_row_id($(this).attr('id'))
     cotent = $('#comment_text_' + row_id).val()

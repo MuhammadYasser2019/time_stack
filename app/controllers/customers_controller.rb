@@ -29,7 +29,7 @@ class CustomersController < ApplicationController
       logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
       logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
     end
-  end
+  end 
 
   # GET /customers/1
   # GET /customers/1.json

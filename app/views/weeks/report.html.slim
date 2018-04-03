@@ -53,6 +53,7 @@ div.report
       td
       td
       td
+
   -if @print_report == "false"
     - @week.upload_timesheets.each do |t|
       - if t.time_sheet.present?

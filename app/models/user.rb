@@ -15,6 +15,12 @@ class User < ApplicationRecord
   has_many :holiday_exceptions
   has_many :vacation_requests
 
+  def self.approved_week(user,start_date)
+    logger.debug(" LOOK LOOK ")
+    user = User.where(:email => params[:email])
+    approved_week = Week.where(:status_id => 3, :start_date => params[:start_date])  
+  end 
+
   def not_google_account?
     logger.debug("################not google account")
     if google_account == "1"

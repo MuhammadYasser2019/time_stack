@@ -13,3 +13,4 @@ Rails.application.config.assets.precompile += %w(ckeditor/config.js)
 #Rails.application.config.assets.precompile += %w( *.js ^[^_]*.css *.scss *.coffee )
 
 # Rails.application.config.assets.precompile += %w( search.js )
+Rails.application.config.assets.precompile += %w( ckeditor/*)

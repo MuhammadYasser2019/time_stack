@@ -25,15 +25,76 @@ class WeeksController < ApplicationController
   # GET /weeks/1
   # GET /weeks/1.json
   def show
+
     #@projects =  Project.all
     #@week = Week.includes("user_week_statuses").find(params[:id])
     #status_ids = [1,2] 
     #@statuses = Status.find(status_ids)
     #@tasks = Task.all
-    redirect_to root_path
-
-    
+    @projects =  Project.all
+    @week = Week.includes("user_week_statuses").find(params[:id])
+    status_ids = [1,2] 
+    @statuses = Status.find(status_ids)
+    @tasks = Task.all
   end
+
+  def change_status
+    logger.debug" PARAMTER ARE #{params}"
+    #find for which user
+    @time_entry = TimeEntry.where(:week_id => params[:week_id])
+     @time_entry.each do |t|
+      aw = ArchivedTimeEntry.new 
+      aw.date_of_activity = t.date_of_activity
+      aw.hours  = t.hours
+      aw.activity_log = t.activity_log
+      aw.task_id = t.task_id
+      aw.week_id = t.week_id
+      aw.user_id = t.user_id
+      aw.created_at = t.created_at
+      aw.updated_at = t.updated_at
+      aw.project_id = t.project_id
+      aw.sick = t.sick
+      aw.personal_day = t.personal_day
+      aw.updated_by = t.updated_by
+      aw.status_id = t.status_id
+      aw.approved_by = t.approved_by
+      aw.approved_date = t.approved_date
+      aw.time_in = t.time_in
+      aw.time_out = t.time_out
+      aw.vacation_type_id = t.vacation_type_id
+      aw.save
+    end 
+    #if archivedweek with start_date, end_date & user_id already present?
+    #do not create
+    w = Week.find(params[:week_id])
+    #if ArchivedWeek.where("start_date =? AND user_id =? AND week_id = ?", w.start_date,w.user_id,w.id).blank?
+      cw = ArchivedWeek.new
+      cw.start_date = w.start_date           
+      cw.end_date =w.end_date         
+      cw.created_at =w.created_at                            
+      cw.updated_at= w.updated_at                      
+      cw.user_id = w.user_id
+      cw.status_id =w.status_id    
+      cw.approved_date = w.approved_date        
+      cw.approved_by = w.approved_by      
+      cw.comments = w.comments         
+      cw.time_sheet = w.time_sheet       
+      cw.proxy_user_id = w.proxy_user_id        
+      cw.proxy_updated_date = w.proxy_updated_date 
+      cw.week_id = w.id
+      cw.reset_reason = params[:reason_for_reset]
+      cw.reset_by = current_user.id
+      cw.reset_date = Time.now 
+      cw.save
+    logger.debug("THIS IS THE WEEK BEFORE#{@week.inspect}")
+   # end 
+    w.status_id = 5
+    w.save 
+    logger.debug("THIS IS THE WEEK CHANGED #{@week.inspect}")
+    respond_to do |format|
+      format.js
+    end 
+  end 
 
   # GET /weeks/new
   def new
@@ -361,6 +422,7 @@ class WeeksController < ApplicationController
     if @week.status_id == 3
       @approved_by = User.find(@week.approved_by)
     end
+    
   end
 
   def print_report
@@ -453,6 +515,7 @@ class WeeksController < ApplicationController
       format.js
     end
   end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.

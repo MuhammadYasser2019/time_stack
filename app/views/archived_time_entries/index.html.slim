@@ -1,0 +1,19 @@
+h1 Listing archived_time_entries
+
+table
+  thead
+    tr
+      th
+      th
+      th
+
+  tbody
+    - @archived_time_entries.each do |archived_time_entry|
+      tr
+        td = link_to 'Show', archived_time_entry
+        td = link_to 'Edit', edit_archived_time_entry_path(archived_time_entry)
+        td = link_to 'Destroy', archived_time_entry, data: { confirm: 'Are you sure?' }, method: :delete
+
+br
+
+= link_to 'New Archived time entry', new_archived_time_entry_path

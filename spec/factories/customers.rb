@@ -1,4 +1,5 @@
-FactoryGirl.define do
+FactoryBot.define do
+
   factory :customer do
     name "MyString"
     address "MyString"
@@ -7,3 +8,5 @@ FactoryGirl.define do
     zipcode "MyString"
   end
 end
+
+

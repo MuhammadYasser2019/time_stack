@@ -1,6 +1,6 @@
-FactoryGirl.define do
+FactoryBot.define do
   factory :time_entry do
-    date "2016-04-30 20:54:42"
+    date {DateTime.now}
     hours 1
     comments "MyString"
     task nil

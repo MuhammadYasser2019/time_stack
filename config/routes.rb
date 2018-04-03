@@ -1,8 +1,10 @@
 Rails.application.routes.draw do
 
+  resources :archived_time_entries
+  resources :archived_weeks
   resources :holiday_exceptions
   resources :time_entries
-  resources :weeks
+  resources :weeks 
   resources :tasks
   resources :projects
   resources :customers
@@ -32,8 +34,11 @@ Rails.application.routes.draw do
   end
   #root 'weeks#index'
   root 'static_pages#home'
-  get 'weeks/:id/report' => 'weeks#report'
 
+  post 'change_status' => 'weeks#change_status', as: :change_status
+  get 'duplicate' => 'weeks#duplicate'
+  get 'weeks/:id/report' => 'weeks#report'
+  
   get '/dynamic_project_update' => 'projects#dynamic_project_update'
   get '/dynamic_customer_update' => 'customers#dynamic_customer_update'
 
@@ -76,6 +81,13 @@ Rails.application.routes.draw do
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
   get 'customers/:id/theme' => 'customers#set_theme'
+  # Form to reset status_id and duplicate exist
+  get '/reset_timesheet/:id' => 'users#reset'
+  post '/reset_timesheet/:id' => 'users#reset'
+  get 'approved_week' => 'users#approved_week'
+  post 'approved_week' => 'users#approved_week'
+  get 'default_week' => 'users#default_week'
+ 
 
   get 'assign_report_logo_to_user' => "users#assign_report_logo_to_user"
 
@@ -121,7 +133,7 @@ Rails.application.routes.draw do
   post "/add_expense_records" => "weeks#add_expense_records"
   get 'get_employment/' => 'customers#get_employment'
 
-  #mount Ckeditor::Engine => '/ckeditor'
+  mount Ckeditor::Engine => '/ckeditor'
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

@@ -54,6 +54,7 @@ RSpec.describe TimeEntriesController, type: :controller do
 
   describe "GET #new" do
     it "assigns a new time_entry as @time_entry" do
+      time_entry = TimeEntry.create! valid_attributes
       get :new, {}, valid_session
       expect(assigns(:time_entry)).to be_a_new(TimeEntry)
     end

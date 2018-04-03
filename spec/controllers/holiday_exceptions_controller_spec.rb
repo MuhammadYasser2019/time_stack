@@ -45,19 +45,20 @@ RSpec.describe HolidayExceptionsController, type: :controller do
   end
 
   describe "GET #show" do
-    it "assigns the requested holiday_exception as @holiday_exception" do
+    it "successfuly show the page if found" do
       holiday_exception = HolidayException.create! valid_attributes
-      get :show, params: {id: holiday_exception.to_param}, session: valid_session
+      get :show, params: {id: holiday_exception.id}
       expect(assigns(:holiday_exception)).to eq(holiday_exception)
     end
   end
 
   describe "GET #new" do
     it "assigns a new holiday_exception as @holiday_exception" do
-      get :new, params: {}, session: valid_session
-      expect(assigns(:holiday_exception)).to be_a_new(HolidayException)
+      holiday_exception = HolidayException.create! valid_attributes
+      get :new, params: {id: holiday_exception.id}
+      expect(assigns(:holiday_exception)).to be_a_new(holiday_exception)
     end
-  end
+  end 
 
   describe "GET #edit" do
     it "assigns the requested holiday_exception as @holiday_exception" do

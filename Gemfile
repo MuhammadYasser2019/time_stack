@@ -101,7 +101,7 @@ group :development do
 end
 
 group :development, :test do
-  gem 'factory_girl_rails'
+  gem 'factory_bot_rails'
   gem 'faker'
   gem 'pry-rails'
   gem 'pry-rescue'
@@ -109,6 +109,7 @@ group :development, :test do
   gem 'rubocop'
   gem 'thin'
   gem 'letter_opener'
+  gem 'rails-controller-testing'
 end
 
 group :test do
