@@ -11,6 +11,3 @@ Rails.application.config.assets.version = '1.0'
 Rails.application.config.assets.precompile += %w(ckeditor/*)
 Rails.application.config.assets.precompile += %w(ckeditor/config.js)
 #Rails.application.config.assets.precompile += %w( *.js ^[^_]*.css *.scss *.coffee )
-
-# Rails.application.config.assets.precompile += %w( search.js )
-Rails.application.config.assets.precompile += %w( ckeditor/*)
