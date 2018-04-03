@@ -3,17 +3,16 @@ h1 Listing archived_weeks
 table
   thead
     tr
-      th
-      th
-      th
+      th Week Id
+      th Start Date
+      th Show
+
 
   tbody
     - @archived_weeks.each do |archived_week|
       tr
+        td = archived_week.id
+        td = archived_week.start_date
         td = link_to 'Show', archived_week
-        td = link_to 'Edit', edit_archived_week_path(archived_week)
-        td = link_to 'Destroy', archived_week, data: { confirm: 'Are you sure?' }, method: :delete
+       
 
-br
-
-= link_to 'New Archived week', new_archived_week_path

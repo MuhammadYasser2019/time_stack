@@ -1,19 +1,16 @@
-h1 Listing archived_time_entries
+h1 Listing Archived Time Entries
 
 table
   thead
     tr
-      th
-      th
-      th
+      th user_id
+      th Week_id
+      th Show
 
   tbody
     - @archived_time_entries.each do |archived_time_entry|
       tr
+        td = archived_time_entry.user_id
+        td = archived_time_entry.week_id
         td = link_to 'Show', archived_time_entry
-        td = link_to 'Edit', edit_archived_time_entry_path(archived_time_entry)
-        td = link_to 'Destroy', archived_time_entry, data: { confirm: 'Are you sure?' }, method: :delete
-
-br
-
-= link_to 'New Archived time entry', new_archived_time_entry_path
+       
