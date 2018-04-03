@@ -75,6 +75,8 @@ gem 'axlsx_styler'
 
 gem "omniauth-google-oauth2"
 gem 'ckeditor'
+gem 'airbrake', '~> 7.2'
+
 
 group :development do
   gem 'better_errors'
