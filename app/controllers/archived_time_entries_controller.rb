@@ -4,7 +4,11 @@ class ArchivedTimeEntriesController < ApplicationController
   # GET /archived_time_entries
   # GET /archived_time_entries.json
   def index
+    if current_user.pm = 1 || current_user.cm = 1
     @archived_time_entries = ArchivedTimeEntry.all
+    else
+      redirect_to root_path
+    end 
   end
 
   # GET /archived_time_entries/1
