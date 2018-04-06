@@ -5,9 +5,8 @@ class UsersController < ApplicationController
   def reset 
     logger.debug("YOU ARE WATCHING: #{params.inspect}")
     @weeks = Week.where("status_id =? ", 3)
-    @user = User.all
-    #Do we want the customer or the user email listed ?  ?
-    @customers = Customer.where(user_id: current_user.id)
+    @users = User.where(customer_id = params[:customer_id])
+    logger.debug("The current users are #{@users.inspect}")
   end 
 
    def default_week
