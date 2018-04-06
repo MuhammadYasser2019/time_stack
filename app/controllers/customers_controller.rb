@@ -1,4 +1,4 @@
-class CustomersController < ApplicationController
+ class CustomersController < ApplicationController
   before_action :set_customer, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
   # GET /customers
@@ -65,6 +65,7 @@ class CustomersController < ApplicationController
   # POST /customers
   # POST /customers.json
   def create
+    @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
     @customer = Customer.new(customer_params)
     @customer.user_id = current_user.id
     @customer.theme = "Orange" 
@@ -529,6 +530,17 @@ class CustomersController < ApplicationController
     end
   end
 
+  def questionaire
+
+    email = params[:anything][:email]
+    type = params[:anything][:feedback]
+    notes = params[:anything][:notes]
+    # image = params[:anything][:attachment]
+    FeedbackMailer.question_email(email,type,notes).deliver
+      respond_to do |format|
+         format.html { redirect_to "/", notice: 'Vacation request sent successfully.' }
+     end   
+  end 
 
   private
     # Use callbacks to share common setup or constraints between actions.

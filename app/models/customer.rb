@@ -5,8 +5,13 @@ class Customer < ApplicationRecord
   has_many :vacation_requests
   has_many :employment_types
   mount_uploader :logo, LogoUploader
-  has_many :vacation_types
+  has_many :vacation_types 
 
+
+  validates_numericality_of :zipcode
+
+
+  
 
   def build_consultant_hash(customer_id, dates_array, start_date, end_date, users, projects, current_week=nil, current_month=nil)
     hash_report_data = Hash.new

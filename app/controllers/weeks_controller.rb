@@ -1,5 +1,6 @@
 class WeeksController < ApplicationController
   before_action :set_week, only: [:show, :edit, :update, :destroy]
+  before_action :redirect_to_root, only: [:show]
   load_and_authorize_resource
   # GET /weeks
   # GET /weeks.json
@@ -523,5 +524,9 @@ class WeeksController < ApplicationController
     def week_params
       params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
       time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id],expense_records_attributes:[:id, :expense_type, :description, :date, :amount, :attachment, :project_id])
+    end
+
+    def redirect_to_root
+      redirect_to root_path
     end
 end
