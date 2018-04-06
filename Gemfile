@@ -55,6 +55,7 @@ gem 'slim-rails'
 gem 'therubyracer', :platform=>:ruby
 gem 'bower-rails'
 gem 'cancancan', '~> 1.10'
+gem "font-awesome-sass"
 gem 'jquery-datatables-rails', '~> 3.4.0'
 
 gem "recaptcha", '3.4.0', require: "recaptcha/rails"
