@@ -1,28 +1,32 @@
 class ArchivedWeeksController < ApplicationController
-  before_action :set_archived_week, only: [:show, :edit, :update, :destroy]
+  before_action :set_archived_week, only: [:show]
+
+ 
 
   # GET /archived_weeks
   # GET /archived_weeks.json
   def index
+    if current_user.pm = 1 || current_user.cm = 1
     @archived_weeks = ArchivedWeek.all
+  else 
+    redirect_to permission_denied
+  end
   end
 
   # GET /archived_weeks/1
   # GET /archived_weeks/1.json
   def show
+      
     @archived_weeks = ArchivedWeek.all
     @statuses = Status.find_by_id(@archived_week.status_id)
     @archived_time_entries = ArchivedTimeEntry.all
     @user = User.find_by_id(@archived_week.user_id)
+       
   end
 
   # GET /archived_weeks/new
   def new
     @archived_week = ArchivedWeek.new
-  end
-
-  # GET /archived_weeks/1/edit
-  def edit
   end
 
   # POST /archived_weeks
@@ -41,19 +45,6 @@ class ArchivedWeeksController < ApplicationController
     end
   end
 
-  # PATCH/PUT /archived_weeks/1
-  # PATCH/PUT /archived_weeks/1.json
-  def update
-    respond_to do |format|
-      if @archived_week.update(archived_week_params)
-        format.html { redirect_to @archived_week, notice: 'Archived week was successfully updated.' }
-        format.json { render :show, status: :ok, location: @archived_week }
-      else
-        format.html { render :edit }
-        format.json { render json: @archived_week.errors, status: :unprocessable_entity }
-      end
-    end
-  end
 
   # DELETE /archived_weeks/1
   # DELETE /archived_weeks/1.json
