@@ -76,7 +76,7 @@ gem 'axlsx_styler'
 
 gem "omniauth-google-oauth2"
 gem 'ckeditor'
-#gem 'airbrake', '~> 7.2'
+
 
 
 group :development do
@@ -96,6 +96,7 @@ group :development do
   gem 'spring-commands-rspec'
   gem 'byebug'
   # gem 'binding_of_caller'
+  gem 'airbrake', '~> 7.2'
 
 
 
