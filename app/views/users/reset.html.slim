@@ -11,7 +11,8 @@
 
 			tbody
 			  tr 
-				td.user = select_tag :email, options_from_collection_for_select(@user, "id", "email",params[:email]), {required: "required", class: "default_user", include_blank: true}
+				td.user = select_tag :email, options_from_collection_for_select(@users, "id", "email",params[:email]), {required: "required", class: "default_user", include_blank: true}
+
 				td{id = "default_week"} = select_tag :start_date, options_from_collection_for_select(@weeks, "id", "start_date",params[:start_date]), include_blank: true
 				td = button_tag "Show Approved Weeks", class: "orange-button"  
 
