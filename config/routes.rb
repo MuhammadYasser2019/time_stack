@@ -1,7 +1,7 @@
 Rails.application.routes.draw do
 
-  resources :archived_time_entries
-  resources :archived_weeks
+  resources :archived_time_entries, only: [:index, :show, :create]
+  resources :archived_weeks, only: [:index, :show, :create]
   resources :holiday_exceptions
   resources :time_entries
   resources :weeks 
@@ -87,8 +87,9 @@ Rails.application.routes.draw do
   get 'approved_week' => 'users#approved_week'
   post 'approved_week' => 'users#approved_week'
   get 'default_week' => 'users#default_week'
- 
 
+  #Questionaite
+  post 'customers/questionaire' => 'customers#questionaire'
   get 'assign_report_logo_to_user' => "users#assign_report_logo_to_user"
 
   get 'user_profile' => "users#user_profile"

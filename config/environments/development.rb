@@ -54,6 +54,15 @@ Rails.application.configure do
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
+
+  #config.action_mailer.smtp_settings = {
+  #  address:         'smtp.office365.com',
+  #  port:            '587',
+  #  authentication:  :login,
+  #  user_name:       'mason.bartlett@resourcestack.com',
+  #  password:        '',
+  #  enable_starttls_auto: true
+  #  }
   
   config.action_mailer.smtp_settings = {
    address:              'smtp.gmail.com',
