@@ -5,7 +5,7 @@ class UsersController < ApplicationController
   def reset 
     logger.debug("YOU ARE WATCHING: #{params.inspect}")
     @weeks = Week.where("status_id =? ", 3)
-    @users = User.where(customer_id = params[:customer_id])
+    @users = User.where(:customer_id => params[:customer_id])
     logger.debug("The current users are #{@users.inspect}")
   end 
 
