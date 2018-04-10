@@ -60,10 +60,9 @@ Rails.application.configure do
   #  port:            '587',
   #  authentication:  :login,
   #  user_name:       'mason.bartlett@resourcestack.com',
-  #  password:        '',
+  #  password:        'Puppet66',
   #  enable_starttls_auto: true
   #  }
-  
   config.action_mailer.smtp_settings = {
    address:              'smtp.gmail.com',
    port:                 587,

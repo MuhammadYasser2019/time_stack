@@ -13,14 +13,14 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = 'mason.bartlett@resourcestack.com'
+  config.mailer_sender = "timestackrsi@gmail.com"
   config.timeout_in = 1.hour
 
   config.omniauth :google_oauth2, "545334339071-vb8p76n0n8h3us8mvrjkvfjuei7k15s9.apps.googleusercontent.com", "meanbnBn67dDHa0bSX9pZliT", {skip_jwt: true}
 
   # Configure the class responsible to send e-mails.
 
-  config.mailer = "MyMailer"
+  #config.mailer = "MyMailer"
 
 
   # Configure the parent class responsible to send e-mails.
