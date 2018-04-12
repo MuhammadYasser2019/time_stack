@@ -54,22 +54,23 @@ Rails.application.configure do
   # config.file_watcher = ActiveSupport::EventedFileUpdateChecker
   config.action_mailer.delivery_method = :smtp
   config.action_mailer.perform_deliveries = true
+  config.action_mailer.smtp_settings = {
+    address:         'smtp.office365.com', 
+    port:            '587',
+    authentication:  :login,
+    user_name:       Rails.application.secrets.microsoft_account,
+    password:        Rails.application.secrets.microsoft_password, 
+    domain:               'resourcestack.com',
+    enable_starttls_auto: true
+  }
 
   #config.action_mailer.smtp_settings = {
-  #  address:         'smtp.office365.com',
-  #  port:            '587',
-  #  authentication:  :login,
-  #  user_name:       'mason.bartlett@resourcestack.com',
-  #  password:        'Puppet66',
-  #  enable_starttls_auto: true
-  #  }
-  config.action_mailer.smtp_settings = {
-   address:              'smtp.gmail.com',
-   port:                 587,
-   domain:               'resourcestack.com',
-   user_name:            'timestackrsi@gmail.com',
-   password:           'Sameer1111$',
-   authentication:     :plain
-  }
+  # address:              'smtp.gmail.com',
+  # port:                 587,
+  # domain:               'resourcestack.com',
+  # user_name:            'timestackrsi@gmail.com',
+  # password:           'Sameer1111$',
+  # authentication:     :plain
+  #}
   config.active_support.deprecation = :log
 end
