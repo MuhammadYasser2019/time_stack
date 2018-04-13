@@ -19,7 +19,9 @@ Devise.setup do |config|
   config.omniauth :google_oauth2, "545334339071-vb8p76n0n8h3us8mvrjkvfjuei7k15s9.apps.googleusercontent.com", "meanbnBn67dDHa0bSX9pZliT", {skip_jwt: true}
 
   # Configure the class responsible to send e-mails.
-  # config.mailer = 'Devise::Mailer'
+
+  #config.mailer = "MyMailer"
+
 
   # Configure the parent class responsible to send e-mails.
   # config.parent_mailer = 'ActionMailer::Base'

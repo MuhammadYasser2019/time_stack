@@ -535,7 +535,8 @@
     email = params[:anything][:email]
     type = params[:anything][:feedback]
     notes = params[:anything][:notes]
-    # image = params[:anything][:attachment]
+    #MyMailer.confirmation_instructions(record, token, current_user).deliver
+  
     FeedbackMailer.question_email(email,type,notes).deliver
       respond_to do |format|
          format.html { redirect_to "/", notice: 'Vacation request sent successfully.' }
