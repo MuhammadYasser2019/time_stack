@@ -8,7 +8,7 @@
 
           <%= form_for :anything, scope: :customer, url: customers_questionaire_path ,multiple: true do |form| %>
                 <div><%= form.label :email, 'E-mail:' %>
-                  <%= form.text_field :email , placeholder: 'JohnDoe@yahoo.com' %>
+                  <%= form.email_field :email , placeholder: 'JohnDoe@yahoo.com' %>
                 </div>
 
                 <div><%= form.label :feedback, 'Type of feedback:' %>
@@ -16,10 +16,10 @@
                 </div>
 
                 <div><%= form.label :notes, 'Notes: (Required)' %>
-                  <%= form.text_field :notes, class: 'notes', id: 'notes', placeholder: "Your Feedback" %>
+                  <%= form.text_field :notes, class: 'notes', id: 'notes', placeholder: "Your Feedback (Required)", required: true %>
                 </div>
 
-                <%= form.submit "Submit", class: "btn1", id: "button", disabled: true %>
+                <%= form.submit "Submit", class: "btn1", id: "button" %>
           <% end  %>
           
        </div> 
@@ -27,16 +27,6 @@
 
 
 <script type="text/javascript">
-          //get the form
-            $('.notes').on("keyup", action);
-              function action() {
-                console.log("You are in the notes.")
-                if($('.notes').val().length > 0){
-                  $('#button').prop("disabled",false);
-                } else {
-                   $('#button').prop("disabled",true);
-                }
-              }
 
 		      // Get the modal
           var modal = document.getElementById('myModal');
