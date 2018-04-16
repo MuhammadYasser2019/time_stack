@@ -1,6 +1,6 @@
 class FeedbackMailer < ActionMailer::Base
 	default to: 'Mbartlett413@me.com'
-	default from: 'mason.bartlett@resourcestack.com'
+	default from: 'timestackrsi@gmail.com'
 
 	def question_email(email, type, notes)
 		logger.debug("LOOKING FOR THE EMAIL #{email}")
