@@ -6,9 +6,12 @@
          <span class = "close"> &times;</span>
          <p>Our goal is to provide you with the best user experience possible! Please leave a note on what you think! </p>
 
-          <%= form_for :anything, url: "customers/questionaire",multiple: true do |form| %>
+          <%= form_for :anything, scope: :customer, url: customers_questionaire_path ,multiple: true do |form| %>
+               
+
                 <div><%= form.label :email, 'E-mail:' %>
                   <%= form.text_field :email , placeholder: 'JohnDoe@yahoo.com' %>
+
                 </div>
 
                 <div><%= form.label :feedback, 'Type of feedback:' %>
@@ -20,9 +23,11 @@
                 </div>
 
                 <%= form.submit "Submit", class: "btn1", id: "button", disabled: true %>
-          <% end  %>
+        
+          <% end %>
           
        </div> 
+
      </div>
 
 
@@ -35,6 +40,8 @@
                   $('#button').prop("disabled",false);
                 } else {
                    $('#button').prop("disabled",true);
+                   window.alert("This field is required.")
+
                 }
               }
 
