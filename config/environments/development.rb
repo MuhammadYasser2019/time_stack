@@ -57,10 +57,10 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address:         'smtp.office365.com', 
     port:            '587',
-    authentication:  :login,
+    authentication:  :plain,
     user_name:       Rails.application.secrets.microsoft_account,
     password:        Rails.application.secrets.microsoft_password, 
-    domain:               'resourcestack.com',
+    domain:          'resourcestack.com',
     enable_starttls_auto: true
   }
 
