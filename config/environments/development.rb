@@ -57,7 +57,7 @@ Rails.application.configure do
   config.action_mailer.smtp_settings = {
     address:         'smtp.office365.com', 
     port:            '587',
-    authentication:  :plain,
+    authentication:  :login,
     user_name:       Rails.application.secrets.microsoft_account,
     password:        Rails.application.secrets.microsoft_password, 
     domain:          'resourcestack.com',
