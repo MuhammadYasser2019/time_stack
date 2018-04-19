@@ -1,5 +1,6 @@
 class ApprovalMailer < ActionMailer::Base
-
+  default from: 'technicalsupport@resourcestack.com'
+  
   def mail_to_manager(week, expense, user)
     te = TimeEntry.where("week_id = ? AND user_id = ? and project_id IS NOT NULL", week.id, week.user_id).first
     unless te.nil?

@@ -1,54 +1,53 @@
+<% if user_signed_in? %>
+  <button class ="tech-btn" id ="myBtn" ><i class="far fa-question-circle fa-3x"></i></button>
+<% end %>
+    <div id="myModal" class= "modal">
+      <div class = "modal-content">
+        <span class = "close"> &times;</span>
+        <p>Our goal is to provide you with the best user experience possible! Please leave a note on what you think! </p>
 
- <button class ="tech-btn" id ="myBtn" ><i class="far fa-question-circle fa-3x"></i></button>
+        <%= form_for :anything, scope: :customer, url: customers_questionaire_path ,multiple: true do |form| %>
+          <div><%= form.label :email, 'E-mail:' %>
+            <%= form.email_field :email , placeholder: 'JohnDoe@yahoo.com' %>
+          </div>
 
-     <div id="myModal" class= "modal">
-       <div class = "modal-content">
-         <span class = "close"> &times;</span>
-         <p>Our goal is to provide you with the best user experience possible! Please leave a note on what you think! </p>
+          <div><%= form.label :feedback, 'Type of feedback:' %>
+            <%= form.text_field :feedback, placeholder: 'Problem, Bug, Idea...' %>
+          </div>
 
-          <%= form_for :anything, scope: :customer, url: customers_questionaire_path ,multiple: true do |form| %>
-                <div><%= form.label :email, 'E-mail:' %>
-                  <%= form.email_field :email , placeholder: 'JohnDoe@yahoo.com' %>
-                </div>
+          <div><%= form.label :notes, 'Notes: (Required)' %>
+            <%= form.text_field :notes, class: 'notes', id: 'notes', placeholder: "Your Feedback (Required)", required: true %>
+          </div>
 
-                <div><%= form.label :feedback, 'Type of feedback:' %>
-                  <%= form.text_field :feedback, placeholder: 'Problem, Bug, Idea...' %>
-                </div>
-
-                <div><%= form.label :notes, 'Notes: (Required)' %>
-                  <%= form.text_field :notes, class: 'notes', id: 'notes', placeholder: "Your Feedback (Required)", required: true %>
-                </div>
-
-                <%= form.submit "Submit", class: "btn1", id: "button" %>
-          <% end  %>
+          <%= form.submit "Submit", class: "btn1", id: "button" %>
+        <% end  %>
           
-       </div> 
-     </div>
-
+      </div> 
+    </div>
 
 <script type="text/javascript">
 
-		      // Get the modal
-          var modal = document.getElementById('myModal');
+  // Get the modal
+  var modal = document.getElementById('myModal');
 
-          // Get the button that opens the modal
-          var btn1 = document.getElementById("myBtn");
+  // Get the button that opens the modal
+  var btn1 = document.getElementById("myBtn");
 
-          // Get the <span> element that closes the modal
-          var span = document.getElementsByClassName("close")[0];
-          // When the user clicks the button, open the modal 
-          btn1.onclick = function() {
-              modal.style.display = "block";
-          }
-          // When the user clicks on <span> (x), close the modal
-          span.onclick = function() {
-              modal.style.display = "none";
-          }
-          // When the user clicks anywhere outside of the modal, close it
-          window.onclick = function(event) {
-              if (event.target == modal) {
-                  modal.style.display = "none"; 
-              }
-          }
+  // Get the <span> element that closes the modal
+  var span = document.getElementsByClassName("close")[0];
+  // When the user clicks the button, open the modal 
+  btn1.onclick = function() {
+      modal.style.display = "block";
+  }
+  // When the user clicks on <span> (x), close the modal
+  span.onclick = function() {
+      modal.style.display = "none";
+  }
+  // When the user clicks anywhere outside of the modal, close it
+  window.onclick = function(event) {
+      if (event.target == modal) {
+          modal.style.display = "none"; 
+      }
+  }
          
 </script>

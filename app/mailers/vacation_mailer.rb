@@ -1,5 +1,7 @@
 class VacationMailer < ActionMailer::Base
 
+	default from: 'technicalsupport@resourcestack.com'
+	
 	def mail_to_customer_owner(user, customer_manager,vacation_start_date,vacetion_end_date )
 
 		@customer_manager_email = User.find(customer_manager).email
