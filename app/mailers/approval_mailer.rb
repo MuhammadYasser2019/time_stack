@@ -1,6 +1,6 @@
 class ApprovalMailer < ActionMailer::Base
   default from: 'technicalsupport@resourcestack.com'
-  
+
   def mail_to_manager(week, expense, user)
     te = TimeEntry.where("week_id = ? AND user_id = ? and project_id IS NOT NULL", week.id, week.user_id).first
     unless te.nil?
@@ -13,7 +13,7 @@ class ApprovalMailer < ActionMailer::Base
       @week = week
       @expenses = expense
       @sender = user.email
-      mail(to: @manager , subject:"Time sheet submitted for approval" , from: @sender )
+      mail(to: @manager , subject:"Time sheet submitted for approval" )
     end
   end
 
@@ -23,7 +23,7 @@ class ApprovalMailer < ActionMailer::Base
 
     @time = week
 
-    mail(to:@user  , subject:"Timesheet Approval" , from:@approver)
+    mail(to:@user  , subject:"Timesheet Approval")
 
   end
 
@@ -33,7 +33,7 @@ class ApprovalMailer < ActionMailer::Base
     @user = user
     user_email = user.email
 
-    mail(to:inviter_email, subject: "Invitation Accepted By #{user_email}", from: user_email)
+    mail(to:inviter_email, subject: "Invitation Accepted By #{user_email}")
 
   end
 end
