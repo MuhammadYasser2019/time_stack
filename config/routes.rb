@@ -121,7 +121,9 @@ Rails.application.routes.draw do
   post "/add_expense_records" => "weeks#add_expense_records"
   get 'get_employment/' => 'customers#get_employment'
 
-  #mount Ckeditor::Engine => '/ckeditor'
+  match "/analytics" => 'analytics#index', via: [:get, :post] 
+  mount Ckeditor::Engine => '/ckeditor'
+  
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
