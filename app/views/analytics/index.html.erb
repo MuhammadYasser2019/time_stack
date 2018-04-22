@@ -1,2 +1,9 @@
-<%= bar :bar_chart, @barSize, @barData%>
-<%= pie :pie_chart, @pieSize, @pieData%>
+<div id="bar">
+  <strong>Projects Per Customer</strong>
+  <%= bar :bar_chart, @barSize, @bar_data_2.to_json %>
+</div>
+
+<div id="pie">
+  <strong>Employees per Customer</strong>
+  <%= pie :pie_chart, @pieSize, @pie_data_2.to_json %>
+</div>

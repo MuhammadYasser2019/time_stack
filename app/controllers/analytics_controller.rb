@@ -1,20 +1,7 @@
 class AnalyticsController < ApplicationController
 	def index
-		#data_table = GoogleVisualr::DataTable.new
-		# Add Column Headers
-		#data_table.new_column('string', 'Year' )
-		#data_table.new_column('number', 'Sales')
-		#data_table.new_column('number', 'Expenses')
 
-		# Add Rows and Values
-		#data_table.add_rows([
-		#	['2004', 1000, 400],
-		#	['2005', 1170, 460],
-		#	['2006', 660, 1120],
-		#	['2007', 1030, 540]
-		#])
-		#option = { width: 1000, height: 1000, title: 'Resource stack' }
-		#@chart = GoogleVisualr::Interactive::AreaChart.new(data_table, option)
+		user_hash = User.top(:customer_id)
 		u = User.all
 	    @user_count = u.count
 	    c = Customer.all
@@ -23,66 +10,66 @@ class AnalyticsController < ApplicationController
 	    :height => 500,
 	    :width => 500
 	  	}
+      colors_array = ["#F7464A", "#46BFBD", "#949FB1", "#4D5360"]
+			@pie_data_2 = Array.new
+		  user_hash.keys.each_with_index do |h, i|
+				c_hash = Hash.new
+				c_hash["value"] = user_hash[h]
+				c_hash["color"] = colors_array[i]
+				c_hash["highlight"] = "#FF5A5E"
+				c_hash["label"] = Customer.find(h).name
+				@pie_data_2 << c_hash
+      end
+      logger.debug "index - #{@pie_data_2}"
 
-	  	@pieData = [
-	        {
-	          value: @user_count,
-	          color:"#F7464A",
-	          highlight: "#FF5A5E",
-	          label: "Total Users"
-	        },
-	        {
-	          value: @cus_count,
-	          color: "#46BFBD",
-	          highlight: "#5AD3D1",
-	          label: "Total Customers"
-	        },
-	        {
-	          value: 100,
-	          color: "#FDB45C",
-	          highlight: "#FFC870",
-	          label: "Yellow"
-	        },
-	        {
-	          value: 40,
-	          color: "#949FB1",
-	          highlight: "#A8B3C5",
-	          label: "Grey"
-	        },
-	        {
-	          value: 120,
-	          color: "#4D5360",
-	          highlight: "#616774",
-	          label: "Dark Grey"
-	        }
-
-	     ].to_json
-
-	    @barSize = {
+	  	@barSize = {
 	    :height => 500,
 	    :width => 500
 	  	}
 
-	  	@barData = [
-	        {
-	          value: @user_count,
-	          color:"#F7464A",
-	          highlight: "#FF5A5E",
-	          label: "Total Users"
-	        },
-	        {
-	          value: @cus_count,
-	          color: "#46BFBD",
-	          highlight: "#5AD3D1",
-	          label: "Total Customers"
-	        },
-	        {
-	          value: 120,
-	          color: "#4D5360",
-	          highlight: "#616774",
-	          label: "Dark Grey"
-	        }
+      project_hash = Project.top(:customer_id)
+      @bar_data_2 = Hash.new
+      @customer_names = Array.new
+      @project_counts = Array.new
+      project_hash.keys.each_with_index do |p,i|
+        @customer_names << Customer.find(p).name.split(" ")[0]
+        @project_counts << project_hash[p]
+      end
+      p_hash = Hash.new
+      @bar_data_2[:datasets] = Array.new
+      @bar_data_2[:labels] = @customer_names
+      p_hash[:data] = @project_counts
+      p_hash[:backgroundColor] = colors_array
+      p_hash[:borderColor] = colors_array
+      p_hash[:borderWidth] = 1
+      @bar_data_2[:datasets][0] = p_hash
+      #@bar_data_2 << p_hash
+      logger.debug "index - bar data is #{@bar_data_2}"
+	  	@barData = {
+					labels: ["Red", "Blue", "Yellow", "Green", "Purple", "Orange"],
+					datasets: [{
+												 label: '# of Votes',
+												 data: [12, 19, 3, 5, 2, 3],
+												 backgroundColor: [
+														 'rgba(255, 99, 132, 0.2)',
+														 'rgba(54, 162, 235, 0.2)',
+														 'rgba(255, 206, 86, 0.2)',
+														 'rgba(75, 192, 192, 0.2)',
+														 'rgba(153, 102, 255, 0.2)',
+														 'rgba(255, 159, 64, 0.2)'
+												 ],
+												 borderColor: [
+														 'rgba(255,99,132,1)',
+														 'rgba(54, 162, 235, 1)',
+														 'rgba(255, 206, 86, 1)',
+														 'rgba(75, 192, 192, 1)',
+														 'rgba(153, 102, 255, 1)',
+														 'rgba(255, 159, 64, 1)'
+												 ],
+												 borderWidth: 1
+										 }]
+			}.to_json
 
-	     ].to_json
+    logger.debug "old barData is #{@barData}"
 	end
 end
