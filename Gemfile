@@ -33,6 +33,7 @@ gem 'spring',        group: :development
 #for implementing charts
 gem 'chart'
 gem 'hightop'
+gem 'highcharts-rails'
 
 # Use unicorn as the app server
 # gem 'unicorn'
