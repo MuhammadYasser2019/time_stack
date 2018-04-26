@@ -79,6 +79,11 @@ gem "omniauth-google-oauth2"
 gem 'ckeditor'
 gem 'airbrake', '~> 7.2'
 
+#Authentication 
+
+gem 'simple_command'
+gem 'jwt'
+
 
 
 group :development do

@@ -3,7 +3,7 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # validates :password , presence: true, if: :not_google_account?
   # validates :password_confirmation , presence: true, if: :not_google_account?
-
+  has_secure_password
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :timeoutable,
