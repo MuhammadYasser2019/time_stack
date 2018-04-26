@@ -60,7 +60,7 @@ Rails.application.configure do
     authentication:  :login,
     user_name:       Rails.application.secrets.microsoft_account,
     password:        Rails.application.secrets.microsoft_password, 
-    domain:               'resourcestack.com',
+    domain:          'resourcestack.com',
     enable_starttls_auto: true
   }
 

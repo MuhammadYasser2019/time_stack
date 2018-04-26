@@ -539,7 +539,7 @@
   
     FeedbackMailer.question_email(email,type,notes).deliver
       respond_to do |format|
-         format.html { redirect_to "/", notice: 'Vacation request sent successfully.' }
+         format.html { redirect_to :back, notice: 'Vacation request sent successfully.' }
      end   
   end 
 
