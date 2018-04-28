@@ -98,16 +98,13 @@ jQuery ($) ->
 			$('#analytics_report_end_date').attr('readonly', true)	
 	)
 	
-	$('#bar_bar_chart').click ->
-		b_id = $(this).val()
-		console.log("Click on bar graph" + b_id + "value")
 
-	$(document).on('click', '#bar', ->
-		console.log("click on the bar graph")
-		c_id = $(this).attr("class")
-		console.log(" customer id" + c_id)
-		$.post "/bar_graph",
-			c_id: c_id
-		return
-	)
+
+	$('.bar-field, .table-field').on 'click', ->
+  		$('.bar-field, .table-field').toggle()
+  		return
+
+
+
+	
 

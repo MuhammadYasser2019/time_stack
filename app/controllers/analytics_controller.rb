@@ -28,35 +28,17 @@ class AnalyticsController < ApplicationController
     :width => 500
     }
 
-    #user_hash = User.top(:customer_id)
-    #@project_names = Array.new
-    #@user_counts = Array.new
-    #user_hash.keys.each_with_index do |p,i|
-    #  @project_names << Project.find(p).name.split(" ")[0]
-    #  @user_counts << user_hash[p]
-    #end
-    #p_hash = Hash.new
-    #@bar_data_2[:label] = "Hello Projects"
-    #@bar_data_2[:datasets] = Array.new
-    #@bar_data_2[:labels] = @project_names
-    #p_hash[:data] = @user_counts
-    #p_hash[:backgroundColor] = colors_array
-    #p_hash[:borderColor] = colors_array
-    #p_hash[:borderWidth] = 1
-    #@bar_data_2[:datasets][0] = p_hash
-
-
 
     @cus_projects = Project.where(customer_id: params[:customer_id])
     @customer_id = params[:customer_id]
-    @project_id = @cus_projects.pluck(:id)
+    @project_ids = @cus_projects.pluck(:id)
     @project_names = Array.new
     @cus_projects.each do |pn|
     	pname = pn.name
     	@project_names << pname[0..10]
     end
     @user_count = Array.new
-    @project_id.each do |pu|
+    @project_ids.each do |pu|
     	@proj_users = ProjectsUser.where(project_id: pu)
     	@user_count << @proj_users.count 
     end
@@ -78,8 +60,9 @@ class AnalyticsController < ApplicationController
     @user_sign_in = Array.new
     @user_name.each do |un|
     	@user_first_name << un.first_name
-    	temp_sign_in = un.last_sign_in_at
-    	@user_sign_in << temp_sign_in.to_formatted_s(:short)
+    	#temp_sign_in = un.last_sign_in_at
+    	#@user_sign_in << temp_sign_in.to_formatted_s(:short)
+        @user_sign_in << un.last_sign_in_at
     end
 
     @bar_data_3 = Hash.new

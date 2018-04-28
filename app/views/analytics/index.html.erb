@@ -1,9 +1,23 @@
-<div id="bar" class= <%= "#{@customer_id}"%> data: {toggle: "barChartModalWindow", target: "#barChartModalWindow"}  >
-  <strong>Projects Per Customer</strong>
-  <%= bar :bar_chart, @barSize, @bar_data_2.to_json %>
+
+<strong>Projects Per Customer</strong>
+
+<div class ="toggle bar-field"> 
+	<%= bar :bar_chart, @barSize, @bar_data_2.to_json %>
 </div>
 
-<div id="barChartModalWindow" class="large reveal" aria-hidden="true" role="dialog" data-reveal)>
+<div class ="toggle table-field"> 
+	<table>
+		<tr>
+			<th> Project</th>
+			<th> Users </th>
+		</tr>
+		<% @project_ids.each do |pi| %>
+		<tr>
+			<td><%= Project.find(pi).name %></td>
+			<td><%=  %></td>
+		</tr>
+		<% end %>
+	</table>
 </div>
 
 <table>
@@ -13,10 +27,15 @@
 		<th> Last Logged In </th>
 		<th> Sign in Count </th>
 	</tr>
-	<% %>
+	<%@project_names.each do |pname| %><%@user_name.each do |uname| %> 
 	<tr>
+		<td><%=  pname %></td>
+		<td><%=  uname.first_name %></td>
+		<td><%=  uname.last_sign_in_at %></td>
+		<td><%=  uname.sign_in_count %></td>
 
 	</tr>
+	<% end %> <% end %>
 
 </table>
 
