@@ -12,9 +12,10 @@
 			<th> Users </th>
 		</tr>
 		<% @project_ids.each do |pi| %>
+		<% %>
 		<tr>
 			<td><%= Project.find(pi).name %></td>
-			<td><%=  %></td>
+			<td><%= Project.find(pi).users.count %></td>
 		</tr>
 		<% end %>
 	</table>
@@ -27,15 +28,18 @@
 		<th> Last Logged In </th>
 		<th> Sign in Count </th>
 	</tr>
-	<%@project_names.each do |pname| %><%@user_name.each do |uname| %> 
-	<tr>
-		<td><%=  pname %></td>
-		<td><%=  uname.first_name %></td>
-		<td><%=  uname.last_sign_in_at %></td>
-		<td><%=  uname.sign_in_count %></td>
+	<% @project_ids.each do |pid| %>
+		<%project = Project.find(pid)%>
+		<% project.users.each do |user| %>
+		<tr>
+			<td><%=  project.name %></td>
+			<td><%=  user.first_name %></td>
+			<td><%=  user.last_sign_in_at %></td>
+			<td><%=  user.sign_in_count %></td>
 
-	</tr>
-	<% end %> <% end %>
+		</tr>
+	<% end %>
+	<% end %>
 
 </table>
 
