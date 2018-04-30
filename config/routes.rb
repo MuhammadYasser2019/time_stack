@@ -32,10 +32,17 @@ Rails.application.routes.draw do
   authenticated :user do
     root to: 'weeks#index', as: :authenticated_root
   end
+
+
   #root 'weeks#index'
   root 'static_pages#home'
-  
-  post 'authenticate', to: 'authentication#authenticate'
+  namespace :api do
+    # match 'activation', :to => 'minors#activation', via: [:get, :post]
+    # post 'generate_end_point', to: 'minors#generate_end_point'
+    get 'get_all_users', to: "users#get_all_users"
+    resource :sessions, only: [:create, :destroy]
+  end
+
   post 'change_status' => 'weeks#change_status', as: :change_status
   get 'duplicate' => 'weeks#duplicate'
   get 'weeks/:id/report' => 'weeks#report'

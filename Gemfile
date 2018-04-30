@@ -80,9 +80,8 @@ gem 'ckeditor'
 gem 'airbrake', '~> 7.2'
 
 #Authentication 
-
-gem 'simple_command'
-gem 'jwt'
+gem 'rack-cors', :require => 'rack/cors'
+gem 'simple_token_authentication', '~> 1.0'
 
 
 
