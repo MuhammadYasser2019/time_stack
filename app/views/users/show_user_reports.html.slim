@@ -1,76 +1,79 @@
-div.report
+- if (current_user.cm? && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) ||current_user.id == @user.id
+  div.report
 
-  h1 Reports for User #{consultant_name(@user.first_name, @user.last_name, @user.email)}
-  = form_tag "/show_user_reports/#{params[:id]}",id: "user_report_form", method: :get
-  table
-    -if @print_report == "true"
-      p Start Date:
-        #{params[:proj_report_start_date]}
-      p End Date:
-        #{params[:proj_report_end_date]}
-      p Project:
-        #{Project.find(params[:project]).name if !params[:project].blank? }
-    -else
+    h1 Reports for User #{consultant_name(@user.first_name, @user.last_name, @user.email)}
+    = form_tag "/show_user_reports/#{params[:id]}",id: "user_report_form", method: :get
+    table
+      -if @print_report == "true"
+        p Start Date:
+          #{params[:proj_report_start_date]}
+        p End Date:
+          #{params[:proj_report_end_date]}
+        p Project:
+          #{Project.find(params[:project]).name if !params[:project].blank? }
+      -else
+        thead
+          tr
+            th Project
+            th Period Start Date
+            th Period End Date
+            th
+
+        tbody
+          tr
+            td = select_tag :project, options_from_collection_for_select(@user_projects, "id", "name", params[:project]), :include_blank => true
+            = hidden_field_tag 'hidden_print_report', false
+            td = date_field_tag 'proj_report_start_date', params[:proj_report_start_date], {required: "required"}
+            /= hidden_field_tag 'id', @user.id
+            td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
+            td = button_tag "Show User Report", class: "orange-button"
+    .grid-y
+      a(href="#{@url}") Convert to Excel Document 
+    table border="1"
       thead
         tr
-          th Project
-          th Period Start Date
-          th Period End Date
-          th
-
+          td Date 
+          td Day
+          td Project 
+          td Task
+          td Hours
+          td Description
+          td Vacation Type
+          td Approved By
       tbody
+      - @time_entries.each do |t|
         tr
-          td = select_tag :project, options_from_collection_for_select(@user_projects, "id", "name", params[:project]), :include_blank => true
-          = hidden_field_tag 'hidden_print_report', false
-          td = date_field_tag 'proj_report_start_date', params[:proj_report_start_date], {required: "required"}
-          /= hidden_field_tag 'id', @user.id
-          td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
-          td = button_tag "Show User Report", class: "orange-button"
-  .grid-y
-    a(href="#{@url}") Convert to Excel Document 
-  table border="1"
-    thead
+          td.date = t.date_of_activity.strftime('%Y-%m-%d')
+          td.date = t.date_of_activity.strftime("%A") 
+          td.project = t.project.name if !t.project.nil?
+          td.task = t.task.description if !t.task.nil?
+          td.hour 
+            = t.hours
+          td.active_log
+            = t.activity_log
+          td.vacation_type
+           - if t.vacation_type.present?
+             = t.vacation_type.vacation_title
+           - else
+             = ""
+          td.approved_by
+           - if t.approved_by?
+            span = "#{User.find(t.approved_by).first_name} #{User.find(t.approved_by).last_name}"
       tr
-        td Date 
-        td Day
-        td Project 
-        td Task
-        td Hours
-        td Description
-        td Vacation Type
-        td Approved By
-    tbody
-    - @time_entries.each do |t|
-      tr
-        td.date = t.date_of_activity.strftime('%Y-%m-%d')
-        td.date = t.date_of_activity.strftime("%A") 
-        td.project = t.project.name if !t.project.nil?
-        td.task = t.task.description if !t.task.nil?
-        td.hour 
-          = t.hours
-        td.active_log
-          = t.activity_log
-        td.vacation_type
-         - if t.vacation_type.present?
-           = t.vacation_type.vacation_title
-         - else
-           = ""
-        td.approved_by
-         - if t.approved_by?
-          span = "#{User.find(t.approved_by).first_name} #{User.find(t.approved_by).last_name}"
-    tr
-      td
-      td
-      td
-      td Total Hours:
-      td = @hours_sum
-      td
-      td
-      td
-  - @week.each do |w|
-    - w.upload_timesheets.each do |t|
-      - if t.time_sheet.present?
-        div = link_to "Attached Files Are: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+        td
+        td
+        td
+        td Total Hours:
+        td = @hours_sum
+        td
+        td
+        td
+    - @week.each do |w|
+      - w.upload_timesheets.each do |t|
+        - if t.time_sheet.present?
+          div = link_to "Attached Files Are: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
 
-  -if @print_report == "false"
-    = button_tag "Print", class: "print-user-report secondary tiny", type: "button"
+    -if @print_report == "false"
+      = button_tag "Print", class: "print-user-report secondary tiny", type: "button"
+- else
+   h1 You are not allowed to access this page.
