@@ -1,5 +1,6 @@
 module Api
-  class SessionsController < ActionController::Base
+  class SessionsController < ActionController::
+      #include UsersHelper
 
     def create
       user = User.find_by(email: params[:email])

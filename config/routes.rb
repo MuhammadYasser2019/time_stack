@@ -37,8 +37,6 @@ Rails.application.routes.draw do
   #root 'weeks#index'
   root 'static_pages#home'
   namespace :api do
-    # match 'activation', :to => 'minors#activation', via: [:get, :post]
-    # post 'generate_end_point', to: 'minors#generate_end_point'
     post 'get_all_users', to: "users#get_all_users"
     get 'get_all_users', to: "users#get_all_users"
 
