@@ -76,6 +76,113 @@ class AnalyticsController < ApplicationController
     login_hash[:borderWidth] = 1
     @bar_data_3[:datasets][0] = login_hash
 
+
+    @lineSize = {
+        :height => 350,
+        :width => 500
+    }
+
+    @month_names = Date::MONTHNAMES
+
+    @line_data = Hash.new
+    new_hash = Hash.new
+    sub_hash = Hash.new
+    appr_hash = Hash.new
+    rej_hash = Hash.new
+
+    time_entries_array = Array.new
+    week_ids_array = Array.new
+    submitted_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    approved_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    rejected_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    new_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    all_week_ids_array = Array.new
+    #weeks_count_array = Array.new
+
+    @project_ids.each do |pids|
+        week_ids_array = TimeEntry.where(project_id: pids).pluck(:week_id).uniq
+        all_week_ids_array.push(week_ids_array)
+        wids_array_count = week_ids_array.count
+        logger.debug("TIME ENTRIES WITH PROJECT ID COUNT #{wids_array_count}")
+    end
+
+    logger.debug("WEEK ID #{all_week_ids_array.flatten}")
+
+    all_week_ids_array.flatten.each do |wid|
+        logger.debug("WEEK IDS IN THE ARRAY #{wid}")
+        w = Week.find(wid)
+        if w.status_id == 1 && w.start_date.year == Date.today.year
+            logger.debug("WEEK Is           #{w}")
+            month = w.start_date.month
+
+            new_count_array[month] +=1 
+            
+            logger.debug("MONTH #{month} ,    #{new_count_array}")
+
+        elsif w.status_id == 2 && w.start_date.year == Date.today.year
+            month = w.start_date.month
+            submitted_count_array[month] +=1
+
+        elsif w.status_id == 3 && w.start_date.year == Date.today.year
+            month = w.start_date.month
+            approved_count_array[month] +=1
+
+        elsif w.status_id == 4 && w.start_date.year == Date.today.year
+            month = w.start_date.month
+            rejected_count_array[month] +=1
+        end
+    end
+
+    #linedata
+
+    @line_data[:datasets] = Array.new
+    @line_data[:labels] = @month_names
+    new_hash[:data] = new_count_array
+    new_hash[:backgroundColor] = colors_array
+    new_hash[:borderColor] = colors_array
+    new_hash[:borderWidth] = 1
+    new_hash[:fill] = false
+    new_hash[:label] = "New Weeks"
+    @line_data[:datasets][0] = new_hash
+    sub_hash[:data] = submitted_count_array
+    sub_hash[:backgroundColor] = colors_array
+    sub_hash[:borderColor] = colors_array
+    sub_hash[:borderWidth] = 1
+    sub_hash[:fill] = "false"
+    sub_hash[:label] = "Submitted Weeks"
+    @line_data[:datasets][1] = sub_hash 
+    appr_hash[:data] = approved_count_array
+    appr_hash[:backgroundColor] = colors_array
+    appr_hash[:borderColor] = colors_array
+    appr_hash[:borderWidth] = 1
+    appr_hash[:fill] = "false"
+    appr_hash[:label] = "Approved Weeks"
+    @line_data[:datasets][2] = appr_hash 
+    rej_hash[:data] = rejected_count_array
+    rej_hash[:backgroundColor] = colors_array
+    rej_hash[:borderColor] = colors_array
+    rej_hash[:borderWidth] = 1
+    rej_hash[:fill] = "false"
+    rej_hash[:label] = "Rejected Weeks"
+    @line_data[:datasets][3] = rej_hash 
+
+
+    @line_data_2 = Hash.new
+    vac_hash = Hash.new
+    vacation_request_ids = VacationRequest.where(customer_id: params[:customer_id])
+    vacation_types = VacationType.where(customer_id: params[:customer_id]).pluck(:vacation_title)
+
+
+    @line_data_2[:datasets] = Array.new
+    @line_data_2[:labels] = vacation_types
+    vac_hash[:data] = [110,20,30]
+    vac_hash[:backgroundColor] = colors_array
+    vac_hash[:borderColor] = colors_array
+    vac_hash[:borderWidth] = 1
+    vac_hash[:fill] = false
+    vac_hash[:label] = "Vacation"
+    @line_data_2[:datasets][0] = vac_hash 
+
   end
 
   def bar_graph
