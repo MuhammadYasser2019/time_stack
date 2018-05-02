@@ -39,7 +39,9 @@ Rails.application.routes.draw do
   namespace :api do
     # match 'activation', :to => 'minors#activation', via: [:get, :post]
     # post 'generate_end_point', to: 'minors#generate_end_point'
+    post 'get_all_users', to: "users#get_all_users"
     get 'get_all_users', to: "users#get_all_users"
+
     resource :sessions, only: [:create, :destroy]
   end
 
