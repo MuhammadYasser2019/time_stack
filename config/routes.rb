@@ -37,9 +37,8 @@ Rails.application.routes.draw do
   #root 'weeks#index'
   root 'static_pages#home'
   namespace :api do
-    post 'get_all_users', to: "users#get_all_users"
-    get 'get_all_users', to: "users#get_all_users"
-
+    post 'login_user', to: "users#login_user"
+    get 'login_user', to: "users#login_user"
     resource :sessions, only: [:create, :destroy]
   end
 

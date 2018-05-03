@@ -2,7 +2,7 @@ module Api
 	class UsersController < ActionController::Base
 		 include UserHelper
 		#before_action :authenticate_user_from_token
-		def get_all_users
+		def login_user
 			
 			user = User.find_by(email: params[:email])
 			logger.debug("the user email you sent is : #{params[:email]}")
@@ -18,6 +18,20 @@ module Api
 			#render :json=> {status: :ok, :user_email=> user.email}
 		end 
 
-		
+		def user_project
+		end
+
+		def user_task
+		end
+
+		def user_hours
+		end 
+
+		def user_vacation
+		end 
+
+		def description
+		end 
+
 	end
 end
