@@ -39,6 +39,7 @@ Rails.application.routes.draw do
   namespace :api do
     post 'login_user', to: "users#login_user"
     get 'login_user', to: "users#login_user"
+    post 'get_time_entry' => 'users#get_time_entry'
     resource :sessions, only: [:create, :destroy]
   end
 
