@@ -1,0 +1,59 @@
+
+<strong></strong>
+<div class = "line_graph">
+	<%= line :line_chart, @lineSize, @line_data.to_json %>
+</div>
+
+
+
+<strong>Number of users per Project</strong>
+
+<div class ="toggle bar-field"> 
+	<%= bar :bar_chart, @barSize, @bar_data_2.to_json %>
+</div>
+
+<div class ="toggle table-field"> 
+	<table>
+		<tr>
+			<th> Project</th>
+			<th> Users </th>
+		</tr>
+		<% @project_ids.each do |pi| %>
+		<% %>
+		<tr>
+			<td><%= Project.find(pi).name %></td>
+			<td><%= Project.find(pi).users.count %></td>
+		</tr>
+		<% end %>
+	</table>
+</div>
+
+<table>
+	<tr>
+		<th> Project Name</th>
+		<th> User </th>
+		<th> Last Logged In </th>
+		<th> Sign in Count </th>
+	</tr>
+	<% @project_ids.each do |pid| %>
+		<%project = Project.find(pid)%>
+		<% project.users.each do |user| %>
+		<tr>
+			<td><%=  project.name %></td>
+			<td><%=  user.first_name %></td>
+			<td><%=  user.last_sign_in_at %></td>
+			<td><%=  user.sign_in_count %></td>
+
+		</tr>
+	<% end %>
+	<% end %>
+
+</table>
+
+<%#= bar :bar_chart, @barSize, @bar_data_2.to_json %>
+<%#= bar :bar_chart, @barSize, @bar_data_3.to_json %>
+<%#= pie :pie_chart, @pieSize, @pie_data_2.to_json %>
+<%#= h_funnel :h_bar, @barSize, @bar_data_2.to_json %>
+<div class = "line_chart_2">
+	<%= bar :line_chart_2, @lineSize, @line_data_2.to_json %>
+</div>

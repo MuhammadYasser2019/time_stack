@@ -43,4 +43,7 @@ div.report
           -else
             td = ""
           /td = button_tag "Resend Request",class: "resend_vacation_request", id:"resend_vacation_request_#{usv.id}_#{i}" , type: "button", remote: true
+          -if !usv.vacation_start_date.past?
+            td = button_tag "Delete Vacation Request",class: "resend_vacation_request", id:"resend_vacation_request_#{usv.id}_#{i}" , type: "button", remote: true
+
 
