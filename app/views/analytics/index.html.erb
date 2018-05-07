@@ -1,10 +1,29 @@
 
-<strong></strong>
-<div class = "line_graph">
+<strong>Timesheets for Each Month</strong>
+<div class = "toggle line_graph">
 	<%= line :line_chart, @lineSize, @line_data.to_json %>
 </div>
 
-
+<div class ="toggle timesheets-table-field"> 
+	<table>
+		<tr>
+			<th> Months</th>
+			<th> New Timesheets </th>
+			<th> Submitted Timesheets </th>
+			<th> Approved Timesheets </th>
+			<th> Rejected Timesheets </th>
+		</tr>
+		<% @month_names.each_with_index do |mn,i| %>
+		<tr>
+			<td><%= mn %></td>
+			<td><%= @new_count_array[i] %></td>
+			<td><%= @submitted_count_array[i] %></td>
+			<td><%= @approved_count_array[i] %></td>
+			<td><%= @rejected_count_array[i] %></td>
+		</tr>
+		<%end %>
+	</table>
+</div>
 
 <strong>Number of users per Project</strong>
 
@@ -19,7 +38,7 @@
 			<th> Users </th>
 		</tr>
 		<% @project_ids.each do |pi| %>
-		<% %>
+
 		<tr>
 			<td><%= Project.find(pi).name %></td>
 			<td><%= Project.find(pi).users.count %></td>
@@ -28,6 +47,25 @@
 	</table>
 </div>
 
+<%#= bar :bar_chart, @barSize, @bar_data_2.to_json %>
+<%#= bar :bar_chart, @barSize, @bar_data_3.to_json %>
+
+<strong>Pie Graph for Employment Types</strong>
+<div class = "pie_employment_types">
+	<%= pie :pie_chart, @pieSize, @pie_data_2.to_json %>
+</div>
+<%#= h_funnel :h_bar, @barSize, @bar_data_2.to_json %>
+<strong>Bar Graph for vacation Request</strong>
+<div class = "line_chart_2">
+	<%= bar :line_chart_2, @lineSize, @line_data_2.to_json %>
+</div>
+
+
+<div class = "user_details_link">
+	<strong>Table for User Details</strong>
+</div>
+
+<div class = "user_details_table">
 <table>
 	<tr>
 		<th> Project Name</th>
@@ -49,11 +87,4 @@
 	<% end %>
 
 </table>
-
-<%#= bar :bar_chart, @barSize, @bar_data_2.to_json %>
-<%#= bar :bar_chart, @barSize, @bar_data_3.to_json %>
-<%#= pie :pie_chart, @pieSize, @pie_data_2.to_json %>
-<%#= h_funnel :h_bar, @barSize, @bar_data_2.to_json %>
-<div class = "line_chart_2">
-	<%= bar :line_chart_2, @lineSize, @line_data_2.to_json %>
 </div>

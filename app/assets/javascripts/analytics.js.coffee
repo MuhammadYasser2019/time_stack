@@ -104,6 +104,14 @@ jQuery ($) ->
   		$('.bar-field, .table-field').toggle()
   		return
 
+  	$('.line_graph, .timesheets-table-field').on 'click', ->
+  		$('.line_graph, .timesheets-table-field').toggle()
+  		return
+
+  	$('.user_details_link, .user_details_table').on 'click', ->
+  		$('.user_details_link, .user_details_table').toggle()
+  		return
+
 
 
 	

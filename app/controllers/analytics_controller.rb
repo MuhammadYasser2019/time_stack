@@ -1,27 +1,31 @@
 class AnalyticsController < ApplicationController
 	def index
 
-		user_hash = User.top(:customer_id)
-		u = User.all
-	  @user_count = u.count
-	  c = Customer.where(user_id: 1)
-	  logger.debug "user hash #{user_hash}"
-	  @cus_count = c.count
-		@pieSize = {
-	    :height => 250,
+      cus_users = User.where(customer_id: params[:customer_id])
+      cus_emp_types = EmploymentType.where(customer_id: params[:customer_id]).pluck(:id)
+      cus_emp_names = EmploymentType.where(customer_id: params[:customer_id]).pluck(:name)
+      user_emp_count = Array.new
+      cus_emp_types.each do |cemp|
+
+        user_emp_type = cus_users.where(employment_type: cemp)
+        user_emp_count << user_emp_type.count
+
+      end
+	@pieSize = {
+        :height => 250,
 	    :width => 500
-	  }
+	}
     colors_array = ["#F7464A", "#46BFBD", "#949FB1", "#4D5360"]
     @pie_data_2 = Array.new
-    user_hash.keys.each_with_index do |h, i|
+    cus_emp_types.each_with_index do |cemp, i|
+
       c_hash = Hash.new
-      c_hash["value"] = user_hash[h]
+      c_hash["value"] = user_emp_count[i]
       c_hash["color"] = colors_array[i]
-      c_hash["highlight"] = "#FF5A5E"
-      c_hash["label"] = Customer.find(h).name
+      c_hash["highlight"] = "#FFFF00"
+      c_hash["label"] = cus_emp_names[i]
       @pie_data_2 << c_hash
     end
-    logger.debug "index - #{@pie_data_2}"
 
     @barSize = {
     :height => 350,
@@ -92,10 +96,10 @@ class AnalyticsController < ApplicationController
 
     time_entries_array = Array.new
     week_ids_array = Array.new
-    submitted_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
-    approved_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
-    rejected_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
-    new_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    @submitted_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    @approved_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    @rejected_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
+    @new_count_array = [0,0,0,0,0,0,0,0,0,0,0,0,0]
     all_week_ids_array = Array.new
     #weeks_count_array = Array.new
 
@@ -115,21 +119,21 @@ class AnalyticsController < ApplicationController
             logger.debug("WEEK Is           #{w}")
             month = w.start_date.month
 
-            new_count_array[month] +=1 
+            @new_count_array[month] +=1 
             
-            logger.debug("MONTH #{month} ,    #{new_count_array}")
+            logger.debug("MONTH #{month} ,    #{@new_count_array}")
 
         elsif w.status_id == 2 && w.start_date.year == Date.today.year
             month = w.start_date.month
-            submitted_count_array[month] +=1
+            @submitted_count_array[month] +=1
 
         elsif w.status_id == 3 && w.start_date.year == Date.today.year
             month = w.start_date.month
-            approved_count_array[month] +=1
+            @approved_count_array[month] +=1
 
         elsif w.status_id == 4 && w.start_date.year == Date.today.year
             month = w.start_date.month
-            rejected_count_array[month] +=1
+            @rejected_count_array[month] +=1
         end
     end
 
@@ -137,28 +141,29 @@ class AnalyticsController < ApplicationController
 
     @line_data[:datasets] = Array.new
     @line_data[:labels] = @month_names
-    new_hash[:data] = new_count_array
+    new_hash[:data] = @new_count_array
     new_hash[:backgroundColor] = colors_array
     new_hash[:borderColor] = colors_array
     new_hash[:borderWidth] = 1
+    new_hash[:highlight] = "#FF5A5E"
     new_hash[:fill] = false
     new_hash[:label] = "New Weeks"
     @line_data[:datasets][0] = new_hash
-    sub_hash[:data] = submitted_count_array
+    sub_hash[:data] = @submitted_count_array
     sub_hash[:backgroundColor] = colors_array
     sub_hash[:borderColor] = colors_array
     sub_hash[:borderWidth] = 1
-    sub_hash[:fill] = "false"
+    sub_hash[:fill] = false
     sub_hash[:label] = "Submitted Weeks"
     @line_data[:datasets][1] = sub_hash 
-    appr_hash[:data] = approved_count_array
+    appr_hash[:data] = @approved_count_array
     appr_hash[:backgroundColor] = colors_array
     appr_hash[:borderColor] = colors_array
     appr_hash[:borderWidth] = 1
     appr_hash[:fill] = "false"
     appr_hash[:label] = "Approved Weeks"
     @line_data[:datasets][2] = appr_hash 
-    rej_hash[:data] = rejected_count_array
+    rej_hash[:data] = @rejected_count_array
     rej_hash[:backgroundColor] = colors_array
     rej_hash[:borderColor] = colors_array
     rej_hash[:borderWidth] = 1
