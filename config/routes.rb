@@ -40,6 +40,9 @@ Rails.application.routes.draw do
     post 'login_user', to: "users#login_user"
     get 'login_user', to: "users#login_user"
     post 'get_time_entry' => 'users#get_time_entry'
+
+    post 'send_entry', to: "users#post_data"
+    get 'send_entry', to: "users#post_data"
     resource :sessions, only: [:create, :destroy]
   end
 
