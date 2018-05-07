@@ -169,13 +169,18 @@ class AnalyticsController < ApplicationController
 
     @line_data_2 = Hash.new
     vac_hash = Hash.new
+    vac_req_count = Array.new
     vacation_request_ids = VacationRequest.where(customer_id: params[:customer_id])
     vacation_types = VacationType.where(customer_id: params[:customer_id]).pluck(:vacation_title)
-
+    vacation_type_ids = VacationType.where(customer_id: params[:customer_id]).pluck(:id)
+    vacation_type_ids.each do |vt|
+        vac_req = VacationRequest.where(vacation_type_id: vt)
+        vac_req_count << vac_req.count
+    end
 
     @line_data_2[:datasets] = Array.new
     @line_data_2[:labels] = vacation_types
-    vac_hash[:data] = [110,20,30]
+    vac_hash[:data] = vac_req_count
     vac_hash[:backgroundColor] = colors_array
     vac_hash[:borderColor] = colors_array
     vac_hash[:borderWidth] = 1
