@@ -18,20 +18,19 @@ module Api
 			#render :json=> {status: :ok, :user_email=> user.email}
 		end 
 
-		def user_project
-		end
-
-		def user_task
-		end
-
-		def user_hours
+		def post_data
+			#find time_entry by date and email?
+			te = TimeEntry.last
+			#te.project_id = params[:project]
+			#te.task_id = params[:task]
+			te.hours = params[:hours]
+			te.vacation_type_id = params[:vacation]
+			te.activity_log = params[:description]
+			te.save
 		end 
 
-		def user_vacation
-		end 
 
-		def description
-		end 
+		
 
 	end
 end
