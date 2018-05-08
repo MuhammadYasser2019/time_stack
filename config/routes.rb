@@ -103,7 +103,8 @@ Rails.application.routes.draw do
   
   get 'check_holidays/:id' => "holidays#check_holidays"
 
-  #get 'customers/:id/customer_reports' => 'customers#customer_reports'
+  get 'customer_reports/:id' => 'customers#customer_reports'
+  get 'customers/:id/customer_reports' => 'customers#customer_reports'
   
   get 'permission_denied' => 'projects#permission_denied'
 

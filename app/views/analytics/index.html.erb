@@ -1,4 +1,5 @@
 
+<%#= REPORTS FOR CUSTOMER "@customer_name" %>
 <strong>Timesheets for Each Month</strong>
 <div class = "toggle line_graph">
 	<%= line :line_chart, @lineSize, @line_data.to_json %>
@@ -28,14 +29,14 @@
 <strong>Number of users per Project</strong>
 
 <div class ="toggle bar-field"> 
-	<%= bar :bar_chart, @barSize, @bar_data_2.to_json %>
+	<%= bar :bar_chart, @barSize, @bar_data_2.to_json, @bar_options %>
 </div>
 
 <div class ="toggle table-field"> 
 	<table>
 		<tr>
 			<th> Project</th>
-			<th> Users </th>
+			<th> Number of Users </th>
 		</tr>
 		<% @project_ids.each do |pi| %>
 
@@ -54,19 +55,49 @@
 <div class = "pie_employment_types">
 	<%= pie :pie_chart, @pieSize, @pie_data_2.to_json %>
 </div>
+
+<div class = "employment_types_table">
+<table>
+	<tr>
+		<th> Employment Types</th>
+		<th> Number of users </th>
+	</tr>
+	<% @cus_emp_types.each_with_index do |cemp, i| %>
+		<tr>
+			<td><%=  @cus_emp_names[i] %></td>
+			<td><%=  @user_emp_count[i] %></td>
+		</tr>
+	<% end %>
+</table>
+</div>
+
 <%#= h_funnel :h_bar, @barSize, @bar_data_2.to_json %>
 <strong>Bar Graph for vacation Request</strong>
-<div class = "line_chart_2">
+<div class = "vacation_request_bar">
 	<%= bar :line_chart_2, @lineSize, @line_data_2.to_json %>
 </div>
 
+<div class = "vacation_request_table">
+<table>
+	<tr>
+		<th> Vaction Types</th>
+		<th> Number of Vacation Requests </th>
+	</tr>
+	<% @vacation_types.each_with_index do |cemp, i| %>
+		<tr>
+			<td><%=  @vacation_types[i] %></td>
+			<td><%=  @vac_req_count[i] %></td>
+		</tr>
+	<% end %>
+</table>
+</div>
 
 <div class = "user_details_link">
-	<strong>Table for User Details</strong>
+	<strong>User Activities</strong>
 </div>
 
 <div class = "user_details_table">
-	<strong>Table for User Details</strong>
+	<strong>Table for User Activities </strong>
 <table>
 	<tr>
 		<th> Project Name</th>
@@ -89,3 +120,5 @@
 
 </table>
 </div>
+
+<%= link_to('REPORTS', "/customer_reports/#{params[:customer_id]}", target: :_blank ) %>

@@ -113,6 +113,15 @@ jQuery ($) ->
   		return
 
 
+  	$('.pie_employment_types, .employment_types_table').on 'click', ->
+  		$('.pie_employment_types, .employment_types_table').toggle()
+  		return
+
+  	$('.vacation_request_bar, .vacation_request_table').on 'click', ->
+  		$('.vacation_request_bar, .vacation_request_table').toggle()
+  		return
+
+
 
 	
 
