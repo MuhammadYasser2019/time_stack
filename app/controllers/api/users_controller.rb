@@ -1,9 +1,9 @@
 module Api
   class UsersController < ActionController::Base
-		#include UserHelper
-		#before_action :authenticate_user_from_token
-		def login_user
-			
+		include UserHelper
+		before_action :authenticate_user_from_token
+		
+		def login_user	
 	    user = User.find_by(email: params[:email])
 	    logger.debug("the user email you sent is : #{params[:email]}")
 	
