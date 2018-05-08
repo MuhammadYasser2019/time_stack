@@ -18,11 +18,25 @@ module Api
 			#render :json=> {status: :ok, :user_email=> user.email}
 		end 
 
+		def get_time_entry
+			user = User.find_by(email: params[:email])
+			time_entry = TimeEntry.last
+			logger.debug("show me the money #{time_entry.inspect}")
+				render :json => {status: :ok, timeEntry_hash: {
+																task_id: time_entry.task_id,
+																project_id: time_entry.project_id,
+																hours: time_entry.hours,
+																vacation_type_id: time_entry.vacation_type_id,
+																activity_log: time_entry.activity_log,
+															}
+							}
+		end
+
 		def post_data
 			#find time_entry by date and email?
 			te = TimeEntry.last
-			#te.project_id = params[:project]
-			#te.task_id = params[:task]
+			te.project_id = params[:project]
+			te.task_id = params[:task]
 			te.hours = params[:hours]
 			te.vacation_type_id = params[:vacation]
 			te.activity_log = params[:description]
