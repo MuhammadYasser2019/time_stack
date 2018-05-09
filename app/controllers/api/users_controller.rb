@@ -1,7 +1,7 @@
 module Api
   class UsersController < ActionController::Base
 		include UserHelper
-		#before_action :authenticate_user_from_token
+		before_action :authenticate_user_from_token, except: [:login_user]
 		
 		def login_user	
 	    user = User.find_by(email: params[:email])
@@ -16,7 +16,6 @@ module Api
 
 
 	def get_time_entry
-		user = User.find_by(email: params[:email])
 		time_entry = TimeEntry.last
 		logger.debug("show me the money #{time_entry.inspect}")
 			render :json => {status: :ok, timeEntry_hash: {
@@ -31,6 +30,7 @@ module Api
 
 		def post_data
 			#find time_entry by date and email?
+
 			te = TimeEntry.last
 			te.project_id = params[:project_id]
 			te.task_id = params[:task_id]
