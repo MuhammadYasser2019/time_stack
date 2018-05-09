@@ -30,28 +30,29 @@ module Api
 		logger.debug("Today's Time Entry #{time_entry.inspect}")
 		
 
-			render :json => {status: :ok, timeEntry_hash: {
-															week_id: time_entry[0].week_id,
-															task_id: time_entry[0].task_id,
-															project_id: time_entry[0].project_id,
-															hours: time_entry[0].hours,
-															vacation_type_id: time_entry[0].vacation_type_id,
-															activity_log: time_entry[0].activity_log,
-														}
-						}
+		render :json => {status: :ok, timeEntry_hash: {
+														id: time_entry[0].id,
+														week_id: time_entry[0].week_id,
+														task_id: time_entry[0].task_id,
+														project_id: time_entry[0].project_id,
+														hours: time_entry[0].hours,
+														vacation_type_id: time_entry[0].vacation_type_id,
+														activity_log: time_entry[0].activity_log,
+													}
+					}
 	end
 
-		def post_data
-			#find time_entry by date and email?
+	def post_data
 
-			te = TimeEntry.last
-			te.project_id = params[:project_id]
-			te.task_id = params[:task_id]
-			te.hours = params[:hours]
-			te.vacation_type_id = params[:vacation_type_id]
-			te.activity_log = params[:activity_log]
-			te.save
-		end 
+		te = TimeEntry.find_by_id(params[:id])
+		logger.debug("Are you finding me #{te}")
+		te.project_id = params[:project_id]
+		te.task_id = params[:task_id]
+		te.hours = params[:hours]
+		te.vacation_type_id = params[:vacation_type_id]
+		te.activity_log = params[:activity_log]
+		te.save
+	end 
 
 
 		
