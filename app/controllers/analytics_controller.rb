@@ -151,7 +151,7 @@ class AnalyticsController < ApplicationController
     @line_data[:labels] = @month_names
     new_hash[:data] = @new_count_array
     new_hash[:lineTension] = 0
-    new_hash[:fill] = false
+    new_hash[:fillColor] = "#006C00"
     new_hash[:borderColor] = 'orange'
     new_hash[:backgroundColor] = 'transparent'
     new_hash[:borderDash] = [5,5]
@@ -169,7 +169,7 @@ class AnalyticsController < ApplicationController
     sub_hash[:backgroundColor] = colors_array
     sub_hash[:borderColor] = colors_array
     sub_hash[:borderWidth] = 1
-    sub_hash[:fillColor] = false
+    sub_hash[:fillColor] = "#FF0000"
     sub_hash[:lineTension] = 0
     sub_hash[:label] = "Submitted Weeks"
     #@line_data[:datasets][1] = sub_hash 
@@ -177,7 +177,7 @@ class AnalyticsController < ApplicationController
     appr_hash[:backgroundColor] = colors_array
     appr_hash[:borderColor] = colors_array
     appr_hash[:borderWidth] = 1
-    appr_hash[:fill] = false
+    appr_hash[:fillColor] = "#00FF00"
     appr_hash[:lineTension] = 0
     appr_hash[:label] = "Approved Weeks"
     #@line_data[:datasets][2] = appr_hash 
@@ -185,7 +185,7 @@ class AnalyticsController < ApplicationController
     rej_hash[:backgroundColor] = colors_array
     rej_hash[:borderColor] = colors_array
     rej_hash[:borderWidth] = 1
-    rej_hash[:fill] = "false"
+    rej_hash[:fillColor] = "#0000FF"
     rej_hash[:lineTension] = 0
     rej_hash[:label] = "Rejected Weeks"
     #@line_data[:datasets][3] = rej_hash 
@@ -235,6 +235,13 @@ class AnalyticsController < ApplicationController
     respond_to do |format|
         format.js
     end
+  end
+
+  def vacation_report
+
+    @customer_id = params[:id]
+    @vac_reqs = VacationRequest.where(customer_id: @customer_id)
+
   end
 
   def customer_reports
