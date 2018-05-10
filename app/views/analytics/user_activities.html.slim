@@ -1,0 +1,18 @@
+<br>
+table
+  tr
+    th Project Name
+    th User
+    th Last Logged In
+    th Sign in Count
+
+  tbody
+    - @project_ids.each do |pid|
+      - project = Project.find(pid)
+      - project.users.each do |user|
+
+        tr
+          td= project.name
+          td= user.first_name
+          td= user.last_sign_in_at
+          td= user.sign_in_count
