@@ -30,7 +30,7 @@
 		<div class = "vacation_request_graph" >
 			<h6>Bar Graph for vacation Request</h6>
 			<div class = "vacation_request_bar">
-				<%= bar :line_chart_2, @lineSize, @line_data_2.to_json %>
+				<%= bar :bar_chart_3, @barSize, @bar_data_3.to_json %>
 			</div>
 
 			<div class = "vacation_request_table">
@@ -116,33 +116,9 @@
 		</div>
 	</div>
 
-	<div class = "orange-button user_details_link">
-		<h7>User Activities</h7>
-	</div>
-
-	<div class = "user_details_table">
-		<h6>Table for User Activities </h6>
-	<table>
-		<tr>
-			<th> Project Name</th>
-			<th> User </th>
-			<th> Last Logged In </th>
-			<th> Sign in Count </th>
-		</tr>
-		<% @project_ids.each do |pid| %>
-			<%project = Project.find(pid)%>
-			<% project.users.each do |user| %>
-			<tr>
-				<td><%=  project.name %></td>
-				<td><%=  user.first_name %></td>
-				<td><%=  user.last_sign_in_at %></td>
-				<td><%=  user.sign_in_count %></td>
-
-			</tr>
-		<% end %>
-		<% end %>
-
-	</table>
+	<br>
+	<div class = "orange-button customer-reports" >
+		<%= link_to('User Activities', "user_activities/#{params[:customer_id]}", target: :_blank ) %>
 	</div>
 	<br>
 	<div class = "orange-button customer-reports" >

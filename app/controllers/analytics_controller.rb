@@ -192,7 +192,7 @@ class AnalyticsController < ApplicationController
     @line_data[:datasets] =[new_hash,sub_hash,appr_hash,rej_hash]
 
 
-    @line_data_2 = Hash.new
+    @bar_data_3 = Hash.new
     vac_hash = Hash.new
     @vac_req_count = Array.new
     vacation_request_ids = VacationRequest.where(customer_id: params[:customer_id])
@@ -203,8 +203,8 @@ class AnalyticsController < ApplicationController
         @vac_req_count << vac_req.count
     end
 
-    @line_data_2[:datasets] = Array.new
-    @line_data_2[:labels] = @vacation_types
+    @bar_data_3[:datasets] = Array.new
+    @bar_data_3[:labels] = @vacation_types
     vac_hash[:data] = @vac_req_count
     vac_hash[:backgroundColor] = colors_array
     vac_hash[:borderColor] = colors_array
@@ -213,7 +213,7 @@ class AnalyticsController < ApplicationController
     vac_hash[:fillColor] = ["olive", "navy", "red", "orange","purple","magenta", "lime", "yellow", "Green"]
     vac_hash[:fill] = false
     vac_hash[:label] = "Vacation"
-    @line_data_2[:datasets][0] = vac_hash 
+    @bar_data_3[:datasets][0] = vac_hash 
 
   end
 
@@ -242,6 +242,12 @@ class AnalyticsController < ApplicationController
     @customer_id = params[:id]
     @vac_reqs = VacationRequest.where(customer_id: @customer_id)
 
+  end
+
+  def user_activities
+    @customer_id = params[:id]
+    @cus_projects = Project.where(customer_id: @customer_id)
+    @project_ids = @cus_projects.pluck(:id)
   end
 
   def customer_reports

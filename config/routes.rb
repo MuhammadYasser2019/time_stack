@@ -137,6 +137,7 @@ Rails.application.routes.draw do
   get 'get_employment/' => 'customers#get_employment'
 
   get "vacation_reports/customer/:id" => 'analytics#vacation_report'
+  get "user_activities/:id" => 'analytics#user_activities'
   match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
   post "/bar_graph" => 'analytics#bar_graph'
   mount Ckeditor::Engine => '/ckeditor'
