@@ -14,7 +14,24 @@ module Api
     	end
     end 
 
+    def update_date
+    	tester = TimeEntry.where("date_of_activity = ?" ,params[:date_of_activity])
+    	logger.debug(" tester tester #{tester.inspect}")
+    	update_date = TimeEntry.where("date_of_activity = ? and user_id = ?", params[:date_of_activity], params[:email])
+    	logger.debug("the new entry is #{update_date.inspect}")
+    		render :json => {status: :ok, timeEntry_hash: {
+														id: update_date[0].id,
+														week_id: update_date[0].week_id,
+														task_id: update_date[0].task_id,
+														project_id: update_date[0].project_id,
+														hours: update_date[0].hours,
+														vacation_type_id: update_date[0].vacation_type_id,
+														activity_log: update_date[0].activity_log,
+													}
 
+				}
+
+    end 
 	def get_time_entry
 		
 		#get user ID
@@ -33,6 +50,7 @@ module Api
 
 				render :json => {status: :ok, timeEntry_hash: {
 														id: time_entry[0].id,
+														user_id: time_entry[0].user_id,
 														week_id: time_entry[0].week_id,
 														task_id: time_entry[0].task_id,
 														project_id: time_entry[0].project_id,
