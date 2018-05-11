@@ -199,7 +199,7 @@ class AnalyticsController < ApplicationController
     @vacation_types = VacationType.where(customer_id: params[:customer_id]).pluck(:vacation_title)
     vacation_type_ids = VacationType.where(customer_id: params[:customer_id]).pluck(:id)
     vacation_type_ids.each do |vt|
-        vac_req = VacationRequest.where(vacation_type_id: vt)
+        vac_req = VacationRequest.where('vacation_type_id = ? AND  vacation_start_date >= ?', vt,"2018-01-01")
         @vac_req_count << vac_req.count
     end
 
@@ -240,7 +240,7 @@ class AnalyticsController < ApplicationController
   def vacation_report
 
     @customer_id = params[:id]
-    @vac_reqs = VacationRequest.where(customer_id: @customer_id)
+    @vac_reqs = VacationRequest.where('customer_id = ? AND  vacation_start_date >= ?', @customer_id,"2018-01-01")
 
   end
 
