@@ -1,7 +1,7 @@
 module Api
   class UsersController < ActionController::Base
 		include UserHelper
-		#before_action :authenticate_user_from_token, except: [:login_user]
+		#before_action :authenticate_user_from_token, except: [:login_user, :update_date]
 		
 	def login_user	
 	    user = User.find_by(email: params[:email])
@@ -15,10 +15,24 @@ module Api
     end 
 
     def update_date
-    	tester = TimeEntry.where("date_of_activity = ?" ,params[:date_of_activity])
-    	logger.debug(" tester tester #{tester.inspect}")
+    	myuser = User.find_by_id(params[:email]).id 
+		logger.debug("User ID is #{myuser}")
+		
+		#Find Current Time Entry
+		time_entry = TimeEntry.where("date_of_activity = ? && user_id = ?", Date.today.to_datetime, params[:email]).first
+		logger.debug("Today's Time Entry #{time_entry.inspect}")
+		gimme = time_entry.week_id
+		logger.debug("GIMME THAT ID #{gimme}")
+
+		
+
+    	#Find time_entry with matching parameters
     	update_date = TimeEntry.where("date_of_activity = ? and user_id = ?", params[:date_of_activity], params[:email])
     	logger.debug("the new entry is #{update_date.inspect}")
+    
+
+    	avaliable_entries = TimeEntry.where("week_id = ?", gimme).collect{|w| w.date_of_activity.strftime("%Y/%m/%d")}
+
     		render :json => {status: :ok, timeEntry_hash: {
 														id: update_date[0].id,
 														week_id: update_date[0].week_id,
@@ -27,10 +41,10 @@ module Api
 														hours: update_date[0].hours,
 														vacation_type_id: update_date[0].vacation_type_id,
 														activity_log: update_date[0].activity_log,
-													}
+													},
+													date_of_activity: avaliable_entries
 
 				}
-
     end 
 	def get_time_entry
 		
