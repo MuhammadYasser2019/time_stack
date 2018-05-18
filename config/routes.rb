@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :features
   resources :case_studies
   resources :vacation_types
+  resources :analytics
   devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
@@ -45,6 +46,9 @@ Rails.application.routes.draw do
 
     get 'get_time_entry', to: "users#get_time_entry"
     post 'get_time_entry', to: "users#get_time_entry"
+
+    get 'get_tasks', to: "users#get_tasks"
+    post 'get_tasks', to: "users#get_tasks"
 
     post 'update_date', to: "users#update_date"
     get 'update_date', to: "users#update_date"
@@ -118,6 +122,7 @@ Rails.application.routes.draw do
   
   get 'check_holidays/:id' => "holidays#check_holidays"
 
+  get 'customer_reports/:id' => 'customers#customer_reports'
   get 'customers/:id/customer_reports' => 'customers#customer_reports'
   
   get 'permission_denied' => 'projects#permission_denied'
@@ -150,7 +155,12 @@ Rails.application.routes.draw do
   post "/add_expense_records" => "weeks#add_expense_records"
   get 'get_employment/' => 'customers#get_employment'
 
+  get "vacation_reports/customer/:id" => 'analytics#vacation_report'
+  get "user_activities/:id" => 'analytics#user_activities'
+  match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
+  post "/bar_graph" => 'analytics#bar_graph'
   mount Ckeditor::Engine => '/ckeditor'
+
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

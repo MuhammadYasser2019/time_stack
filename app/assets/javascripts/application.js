@@ -19,7 +19,9 @@
 //= require ckeditor/init
 //= require foundation-datetimepicker
 //= require turbolinks
+//= require chart
 //= require turbolinks-compatibility
+//= require highcharts
 //= require_tree .
 
 
