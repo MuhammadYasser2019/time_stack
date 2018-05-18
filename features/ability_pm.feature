@@ -121,3 +121,11 @@ Scenario: 21) With PM roles user should be able to assign users
     And Expect page to have "Users on the Project"
     And PM click on the "Users on the Project" link
     And Expect page to have "Available Users"
+
+Scenario: 33) With PM roles user should able to see all projects
+    Given I am a project manager
+    Given PM logs in with "Email" and "Password"
+    Then On the index page
+    Then Should see "Listing projects" 
+    Then User should able to see all projects "checkbox"
+    When the checkbox is checked, user should able to see the projects with inactive as yes and no 
