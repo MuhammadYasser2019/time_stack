@@ -46,6 +46,9 @@ Rails.application.routes.draw do
     get 'get_time_entry', to: "users#get_time_entry"
     post 'get_time_entry', to: "users#get_time_entry"
 
+    get 'get_tasks', to: "users#get_tasks"
+    post 'get_tasks', to: "users#get_tasks"
+
     post 'update_date', to: "users#update_date"
     get 'update_date', to: "users#update_date"
     resource :sessions, only: [:create, :destroy]
