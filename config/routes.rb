@@ -52,6 +52,16 @@ Rails.application.routes.draw do
 
     post 'update_date', to: "users#update_date"
     get 'update_date', to: "users#update_date"
+
+    post 'get_submitted_timesheet', to: "users#get_submitted_timesheet"
+    get 'get_submitted_timesheet', to: "users#get_submitted_timesheet"
+
+    post 'approve', to: "users#approve"
+    get 'approve', to: "users#approve"
+
+    post 'reject', to: "users#reject"
+    get 'reject', to: "users#reject"
+
     resource :sessions, only: [:create, :destroy]
   end
 

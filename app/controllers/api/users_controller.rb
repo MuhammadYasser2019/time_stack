@@ -1,14 +1,19 @@
 module Api
   class UsersController < ActionController::Base
 		include UserHelper
-		#before_action :authenticate_user_from_token, except: [:login_user, :update_date, :post_data]
+		#before_action :authenticate_user_from_token, except: [:login_user]
 			
 		def login_user	
 		  user = User.find_by(email: params[:email])
 		  logger.debug("the user email you sent is : #{params[:email]}")
 		
 			if user&.valid_password?(params[:password])
-		    render json: user.as_json(only: [:email, :authentication_token, message: "success"]),status: :created
+				user_type = (user.pm? || user.cm? || user.admin?) ?  "admin" : "user"
+		    render :json => {  status: :ok,
+		    									email: user.email,
+		    									authentication_token: user.authentication_token,
+		    									user_type: user_type
+		    								}
 		  else
 		    render :json => {status: :unauthorized ,message: "The email or password was incorrect. Please try again"}
 	    end
@@ -120,6 +125,67 @@ module Api
 																								avaliable_tasks: task_list
 																							}
 											}
+		end
+
+		def get_submitted_timesheet
+			user = User.find_by_email params[:email]
+			projects = Project.where(user_id: user.id)
+				
+			timesheet = []
+			projects.each do |p|
+				applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2",p.id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+	  		project_hash = {}
+	  		applicable_week.each do |at|
+	  			project_hash[:id]= at.id
+			    project_hash[:project]= p.name
+			    project_hash[:employee]= User.find(at.user_id).email
+			    project_hash[:start]= at.start_date.strftime('%Y-%m-%d')
+			    project_hash[:end]= at.end_date.strftime('%Y-%m-%d')
+			    project_hash[:hours]= TimeEntry.where(week_id: at.id, project_id: p.id).sum(:hours)
+			    timesheet.push(project_hash)
+			  end
+			end
+			render :json => {status: :ok, timesheet: timesheet}
+
+		end
+
+		def approve
+			user = User.find_by_email params[:email]
+
+	    week = Week.find(params[:week_id])
+	    #TODO need to pass project id as well
+	    week.time_entries.each do |t|
+	      t.update(status_id: 3, approved_date: Time.now.strftime('%Y-%m-%d'), approved_by: user.id)
+	    end
+	    week.approved_date = Time.now.strftime('%Y-%m-%d')
+	    week.approved_by = user.id
+	    if week.time_entries.where.not(hours:nil).count == week.time_entries.where(status_id: 3).count
+	      week.status_id = 3
+	    end
+	    week.save!
+
+	    manager = user
+	    ApprovalMailer.mail_to_user(week, manager).deliver
+	    render :json => {status: :ok, timesheet: timesheet}
+
+	  end
+
+	
+		def reject
+			user = User.find_by_email params[:email]
+
+			week = Week.find(params[:id])
+	    week.status_id = 4
+	    #TODO need to pass project id as well
+	    week.time_entries.each do |t|
+	      t.update(status_id: 4)
+	    end
+	    #todo pass comment
+	    #week.comments = params[:comments]
+	    week.save!
+	    ApprovalMailer.mail_to_user(week, user).deliver
+	    logger.debug "time_reject - leaving"
+	 		render :json => {status: :ok, timesheet: timesheet}
 		end
 	end 
 end
