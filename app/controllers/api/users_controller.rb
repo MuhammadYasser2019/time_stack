@@ -155,6 +155,7 @@ module Api
 	    week = Week.find(params[:week_id])
 	    #TODO need to pass project id as well
 	    week.time_entries.each do |t|
+	    	debugger
 	      t.update(status_id: 3, approved_date: Time.now.strftime('%Y-%m-%d'), approved_by: user.id)
 	    end
 	    week.approved_date = Time.now.strftime('%Y-%m-%d')
@@ -166,7 +167,7 @@ module Api
 
 	    manager = user
 	    ApprovalMailer.mail_to_user(week, manager).deliver
-	    render :json => {status: :ok, timesheet: timesheet}
+	    render :json => {status: :ok}
 
 	  end
 
@@ -185,7 +186,7 @@ module Api
 	    week.save!
 	    ApprovalMailer.mail_to_user(week, user).deliver
 	    logger.debug "time_reject - leaving"
-	 		render :json => {status: :ok, timesheet: timesheet}
+	 		render :json => {status: :ok}
 		end
 	end 
 end
