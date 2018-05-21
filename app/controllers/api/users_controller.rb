@@ -175,7 +175,7 @@ module Api
 		def reject
 			user = User.find_by_email params[:email]
 
-			week = Week.find(params[:id])
+			week = Week.find(params[:week_id])
 	    week.status_id = 4
 	    #TODO need to pass project id as well
 	    week.time_entries.each do |t|
