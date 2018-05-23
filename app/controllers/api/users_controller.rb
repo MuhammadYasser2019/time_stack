@@ -104,12 +104,13 @@ module Api
 			te.task_id = params[:task]
 			te.vacation_type_id = params[:vacation]
 			te.activity_log = params[:activity_log]
-			te.save
+			
 			if params[:vacation].present?
 				te.hours = params[:hours]
 			else	
 				te.hours = params[:hours]
 			end
+			te.save
 			render :json => {status: :ok, message: "successfully updated"}
 		end 
 
