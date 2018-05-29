@@ -1,7 +1,7 @@
 module Api
   class UsersController < ActionController::Base
 		include UserHelper
-		#before_action :authenticate_user_from_token, except: [:login_user]
+		before_action :authenticate_user_from_token, except: [:login_user]
 			
 		def login_user	
 		  user = User.find_by(email: params[:email])
@@ -57,45 +57,49 @@ module Api
 			#Find Current Time Entry
 			time_entry = TimeEntry.where("date_of_activity = ? && user_id = ?", Date.today.to_datetime, user.id).first
 			#logger.debug("Today's Time Entry #{time_entry.inspect}")
-			
-			#TimeEntries To Load Into DropDown
-			avaliable_entries = TimeEntry.where("week_id = ?", time_entry.week_id).collect{|w| w.date_of_activity.strftime("%Y/%m/%d")}
-			logger.debug("These are entries Avaliable #{avaliable_entries.count}")
+			if time_entry.present?
+				#TimeEntries To Load Into DropDown
+				avaliable_entries = TimeEntry.where("week_id = ?", time_entry.week_id).collect{|w| w.date_of_activity.strftime("%Y/%m/%d")}
+				logger.debug("These are entries Avaliable #{avaliable_entries.count}")
 
-			#List Projects
-			avaliable_projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", user.id)
-			project_list = []
-			avaliable_projects.each do |p|
-				project_hash = {id: p.id, name: p.name}
-				project_list.push(project_hash)
+				#List Projects
+				avaliable_projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", user.id)
+				project_list = []
+				avaliable_projects.each do |p|
+					project_hash = {id: p.id, name: p.name}
+					project_list.push(project_hash)
+				end
+				logger.debug (" These are the avaliable project's #{avaliable_projects.count}")
+				#vacation lists
+				emp_type = EmploymentType.find user.employment_type
+	    	vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", user.customer_id, true)
+				vacation_list = []
+				vacation_types.each do |v|
+					vacation_hash = {id: v.id, title: v.vacation_title}
+					vacation_list.push(vacation_hash)
+				end
+				logger.debug (" These are the avaliable vacations #{vacation_types.count}")
+				
+
+				render :json => { status: :ok, 
+													timeEntry_hash: { id: time_entry.id,
+																						user_id: time_entry.user_id,
+																						week_id: time_entry.week_id,
+																						task_id: time_entry.task_id,
+																						project_id: time_entry.project_id,
+																						hours: time_entry.hours,
+																						vacation_type_id: time_entry.vacation_type_id,
+																						activity_log: time_entry.activity_log,
+																					},
+													date_of_activity: avaliable_entries,
+													avaliable_projects: project_list,
+													vacations: vacation_list
+
+												}
+			else
+				render :json => {status: :not_found, message: "We do not found any time entry for this week."}
 			end
-			logger.debug (" These are the avaliable project's #{avaliable_projects.count}")
-			#vacation lists
-			emp_type = EmploymentType.find user.employment_type
-    	vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", user.customer_id, true)
-			vacation_list = []
-			vacation_types.each do |v|
-				vacation_hash = {id: v.id, title: v.vacation_title}
-				vacation_list.push(vacation_hash)
-			end
-			logger.debug (" These are the avaliable vacations #{vacation_types.count}")
-			
 
-			render :json => { status: :ok, 
-												timeEntry_hash: { id: time_entry.id,
-																					user_id: time_entry.user_id,
-																					week_id: time_entry.week_id,
-																					task_id: time_entry.task_id,
-																					project_id: time_entry.project_id,
-																					hours: time_entry.hours,
-																					vacation_type_id: time_entry.vacation_type_id,
-																					activity_log: time_entry.activity_log,
-																				},
-												date_of_activity: avaliable_entries,
-												avaliable_projects: project_list,
-												vacations: vacation_list
-
-											}
 		end
 
 		def post_data
@@ -115,7 +119,7 @@ module Api
 		end 
 
 		def get_tasks
-			u = User.find params[:email]
+			u = User.find_by_email(params[:email])
 			project = Project.find params["project_id"].split(": ").last
 			task_list = []
 			project.tasks.each do |t|
