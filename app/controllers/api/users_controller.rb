@@ -91,6 +91,7 @@ module Api
 																						hours: time_entry.hours,
 																						vacation_type_id: time_entry.vacation_type_id,
 																						activity_log: time_entry.activity_log,
+																						status_id: time_entry.status_id,
 																					},
 													date_of_activity: avaliable_entries,
 													avaliable_projects: project_list,
@@ -109,22 +110,22 @@ module Api
 			te.task_id = params[:task]
 			te.vacation_type_id = params[:vacation]
 			te.activity_log = params[:activity_log]
-			if params[:vacation].present?
-					te.hours = params[:hours]
-				else	
-					te.hours = params[:hours]
-			end
+				if params[:vacation].present?
+						te.hours = params[:hours]
+					else	
+						te.hours = params[:hours]
+				end
 			te.save
 
 			if params["status"] =="submit"
 				week = te.week
 				week.status_id = 2
-	      week.time_entries.where(status_id: [nil,1,4,5]).each do |t|
-	        t.update(status_id: 2)
-				end
-			week.save
-				return render :json => {status: :ok, message: "Timesheet successfully submitted"}
-	    end
+			     	week.time_entries.where(status_id: [nil,1,4,5]).each do |t|
+				        t.update(status_id: 2)
+					end
+				week.save
+					return render :json => {status: :ok, message: "Timesheet successfully submitted"}
+	    	end
 			render :json => {status: :ok, message: "Timesheet successfully saved "}
 
 		end 
