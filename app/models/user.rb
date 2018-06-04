@@ -4,6 +4,8 @@ class User < ApplicationRecord
   # validates :password , presence: true, if: :not_google_account?
   # validates :password_confirmation , presence: true, if: :not_google_account?
 
+  ## Token Authenticatable
+  acts_as_token_authenticatable
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable, :timeoutable,

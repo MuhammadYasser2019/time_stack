@@ -1,5 +1,6 @@
 class UsersController < ApplicationController 
   load_and_authorize_resource 
+  acts_as_token_authentication_handler_for User
  
 #Choose Approved Timesheet to Reset
   def reset 
