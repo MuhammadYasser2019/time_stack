@@ -17,7 +17,7 @@ Rails.application.routes.draw do
   resources :features
   resources :case_studies
   resources :vacation_types
-  resources :analytics
+  #resources :analytics
   devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
@@ -165,10 +165,11 @@ Rails.application.routes.draw do
   post "/add_expense_records" => "weeks#add_expense_records"
   get 'get_employment/' => 'customers#get_employment'
 
-  get "vacation_reports/customer/:id" => 'analytics#vacation_report'
-  get "user_activities/:id" => 'analytics#user_activities'
+  get "analytics/vacation_reports/customer/:customer_id" => 'analytics#vacation_report'
+  get "/analytics/user_activities/:customer_id" => 'analytics#user_activities'
   match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
   post "/bar_graph" => 'analytics#bar_graph'
+  match "analytics/:customer_id" => "analytics#index", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
 
 
