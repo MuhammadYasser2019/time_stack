@@ -44,6 +44,7 @@ module Api
 																					hours: update_date[0].hours,
 																					vacation_type_id: update_date[0].vacation_type_id,
 																					activity_log: update_date[0].activity_log,
+																					date_of_activity: update_date[0].date_of_activity,
 																				},
 												date_of_activity: avaliable_entries
 											}
@@ -92,19 +93,20 @@ module Api
 																						vacation_type_id: time_entry.vacation_type_id,
 																						activity_log: time_entry.activity_log,
 																						status_id: time_entry.status_id,
+																						date_of_activity: time_entry.date_of_activity,
 																					},
 													date_of_activity: avaliable_entries,
 													avaliable_projects: project_list,
 													vacations: vacation_list
 
 												}
-			else
-				render :json => {status: :not_found, message: "We do not found any time entry for this week."}
+
 			end
 
 		end
 
 		def post_data
+			logger.debug("HELLO HARSH!!!!!!")
 			te = TimeEntry.find_by_id(params[:id])
 			te.project_id = params[:project]
 			te.task_id = params[:task]
@@ -116,7 +118,9 @@ module Api
 						te.hours = params[:hours]
 				end
 			te.save
+			render :json => {status: :ok, message: "Timesheet successfully saved "}
 
+			#
 			if params["status"] =="submit"
 				week = te.week
 				week.status_id = 2
@@ -126,7 +130,6 @@ module Api
 				week.save
 					return render :json => {status: :ok, message: "Timesheet successfully submitted"}
 	    	end
-			render :json => {status: :ok, message: "Timesheet successfully saved "}
 
 		end 
 
