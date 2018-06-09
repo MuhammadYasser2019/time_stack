@@ -113,7 +113,7 @@ module Api
 			te.vacation_type_id = params[:vacation]
 			te.activity_log = params[:activity_log]
 				if params[:vacation].present?
-						te.hours = params[:hours]
+						te.hours = 0
 					else	
 						te.hours = params[:hours]
 				end
@@ -175,14 +175,11 @@ module Api
 	    week = Week.find(params[:week_id])
 	    #TODO need to pass project id as well
 	    week.time_entries.each do |t|
-	    	debugger
 	      t.update(status_id: 3, approved_date: Time.now.strftime('%Y-%m-%d'), approved_by: user.id)
 	    end
 	    week.approved_date = Time.now.strftime('%Y-%m-%d')
 	    week.approved_by = user.id
-	    if week.time_entries.where.not(hours:nil).count == week.time_entries.where(status_id: 3).count
-	      week.status_id = 3
-	    end
+	    week.status_id = 3
 	    week.save!
 
 	    manager = user
