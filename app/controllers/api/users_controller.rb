@@ -154,8 +154,8 @@ module Api
 			timesheet = []
 			projects.each do |p|
 				applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2",p.id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
-	  		project_hash = {}
 	  		applicable_week.each do |at|
+	  			project_hash = {}
 	  			project_hash[:id]= at.id
 			    project_hash[:project]= p.name
 			    project_hash[:employee]= User.find(at.user_id).email
@@ -173,8 +173,9 @@ module Api
 			user = User.find_by_email params[:email]
 
 	    week = Week.find(params[:week_id])
+	    project_ids = Project.where(user_id: user.id).collect(&:id)
 	    #TODO need to pass project id as well
-	    week.time_entries.each do |t|
+	    week.time_entries.where(project_id: project_ids).each do |t|
 	      t.update(status_id: 3, approved_date: Time.now.strftime('%Y-%m-%d'), approved_by: user.id)
 	    end
 	    week.approved_date = Time.now.strftime('%Y-%m-%d')
@@ -194,8 +195,9 @@ module Api
 
 			week = Week.find(params[:week_id])
 	    week.status_id = 4
+	    project_ids = Project.where(user_id: user.id).collect(&:id)
 	    #TODO need to pass project id as well
-	    week.time_entries.each do |t|
+	    week.time_entries.where(project_id: project_ids).each do |t|
 	      t.update(status_id: 4)
 	    end
 	    #todo pass comment
