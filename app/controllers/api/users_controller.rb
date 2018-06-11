@@ -137,8 +137,8 @@ module Api
 			u = User.find_by_email(params[:email])
 			project = Project.find params["project_id"].split(": ").last
 			task_list = []
-			project.tasks.each do |t|
-				task_hash = {id: t.id, code: t.code}
+			project.tasks.where(:active=> true).each do |t|
+				task_hash = {id: t.id, code: t.description}
 				task_list.push(task_hash)
 			end
 			render :json => {status: :ok, task_hash: {
