@@ -62,6 +62,8 @@ Rails.application.routes.draw do
     post 'reject', to: "users#reject"
     get 'reject', to: "users#reject"
 
+    post 'submit_week', to: "users#submit_week"
+
     resource :sessions, only: [:create, :destroy]
   end
 

@@ -106,7 +106,6 @@ module Api
 		end
 
 		def post_data
-			logger.debug("HELLO HARSH!!!!!!")
 			te = TimeEntry.find_by_id(params[:id])
 			te.project_id = params[:project]
 			te.task_id = params[:task]
@@ -132,6 +131,22 @@ module Api
 	    	end
 
 		end 
+
+
+		def submit_week
+		#pass the week_id and find all timeEntry's with that week_id
+			te = TimeEntry.where(:week_id => params[:week_id])
+			te.each do |x|
+				x.status_id = 2
+				x.save
+			end 
+
+			we = Week.find_by_id(params[:week_id])
+			we.status_id = 2
+				we.save
+
+		end 
+		
 
 		def get_tasks
 			u = User.find_by_email(params[:email])
