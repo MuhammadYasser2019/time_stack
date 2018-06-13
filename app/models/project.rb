@@ -31,16 +31,20 @@ class Project < ApplicationRecord
   end
   
   def find_dates_to_print(proj_report_start_date = nil, proj_report_end_date = nil, current_week = nil, current_month = nil)
-    if current_month == "true"
+    if current_month == "current_month"
       start_day = Time.now.beginning_of_month
+    elsif current_month == "last_month"
+      start_day = Time.now.beginning_of_month-1.month
     elsif proj_report_start_date.nil? || current_week == "true"
       start_day = Time.now.beginning_of_week
     else
       start_day = Date.parse(proj_report_start_date)
     end
 
-    if current_month == "true"
+    if current_month == "current_month"
       last_day = Time.now.end_of_month
+    elsif current_month == "last_month"
+      last_day = Time.now.end_of_month-1.month
     elsif proj_report_end_date.nil? || current_week == "true"
       last_day = start_day.end_of_week
     else
@@ -60,15 +64,19 @@ class Project < ApplicationRecord
   def build_consultant_hash(project_id, dates_array, start_date, end_date, users, current_week=nil, current_month=nil)
     hash_report_data = Hash.new
     consultant_ids = users
-    if current_month == "true"
+    if current_month == "current_month"
       start_date = Time.now.beginning_of_month.to_date.to_s
+    elsif current_month == "last_month"
+      start_date = (Time.now.beginning_of_month-1.month).to_date.to_s
     elsif start_date.nil? || current_week == "true"
       start_date = Time.now.beginning_of_week.to_date.to_s
     else
       start_date = start_date
     end
 
-    if current_month == "true"
+    if current_month == "current_month"
+      end_date = Time.now.end_of_month.to_date.to_s
+    elsif current_month == "last_month"
       end_date = Time.now.end_of_month.to_date.to_s
     elsif end_date.nil? || current_week == "true"
       end_date = Time.now.end_of_week.to_date.to_s

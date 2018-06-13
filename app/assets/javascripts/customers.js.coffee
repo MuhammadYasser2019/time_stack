@@ -218,9 +218,10 @@ jQuery ($) ->
       "project_id": project_id,
       "user_id": $("#pm_user_id_"+project_id).val(),
   )
+   
+  $("tbody").on("change", "#current_month", ->
     
-  $(document).on('click', '#current_month', ->
-    if $(this).is(":checked") || $('#current_week').is(":checked")
+    if ($(this).val() =="current_month" || $(this).val() =="last_month" || $('#current_week').is(":checked"))
 
       date = new Date()
       firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
@@ -228,10 +229,12 @@ jQuery ($) ->
 
       f_day_m = ("0" + firstDay.getDate()).slice(-2)
       l_day_m = ("0" + lastDay.getDate()).slice(-2)
-      
-      firstofmonth = ("0" + (firstDay.getMonth() + 1)).slice(-2)
-      lastofmonth = ("0" + (lastDay.getMonth() + 1)).slice(-2)
-
+      if $(this).val() =="current_month"
+        firstofmonth = ("0" + (firstDay.getMonth() + 1)).slice(-2)
+        lastofmonth = ("0" + (lastDay.getMonth() + 1)).slice(-2)
+      else if $(this).val() =="last_month"
+        firstofmonth = ("0" + (firstDay.getMonth()-1 +1)).slice(-2)
+        lastofmonth = ("0" + (lastDay.getMonth()-1 + 1)).slice(-2)
       firstDay = firstDay.getFullYear()+"-"+(firstofmonth)+"-"+f_day_m
       lastDay =  lastDay.getFullYear()+"-"+(lastofmonth)+"-"+l_day_m
   
@@ -246,7 +249,7 @@ jQuery ($) ->
   )
 
   $(document).on('click', '#current_week', ->
-    if $(this).is(":checked") || $('#current_month').is(":checked")
+    if ($(this).is(":checked") || $(this).val() =="current_month" || $(this).val() =="last_month")
       
       current = new Date()
       f_day_w = ("0" + (current.getDate() - (current.getDay() - 1))).slice(-2)
@@ -261,7 +264,7 @@ jQuery ($) ->
       $('#proj_report_end_date').val(last)
       $('#proj_report_start_date').attr('readonly', true)
       $('#proj_report_end_date').attr('readonly', true)
-      $('#current_month').attr('checked', false)
+      $('#current_month').val('')
       
     else
       $('#proj_report_start_date').attr('readonly', false)
