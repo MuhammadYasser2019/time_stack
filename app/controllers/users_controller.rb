@@ -180,7 +180,7 @@ class UsersController < ApplicationController
         end
       end
     end
-    redirect_to "/users/#{params[:id]}/proxies/#{params[:proxy_id]}/enter_timesheets  "
+    redirect_to show_project_reports_path(id: @project_id, proj_report_start_date: params[:proj_report_start_date], proj_report_end_date: params[:proj_report_end_date])
   end
 
   def vacation(week)
