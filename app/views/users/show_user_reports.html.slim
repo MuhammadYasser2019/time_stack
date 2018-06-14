@@ -38,6 +38,7 @@
           td Task
           td Hours
           td Description
+          td Partial Day
           td Vacation Type
           td Approved By
       tbody
@@ -51,6 +52,8 @@
             = t.hours
           td.active_log
             = t.activity_log
+          td.partial
+            = t.partial_day == "true" ? "Yes" : "No"
           td.vacation_type
            - if t.vacation_type.present?
              = t.vacation_type.vacation_title
