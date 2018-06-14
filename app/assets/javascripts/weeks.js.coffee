@@ -202,8 +202,8 @@ jQuery ($) ->
           orig.remove()
       else
         orig.val('')
-        if partial
-          tr.find(".partial_day").attr('checked', true)
+        if !partial
+          tr.find(".partial_day").prop("checked", true)
         orig.removeAttr("disabled")
     else
       console.log("not checked")
