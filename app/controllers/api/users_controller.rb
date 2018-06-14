@@ -145,6 +145,8 @@ module Api
 			we.status_id = 2
 				we.save
 
+			return render :json => {status: :ok, message: "Timesheet successfully submitted"}
+
 		end 
 		
 
