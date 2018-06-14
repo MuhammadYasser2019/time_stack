@@ -175,32 +175,39 @@ jQuery ($) ->
       tr.find("a").show()
   )
 
-  $("tbody").on("change", ".vacation-change", ->
+  $("tbody").on("change", ".vacation-change, .partial_day", ->
     orig = $(this)
-    tr = $(this).parent().parent("tr")
+    
+    tr = orig.parent().parent("tr")
     label = tr.find(".date1").children("label")
     console.log(label.text())
+    partial = tr.find(".partial_day").is(":checked")
+    
     date = label.text()
     console.log("count: " + tr.siblings().length)
-    if (orig.val() != "")
+    
+    if ($(this).attr('class') == 'vacation-change' && orig.val() != "" && !partial) || ($(this).attr('class') == 'partial_day' && tr.find(".vacation-change").val() != "" && !partial)
       console.log("already checked")
       console.log("non-date: " + tr.next().next().next().find(".date1").children("label").text())
       console.log("date: " + date)
       result = confirm("This will remove any added rows to from this day. Proceed?");
       if result
-       tr.find(".hours-input,button,textarea,select:not(.vacation-change)").attr("disabled", "disabled");
-       tr.find(".hours-input").val(0)
-       tr.find("a").hide()
-       tr.siblings().each ->
+        
+        tr.find(".hours-input,button,textarea,.partial_day,select:not(.vacation-change)").attr("disabled", "disabled");
+        tr.find(".hours-input").val(0)
+        tr.find("a").hide()
+        tr.siblings().each ->
         console.log("sibling")
-        if $(this).find(".date1").children("label").text() == date
-         $(this).remove()
+        if orig.find(".date1").children("label").text() == date
+          orig.remove()
       else
-       orig.prop("checked", false)
-       orig.removeAttr("disabled")
+        orig.val('')
+        if partial
+          tr.find(".partial_day").attr('checked', true)
+        orig.removeAttr("disabled")
     else
       console.log("not checked")
-      tr.find(".hours-input,button,textarea,select").removeAttr("disabled");
+      tr.find(".hours-input,button,textarea,.partial_day,select").removeAttr("disabled");
       tr.find("a").show()
   )
 

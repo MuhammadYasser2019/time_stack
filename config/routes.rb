@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :features
   resources :case_studies
   resources :vacation_types
+  #resources :analytics
   devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
@@ -32,8 +33,39 @@ Rails.application.routes.draw do
   authenticated :user do
     root to: 'weeks#index', as: :authenticated_root
   end
+
+
   #root 'weeks#index'
   root 'static_pages#home'
+  namespace :api do
+    post 'login_user', to: "users#login_user"
+    get 'login_user', to: "users#login_user"
+
+    post 'send_entry', to: "users#post_data"
+    get 'send_entry', to: "users#post_data"
+
+    get 'get_time_entry', to: "users#get_time_entry"
+    post 'get_time_entry', to: "users#get_time_entry"
+
+    get 'get_tasks', to: "users#get_tasks"
+    post 'get_tasks', to: "users#get_tasks"
+
+    post 'update_date', to: "users#update_date"
+    get 'update_date', to: "users#update_date"
+
+    post 'get_submitted_timesheet', to: "users#get_submitted_timesheet"
+    get 'get_submitted_timesheet', to: "users#get_submitted_timesheet"
+
+    post 'approve', to: "users#approve"
+    get 'approve', to: "users#approve"
+
+    post 'reject', to: "users#reject"
+    get 'reject', to: "users#reject"
+
+    post 'submit_week', to: "users#submit_week"
+
+    resource :sessions, only: [:create, :destroy]
+  end
 
   post 'change_status' => 'weeks#change_status', as: :change_status
   get 'duplicate' => 'weeks#duplicate'
@@ -102,6 +134,7 @@ Rails.application.routes.draw do
   
   get 'check_holidays/:id' => "holidays#check_holidays"
 
+  get 'customer_reports/:id' => 'customers#customer_reports'
   get 'customers/:id/customer_reports' => 'customers#customer_reports'
   
   get 'permission_denied' => 'projects#permission_denied'
@@ -134,7 +167,13 @@ Rails.application.routes.draw do
   post "/add_expense_records" => "weeks#add_expense_records"
   get 'get_employment/' => 'customers#get_employment'
 
+  get "analytics/vacation_reports/customer/:customer_id" => 'analytics#vacation_report'
+  get "/analytics/user_activities/:customer_id" => 'analytics#user_activities'
+  match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
+  post "/bar_graph" => 'analytics#bar_graph'
+  match "analytics/:customer_id" => "analytics#index", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
+
 
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

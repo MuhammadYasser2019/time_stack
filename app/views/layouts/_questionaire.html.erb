@@ -1,7 +1,8 @@
 <% if user_signed_in? %>
+
   <button class ="tech-btn" id ="myBtn" ><i class="far fa-question-circle fa-3x"></i></button>
 <% end %>
-    <div id="myModal" class= "modal">
+    <div id="myModal" class= "modal" style="display:none;"> 
       <div class = "modal-content">
         <span class = "close"> &times;</span>
         <p>Our goal is to provide you with the best user experience possible! Please leave a note on what you think! </p>
@@ -21,20 +22,27 @@
 
           <%= form.submit "Submit", class: "btn1", id: "button" %>
         <% end  %>
+
           
-      </div> 
-    </div>
+       </div> 
+     </div>
+   
+
 
 <script type="text/javascript">
 
-  // Get the modal
-  var modal = document.getElementById('myModal');
+                    //get the form
+       
 
-  // Get the button that opens the modal
-  var btn1 = document.getElementById("myBtn");
 
-  // Get the <span> element that closes the modal
-  var span = document.getElementsByClassName("close")[0];
+
+		      // Get the modal
+          var modal = document.getElementById('myModal');
+
+          // Get the button that opens the modal
+          var btn1 = document.getElementById("myBtn");
+
+          var span = document.getElementsByClassName("close")[0];
   // When the user clicks the button, open the modal 
   btn1.onclick = function() {
       modal.style.display = "block";

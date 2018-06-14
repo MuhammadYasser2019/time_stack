@@ -1,5 +1,6 @@
 class UsersController < ApplicationController 
   load_and_authorize_resource 
+  acts_as_token_authentication_handler_for User
  
 #Choose Approved Timesheet to Reset
   def reset 
@@ -179,7 +180,7 @@ class UsersController < ApplicationController
         end
       end
     end
-    redirect_to "/users/#{params[:id]}/proxies/#{params[:proxy_id]}/enter_timesheets  "
+    redirect_to show_project_reports_path(id: @project_id, proj_report_start_date: params[:proj_report_start_date], proj_report_end_date: params[:proj_report_end_date])
   end
 
   def vacation(week)
@@ -208,6 +209,8 @@ class UsersController < ApplicationController
   
 
   def show_user_reports
+
+
     logger.debug("IN THE SHOW USER REPORT*******: #{params.inspect}")
     @print_report = "false"
     logger.debug("******CHECKING hidden_print_report: #{params[:hidden_print_report].inspect}")
@@ -217,6 +220,15 @@ class UsersController < ApplicationController
     else
       @user = User.find(params[:id])
     end
+
+
+    logger.debug("What are the dates, #{params[:proj_report_start_date].inspect}")
+    if params[:proj_report_start_date].blank?
+      logger.debug("Are you in here or there$%^&$%^&$%&$%^&$%&$%^^&$%^&$%^&$&$%^&$%^&$%^&$%^&$%^&")
+      params[:proj_report_start_date] = Date.today.strftime("%Y-%m-01")
+      params[:proj_report_end_date] = Date.today.strftime("%Y-%m-%d")
+    end 
+
     user_id = @user.id
     @users = User.all
     @user_projects = @user.projects
@@ -228,7 +240,9 @@ class UsersController < ApplicationController
     else
       @time_entries = TimeEntry.where(user_id: @user.id,date_of_activity: time_period).order(:date_of_activity)
     end
+
     @dates_array = @user.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
+    logger.debug "HELLO THERE: #{@dates_array}"
     @daily_totals = Array.new
     full_date_array = @user.full_date_array(params[:proj_report_start_date], params[:proj_report_end_date])
     full_date_array.each do |d|
@@ -273,6 +287,7 @@ class UsersController < ApplicationController
       @url = split_url[0] + "//" + split_url[2] + "/" + split_url[3] + "/" + period_url[0] + ".xlsx" + "?" + period_url[1]
     end
     logger.debug "URLLLLLLL: #{@url}"
+
     respond_to do |format|
       format.xlsx
       format.html{}

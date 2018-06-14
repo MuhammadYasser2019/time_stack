@@ -30,6 +30,10 @@ gem 'spring',        group: :development
 
 # Use ActiveModel has_secure_password
 # gem 'bcrypt', '~> 3.1.7'
+#for implementing charts
+gem 'chart'
+gem 'hightop'
+gem 'highcharts-rails'
 
 # Use unicorn as the app server
 # gem 'unicorn'
@@ -78,6 +82,10 @@ gem 'axlsx_styler'
 gem "omniauth-google-oauth2"
 gem 'ckeditor'
 gem 'airbrake', '~> 7.2'
+
+#Authentication 
+gem 'rack-cors', :require => 'rack/cors'
+gem 'simple_token_authentication', '~> 1.0'
 
 
 

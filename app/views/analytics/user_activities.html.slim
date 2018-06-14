@@ -1,0 +1,14 @@
+<br>
+table
+  tr
+    th User
+    th Last Logged In
+    th Sign in Count
+
+  tbody
+    - customer = Customer.where(id: @customer_id).first
+    - customer.projects.flat_map(&:users).uniq.each do |user|
+      tr
+        td= user.first_name
+        td= user.last_sign_in_at
+        td= user.sign_in_count
