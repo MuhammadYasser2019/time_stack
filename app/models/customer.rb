@@ -17,20 +17,26 @@ class Customer < ApplicationRecord
     hash_report_data = Hash.new
     consultant_ids = users
     customer = Customer.find(customer_id)
-    if current_month == "true"
-      start_date = Time.now.beginning_of_month.to_date.to_s
+
+    if current_month == "current_month"
+      start_day = Time.now.beginning_of_month.to_date.to_s
+    elsif current_month == "last_month"
+      start_day = (Time.now.beginning_of_month-1.month).to_date.to_s
     elsif start_date.nil? || current_week == "true"
-      start_date = Time.now.beginning_of_week.to_date.to_s
+      start_day = Time.now.beginning_of_week.to_date.to_s
     else
-      start_date = start_date
+      start_day = start_date
     end
 
-    if current_month == "true"
-      end_date = Time.now.end_of_month.to_date.to_s
+
+    if current_month == "current_month"
+      last_day = Time.now.end_of_month.to_date.to_s
+    elsif current_month == "last_month"
+      last_day = (Time.now.end_of_month-1.month).to_date.to_s
     elsif end_date.nil? || current_week == "true"
-      end_date = Time.now.end_of_week.to_date.to_s
+      last_day = Time.now.end_of_week.to_date.to_s
     else
-      end_date = end_date
+      last_day = end_date
     end
 
     logger.debug "consultant_ids: #{consultant_ids}"
@@ -94,16 +100,20 @@ class Customer < ApplicationRecord
   end
 
   def find_dates_to_print(proj_report_start_date = nil, proj_report_end_date = nil, current_week = nil, current_month = nil) 
-    if current_month == "true"
+    if current_month == "current_month"
       start_day = Time.now.beginning_of_month
+    elsif current_month == "last_month"
+      start_day = Time.now.beginning_of_month-1.month
     elsif proj_report_start_date.nil? || current_week == "true"
       start_day = Time.now.beginning_of_week
     else
       start_day = Date.parse(proj_report_start_date)
     end
 
-    if current_month == "true"
+    if current_month == "current_month"
       last_day = Time.now.end_of_month
+    elsif current_month == "last_month"
+      last_day = Time.now.end_of_month-1.month
     elsif proj_report_end_date.nil? || current_week == "true"
       last_day = start_day.end_of_week
     else
