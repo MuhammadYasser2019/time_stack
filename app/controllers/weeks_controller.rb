@@ -56,7 +56,7 @@ class WeeksController < ApplicationController
       aw.project_id = t.project_id
       aw.sick = t.sick
       aw.personal_day = t.personal_day
-      aw.updated_by = t.updated_by
+      aw.updated_by = t.updated_by.
       aw.status_id = t.status_id
       aw.approved_by = t.approved_by
       aw.approved_date = t.approved_date
@@ -263,6 +263,7 @@ class WeeksController < ApplicationController
         new_day.hours = t[1][:hours]
         new_day.activity_log = t[1][:activity_log]
         new_day.updated_by = t[1][:updated_by]
+
         @week.time_entries.push(new_day)
       end
     end
@@ -303,6 +304,7 @@ class WeeksController < ApplicationController
         new_day.activity_log = t[1][:activity_log]
         new_day.updated_by = t[1][:updated_by]
         new_day.user_id = week_user
+        new_day.partial_day = t[1][:partial_day]
         
         @week.time_entries.push(new_day)
       end
@@ -335,7 +337,7 @@ class WeeksController < ApplicationController
         else
           @week.status_id = 5
         end
-        @week.time_entries.where(status_id: [nil, 4]).each do |t|
+        @week.time_entries.where(status_id: [nil,1,4]).each do |t|
           t.update(status_id: 5)
         end
     elsif params[:commit] == "Submit Timesheet"
@@ -527,7 +529,7 @@ class WeeksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
       params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
-      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id],expense_records_attributes:[:id, :expense_type, :description, :date, :amount, :attachment, :project_id])
+      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id, :partial_day],expense_records_attributes:[:id, :expense_type, :description, :date, :amount, :attachment, :project_id])
     end
 
     def redirect_to_root
