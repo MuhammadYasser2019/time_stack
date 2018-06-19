@@ -23,13 +23,13 @@ module Api
     	
 			#Used to find week_id for today's time entry 
 			user = User.find_by(email: params[:email])
-			time_entry = TimeEntry.where("date_of_activity = ? && user_id = ? && status_id IN (?)", Date.today.to_datetime, user.id, [1,5,4]).first
+			time_entry = TimeEntry.where("date_of_activity = ? && user_id = ? && status_id IN (?)", Date.today.to_datetime, user.id, [nil,1,5,4]).first
 			logger.debug("Today's Time Entry #{time_entry.inspect}")
 			gimme = time_entry.week_id
 			logger.debug("GIMME THAT ID #{gimme}")
 
 			#Find new time_entry with matching parameters
-			update_date = TimeEntry.where("date_of_activity = ? and user_id = ? && status_id IN (?)", params[:date_of_activity], user.id, [1,5,4])
+			update_date = TimeEntry.where("date_of_activity = ? and user_id = ? && status_id IN (?)", params[:date_of_activity], user.id, [nil,1,5,4])
 			logger.debug("the new entry is #{update_date.inspect}")
 
 			#needed for dropdown
@@ -57,7 +57,7 @@ module Api
 			logger.debug("User ID is #{user.id}")
 		
 			#Find Current Time Entry
-			time_entry = TimeEntry.where("date_of_activity = ? && user_id = ? && status_id IN (?)", Date.today.to_datetime, user.id, [1,5,4]).first
+			time_entry = TimeEntry.where("date_of_activity = ? && user_id = ? && status_id IN (?)", Date.today.to_datetime, user.id, [nil,1,5,4]).first
 			#logger.debug("Today's Time Entry #{time_entry.inspect}")
 			if time_entry.present?
 				#TimeEntries To Load Into DropDown
@@ -111,24 +111,27 @@ module Api
 			te.task_id = params[:task]
 			te.vacation_type_id = params[:vacation]
 			te.activity_log = params[:activity_log]
-				if params[:vacation].present?
-						te.hours = 0
-					else	
-						te.hours = params[:hours]
-				end
+			if params[:vacation].present?
+					te.hours = 0
+				else	
+					te.hours = params[:hours]
+			end
+			te.status_id = 5
 			te.save
+			week = te.week
+			week.status_id = 5
+			week.save
 			render :json => {status: :ok, message: "Timesheet successfully saved "}
 
-			#
 			if params["status"] =="submit"
 				week = te.week
 				week.status_id = 2
-			     	week.time_entries.where(status_id: [nil,1,4,5]).each do |t|
-				        t.update(status_id: 2)
-					end
+		     	week.time_entries.where(status_id: [nil,1,4,5]).each do |t|
+			        t.update(status_id: 2)
+				end
 				week.save
-					return render :json => {status: :ok, message: "Timesheet successfully submitted"}
-	    	end
+				return render :json => {status: :ok, message: "Timesheet successfully submitted"}
+	    end
 
 		end 
 
