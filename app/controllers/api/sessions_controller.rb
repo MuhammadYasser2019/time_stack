@@ -1,7 +1,7 @@
 module Api
-  class SessionsController < ActionController::
-      include UserHelper
-      before_action :authenticate_user_from_token, except: [:create]
+  class SessionsController < ActionController::Base
+    include UserHelper
+    before_action :authenticate_user_from_token, except: [:create]
 
     def create
       user = User.find_by(email: params[:email])
