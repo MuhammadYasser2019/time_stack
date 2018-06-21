@@ -23,13 +23,13 @@ module Api
     	
 			#Used to find week_id for today's time entry 
 			user = User.find_by(email: params[:email])
-			time_entry = TimeEntry.where("date_of_activity = ? && user_id = ? && status_id IN (?)", Date.today.to_datetime, user.id, [nil,1,5,4]).first
+			time_entry = TimeEntry.where("date_of_activity = ? && user_id = ? && (status_id IN (?) or status_id is null)", Date.today.to_datetime, user.id, [1,5,4]).first
 			logger.debug("Today's Time Entry #{time_entry.inspect}")
 			gimme = time_entry.week_id
 			logger.debug("GIMME THAT ID #{gimme}")
 
 			#Find new time_entry with matching parameters
-			update_date = TimeEntry.where("date_of_activity = ? and user_id = ? && status_id IN (?)", params[:date_of_activity], user.id, [nil,1,5,4])
+			update_date = TimeEntry.where("date_of_activity = ? and user_id = ? && (status_id IN (?) or status_id is null)", params[:date_of_activity], user.id, [1,5,4])
 			logger.debug("the new entry is #{update_date.inspect}")
 
 			#needed for dropdown
@@ -57,7 +57,7 @@ module Api
 			logger.debug("User ID is #{user.id}")
 		
 			#Find Current Time Entry
-			time_entry = TimeEntry.where("date_of_activity = ? && user_id = ? && status_id IN (?)", Date.today.to_datetime, user.id, [nil,1,5,4]).first
+			time_entry = TimeEntry.where("date_of_activity = ? && user_id = ? && (status_id IN (?) or status_id is null)", Date.today.to_datetime, user.id, [1,5,4]).first
 			#logger.debug("Today's Time Entry #{time_entry.inspect}")
 			if time_entry.present?
 				#TimeEntries To Load Into DropDown
