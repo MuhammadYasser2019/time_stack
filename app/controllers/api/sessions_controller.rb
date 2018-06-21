@@ -1,6 +1,6 @@
 module Api
   class SessionsController < ActionController::
-      include UsersHelper
+      include UserHelper
       before_action :authenticate_user_from_token, except: [:create]
 
     def create
