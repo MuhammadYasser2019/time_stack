@@ -8,6 +8,8 @@
 	      th Email
 	      th Vacation Start Date
 	      th Vacation End Date
+	      th Partial Day
+	      th Status
 	      th Reason
 
 	  tbody
@@ -23,4 +25,6 @@
 		  		td = user_email
 		  		td = vr.vacation_start_date.to_date
 		  		td = vr.vacation_end_date.to_date
+		  		td = vr.partial_day ? "Yes" : "NO"
+		  		td = vr.status
 		  		td = vr.comment
