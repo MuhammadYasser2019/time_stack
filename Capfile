@@ -4,6 +4,9 @@ require "capistrano/setup"
 # Include default deployment tasks
 require "capistrano/deploy"
 
+require "capistrano/scm/git"
+install_plugin Capistrano::SCM::Git
+
 # Load the SCM plugin appropriate to your project:
 #
 # require "capistrano/scm/hg"
@@ -12,8 +15,15 @@ require "capistrano/deploy"
 # require "capistrano/scm/svn"
 # install_plugin Capistrano::SCM::Svn
 # or
-require "capistrano/scm/git"
-install_plugin Capistrano::SCM::Git
+
+# This will add tasks to your deploy process
+require "capistrano/rails"
+require "capistrano/passenger"
+require "capistrano/bundler"
+
+set :ssh_options, {:forward_agent => true}
+# Load the SCM plugin appropriate to your project:
+
 
 # Include tasks from other gems included in your Gemfile
 #
