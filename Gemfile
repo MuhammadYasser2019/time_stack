@@ -71,7 +71,7 @@ gem "mini_magick"
 gem 'rmagick'
 gem 'whenever', :require => false
 
-gem 'capistrano'
+
 
 #For Excel Exporting
 gem 'axlsx', '2.1.0.pre'
@@ -105,6 +105,10 @@ group :development do
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
   gem 'byebug'
+  gem "capistrano"
+  gem "capistrano-rails"
+  gem "capistrano-passenger"
+  gem 'net-ssh'
   # gem 'binding_of_caller'
 
 end

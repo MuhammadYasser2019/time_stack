@@ -12,6 +12,9 @@ Rails.application.configure do
   # Show full error reports.
   config.consider_all_requests_local = true
 
+  ask(:password, nil, echo: false)
+    server '192.168.1.239', user: 'susmitha', port: 22, password: fetch(:password), roles: %w{web app db}
+
   # Enable/disable caching. By default caching is disabled.
   if Rails.root.join('tmp/caching-dev.txt').exist?
     config.action_controller.perform_caching = true
