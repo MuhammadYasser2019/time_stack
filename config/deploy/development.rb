@@ -22,6 +22,14 @@ role :app, '104.131.27.11'                          # This may be the same as yo
 role :db,  '104.131.27.11', :primary => true # This is where Rails migrations will run
 #role :db,  "your slave db-server here"
 
+ssh_options: {
+        user: 'developer', # overrides user setting above
+        keys: %w(/home/developer/.ssh/id_rsa),
+        forward_agent: true,
+        auth_methods: %w(publickey),
+	verbose: :debug
+}
+#ssh_options[:forward_agent] = true
 # default_run_options[:pty] = true
 
 namespace :deploy do
