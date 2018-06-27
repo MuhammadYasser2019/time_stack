@@ -346,6 +346,7 @@ class WeeksController < ApplicationController
           t.update(status_id: 2)
         end
     end
+
     logger.debug "STATUS ID IS #{week_params[:status_id]}"
     logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
     
@@ -370,6 +371,8 @@ class WeeksController < ApplicationController
         end
         @expenses = ExpenseRecord.where(week_id: @week.id)
         logger.debug "THE EXPENSES IN WEEKS-UPDATE #{@expenses.inspect}"
+        create_vacation_request(@week) if params[:commit] == "Submit Timesheet"
+
         if @week.status_id == 2
           ApprovalMailer.mail_to_manager(@week, @expenses, User.find(@week.user_id)).deliver
         end
@@ -516,6 +519,24 @@ class WeeksController < ApplicationController
     respond_to do |format|
       # format.html {flash[:notice] = "Reject"}
       format.js
+    end
+  end
+
+  def create_vacation_request(week)
+    week.time_entries.each do |wtime|
+      if wtime.vacation_type_id.present? 
+        user = User.find wtime.user_id
+        new_vr = VacationRequest.new
+        new_vr.vacation_start_date = wtime.date_of_activity
+        new_vr.vacation_end_date = wtime.date_of_activity
+        new_vr.user_id = wtime.user_id
+        new_vr.customer_id = user.customer_id
+      
+        new_vr.status = "Requested"
+        new_vr.vacation_type_id =wtime.vacation_type_id
+        new_vr.partial_day = "true" if wtime.partial_day
+        new_vr.save
+      end
     end
   end
 
