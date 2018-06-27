@@ -155,15 +155,16 @@ module Api
 
 		def get_tasks
 			u = User.find_by_email(params[:email])
-			project = Project.find params["project_id"].split(": ").last
+			project = Project.where(id: params["project_id"].split(": ").last).first
 			task_list = []
-			project.tasks.where(:active=> true).each do |t|
-				task_hash = {id: t.id, code: t.description}
-				task_list.push(task_hash)
+			if project.present?
+				project.tasks.where(:active=> true).each do |t|
+					task_hash = {id: t.id, code: t.description}
+					task_list.push(task_hash)
+				end
 			end
 			render :json => {status: :ok, task_hash: {
-																								avaliable_tasks: task_list
-																							}
+													avaliable_tasks: task_list																				}
 											}
 		end
 
