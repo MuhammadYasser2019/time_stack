@@ -314,9 +314,13 @@ class WeeksController < ApplicationController
        t[1]["task_id"] = nil
 
        unless TimeEntry.where(id: t[1]["id"]).empty?
-        TimeEntry.find(t[1]["id"]).update(project_id: nil, task_id: nil)
+        TimeEntry.find(t[1]["id"]).update(project_id: nil, task_id: nil) 
        end
       end
+      if t[1]["vacation_type_id"].present? && t[1]["hours"].nil?
+        TimeEntry.find(t[1]["id"]).update(hours: nil, partial_day: "false",project_id: nil, task_id: nil, activity_log: nil)
+      end
+
       # if t[0].to_i > 6
       #   logger.debug "t[1][project_id]: #{t[1]['project_id']}"
       #   logger.debug "t[1][task_id]: #{t[1]['task_id']}"
