@@ -286,6 +286,7 @@ class UsersController < ApplicationController
     else
       @url = split_url[0] + "//" + split_url[2] + "/" + split_url[3] + "/" + period_url[0] + ".xlsx" + "?" + period_url[1]
     end
+    @customer = Customer.where(id: current_user.customer_id).first
     logger.debug "URLLLLLLL: #{@url}"
 
     respond_to do |format|

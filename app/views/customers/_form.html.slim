@@ -46,6 +46,9 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
 	    = f.label :zipcode
 	    = f.text_field :zipcode
 	  .field
+	  	= f.label :regular_hours_per_day
+	  	= f.number_field :regular_hours
+	  .field
 	    = f.label :customer_manager
 	    = f.select(:user_id, options_from_collection_for_select(@users_eligible_to_be_manager, "id", "email", @customer.user_id))
 	  

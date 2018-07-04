@@ -551,6 +551,6 @@
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def customer_params
-      params.require(:customer).permit(:name, :address, :city, :state, :zipcode, :logo, holiday_ids: [])
+      params.require(:customer).permit(:name, :address, :city, :state, :zipcode, :regular_hours, :logo, holiday_ids: [])
     end
 end
