@@ -5,6 +5,7 @@ h1 Edit Customer User
 			tr
 				td Email
 				td Employment Type
+				td Active?
 				td 
 		tbody
 			tr					 
@@ -12,4 +13,5 @@ h1 Edit Customer User
 					= @user.email
 					= hidden_field_tag "user_id", @user.id	
 				td = select_tag :employment_type, options_from_collection_for_select(@employment_types, :id, :name, @user.employment_type)
+				td = check_box_tag :is_active, true, @user.is_active?
 				td = submit_tag "Submit"
