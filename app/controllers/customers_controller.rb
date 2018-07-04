@@ -275,6 +275,7 @@
     logger.debug("customer.controller - update_user_employment ")
     user = User.find(params[:user_id])
     user.employment_type = params[:employment_type]
+    user.is_active = params[:is_active].present? ? params[:is_active] : false 
     user.save
     respond_to do |format|
       format.html { redirect_to customers_path}
