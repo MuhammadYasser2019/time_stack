@@ -224,19 +224,32 @@ jQuery ($) ->
     if ($(this).val() =="current_month" || $(this).val() =="last_month" || $('#current_week').is(":checked"))
 
       date = new Date()
-      firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
-      lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
-
-      f_day_m = ("0" + firstDay.getDate()).slice(-2)
-      l_day_m = ("0" + lastDay.getDate()).slice(-2)
+      
       if $(this).val() =="current_month"
+        firstDay = new Date(date.getFullYear(), date.getMonth(), 1);
+        lastDay = new Date(date.getFullYear(), date.getMonth() + 1, 0);
+
+        f_day_m = ("0" + firstDay.getDate()).slice(-2)
+        l_day_m = ("0" + lastDay.getDate()).slice(-2)
+
         firstofmonth = ("0" + (firstDay.getMonth() + 1)).slice(-2)
         lastofmonth = ("0" + (lastDay.getMonth() + 1)).slice(-2)
+
+        firstDay = firstDay.getFullYear()+"-"+(firstofmonth)+"-"+f_day_m
+        lastDay =  lastDay.getFullYear()+"-"+(lastofmonth)+"-"+l_day_m
       else if $(this).val() =="last_month"
-        firstofmonth = ("0" + (firstDay.getMonth()-1 +1)).slice(-2)
-        lastofmonth = ("0" + (lastDay.getMonth()-1 + 1)).slice(-2)
-      firstDay = firstDay.getFullYear()+"-"+(firstofmonth)+"-"+f_day_m
-      lastDay =  lastDay.getFullYear()+"-"+(lastofmonth)+"-"+l_day_m
+        firstDay = new Date(date.getFullYear(), date.getMonth()-1, 1);
+        lastDay = new Date(date.getFullYear(), date.getMonth(), 0);
+
+        f_day_m = ("0" + firstDay.getDate()).slice(-2)
+        l_day_m = ("0" + lastDay.getDate()).slice(-2)
+
+        
+        firstofmonth = ("0" + (firstDay.getMonth() + 1)).slice(-2)
+        lastofmonth = ("0" + (lastDay.getMonth() + 1)).slice(-2)
+        
+        firstDay = firstDay.getFullYear()+"-"+(firstofmonth)+"-"+f_day_m
+        lastDay =  lastDay.getFullYear()+"-"+(lastofmonth)+"-"+l_day_m
   
       $('#proj_report_start_date').val(firstDay)
       $('#proj_report_end_date').val(lastDay)
