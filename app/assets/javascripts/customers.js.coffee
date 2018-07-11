@@ -266,7 +266,7 @@ jQuery ($) ->
       
       current = new Date()
       f_day_w = ("0" + (current.getDate() - (current.getDay() - 1))).slice(-2)
-      l_day_w = ("0" + (current.getDate()+ (current.getDay() - 1))).slice(-2)
+      l_day_w = ("0" + (current.getDate()+ (current.getDay() + 1))).slice(-2)
     
       month = ("0" + (current.getMonth() + 1)).slice(-2)
 
