@@ -5,6 +5,12 @@ class WeeksController < ApplicationController
   # GET /weeks
   # GET /weeks.json
   def index
+    @user = current_user
+    
+    @default_project = @user.default_project
+    @default_task = @user.default_task
+    @project_tasks = Task.where(project_id: @default_project)
+    logger.debug("the project tasks are: #{@project_tasks.inspect}")
     @projects =  Project.all
     #@weeks = Week.includes("user_week_statuses").where("user_week_statuses.user_id =  ?", current_user.id)
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(10)

@@ -1,4 +1,12 @@
 jQuery ($) ->	 
+  $("tbody").on("change", ".default_project_id", ->
+    console.log "Inside project change" + $(this).attr('id') +  " the value selected is " + $(this).val()
+    task_select_id = "default_task_id"
+    build_tasks(task_select_id, $(this).val())
+    date = $(this).parent().siblings(".date1").children("label").text()
+  )
+  
+
   $(document).off("click",".reset_reason")
   $(document).one("click", ".reset_reason", ->
     week_id = $(this).attr('id').split("_")[2]
@@ -35,9 +43,9 @@ jQuery ($) ->
 	  
 	  $('#user_report_form').submit()
 
-	build_tasks = (field_id, project_id) ->
+  build_tasks = (field_id, project_id) ->
     $('#'+field_id).find('option').remove()
-    console.log "Inside build_default_tasks  " +  field_id +  "  " + project_id
+    console.log "Inside  build_tasks  " +  field_id +  "  " + project_id
     my_url = '/available_tasks/'+project_id
     $.ajax my_url,
     data: {}
@@ -49,7 +57,7 @@ jQuery ($) ->
       for item in $my_data
         console.log "data is "+item.code + "  "  + item.description
         $('#'+field_id).append($("<option></option>").attr("value",item.id).text(item.description))
-      #task_id = $('#'+field_id+' :selected').val()
+      #default_task_id = $('#'+field_id+' :selected').val()
 
   $("#feature_id").change ->
     console.log("You changed the feature "+ $(this).attr('id') + "the value is " + $(this).val())
