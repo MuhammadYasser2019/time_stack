@@ -125,6 +125,8 @@ Rails.application.routes.draw do
   get 'assign_report_logo_to_user' => "users#assign_report_logo_to_user"
 
   get 'user_profile' => "users#user_profile"
+  get 'user_notification' => "users#user_notification", as: :user_notification
+  get 'get_notification' => "users#get_notification"
   # Example of named route that can be invoked with purchase_url(id: product.id)
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
   get 'available_tasks/:id' => 'tasks#available_tasks'

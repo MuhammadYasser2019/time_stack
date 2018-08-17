@@ -1,0 +1,14 @@
+.grid-x
+	.small-6.white-background
+		h3 Notifications
+		- @notifications.each do |notif|
+			table
+				tr
+					th Type
+					th Date
+					th
+				tr
+					td = link_to notif.notification_type, "javascript:void(0);", id: "notification_#{notif.id}", class: "notification_dialog",type: "link", data: {toggle: "user_notification", target: "#user_notification"}
+					td = notif.created_at.to_date
+
+		div(id="user_notification" class="reveal" aria-hidden="true" role="dialog" data-reveal)
