@@ -67,9 +67,16 @@
 	  	<% if !current_user.nil? && current_user.admin? %>
 		     <span style="float:right;margin-top:0px;"><%= link_to current_user.email, "/user_profile" %></span>
 		     <span style="float:right; margin: 5px;"><a href= "/admin" %><%= button_to "Admin" %></a></span>
+		     <span><%= link_to 'Notification', user_notification_path %>
+				
+			</span>	
+			
 		     <span style="float:right; margin: 5px;"><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span>
 		<% elsif !current_user.nil? %>
-			<span style="float:right;margin-top:-25px;"><%= link_to current_user.email, "/user_profile" %></span>
+			<span style="float:right;margin-top:-20px;"><%= link_to current_user.email, "/user_profile" %></span>
+			<span><%= link_to 'Notification', user_notification_path %>
+				
+			</span>	
 			<span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span>
 		<% else %>
 

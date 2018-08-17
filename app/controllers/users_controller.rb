@@ -305,6 +305,17 @@ class UsersController < ApplicationController
     logger.debug("the project tasks are: #{@project_tasks.inspect}")
   end
 
+  def user_notification
+    @user = current_user
+    @notifications = @user.user_notifications
+
+
+  end
+
+  def get_notification
+    @notification = UserNotification.where(id: params[:notification_id]).first
+  end
+
   def set_default_project
     logger.debug("THE PARAMETERS ARE: #{params.inspect}")
     default_project_id = params[:default_project_id]

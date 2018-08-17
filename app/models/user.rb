@@ -16,6 +16,7 @@ class User < ApplicationRecord
   has_many :user_roles
   has_many :holiday_exceptions
   has_many :vacation_requests
+  has_many :user_notifications
 
   def self.approved_week(user,start_date)
     logger.debug(" LOOK LOOK ")
@@ -46,6 +47,26 @@ class User < ApplicationRecord
     #     )
     # end
     user
+  end
+
+  def self.send_timesheet_notification
+    last_weeks = Week.where("start_date >=? ", Time.now.utc.beginning_of_day-7.days)
+    last_weeks.each do |w|
+      if w.status_id != 2 || w.status_id != 3
+        user = User.find w.user_id
+        TimesheetNotificationMailer.mail_to_user(w,user).deliver_now
+        User.push_notification(user)
+      end
+    end
+  end
+
+  def self.push_notification(user)
+    body ="<html>You have not filled your last week timesheet.</html>"
+    UserNotification.create(user_id: user.id, 
+                            notification_type: "Timesheet Reminder",
+                            body: body,
+                            count: 1, 
+                            seen: false)
   end
 
   def find_dates_to_print(proj_report_start_date = nil, proj_report_end_date = nil)

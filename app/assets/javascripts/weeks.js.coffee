@@ -287,6 +287,13 @@ jQuery ($) ->
     $(this).html if $(this).text() == 'Enter Time' then 'Enter Hours' else 'Enter Time'
     return
     )
+  $("tbody").on("click", ".notification_dialog", ->
+    notification_id = ($(this).attr('id')).split("_")[1]
+    console.log("THE notif ID IS: " + notification_id)
+    $.get '/get_notification',
+      notification_id: notification_id
+    return
+  )
 
 
 
