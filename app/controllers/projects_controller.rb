@@ -149,6 +149,8 @@ end
     @tasks_on_project = Task.where(project_id: @project_id)
     @proxies = User.where("customer_id =? and proxy =?", @project.customer.id, true)
     @customer = Customer.find(@project.customer_id)
+    @notifications = project_params[:deactivate_notifications]
+    logger.debug("Notifications are:  #{@notifications}")
 		#@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",params[:id],"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct    
 		@users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @users = User.all
@@ -163,7 +165,7 @@ end
     @projects = Project.where(id: params[:project_id])
     @available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id)
     respond_to do |format|
-      if @project.update(customer_id: project_params["customer_id"], proxy: params["proxy"])
+      if @project.update(customer_id: project_params["customer_id"], proxy: params["proxy"], deactivate_notifications: @notifications)
 				format.js
         format.html { redirect_to projects_path, notice: 'Project was successfully updated.' }
         format.json { render :show, status: :ok, location: @project }
@@ -466,7 +468,7 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :customer_id, :user_id, :proxy,
+      params.require(:project).permit(:name, :customer_id, :user_id, :proxy, :deactivate_notifications,
       tasks_attributes: [:id, :code, :description, :project_id, :default_comment, :active ,:delete])
     end
 end

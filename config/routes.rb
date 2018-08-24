@@ -174,9 +174,11 @@ Rails.application.routes.draw do
   match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
   post "/bar_graph" => 'analytics#bar_graph'
   match "analytics/:customer_id" => "analytics#index", via: [:get, :post]
+  match "users_notification_date" => "users#user_notification_date", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
 
-
+  
+  
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 

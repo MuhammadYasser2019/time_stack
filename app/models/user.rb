@@ -52,10 +52,21 @@ class User < ApplicationRecord
   def self.send_timesheet_notification
     last_weeks = Week.where("start_date >=? ", Time.now.utc.beginning_of_day-7.days)
     last_weeks.each do |w|
-      if w.status_id != 2 || w.status_id != 3
-        user = User.find w.user_id
-        TimesheetNotificationMailer.mail_to_user(w,user).deliver_now
-        User.push_notification(user)
+        if w.status_id != 2 || w.status_id != 3
+            user = User.find w.user_id
+            projects = ProjectsUser.where(user_id: user.id).pluck(:project_id)
+            flag_array =  Array.new
+            projects.each do |p|
+              project = Project.find(p)
+              flag_array.push(project.deactivate_notifications)
+            end
+  
+            if flag_array.include?(false) 
+              logger.debug("***************Sending the Notifications to : #{user.inspect}")
+              TimesheetNotificationMailer.mail_to_user(w,user).deliver_now
+              User.push_notification(user)
+
+            end
       end
     end
   end

@@ -308,8 +308,21 @@ class UsersController < ApplicationController
   def user_notification
     @user = current_user
     @notifications = @user.user_notifications
+  end
 
-
+  def user_notification_date
+    logger.debug(params[:created_at])
+    @user = current_user
+    logger.debug("USER IS : #{@user.inspect}")
+    created_at = params[:created_at].to_date
+    week_id = Week.where("end_date = :date and user_id = :user_id", {:date => created_at - 1.day, user_id: @user.id}).pluck(:id)
+    #id = week_ids.first
+     #Week.where(end_date: wek).pluck(:id)
+    logger.debug((created_at - 1.day).to_date)
+    logger.debug("WEEK ID : #{week_id.inspect}")
+    respond_to do |format|
+      format.html { redirect_to "/weeks/#{week_id[0]}/edit" }
+    end
   end
 
   def get_notification

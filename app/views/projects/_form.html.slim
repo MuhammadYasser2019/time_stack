@@ -75,6 +75,10 @@ div.tabs-content.white-background data-tabs-content="projects-tab"
 				.field
 					= f.label :name
 					= f.text_field :name
+				.field
+					= f.label :Notification_Deactive
+					= f.check_box :deactivate_notifications
+
 
 				h1 class="task-center-row" Tasks
 				table class="center-row " id="tasklist"

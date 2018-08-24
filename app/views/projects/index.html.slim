@@ -11,6 +11,7 @@
 						  th Inactive?
 						  th
 						  
+						  
 					tbody
 					- if @adhoc_pm_projects.present? 
 						- @adhoc_pm_projects.each_with_index do |project, i|
@@ -26,10 +27,11 @@
 										td = radio_button_tag("project",project.id, true, class:"select-project")
 									- else
 										td = radio_button_tag("project",project.id, false,class:"select-project")
+
 								
 		- else
 			.left-row
-				h1 Listing projects
+				h1 Listing projects 
 				.field
 					= check_box_tag("show_all_projects", @project.id, false, class:"show_all_projects")
 					= label_tag "all_Projects"
