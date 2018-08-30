@@ -9,9 +9,17 @@ module WeeksHelper
       return "NEW"
     end
     stat =  Status.find(week.status_id).status
-    
+    @time_entries = TimeEntry.where(week_id: week.id).order(:date_of_activity)
+    @hours_sum = 0
+    @time_entries.each do |t|
+      if !t.hours.nil?
+        @hours_sum += t.hours
+      end
+    end
     if stat.nil?
       return "NEW"
+    elsif stat == "EDIT"
+      return @hours_sum
     else
       return stat
     end

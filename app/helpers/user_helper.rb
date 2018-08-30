@@ -20,4 +20,9 @@ module UserHelper
       render :json => {status: :unauthorized ,message: "You have to login"}
     end
   end
+
+  def new_messages 
+    UserNotification.where(:user_id => current_user.id, :seen => false).count 
+  end
+
 end

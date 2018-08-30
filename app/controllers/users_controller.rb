@@ -1,6 +1,11 @@
 class UsersController < ApplicationController 
   load_and_authorize_resource 
   acts_as_token_authentication_handler_for User
+
+
+  def self.unread
+      where(:read => false)
+  end
  
 #Choose Approved Timesheet to Reset
   def reset 
@@ -307,21 +312,35 @@ class UsersController < ApplicationController
 
   def user_notification
     @user = current_user
-    @notifications = @user.user_notifications
+    @notifications = @user.user_notifications  
+    logger.debug "The NOTIFICATIONS ARE: #{@notifications}"
+    @notification_ids = @user.user_notifications.pluck(:id)
+    logger.debug "THE NOTIF IDS ARE: #{@notification_ids}"
+    
   end
 
   def user_notification_date
     logger.debug(params[:created_at])
     @user = current_user
     logger.debug("USER IS : #{@user.inspect}")
-    created_at = params[:created_at].to_date
-    week_id = Week.where("end_date = :date and user_id = :user_id", {:date => created_at - 1.day, user_id: @user.id}).pluck(:id)
+    week_id = params[:week_id]
+   # created_at = params[:created_at].to_date
+    #week_id = Week.where("end_date = :date and user_id = :user_id", {:date => created_at - 1.day, user_id: @user.id}).pluck(:id)
+
+    #for getting user notifications 
+    @user_notification_id = UserNotification.find(params[:notification_id])
+    logger.debug "THE user notification id : #{@user_notification_id}"
+    
+    if @user_notification_id.user_id == current_user.id
+      @user_notification_id.update_attributes(:seen => Time.now)
+    end
+
     #id = week_ids.first
      #Week.where(end_date: wek).pluck(:id)
-    logger.debug((created_at - 1.day).to_date)
-    logger.debug("WEEK ID : #{week_id.inspect}")
+    
+    logger.debug("WEEK ID : #{week_id}")
     respond_to do |format|
-      format.html { redirect_to "/weeks/#{week_id[0]}/edit" }
+      format.html { redirect_to "/weeks/#{week_id}/edit" }
     end
   end
 

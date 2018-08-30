@@ -12,6 +12,7 @@
         th Current Month
         th Current week
         th Exclude Pending Users
+        th Tasks
         th
 
     tbody
@@ -26,7 +27,7 @@
         td = select_tag "current_month", options_for_select([[ "Current Month", "current_month"],["Previous Month", "last_month"]], params["current_month"]), prompt: "Select month"
         td = check_box_tag "current_week", true, params["current_week"]
         td = check_box_tag "exclude_pending_users", true, params["exclude_pending_users"]
-
+        td = select_tag "Tasks", options_for_select([["Billable Tasks", "true"], ["Unbillable Tasks", "false"]], params[:Tasks])
         td = button_tag "Show Report", class:"orange-button"
   table id="show_reports" class="display" width="100%" cellspacing="0"
     thead

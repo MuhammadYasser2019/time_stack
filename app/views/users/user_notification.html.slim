@@ -8,6 +8,7 @@
 				th
 			- @notifications.each do |notif|
 				tr
+					= hidden_field_tag 'user_notification_id', notif.id
 					td = link_to notif.notification_type, "javascript:void(0);", id: "notification_#{notif.id}", class: "notification_dialog",type: "link", data: {toggle: "user_notification", target: "#user_notification"}
-					td = link_to notif.created_at.to_date, users_notification_date_path(:created_at => notif.created_at), id: "notif_date#{notif.created_at.to_date}"
+					td = link_to notif.created_at.to_date, users_notification_date_path(:week_id => notif.week_id, :notification_id => notif.id), id: "notif_date#{notif.created_at.to_date}"
 			div(id="user_notification" class="reveal" aria-hidden="true" role="dialog" data-reveal)

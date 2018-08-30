@@ -13,7 +13,8 @@ class Customer < ApplicationRecord
 
   
 
-  def build_consultant_hash(customer_id, dates_array, start_date, end_date, users, projects, current_week=nil, current_month=nil)
+  def build_consultant_hash(customer_id, dates_array, start_date, end_date, users, projects, current_week=nil, current_month=nil, billable)
+    logger.debug "Billable are :#{billable}"
     hash_report_data = Hash.new
     consultant_ids = users
     customer = Customer.find(customer_id)
@@ -57,23 +58,35 @@ class Customer < ApplicationRecord
       time_entries.each do |t|
         logger.debug "COUNT THIS: #{count}"
         count += 1
-        if !employee_time_hash[t.date_of_activity.strftime('%m/%d')].blank?
-          logger.debug "EMPLOYEE TIME HASH: #{employee_time_hash[t.date_of_activity.strftime('%m/%d')]}"
-          if employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours].blank?
-            daily_hours = t.hours if !t.hours.blank?
-            daily_hours = 0 if t.hours.blank?
+        #to get billable hours
+        task_ids = t.task_id
+        task = Task.find(task_ids)
+        logger.debug "The Task billable are : #{task.billable}"
+        logger.debug "Billable is : #{billable.class}"
+        task_value = (task.billable ? "true" : "false")
+        logger.debug "THE taks VALUE ARE : #{task_value.class}"
+        logger.debug "COMPARISION IS : #{task_value == billable}"
+        if task_value == billable
+          logger.debug "TASK BILLABLE inside ARE: #{task.billable}"
+          if !employee_time_hash[t.date_of_activity.strftime('%m/%d')].blank?
+            logger.debug "EMPLOYEE TIME HASH: #{employee_time_hash[t.date_of_activity.strftime('%m/%d')]}"
+            if employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours].blank?
+              daily_hours = t.hours if !t.hours.blank?
+              daily_hours = 0 if t.hours.blank?
+            else
+              logger.debug "DAILY HOURS 1: #{daily_hours}"
+              daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] + t.hours if !t.hours.blank?
+              daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] if t.hours.blank?
+              logger.debug "DAILY HOURS 2: #{daily_hours}"
+            end
           else
-            logger.debug "DAILY HOURS 1: #{daily_hours}"
-            daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] + t.hours if !t.hours.blank?
-            daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] if t.hours.blank?
-            logger.debug "DAILY HOURS 2: #{daily_hours}"
+            daily_hours = !t.hours.blank? ? t.hours : 0
+            logger.debug "DAILY HOURS 3: #{daily_hours}"
           end
-        else
-          daily_hours = !t.hours.blank? ? t.hours : 0
-          logger.debug "DAILY HOURS 3: #{daily_hours}"
+        
+          total_hours = total_hours + t.hours if !t.hours.blank?
+          employee_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: daily_hours, activity_log: t.activity_log }
         end
-        total_hours = total_hours + t.hours if !t.hours.blank?
-        employee_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: daily_hours, activity_log: t.activity_log }
       end
       logger.debug "POST LOOP EMPLOYEE HASH: #{employee_time_hash.inspect}"
       if hash_report_data[c].blank?

@@ -64,18 +64,19 @@ class User < ApplicationRecord
             if flag_array.include?(false) 
               logger.debug("***************Sending the Notifications to : #{user.inspect}")
               TimesheetNotificationMailer.mail_to_user(w,user).deliver_now
-              User.push_notification(user)
+              User.push_notification(user, w.id)
 
             end
       end
     end
   end
 
-  def self.push_notification(user)
+  def self.push_notification(user, week_id)
     body ="<html>You have not filled your last week timesheet.</html>"
     UserNotification.create(user_id: user.id, 
                             notification_type: "Timesheet Reminder",
                             body: body,
+                            week_id: week_id,
                             count: 1, 
                             seen: false)
   end

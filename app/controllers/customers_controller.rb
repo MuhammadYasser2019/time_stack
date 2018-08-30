@@ -69,6 +69,7 @@
     @customer = Customer.new(customer_params)
     @customer.user_id = current_user.id
     @customer.theme = "Orange" 
+    binding.pry @customer.theme
     respond_to do |format|
       if @customer.save
         format.html { redirect_to customers_path, notice: 'Customer was successfully created.' }
@@ -403,6 +404,15 @@
         @users << p.users
       end
     end
+    # @customer.projects.each do |ids|
+    #   t = Task.find_by_project_id(ids)
+    #   b = t.billable
+    #   logger.debug "THE BILLABE VALUES INSIDE LOOP : #{b}"
+    # end
+    
+    billable = params[:Tasks]
+    logger.debug "The PARAMS INSIDE CUSTOMER REPORT ARE: #{@billable}"
+   
     @users = @users.flatten.uniq
     @users_array = @users.pluck(:id)
     logger.debug("THE USER IDS ARE: #{@users_array}")
@@ -412,15 +422,16 @@
     logger.debug("THE WEEK ID YOU ARE LOOKING FOR ARE :  #{@week_array}")
     if params[:user] == "" || params[:user] == nil
       if params[:project] == "" || params[:project] == nil
-        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, @projects, params["current_week"], params["current_month"])
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, @projects, params["current_week"], params["current_month"], billable)
       else
-        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, params[:project], params["current_week"], params["current_month"])
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], @users_array, params[:project], params["current_week"], params["current_month"], billable)
       end
     else
       if params[:project] == "" || params[:project] == nil
-        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], @projects, params["current_week"], params["current_month"])
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], @projects, params["current_week"], params["current_month"], billable)
+
       else
-        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], params[:project], params["current_week"], params["current_month"])
+        @consultant_hash = @customer.build_consultant_hash(@customer_id, @dates_array, params[:proj_report_start_date], params[:proj_report_end_date], [params[:user]], params[:project], params["current_week"], params["current_month"], billable)
       end
 
     end
