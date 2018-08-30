@@ -1,6 +1,6 @@
 source 'https://rubygems.org'
 
-
+#gem 'mysql 2', '0.3.21'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 ruby '2.3.0'
 gem 'rails', '5.0'
@@ -15,6 +15,9 @@ gem 'coffee-rails'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 #gem 'therubyracer',  platforms: :ruby
 
+
+#for bell icon
+gem "stroke-seven-rails"
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
@@ -52,7 +55,7 @@ gem 'cocoon'
 gem 'foundation-rails'
 gem 'foundation-datetimepicker-rails'
 gem 'high_voltage'
-gem 'mysql2', '~> 0.3.18'
+gem 'mysql2', '~> 0.4.10'
 gem 'pundit'
 gem 'simple_form'
 #gem 'slim-rails'
@@ -68,7 +71,7 @@ gem "recaptcha", '3.4.0', require: "recaptcha/rails"
 #Following two gems are needed for uploading files functionality.
 gem 'carrierwave'
 gem "mini_magick"
-gem 'rmagick'
+gem 'rmagick', '2.16.0'
 gem 'whenever', :require => false
 
 gem 'capistrano'
