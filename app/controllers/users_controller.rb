@@ -358,7 +358,7 @@ class UsersController < ApplicationController
     user.save
 
     respond_to do |format|
-        format.html { redirect_to "/user_profile", notice: 'Defaul project set' }
+        format.html { redirect_to "/", notice: 'Defaul project set' }
     end
   end
 

@@ -175,6 +175,7 @@ Rails.application.routes.draw do
   post "/bar_graph" => 'analytics#bar_graph'
   match "analytics/:customer_id" => "analytics#index", via: [:get, :post]
   match "users_notification_date" => "users#user_notification_date", via: [:get, :post]
+  match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
 
   

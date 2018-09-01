@@ -1,7 +1,9 @@
 .white-background
 	.grid-x
+	= form_tag approve_all_path, id: "approve_all_form", method: :post, remote: true
+
 		h1 Time Sheets Submitted for Approval
-		table style="width:90%;"
+		table class="approve-table"style="width:90%;"
 			thead
 			  tr
 			  	th Project
@@ -47,3 +49,5 @@
 					    - i +=1	
 			    div class = "approval-class"
 				 div(id="showHours" class="reveal" aria-hidden="true" role="dialog" data-reveal)
+
+		= submit_tag "Approve ALL" , :id=> "approve_all_button" , :class=> "approve_all_class"

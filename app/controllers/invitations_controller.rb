@@ -8,12 +8,12 @@ class InvitationsController < Devise::InvitationsController
   
   def create
     logger.debug "HELLO NURSE #{params[:user][:project_id]}"
-
     if params[:user][:customer_id]
       logger.debug "HELLO CUSTOMER ID"
     elsif params[:user][:project_id] != nil
         project_customer_id = Project.find(params[:user][:project_id]).customer_id
-        user = User.invite!({:email => params[:user][:email], :invitation_start_date => params[:invite_start_date],:customer_id => project_customer_id,:employment_type => params[:employment_type]},current_user)
+        project_id = params[:user][:project_id]
+        user = User.invite!({:email => params[:user][:email], :invitation_start_date => params[:invite_start_date],:customer_id => project_customer_id,:default_project => project_id, :employment_type => params[:employment_type]},current_user)
         ProjectsUser.create(user_id: user.id, project_id: params[:user][:project_id])
         project_customer_id = Project.find(params[:user][:project_id])
         logger.debug("invitation controller- create- project_customer_id: #{project_customer_id} ")

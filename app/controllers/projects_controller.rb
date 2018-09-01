@@ -209,6 +209,35 @@ end
 
   end
 
+  def approve_all
+    @pm_projects = Project.where("user_id=?", current_user.id)
+    week_ids_array = Array.new
+
+    @pm_projects.each do |p|
+      week_ids = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",p.id,"2").pluck(:id)
+      week_ids_array.push(week_ids)
+    end
+    
+
+    distinct_week_ids = week_ids_array.flatten
+    logger.debug "WEEK IDS ARE #{distinct_week_ids}"
+
+    distinct_week_ids.each do |wid|
+      w = Week.find(wid)
+      w.status_id = 3
+      w.save
+    end
+
+    manager = current_user
+    ApprovalMailer.mail_to_user(@w, manager).deliver
+    respond_to do |format|
+      format.html {flash[:notice] = "Approved"}
+      format.js
+    end
+    
+
+  end
+
   def show_project_reports
     @project_id = params[:id]
     @p = Project.find(@project_id)
