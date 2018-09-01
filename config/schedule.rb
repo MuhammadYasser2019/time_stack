@@ -1,6 +1,6 @@
 require File.expand_path(File.dirname(__FILE__) + "/environment")
 
-set :output, "/home/chronstackuser/time_stack/log/cron_log.log"
+set :output, "{Rails.root}/log/cron_log.log"
 
 set :environment, "development"
 # Use this file to easily define all of your cron jobs.
