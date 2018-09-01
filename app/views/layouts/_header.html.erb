@@ -1,4 +1,3 @@
-<script src="js/foundation/foundation.tooltip.js"></script>
 <div class="header">	
   <div class="top-bar" style="background:white;">
     <div class="top-bar-left" style="width:30% !important;margin-left: 20px;">
@@ -66,21 +65,21 @@
 	  <% else %>
 
 	  	<% if !current_user.nil? && current_user.admin? %>
-		     <span style="float:right;margin-top:0px;"><%= link_to current_user.email, "/user_profile" %></span>
-		     <span style="float:right; margin: 5px;"><a href= "/admin" %><%= button_to "Admin" %></a></span>
-		   
-			    <% if new_messages > 0 %><span class="notification"><%= new_messages %></span><% end %>
-			   
-                   <%= link_to '<i class="pe-7s-bell"></i>'.html_safe, user_notification_path, :class => "bell"%> &nbsp;&nbsp;
-                       <!-- <i class="pe-7s-bell"></i>  -->
-           
-			
-		     <span style="float:right; margin: 5px;"><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span>
-		<% elsif !current_user.nil? %>
-			<span style="float:right;margin-top:-20px;"><%= link_to current_user.email, "/user_profile" %></span>
+		    <span style="float:right;margin:10px;"><%= link_to current_user.email, "/user_profile" %></span>
+		
 			<% if new_messages > 0 %><span class="notification"><%= new_messages %></span><% end %>
 			   
-			<span><%= link_to '<i class="pe-7s-bell"></i>'.html_safe, user_notification_path %> &nbsp;&nbsp;
+            <%= link_to '<i class="fas fa-bell"></i>'.html_safe, user_notification_path %> &nbsp;&nbsp;
+
+            <span style="float:right; margin: 5px;"><a href= "/admin" %><%= button_to "Admin" %></a></span>
+                       <!-- <i class="pe-7s-bell"></i>  -->
+           
+		    <span style="float:right; margin: 5px;"><%= button_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;" %></span>
+		<% elsif !current_user.nil? %>
+			<span style="float:right;margin:10px;"><%= link_to current_user.email, "/user_profile" %></span>
+			<% if new_messages > 0 %><span class="notification"><%= new_messages %></span><% end %>
+			   
+			<span><%= link_to '<i class="fas fa-bell"></i>'.html_safe, user_notification_path %> &nbsp;&nbsp;
 				
 			</span>	
 			<span><%= button_to 'Logout', destroy_user_session_path, :method => :delete, stye: "float:right;" %></span>

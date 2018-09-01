@@ -17,7 +17,7 @@ gem 'coffee-rails'
 
 
 #for bell icon
-gem "stroke-seven-rails"
+#gem "stroke-seven-rails"
 # Use jquery as the JavaScript library
 gem 'jquery-rails'
 # Turbolinks makes following links in your web application faster. Read more: https://github.com/rails/turbolinks
