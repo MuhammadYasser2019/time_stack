@@ -106,6 +106,8 @@ class Week < ApplicationRecord
         @week.save!
       end
     end
+    ###send time sheet notification
+    User.send_timesheet_notification
   end
 
   def copy_last_week_timesheet(user)

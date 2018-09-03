@@ -26,5 +26,4 @@ set :environment, "development"
 every :sunday, :at => "12:01 am" do
   Rails.logger.debug "SUNDAY SUNDAY SUNDAY"
   runner "Week.weekly_weeks"
-  runner "User.send_timesheet_notification"
 end
