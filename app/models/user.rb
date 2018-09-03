@@ -63,9 +63,10 @@ class User < ApplicationRecord
   
             if flag_array.include?(false) 
               logger.debug("***************Sending the Notifications to : #{user.inspect}")
-              TimesheetNotificationMailer.mail_to_user(w,user).deliver_now
-              User.push_notification(user, w.id)
-
+              if UserNotification.where("week_id =?", w.id).blank?
+                TimesheetNotificationMailer.mail_to_user(w,user).deliver_now
+                User.push_notification(user, w.id)
+              end
             end
       end
     end
