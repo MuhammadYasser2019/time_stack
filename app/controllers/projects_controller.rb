@@ -229,7 +229,7 @@ end
     end
 
     manager = current_user
-    ApprovalMailer.mail_to_user(@w, manager).deliver
+    #ApprovalMailer.mail_to_user(@w, manager).deliver
     respond_to do |format|
       format.html {flash[:notice] = "Approved"}
       format.js

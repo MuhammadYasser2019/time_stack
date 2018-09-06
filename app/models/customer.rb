@@ -60,10 +60,10 @@ class Customer < ApplicationRecord
         count += 1
         #to get billable hours
         task_ids = t.task_id
-        task = Task.find(task_ids)
+        task = Task.find(task_ids) if task_ids.present?
         logger.debug "The Task billable are : #{task.billable}"
         logger.debug "Billable is : #{billable.class}"
-        task_value = (task.billable ? "true" : "false")
+        task_value = (task.present? && task.billable ? "true" : "false")
         logger.debug "THE taks VALUE ARE : #{task_value.class}"
         logger.debug "COMPARISION IS : #{task_value == billable}"
         if task_value == billable
