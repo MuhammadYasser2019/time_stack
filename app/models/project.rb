@@ -61,7 +61,7 @@ class Project < ApplicationRecord
     return dates_array
   end
   
-  def build_consultant_hash(project_id, dates_array, start_date, end_date, users, current_week=nil, current_month=nil)
+  def build_consultant_hash(project_id, dates_array, start_date, end_date, users, current_week=nil, current_month=nil, billable)
     hash_report_data = Hash.new
     consultant_ids = users
     if current_month == "current_month"
@@ -90,21 +90,32 @@ class Project < ApplicationRecord
       total_hours = 0
       daily_hours = 0
       time_entries.each do |t|
-        if !employee_time_hash[t.date_of_activity.strftime('%m/%d')].blank?
-          if employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours].blank?
-            daily_hours = t.hours if !t.hours.blank?
-            daily_hours = 0 if t.hours.blank?
-          else
-            daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] + t.hours if !t.hours.blank?
-            daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] if t.hours.blank?
+        #to get billable hours
+        task_ids = t.task_id
+        task = Task.find(task_ids)
+        logger.debug "The Task billable are : #{task.billable}"
+        logger.debug "Billable is : #{billable.class}"
+        task_value = (task.billable ? "true" : "false")
+        logger.debug "THE taks VALUE ARE : #{task_value.class}"
+        logger.debug "COMPARISION IS : #{task_value == billable}"
+        if task_value == billable
+          logger.debug "TASK BILLABLE inside ARE: #{task.billable}"
+          if !employee_time_hash[t.date_of_activity.strftime('%m/%d')].blank?
+            if employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours].blank?
+              daily_hours = t.hours if !t.hours.blank?
+              daily_hours = 0 if t.hours.blank?
+            else
+              daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] + t.hours if !t.hours.blank?
+              daily_hours = employee_time_hash[t.date_of_activity.strftime('%m/%d')][:hours] if t.hours.blank?
+            end
+          else 
+            daily_hours = !t.hours.blank? ? t.hours : 0
           end
-        else 
-          daily_hours = !t.hours.blank? ? t.hours : 0
-        end
-
         total_hours = total_hours + t.hours if !t.hours.blank?
         employee_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: daily_hours, activity_log: t.activity_log }
-      end
+       end
+    end
+
       u = User.find(c)
       hash_report_data[c] = { daily_hash: employee_time_hash, total_hours: total_hours }
     end
