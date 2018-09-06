@@ -11,6 +11,7 @@
         th Period End Date
         th Monthly
         th Current Week
+        th Tasks
         th
 
     tbody
@@ -22,6 +23,7 @@
         td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date].present? ? params[:proj_report_end_date] : Date.today.end_of_week, {required: "required", style: 'margin: 0;'}
         td = select_tag "current_month", options_for_select([[ "Current Month", "current_month"],["Previous Month", "last_month"]], params["current_month"]), prompt: "Select month"
         td = check_box_tag "current_week", true, params["current_week"]
+        td = select_tag "Tasks", options_for_select([["Billable Tasks", "true"], ["Unbillable Tasks", "false"]], params[:Tasks])
         td = button_tag "Show Report", class:"orange-button" 
   table id='show_reports' class="display" width="100%" cellspacing="0"
     thead
