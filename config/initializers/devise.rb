@@ -13,10 +13,10 @@ Devise.setup do |config|
   # Configure the e-mail address which will be shown in Devise::Mailer,
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
-  config.mailer_sender = '#'
+  config.mailer_sender = 'technicalsupport@resourcestack.com'
   config.timeout_in = 1.hour
 
-  config.omniauth :google_oauth2, "545334339071-vb8p76n0n8h3us8mvrjkvfjuei7k15s9.apps.googleusercontent.com", "meanbnBn67dDHa0bSX9pZliT", {skip_jwt: true}
+  config.omniauth :google_oauth2, "192908240819-srhp1ntugvul9ib2ki4l8uu9ta1qjjsb.apps.googleusercontent.com", "UvbUVy0PW9sLMKhdWRrkvypl", {skip_jwt: true}
 
   # Configure the class responsible to send e-mails.
 
