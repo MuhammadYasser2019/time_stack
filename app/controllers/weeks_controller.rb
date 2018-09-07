@@ -323,7 +323,7 @@ class WeeksController < ApplicationController
         TimeEntry.find(t[1]["id"]).update(project_id: nil, task_id: nil) 
        end
       end
-      if t[1]["vacation_type_id"].present? && t[1]["hours"].nil?
+      if t[1]["vacation_type_id"].present? && t[1]["hours"].nil? && TimeEntry.where(id: t[1]["id"]).present?
         TimeEntry.find(t[1]["id"]).update(hours: nil, partial_day: "false",project_id: nil, task_id: nil, activity_log: nil)
       end
 
