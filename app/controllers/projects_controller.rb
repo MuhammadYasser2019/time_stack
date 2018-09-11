@@ -190,15 +190,18 @@ end
   def approve
     @w = Week.find(params[:week_id])
     @w.time_entries.where(project_id: params[:id]).each do |t|
-      t.update(status_id: 3, approved_date: Time.now.strftime('%Y-%m-%d'), approved_by: current_user.id)
+      #t.update(status_id: 3, approved_date: Time.now.strftime('%Y-%m-%d'), approved_by: current_user.id)
+      t.status_id = 3
+      t.approved_date = Time.now.strftime('%Y-%m-%d')
+      t.approved_by = current_user.id
+      t.save
     end
     @row_id = params[:row_id]
     @w.approved_date = Time.now.strftime('%Y-%m-%d')
     @w.approved_by = current_user.id
-    if @w.time_entries.where.not(hours:nil).count == @w.time_entries.where(status_id: 3).count
+    #if @w.time_entries.where.not(hours:nil).count == @w.time_entries.where(status_id: 3).count
       @w.status_id = 3
-    end
-    @w.save!
+      @w.save!
 
     manager = current_user
     ApprovalMailer.mail_to_user(@w, manager).deliver
@@ -226,10 +229,21 @@ end
 
     distinct_week_ids.each do |wid|
       w = Week.find(wid)
+      w.time_entries.where(week_id: wid).each do |t|
+       t.status_id = 3
+       logger.debug " INSIDE OF TIME ENTRY STATUS ID: #{t.status_id}"
+       t.approved_date = Time.now.strftime('%Y-%m-%d')
+       logger.debug " INSIDE OF TIME APPROVED DATE: #{t.approved_date}"
+       t.approved_by = current_user.id
+       logger.debug " INSIDE OF TIME ENTRY APPROVED BY: #{t.approved_by}"
+       t.save
+      end
       w.status_id = 3
+      w.approved_date = Time.now.strftime('%Y-%m-%d')
+      w.approved_by = current_user.id
       w.save
     end
-    
+   
 
     manager = current_user
     #ApprovalMailer.mail_to_user(@w, manager).deliver

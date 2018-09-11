@@ -342,11 +342,12 @@ class WeeksController < ApplicationController
     test_array
     logger.debug("TEST ARRAY ---------------------#{test_array.inspect}")
     if params[:commit] == "Save Timesheet"
-        if test_array.empty?
-          @week.status_id = 1
-        else
-          @week.status_id = 5
-        end
+        # if test_array.empty?
+        #   @week.status_id = 1
+        # else
+        #   @week.status_id = 5
+        # end
+        @week.status_id = 5
         @week.time_entries.where(status_id: [nil,1,4]).each do |t|
           t.update(status_id: 5)
         end
@@ -435,7 +436,7 @@ class WeeksController < ApplicationController
         @hours_sum += t.hours
       end
     end
-    if @week.status_id == 3
+    if @week.status_id == 3 && !@week.approved_by.nil?
       @approved_by = User.find(@week.approved_by)
     end
     
