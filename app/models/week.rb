@@ -85,6 +85,7 @@ class Week < ApplicationRecord
   end
   
   def self.weekly_weeks
+    User.send_timesheet_notification
     User.all.each do |u|
       user_week_end_date = Week.where(user_id: u.id, end_date: "#{Date.today.end_of_week.strftime('%Y-%m-%d')}")
       if user_week_end_date.blank?
@@ -107,7 +108,7 @@ class Week < ApplicationRecord
       end
     end
     ###send time sheet notification
-    User.send_timesheet_notification
+    #User.send_timesheet_notification
   end
 
   def copy_last_week_timesheet(user)
