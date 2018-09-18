@@ -50,7 +50,6 @@ module Api
 											}
 		end 
 
-
 		def get_time_entry
 			#get user
 			user = User.find_by_email(params[:email])
@@ -197,8 +196,13 @@ module Api
 	    project_ids = Project.where(user_id: user.id).collect(&:id)
 	    #TODO need to pass project id as well
 	    week.time_entries.where(project_id: project_ids).each do |t|
-	      t.update(status_id: 3, approved_date: Time.now.strftime('%Y-%m-%d'), approved_by: user.id)
+	      t.status_id = 3
+    	  t.approved_date = Time.now.strftime('%Y-%m-%d')
+    	  t.approved_by = user.id
+    	  t.save
+      #t.update(status_id: 3, approved_date: Time.now.strftime('%Y-%m-%d'), approved_by: user.id)
 	    end
+
 	    week.approved_date = Time.now.strftime('%Y-%m-%d')
 	    week.approved_by = user.id
 	    week.status_id = 3
@@ -215,12 +219,13 @@ module Api
 			user = User.find_by_email params[:email]
 
 			week = Week.find(params[:week_id])
-	    week.status_id = 4
-	    project_ids = Project.where(user_id: user.id).collect(&:id)
-	    #TODO need to pass project id as well
-	    week.time_entries.where(project_id: project_ids).each do |t|
-	      t.update(status_id: 4)
-	    end
+    	week.status_id = 4
+    	project_ids = Project.where(user_id: user.id).collect(&:id)
+    	#TODO need to pass project id as well
+    	week.time_entries.where(project_id: project_ids).each do |t|
+      	t.status_id = 4
+      	t.save
+    	end
 	    #todo pass comment
 	    #week.comments = params[:comments]
 	    week.save!
