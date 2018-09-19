@@ -497,8 +497,8 @@
 
   def available_users
     logger.debug "available_users - starting to process, params passed  are #{params[:id]}"
-    project_id  = params[:id]
-    project = Project.find params[:id]	
+    project_id  = params[:project_id]
+    project = Project.find params[:project_id]	
     
     @users = project.users
     logger.debug "available_users - leaving  @users is #{@users}"

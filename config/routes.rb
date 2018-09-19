@@ -131,7 +131,7 @@ Rails.application.routes.draw do
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
   get 'available_tasks/:id' => 'tasks#available_tasks'
   get 'available_data/:id' => 'features#available_data'
-  get 'available_users/:id' => 'customers#available_users'
+  get 'available_users/:project_id' => 'customers#available_users'
   get '/default_comment' => 'tasks#default_comment'
   
   get 'check_holidays/:id' => "holidays#check_holidays"
@@ -177,6 +177,8 @@ Rails.application.routes.draw do
   match "users_notification_date" => "users#user_notification_date", via: [:get, :post]
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
+
+  
 
   
   
