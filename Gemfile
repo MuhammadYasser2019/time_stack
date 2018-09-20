@@ -14,6 +14,9 @@ gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails'
 # See https://github.com/sstephenson/execjs#readme for more supported runtimes
 #gem 'therubyracer',  platforms: :ruby
+#session time out
+gem 'session_timeout_prompter'
+
 
 
 #for bell icon
@@ -55,7 +58,7 @@ gem 'cocoon'
 gem 'foundation-rails'
 gem 'foundation-datetimepicker-rails'
 gem 'high_voltage'
-gem 'mysql2', '~> 0.3.18'
+gem 'mysql2', '>= 0.3.18', '< 0.5'
 gem 'pundit'
 gem 'simple_form'
 #gem 'slim-rails'
