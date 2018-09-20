@@ -14,7 +14,7 @@ Devise.setup do |config|
   # note that it will be overwritten if you use your own mailer class
   # with default "from" parameter.
   config.mailer_sender = 'technicalsupport@resourcestack.com'
-  config.timeout_in = 1.hour
+  #config.timeout_in = 1.minutes
 
   config.omniauth :google_oauth2, "192908240819-srhp1ntugvul9ib2ki4l8uu9ta1qjjsb.apps.googleusercontent.com", "UvbUVy0PW9sLMKhdWRrkvypl", {skip_jwt: true}
 

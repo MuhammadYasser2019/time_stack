@@ -131,7 +131,7 @@ Rails.application.routes.draw do
   #   get 'products/:id/purchase' => 'catalog#purchase', as: :purchase
   get 'available_tasks/:id' => 'tasks#available_tasks'
   get 'available_data/:id' => 'features#available_data'
-  get 'available_users/:id' => 'customers#available_users'
+  get 'available_users/:project_id' => 'customers#available_users'
   get '/default_comment' => 'tasks#default_comment'
   
   get 'check_holidays/:id' => "holidays#check_holidays"
@@ -178,6 +178,7 @@ Rails.application.routes.draw do
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
 
+  mount SessionTimeoutPrompter::Engine, at: "/session_timeout_prompter"
   
   
   # Example resource route (maps HTTP verbs to controller actions automatically):
