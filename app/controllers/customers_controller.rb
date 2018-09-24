@@ -69,7 +69,6 @@
     @customer = Customer.new(customer_params)
     @customer.user_id = current_user.id
     @customer.theme = "Orange" 
-    binding.pry @customer.theme
     respond_to do |format|
       if @customer.save
         format.html { redirect_to customers_path, notice: 'Customer was successfully created.' }
