@@ -32,9 +32,10 @@
 		- else
 			.left-row
 				h1 Listing projects 
-				.field
-					= check_box_tag("show_all_projects", @project.id, false, class:"show_all_projects")
-					= label_tag "all_Projects"
+				- if @project.present?
+					.field
+						= check_box_tag("show_all_projects", @project.id, false, class:"show_all_projects")
+						= label_tag "all_Projects"
 
 				.(id="show_all_projects")
 					== render partial: 'show_all_projects_form'
