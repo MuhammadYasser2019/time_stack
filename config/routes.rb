@@ -93,6 +93,9 @@ Rails.application.routes.draw do
   get '/show_user_reports/:id' => 'users#show_user_reports'
   post '/show_user_reports/:id' => 'users#show_user_reports'
 
+  get '/show_user_weekly_reports/:id' => 'users#show_user_weekly_reports'
+  post '/show_user_weekly_reports/:id' => 'users#show_user_weekly_reports'
+
   get '/set_default_project' => 'users#set_default_project'
   
   get 'add_user_to_project' => "projects#add_user_to_project"

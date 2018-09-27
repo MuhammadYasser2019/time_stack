@@ -301,6 +301,61 @@ class UsersController < ApplicationController
     end
   end
 
+
+  def show_user_weekly_reports
+
+    if params[:id].blank?
+      @user = current_user
+    else
+      @user = User.find(params[:id])
+    end
+    if params[:month].blank?
+      logger.debug("Are you in here or there$%^&$%^&$%&$%^&$%&$%^^&$%^&$%^&$&$%^&$%^&$%^&$%^&$%^&")
+      proj_report_start_date = Time.now.beginning_of_month
+      proj_report_end_date = Time.now.end_of_month
+    else
+      mon = Time.now.month-params[:month].to_i
+      debugger
+      proj_report_start_date = (Time.now.beginning_of_month - mon.month)
+      proj_report_end_date = (Time.now.end_of_month - mon.month)
+    end 
+
+    user_id = @user.id
+    @users = User.all
+    @user_projects = @user.projects
+    @current_user_id = current_user.id
+    time_period = proj_report_start_date..proj_report_end_date
+
+    time_entries = TimeEntry.where(user_id: @user.id,date_of_activity: time_period).order(:date_of_activity)
+    week_array = time_entries.collect(&:week_id).uniq
+    @time_hash = {}
+    week_array.each do |w|
+      @time_hash[w] = {}
+      week = Week.find w
+      if params[:project].present?
+        time_entry = week.time_entries.where(project_id: params[:project],date_of_activity: time_period).order(:date_of_activity)
+      else
+        time_entry = week.time_entries.where(date_of_activity: time_period).order(:date_of_activity)
+      end  
+      time_entry.each do |t|
+        #if t.project_id.present? && t.task_id.present?
+          
+          @time_hash[w][t.project_id] ||= {}
+          @time_hash[w][t.project_id][t.task_id] ||= Array.new(7,0.0)
+          time = t.hours.present? ? t.hours : 0.0 
+          @time_hash[w][t.project_id][t.task_id][t.date_of_activity.wday] += time
+        #end
+      end
+    end
+    #hours_today = TimeEntry.where(user_id: @user.id, date_of_activity: d).sum(:hours)
+    
+    respond_to do |format|
+      format.xlsx
+      format.html{}
+
+    end
+  end
+
   def user_profile
     @user = current_user
     

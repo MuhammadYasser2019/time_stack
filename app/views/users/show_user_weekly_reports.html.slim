@@ -1,0 +1,64 @@
+- if (current_user.cm? && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) ||current_user.id == @user.id
+  div.reports
+    h1 Reports for #{consultant_name(@user.first_name, @user.last_name, @user.email)}
+  	= form_tag "/show_user_weekly_reports/#{params[:id]}",id: "user_report_form", method: :get
+  	table
+    	thead
+    		tr
+      		th Project
+      		th Month
+      		th
+
+    	tbody
+    		tr
+      		td = select_tag :project, options_from_collection_for_select(@user_projects, "id", "name", params[:project]), :include_blank => true
+      		td = select_tag "month", options_for_select([[ "January", 1],["February", 2],["March",3],["April", 4],["May", 5],["June", 6],["July", 7],["August", 8],["September", 9],["October", 10],["November", 11],["December", 12]], params["month"]), prompt: "Select month"
+      		td = button_tag "Show Report", class: "orange-button"
+
+  table id="show_reports"
+    -i = 1
+    - @time_hash.each do |week_id, project_hash|
+      table id="show_weekly_reports"
+        tr
+          td week-#{i}
+        tr border="1px solid black;"
+          td width="10%" Project 
+          td width="10%" Task
+          td SUN
+          td MON
+          td TUE
+          td WED
+          td THU
+          td FRI
+          td SAT
+          td Total
+        - project_hash.each do |project_id, task_hash|
+          - project_name = Project.where(id: project_id).first
+          -task_hash.each do |task_id, time|
+            - task_name = Task.where(id: task_id).first
+            tr
+              td.project width="50px;"
+                = project_name.name if project_name.present?
+              td.task width="50px;"
+                = task_name.code if task_name.present?
+              - time.each do |t|
+                td.hour = t
+              td
+
+        tr
+          td Total
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+          td
+
+      -i += 1
+
+- else
+  h1 You are not allowed to access this page.
+            

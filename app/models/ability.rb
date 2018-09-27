@@ -6,7 +6,7 @@ class Ability
     #
     if user.user
       can [:new, :create, :update], TimeEntry
-      can [:user_account, :edit, :update, :show_user_reports, :user_profile, :user_notification, :set_default_project, :user_notification_date, :get_notification], User
+      can [:user_account, :edit, :update, :show_user_reports, :user_profile, :user_notification, :set_default_project, :user_notification_date, :get_notification, :show_user_weekly_reports], User
       can [:read, :available_tasks], Task
       can [:read, :edit, :create, :update, :new, :report, :copy_timesheet, :clear_timesheet, :previous_comments, :add_previous_comments, :expense_records, :delete_expense], Week
       can [:read, :permission_denied, :show_old_timesheets], Project
