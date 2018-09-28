@@ -338,9 +338,9 @@ class UsersController < ApplicationController
       end  
       time_entry.each do |t|  
         @time_hash[w][t.project_id] ||= {}
-        @time_hash[w][t.project_id][t.task_id] ||= Array.new(7,0.0) if (t.date_of_activity.wday != 0 && t.project_id.present?) || (t.date_of_activity.wday != 7 &&  t.project_id.present?)
+        @time_hash[w][t.project_id][t.task_id] ||= Array.new(7,0.0) if (t.date_of_activity.wday != 0 && t.project_id.present?) || (t.date_of_activity.wday != 7 && t.project_id.present?)
         time = t.hours.present? ? t.hours : 0.0 
-        @time_hash[w][t.project_id][t.task_id][t.date_of_activity.wday] += time
+        @time_hash[w][t.project_id][t.task_id][t.date_of_activity.wday] += time if @time_hash[w][t.project_id][t.task_id].present?
       end
     end
     
