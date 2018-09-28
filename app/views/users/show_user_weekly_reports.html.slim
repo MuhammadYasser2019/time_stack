@@ -30,21 +30,22 @@
         td width="60px" Total
 
     -i = 1
-    - @time_hash.each do |week_id, project_hash|
-      -week = Week.where(id: week_id).first
-      -mon = week.start_date.beginning_of_week.strftime("%d").to_i
-      -sun = week.start_date.end_of_week.strftime("%d")
-      tbody
-        tr id ="first_row"
+    tbody
+      - @time_hash.each do |week_id, project_hash|
+        -week = Week.where(id: week_id).first
+        -mon = week.start_date.beginning_of_week.strftime("%d").to_i
+        -sun = week.start_date.end_of_week.strftime("%d")
+        
+        tr
           td week-#{i}
           td
           td =sun
           td =mon
-          td =mon+1
-          td =mon+2
-          td =mon+3
-          td =mon+4
-          td =mon+5
+          td =(mon+1 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+1 :1
+          td =(mon+2 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+2 :1
+          td =(mon+3 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+3 :1
+          td =(mon+4 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+4 :1
+          td =(mon+5 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+5 :1
           td
 
         - project_hash.each do |project_id, task_hash|
