@@ -315,7 +315,6 @@ class UsersController < ApplicationController
       proj_report_end_date = Time.now.end_of_month
     else
       mon = Time.now.month-params[:month].to_i
-      debugger
       proj_report_start_date = (Time.now.beginning_of_month - mon.month)
       proj_report_end_date = (Time.now.end_of_month - mon.month)
     end 
@@ -332,8 +331,8 @@ class UsersController < ApplicationController
     week_array.each do |w|
       @time_hash[w] = {}
       week = Week.find w
-      if params[:project].present?
-        time_entry = week.time_entries.where(project_id: params[:project],date_of_activity: time_period).order(:date_of_activity)
+      if params[:project_id].present?
+        time_entry = week.time_entries.where(project_id: params[:project_id],date_of_activity: time_period).order(:date_of_activity)
       else
         time_entry = week.time_entries.where(date_of_activity: time_period).order(:date_of_activity)
       end  
