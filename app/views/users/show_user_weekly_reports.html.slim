@@ -33,19 +33,24 @@
     tbody
       - @time_hash.each do |week_id, project_hash|
         -week = Week.where(id: week_id).first
-        -mon = week.start_date.beginning_of_week.strftime("%d").to_i
+        -mon = week.start_date.beginning_of_week
+        -tue = mon.next_day
+        -wed = tue.next_day
+        -thu = wed.next_day
+        -fri = thu.next_day
+        -sat = fri.next_day
         -sun = week.start_date.end_of_week.strftime("%d")
         
         tr
           td week-#{i}
           td
           td =sun
-          td =mon
-          td =(mon+1 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+1 :1
-          td =(mon+2 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+2 :1
-          td =(mon+3 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+3 :1
-          td =(mon+4 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+4 :1
-          td =(mon+5 < week.start_date.end_of_week.strftime("%d").to_i) ? mon+5 :1
+          td =mon.strftime("%d")
+          td =tue.strftime("%d")
+          td =wed.strftime("%d")
+          td =thu.strftime("%d")
+          td =fri.strftime("%d")
+          td =sat.strftime("%d")
           td
 
         - project_hash.each do |project_id, task_hash|
@@ -63,7 +68,7 @@
 
         
         tr
-          td Total
+          td
           td
           td
           td
