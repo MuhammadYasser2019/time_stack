@@ -315,8 +315,8 @@ class UsersController < ApplicationController
       proj_report_end_date = Time.now.end_of_month
     else
       mon = Time.now.month-params[:month].to_i
-      proj_report_start_date = (Time.now.beginning_of_month - mon.month)
-      proj_report_end_date = (Time.now.end_of_month - mon.month)
+      proj_report_start_date = (Time.now - mon.month).beginning_of_month
+      proj_report_end_date = (Time.now - mon.month).end_of_month
     end 
 
     user_id = @user.id
@@ -336,17 +336,13 @@ class UsersController < ApplicationController
       else
         time_entry = week.time_entries.where(date_of_activity: time_period).order(:date_of_activity)
       end  
-      time_entry.each do |t|
-        #if t.project_id.present? && t.task_id.present?
-          
-          @time_hash[w][t.project_id] ||= {}
-          @time_hash[w][t.project_id][t.task_id] ||= Array.new(7,0.0)
-          time = t.hours.present? ? t.hours : 0.0 
-          @time_hash[w][t.project_id][t.task_id][t.date_of_activity.wday] += time
-        #end
+      time_entry.each do |t|  
+        @time_hash[w][t.project_id] ||= {}
+        @time_hash[w][t.project_id][t.task_id] ||= Array.new(7,0.0)
+        time = t.hours.present? ? t.hours : 0.0 
+        @time_hash[w][t.project_id][t.task_id][t.date_of_activity.wday] += time
       end
     end
-    #hours_today = TimeEntry.where(user_id: @user.id, date_of_activity: d).sum(:hours)
     
     respond_to do |format|
       format.xlsx

@@ -203,7 +203,8 @@ jQuery ($) ->
     dom: 'lBfrtip',
     searching: false, 
     paging: false, 
-    info: false
+    info: false,
+    ordering: false
     buttons: [
       {
         extend: 'excel',
