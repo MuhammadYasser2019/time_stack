@@ -199,6 +199,25 @@ jQuery ($) ->
   })
 
 
+  $('#show_weekly_reports').DataTable({
+    dom: 'lBfrtip',
+    searching: false, 
+    paging: false, 
+    info: false,
+    ordering: false
+    buttons: [
+      {
+        extend: 'excel',
+      },
+      {
+        extend: 'pdf',
+        orientation:'landscape',
+        pageSize: 'TABLOID'
+      }
+    ]
+  })
+
+
   $(document).on("change", ".pm_user_id", ->
     console.log "Inside user change" + $(this).attr('id') +  " the value selected is " + $(this).val()  
     pm_user_id = $(this).val() 
