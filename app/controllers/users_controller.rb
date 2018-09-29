@@ -315,7 +315,6 @@ class UsersController < ApplicationController
       proj_report_end_date = Time.now.end_of_month
     else
       mon = Time.now.month-params[:month].to_i
-      debugger
       proj_report_start_date = (Time.now.beginning_of_month - mon.month)
       proj_report_end_date = (Time.now.end_of_month - mon.month)
     end 
