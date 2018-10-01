@@ -311,12 +311,19 @@ class UsersController < ApplicationController
     if params[:month].blank?
       logger.debug("Are you in here or there$%^&$%^&$%&$%^&$%&$%^^&$%^&$%^&$&$%^&$%^&$%^&$%^&$%^&")
       proj_report_start_date = Time.now.beginning_of_month
-      proj_report_end_date = Time.now.end_of_month
+      if Time.now.end_of_month ==0
+        proj_report_end_date = Time.now.end_of_month + 6.days
+      else
+        proj_report_end_date = Time.now.end_of_month
+      end
     else
       mon = Time.now.month-params[:month].to_i
-
       proj_report_start_date = (Time.now.beginning_of_month - mon.month)
-      proj_report_end_date = (Time.now.end_of_month - mon.month)
+      if (Time.now.end_of_month - mon.month).wday ==0
+        proj_report_end_date = (Time.now.end_of_month - mon.month) + 6.days
+      else
+        proj_report_end_date = (Time.now.end_of_month - mon.month)
+      end
     end 
 
     user_id = @user.id
