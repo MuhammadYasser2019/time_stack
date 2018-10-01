@@ -37,7 +37,7 @@
         -thu = wed.next_day
         -fri = thu.next_day
         -sat = fri.next_day
-        -sun = week.start_date.end_of_week.strftime("%d")
+        -sun = (week.start_date.beginning_of_week-1.day).strftime("%d")
         
         tr class="week_row"
           td week-#{i}
