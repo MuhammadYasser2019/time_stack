@@ -215,7 +215,6 @@ class UsersController < ApplicationController
 
   def show_user_reports
 
-
     logger.debug("IN THE SHOW USER REPORT*******: #{params.inspect}")
     @print_report = "false"
     logger.debug("******CHECKING hidden_print_report: #{params[:hidden_print_report].inspect}")
@@ -322,7 +321,9 @@ class UsersController < ApplicationController
 
     user_id = @user.id
     @users = User.all
-    @user_projects = @user.projects
+    user_project = @user.projects
+    @user_projects = user_project & Project.where(customer_id: current_user.customer_id)
+
     @current_user_id = current_user.id
     time_period = proj_report_start_date..proj_report_end_date
 
