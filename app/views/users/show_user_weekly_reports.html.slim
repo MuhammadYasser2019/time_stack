@@ -79,3 +79,7 @@
 
 
         -i += 1
+  - @week.each do |w|
+      - w.upload_timesheets.each do |t|
+        - if t.time_sheet.present?
+          div = link_to "Attached Files Are: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"

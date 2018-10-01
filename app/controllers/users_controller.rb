@@ -337,6 +337,7 @@ class UsersController < ApplicationController
     time_entries = TimeEntry.where(user_id: @user.id,date_of_activity: time_period).order(:date_of_activity)
     week_array = time_entries.collect(&:week_id).uniq
     @time_hash = {}
+    
     week_array.each do |w|
       @time_hash[w] = {}
       week = Week.find w
@@ -352,6 +353,8 @@ class UsersController < ApplicationController
         @time_hash[w][t.project_id][t.task_id][t.date_of_activity.wday] += time if @time_hash[w][t.project_id][t.task_id].present?
       end
     end
+    
+    @week = @user.find_week_id(proj_report_start_date, proj_report_end_date, @user)
     
     respond_to do |format|
       format.xlsx
