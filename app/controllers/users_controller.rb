@@ -336,7 +336,7 @@ class UsersController < ApplicationController
       if params[:project_id].present?
         time_entry = week.time_entries.where(project_id: params[:project_id],date_of_activity: time_period).order(:date_of_activity)
       else
-        time_entry = week.time_entries.where(date_of_activity: time_period).order(:date_of_activity)
+        time_entry = week.time_entries.where(project_id: @user_projects.collect(&:id), date_of_activity: time_period).order(:date_of_activity)
       end  
       time_entry.each do |t|  
         @time_hash[w][t.project_id] ||= {}

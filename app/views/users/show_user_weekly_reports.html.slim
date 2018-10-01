@@ -9,7 +9,7 @@
 
     	tbody
     		tr
-      		td = select_tag :project, options_from_collection_for_select(@user_projects, "id", "name", params[:project]), :include_blank => true
+      		td = select_tag :project_id, options_from_collection_for_select(@user_projects, "id", "name", params[:project_id]), :include_blank => true
       		td = select_tag "month", options_for_select([[ "January", 1],["February", 2],["March",3],["April", 4],["May", 5],["June", 6],["July", 7],["August", 8],["September", 9],["October", 10],["November", 11],["December", 12]], params["month"].present? ? params["month"] : Time.now.month), prompt: "Select month"
       		td = button_tag "Show Report", class: "orange-button"
 
