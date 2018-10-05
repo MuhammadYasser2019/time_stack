@@ -1,5 +1,3 @@
-- if (current_user.cm? && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) ||current_user.id == @user.id
-  
   h1 Reports for #{consultant_name(@user.first_name, @user.last_name, @user.email)}
   = form_tag "/show_user_weekly_reports/#{params[:id]}",id: "user_report_form", method: :get
   	table
@@ -12,7 +10,7 @@
     	tbody
     		tr
       		td = select_tag :project_id, options_from_collection_for_select(@user_projects, "id", "name", params[:project_id]), :include_blank => true
-      		td = select_tag "month", options_for_select([[ "January", 1],["February", 2],["March",3],["April", 4],["May", 5],["June", 6],["July", 7],["August", 8],["September", 9],["October", 10],["November", 11],["December", 12]], params["month"]), prompt: "Select month"
+      		td = select_tag "month", options_for_select([[ "January", 1],["February", 2],["March",3],["April", 4],["May", 5],["June", 6],["July", 7],["August", 8],["September", 9],["October", 10],["November", 11],["December", 12]], params["month"].present? ? params["month"] : Time.now.month), prompt: "Select month"
       		td = button_tag "Show Report", class: "orange-button"
 
   table id="show_weekly_reports" class="display"
@@ -39,9 +37,9 @@
         -thu = wed.next_day
         -fri = thu.next_day
         -sat = fri.next_day
-        -sun = week.start_date.end_of_week.strftime("%d")
+        -sun = (week.start_date.beginning_of_week-1.day).strftime("%d")
         
-        tr
+        tr class="week_row"
           td week-#{i}
           td
           td =sun
@@ -61,7 +59,7 @@
               td.project width="50px;"
                 = project_name.name if project_name.present?
               td.task width="50px;"
-                = task_name.code if task_name.present?
+                = task_name.description if task_name.present?
               - time.each do |t|
                 td.hour = t
               td = time.sum
@@ -81,7 +79,7 @@
 
 
         -i += 1
-
-- else
-  h1 You are not allowed to access this page.
-            
+  - @week.each do |w|
+      - w.upload_timesheets.each do |t|
+        - if t.time_sheet.present?
+          div = link_to "Attached Files Are: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"

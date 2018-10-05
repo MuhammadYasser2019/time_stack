@@ -26,6 +26,10 @@ jQuery ($) ->
     user_email: user_email 
     return
   )
+  $('.print-user-report').click ->
+    console.log("in here")
+    $('#hidden_print_report').val("true")
+    $('#user_report_form').submit()
 
   $(document).off("keyup", ".r_comment")
   $(document).on("keyup", ".r_comment",  ->
@@ -36,13 +40,7 @@ jQuery ($) ->
   )
 
   $('#show_approved_form').click
-
-	$('.print-user-report').click ->
-	  console.log("in here")
-	  $('#hidden_print_report').val("true")
 	  
-	  $('#user_report_form').submit()
-
   build_tasks = (field_id, project_id) ->
     $('#'+field_id).find('option').remove()
     console.log "Inside  build_tasks  " +  field_id +  "  " + project_id

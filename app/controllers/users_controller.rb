@@ -215,7 +215,6 @@ class UsersController < ApplicationController
 
   def show_user_reports
 
-
     logger.debug("IN THE SHOW USER REPORT*******: #{params.inspect}")
     @print_report = "false"
     logger.debug("******CHECKING hidden_print_report: #{params[:hidden_print_report].inspect}")
@@ -312,37 +311,50 @@ class UsersController < ApplicationController
     if params[:month].blank?
       logger.debug("Are you in here or there$%^&$%^&$%&$%^&$%&$%^^&$%^&$%^&$&$%^&$%^&$%^&$%^&$%^&")
       proj_report_start_date = Time.now.beginning_of_month
-      proj_report_end_date = Time.now.end_of_month
+      if Time.now.end_of_month ==0
+        proj_report_end_date = Time.now.end_of_month + 6.days
+      else
+        proj_report_end_date = Time.now.end_of_month
+      end
     else
       mon = Time.now.month-params[:month].to_i
-      proj_report_start_date = (Time.now - mon.month).beginning_of_month
-      proj_report_end_date = (Time.now - mon.month).end_of_month
+      proj_report_start_date = (Time.now.beginning_of_month - mon.month)
+      if (Time.now.end_of_month - mon.month).wday ==0
+        proj_report_end_date = (Time.now.end_of_month - mon.month) + 6.days
+      else
+        proj_report_end_date = (Time.now.end_of_month - mon.month)
+      end
     end 
 
     user_id = @user.id
     @users = User.all
-    @user_projects = @user.projects
+    user_project = @user.projects
+    @user_projects = user_project & Project.where(customer_id: current_user.customer_id)
+
     @current_user_id = current_user.id
     time_period = proj_report_start_date..proj_report_end_date
 
     time_entries = TimeEntry.where(user_id: @user.id,date_of_activity: time_period).order(:date_of_activity)
     week_array = time_entries.collect(&:week_id).uniq
     @time_hash = {}
+    
     week_array.each do |w|
       @time_hash[w] = {}
       week = Week.find w
       if params[:project_id].present?
         time_entry = week.time_entries.where(project_id: params[:project_id],date_of_activity: time_period).order(:date_of_activity)
       else
-        time_entry = week.time_entries.where(date_of_activity: time_period).order(:date_of_activity)
+        time_entry = week.time_entries.where(project_id: @user_projects.collect(&:id), date_of_activity: time_period).order(:date_of_activity)
       end  
       time_entry.each do |t|  
         @time_hash[w][t.project_id] ||= {}
-        @time_hash[w][t.project_id][t.task_id] ||= Array.new(7,0.0)
+        @time_hash[w][t.project_id][t.task_id] ||= Array.new(7,0.0) if (t.date_of_activity.wday != 0 && t.project_id.present?) || (t.date_of_activity.wday != 7 && t.project_id.present?)
         time = t.hours.present? ? t.hours : 0.0 
-        @time_hash[w][t.project_id][t.task_id][t.date_of_activity.wday] += time
+        @time_hash[w][t.project_id][t.task_id][t.date_of_activity.wday] += time if @time_hash[w][t.project_id][t.task_id].present?
       end
     end
+    
+    @week = @user.find_week_id(proj_report_start_date, proj_report_end_date, @user)
     
     respond_to do |format|
       format.xlsx

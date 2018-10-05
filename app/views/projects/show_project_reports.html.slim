@@ -36,7 +36,7 @@
     tbody
       - @consultant_hash.keys.each do |c|
         tr
-          td = link_to "#{consultant_name(User.find(c).first_name, User.find(c).last_name, User.find(c).email)}","/show_user_reports/#{c}?&proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", type: "button", target: :_blank
+          td = link_to "#{consultant_name(User.find(c).first_name, User.find(c).last_name, User.find(c).email)}","/show_user_weekly_reports/#{c}?&proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", type: "button", target: :_blank
           - @dates_array.each do |d|
             - if !@consultant_hash[c][:daily_hash][d].nil?
               td = @consultant_hash[c][:daily_hash][d][:hours]
