@@ -183,9 +183,6 @@ Rails.application.routes.draw do
 
   mount SessionTimeoutPrompter::Engine, at: "/session_timeout_prompter"
   
-
-  
-  
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
 

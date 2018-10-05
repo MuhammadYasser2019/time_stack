@@ -8,8 +8,9 @@ class User < ApplicationRecord
   acts_as_token_authenticatable
 
   devise :invitable, :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :timeoutable,
+         :recoverable, :rememberable, :trackable,
          :omniauthable, :omniauth_providers => [:google_oauth2]
+  devise :timeoutable, :timeout_in => 1.minutes
   has_many :projects_users
   has_many :projects , :through => :projects_users
   has_many :roles, :through => :user_roles

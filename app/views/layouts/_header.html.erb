@@ -3,7 +3,7 @@
     <div class="top-bar-left" style="width:30% !important;margin-left: 20px;">
 	    <% if current_user.nil?%>
 		    <a href="/", class ="header_logo" ><%= image_tag "chronstack.jpg", class: 'logo' %></a>
-		<% else %> 
+		<% else %>
 		    <% if !current_user.customer_id.nil? %>
 			  <% customer = Customer.find(current_user.customer_id)%>
 			  <% if !customer.logo.blank?%>
@@ -14,6 +14,7 @@
 			<% else %>
 			  <a href="/", class="header_logo"><%= image_tag "chronstack.jpg", class: 'logo' %></a>
 		    <% end %>
+		    <%= init_session_timeout_prompter(session_timeout_in_seconds: 60, seconds_to_warn_before_timeout: 30, scope: :user) %>
 		<% end %>
 	</div>
 	<% if current_user.nil?%>
