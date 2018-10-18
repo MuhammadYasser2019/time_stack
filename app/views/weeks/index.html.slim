@@ -18,68 +18,94 @@
 	        td = week.end_date.strftime('%Y-%m-%d')
 	        td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
 			td = link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
-			-if (find_status(week) == "NEW") && @weeks.last.id != week.id
-				td = link_to "COPY", "/copy_timesheet/#{week.id}" 
-			-elsif (find_status(week) == @hours_sum) && @weeks.last.id != week.id
-				td = link_to "CLEAR", "/clear_timesheet/#{week.id}" 
+			td
+				-if (find_status(week) == "NEW") && @weeks.last.id != week.id
+					= link_to "COPY", "/copy_timesheet/#{week.id}" 
+				-elsif (find_status(week) == @hours_sum) && @weeks.last.id != week.id
+					= link_to "CLEAR", "/clear_timesheet/#{week.id}" 
 	
-	    tr
-	      td = link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
-	      td
-	      td
-	      td
+	    - if current_week_available(current_user).blank?
+		    tr
+		      td = link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" 
+		      td
+		      td
+		      td
+		      td
 	    tr
 	      td = link_to "Show Old Timesheets","show_old_timesheets", target: :_blank
 	      td
 	      td
-	      td	      
-	    tr
-	      td = link_to "Manage Customers", "customers" if user_represents_customers(current_user) || (can? :manage, Customer)
 	      td
 	      td
-	      td
-	    tr 
-	      td = link_to "Manage Projects", "projects" if user_represents_projects(current_user) || (can? :manage, Project)
-	      td
-	      td
-	      td
-	    tr
-	      td = link_to "Adhoc PM", projects_path(adhoc: true) if user_have_adhoc_permission(current_user)
-	      td
-	      td
-	      td
-	    tr
-	      td = link_to "Manage Proxy Projects", "/users/#{current_user.id}/proxies" if current_user.proxy
-	      td
-	      td
-	      td
+	    - if current_user.parent_user_id.blank?      
+		    tr
+		      td = link_to "Manage Profiles", manage_profiles_path 
+		      td
+		      td
+		      td
+		      td
+		- if user_represents_customers(current_user) || (can? :manage, Customer)
+		    tr
+		      td = link_to "Manage Customers", "customers" 
+		      td
+		      td
+		      td
+		      td
+		- if user_represents_projects(current_user) || (can? :manage, Project)
+		    tr 
+		      td = link_to "Manage Projects", "projects"
+		      td
+		      td
+		      td
+		      td
+		- if user_have_adhoc_permission(current_user)
+		    tr
+		      td = link_to "Adhoc PM", projects_path(adhoc: true) 
+		      td
+		      td
+		      td
+		      td
+		- if current_user.proxy
+		    tr
+		      td = link_to "Manage Proxy Projects", "/users/#{current_user.id}/proxies" 
+		      td
+		      td
+		      td
+		      td
 	    tr
 	      td = link_to "User Report", "/show_user_reports/#{current_user.id}" 
 	      td
 	      td
 	      td
-	    tr
-	      td = link_to "Vacation Request", "/vacation_request"
 	      td
-	      td
-	      td
-	    tr
-	      td = link_to "Admin", "/admin" if current_user.admin
-	      td
-	      td
-	      td
-	    tr
-	br
-	h4 Set Default Project
-	= form_tag "/set_default_project", method: :get do
-		table
-			thead
-				tr 
-					th Project
-					th Task
-					th Set Default
-			tbody	
-				tr
-					td = select_tag :default_project_id, options_from_collection_for_select(@user.projects,"id", "name",@default_project),class: "default_project_id", :include_blank => true
-					td = select_tag :default_task_id, options_from_collection_for_select(@project_tasks,"id", "description",@default_task ), class: "default_task_id", :include_blank => true
-					td = button_tag "Set Defaults", class: "tiny orange-button"
+	    - if current_user.parent_user_id.blank?
+		    tr
+		      td = link_to "Vacation Request", "/vacation_request" 
+		      td
+		      td
+		      td
+		      td
+		      
+		- if current_user.admin      
+		    tr
+		      td = link_to "Admin", "/admin" 
+		      td
+		      td
+		      td
+		      td
+
+	- if current_user.parent_user_id.blank?
+		br
+		h4 Set Default Project
+		= form_tag "/set_default_project", method: :get do
+			table
+				thead
+					tr 
+						th Project
+						th Task
+						th Set Default
+				tbody	
+					tr
+						td = select_tag :default_project_id, options_from_collection_for_select(@user.projects,"id", "name",@default_project),class: "default_project_id", :include_blank => true
+						td = select_tag :default_task_id, options_from_collection_for_select(@project_tasks,"id", "description",@default_task ), class: "default_task_id", :include_blank => true
+						td = button_tag "Set Defaults", class: "tiny orange-button"

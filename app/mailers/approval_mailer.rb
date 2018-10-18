@@ -18,7 +18,12 @@ class ApprovalMailer < ActionMailer::Base
   end
 
   def mail_to_user(week, user)
-    @user = User.find(week.user_id).email
+    normal_user = User.find(week.user_id)
+    if normal_user.parent.present?
+      @user = normal_user.parent.email
+    else
+      @user = normal_user.email
+    end
     @approver = user.email
 
     @time = week

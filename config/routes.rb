@@ -126,6 +126,10 @@ Rails.application.routes.draw do
   #Questionaite
   post 'customers/questionaire' => 'customers#questionaire'
   get 'assign_report_logo_to_user' => "users#assign_report_logo_to_user"
+  get 'manage_profiles' => "users#manage_profiles"
+  get 'assign_project' => "users#assign_project"
+  post "invite_sub_users" => "users#invite_sub_users"
+  get "login_user/:id" => "users#login_user"
 
   get 'user_profile' => "users#user_profile"
   get 'user_notification' => "users#user_notification", as: :user_notification

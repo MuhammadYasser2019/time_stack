@@ -1,31 +1,39 @@
 div.report
 	h4 User Details
 	div.grid-y 
-		p <b>First Name:</b> #{@user.first_name} 
-		p <b>Last Name:</b> #{@user.last_name} 
-		-if !@user.customer_id.nil?
-			p <b>User Employer:</b> #{Customer.find(@user.customer_id).name}
-
-			p <b>Employment Type:</b> #{EmploymentType.find(@user.employment_type).name}
-		else
-		p <b>Projects:
-
-		/table
-		/	- @user.projects.each do |project| 
-		/		<tr> <td>#{project.name}</td> </tr>
-
-		
 		table
-		  - @user.projects.each_with_index do |project,index|
-		        <tr>
-		          - if index%2==0
-		               <td> #{project.name} </td>
-		          - else 
-		               <td> #{project.name} </td>
-		        </tr>
-		
+			thead
+				tr
+					th First Name
+					th Last Name
+					th Parent User
+					th Employment Type
+					th User Employer
+					th Login as Parent
+			tbody
+				tr
+					td = @user.first_name
+					td = @user.last_name
+					td
+						-if current_user.parent.present?
+							= @user.parent.name
+					td = EmploymentType.find(@user.employment_type).name
+					td
+						-if !@user.customer_id.nil?
+							= Customer.find(@user.customer_id).name
+					td
+						-if current_user.parent.present?
+							= link_to "Login as parent", "/login_user/#{current_user.parent.id}"
+				tr
+					td Projects:
+					- @user.projects.each_with_index do |project,index|
+	        			- if index%2==0
+	             			td = project.name
+	        			- else 
+	             			td = project.name
 
-		= link_to "Change Password and User Information", edit_user_registration_path
+	
+	= link_to "Change Password and User Information", edit_user_registration_path
 	h4 Set Default Project
 	= form_tag "/set_default_project", method: :get do
 		table

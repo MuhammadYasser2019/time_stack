@@ -44,12 +44,12 @@ class UsersController < ApplicationController
   end
   
   def admin
-    @users = User.all
+    @users = User.where("parent_user_id IS nil").all
     @holidays = Holiday.where(global: true)
     @customers = Customer.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
     @all_report_logos = ReportLogo.all
-    @users_with_logo= User.where("report_logo IS NOT ? ", nil)
+    @users_with_logo= User.where("parent_user_id IS ? && report_logo IS NOT ? ", nil, nil)
     @features = Feature.all  
 
   end
@@ -79,7 +79,7 @@ class UsersController < ApplicationController
   end
   
   def index
-    @users = User.all
+    @users = User.where("parent_user_id IS nil").all
   end
   
   def update
@@ -379,6 +379,69 @@ class UsersController < ApplicationController
     @notification_ids = @user.user_notifications.pluck(:id)
     logger.debug "THE NOTIF IDS ARE: #{@notification_ids}"
     
+  end
+
+  def manage_profiles
+    
+    @customer = Customer.where(id: current_user.customer_id).first
+    @employment_type = EmploymentType.where(customer_id: @customer.id)
+    @projects = @customer.projects
+    @invited_users = User.where("parent_user_id = ?", current_user.id)
+    @projects = current_user.parent.projects if current_user.parent.present?
+
+  end
+
+  def assign_project
+    if params[:project_id].present?
+      project = Project.find(params[:project_id])
+      user = User.find(params[:user_id]) 
+      #remove sub user from project while assigning different project
+      ProjectsUser.where(user_id: user.id).destroy_all if user.projects.present?
+      #add sub user to project
+      project.users.push(user) if !project.users.include?(user)
+      project.save
+    end
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def login_user
+    if params[:id].present?
+      user = User.find params[:id]
+      sign_out(current_user)
+      sign_in(:user, user)
+      if current_user.cm?
+        return redirect_to customers_path
+      elsif current_user.pm?
+        return redirect_to projects_path
+      else
+        redirect_to weeks_path
+      end      
+    end
+  end
+
+  def invite_sub_users
+    logger.debug "INVITED BY #{params[:invited_by_id]}"
+    project = Project.find(params[:project_id])
+    project_id = params[:project_id]
+    @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, default_project: project_id)
+    @user.update(invited_by_id: params[:invited_by_id], customer_id: project.customer_id, parent_user_id: current_user.id)
+    pu = ProjectsUser.new
+    # @users_on_project = @project.users
+    # @users_on_project = params[:user_id]
+    # @project = Project.find(1)
+
+    user = User.find(@user.id)
+    
+    if project.users.include?(user)
+      
+    else
+      project.users.push(user)
+    end
+    project.save
+
+    redirect_to manage_profiles_path
   end
 
   def user_notification_date

@@ -18,6 +18,23 @@ class User < ApplicationRecord
   has_many :vacation_requests
   has_many :user_notifications
 
+  def childs
+    self.parent_user_id.present? ? nil : User.where(id: self.parent_user_id)
+
+  end
+
+  def parent
+    self.parent_user_id.present? ? User.where(id: self.parent_user_id).first : nil
+  end
+
+  def name
+    if self.first_name.present? && self.last_name.present?
+      return "#{self.first_name}" + " #{ self.last_name}"
+    else
+      self.email
+    end
+  end
+
   def self.approved_week(user,start_date)
     logger.debug(" LOOK LOOK ")
     user = User.where(:email => params[:email])
@@ -54,6 +71,7 @@ class User < ApplicationRecord
     last_weeks.each do |w|
         if w.status_id != 2 || w.status_id != 3
             user = User.find w.user_id
+            
             projects = ProjectsUser.where(user_id: user.id).pluck(:project_id)
             flag_array =  Array.new
             projects.each do |p|

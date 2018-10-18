@@ -5,7 +5,20 @@ jQuery ($) ->
     build_tasks(task_select_id, $(this).val())
     date = $(this).parent().siblings(".date1").children("label").text()
   )
+
+  $("tbody").on("click", ".assign_project", ->
+    
+    console.log "Inside project change" + $(this).attr('id').split('_')[1]
+    user_id = $(this).attr('id').split("_")[1]
+    project_id = $("#project_id_"+user_id).val()
+    $.get '/assign_project',
+      async: false,
+      project_id: project_id,
+      user_id: user_id 
+    return
+  )
   
+
 
   $(document).off("click",".reset_reason")
   $(document).one("click", ".reset_reason", ->

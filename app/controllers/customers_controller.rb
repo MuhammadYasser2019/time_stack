@@ -16,7 +16,7 @@
       @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
       @customer_holiday = CustomersHoliday.new
       @invited_users = User.where("invited_by_id = ?", current_user.id)
-      @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
+      @users = User.where("parent_user_id IS ? && (customer_id IS ? OR customer_id = ?)", nil, nil , params[:customer_id])
       @employment_type = EmploymentType.where(customer_id: @customer.id)
       @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
       logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
@@ -49,7 +49,7 @@
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
     @customer_holiday = CustomersHoliday.new
     @invited_users = User.where("invited_by_id = ?", current_user.id)
-    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:id])
+    @users = User.where("parent_user_id IS ? && (customer_id IS ? OR customer_id = ?)", nil, nil , params[:id])
     @employment_type = EmploymentType.where(customer_id: @customer.id)
     @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
     logger.debug("customer edit- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
@@ -93,7 +93,7 @@
     @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
     @customer_holiday = CustomersHoliday.new
     @invited_users = User.where("invited_by_id = ?", current_user.id)
-    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
+    @users = User.where("parent_user_id IS ? && (customer_id IS ? OR customer_id = ?)", nil, nil , params[:customer_id])
     
     @employment_type = EmploymentType.where(customer_id: @customer.id)
     @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
@@ -523,7 +523,7 @@
     @customer_holiday = CustomersHoliday.new
     @projects = @customer.projects
     @invited_users = User.where("invited_by_id = ?", current_user.id)
-    @users = User.where("customer_id IS ? OR customer_id = ?", nil , params[:customer_id])
+    @users = User.where("parent_user_id IS ? && (customer_id IS ? OR customer_id = ?)", nil, nil , params[:customer_id])
     @employment_type = EmploymentType.where(customer_id: @customer.id)
     @users_eligible_to_be_manager = User.where("customer_id = ? OR admin = ?",@customer.id, 1)
     logger.debug("customer-dynamic-update- @users_eligible_to_be_manager #{@users_eligible_to_be_manager.inspect}")
