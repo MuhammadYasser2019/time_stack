@@ -1,7 +1,8 @@
 
 == render 'form'
 div(style="width: 90%; margin-left: 7%;")
-	div.grid-x  
+	div.grid-x
+		= link_to "Manage Profiles", manage_profiles_path, class: "orange-button small-2 cell", style: "margin: 5px;" if current_user.parent_user_id.blank?
 		= link_to 'Set Theme', "/customers/#{@customer.id}/theme", class: "orange-button small-2 cell", style: "margin: 5px;"	   
 		= link_to 'Report', "/analytics/#{@customer.id}", id: 'show_report', class: 'orange-button small-2 cell', style: "margin: 5px;"     
 		= link_to "Manage Projects", "projects",  class: "orange-button small-2 cell", style: "margin: 5px;"
