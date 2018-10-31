@@ -21,6 +21,7 @@
 //= require turbolinks
 //= require chart
 //= require turbolinks-compatibility
+// session_timeout_prompter
 //= require highcharts
 //= require_tree .
 
@@ -28,6 +29,4 @@
 
 
 $(function(){ $(document).foundation(); });
-
-
 
