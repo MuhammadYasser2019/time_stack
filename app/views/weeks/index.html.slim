@@ -37,14 +37,7 @@
 	      td
 	      td
 	      td
-	    - if current_user.parent_user_id.blank?      
-		    tr
-		      td = link_to "Manage Profiles", manage_profiles_path 
-		      td
-		      td
-		      td
-		      td
-		- if user_represents_customers(current_user) || (can? :manage, Customer)
+	    - if user_represents_customers(current_user) || (can? :manage, Customer)
 		    tr
 		      td = link_to "Manage Customers", "customers" 
 		      td

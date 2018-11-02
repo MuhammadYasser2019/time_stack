@@ -10,7 +10,7 @@ class User < ApplicationRecord
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable,
          :omniauthable, :omniauth_providers => [:google_oauth2]
-  devise :timeoutable, :timeout_in => 1.minutes
+  devise :timeoutable, :timeout_in => 30.minutes
   has_many :projects_users
   has_many :projects , :through => :projects_users
   has_many :roles, :through => :user_roles

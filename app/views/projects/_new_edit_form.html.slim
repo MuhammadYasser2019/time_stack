@@ -4,7 +4,6 @@
 br
 div[style="width: 90%; margin-left: 7%;"]
   div.grid-x
-    = link_to "Manage Profiles", manage_profiles_path, class: "orange-button small-2 cell", style: "margin: 5px;" if current_user.parent_user_id.blank?
     - if !user_have_adhoc_permission(current_user)
       = link_to 'Report', "/show_project_reports?id=#{@project.id}", :method => :get,class: "center orange-button large-3 cell", style: "margin: 5px;"
     - if user_have_adhoc_permission(current_user)

@@ -385,9 +385,8 @@ class UsersController < ApplicationController
     
     @customer = Customer.where(id: current_user.customer_id).first
     @employment_type = EmploymentType.where(customer_id: @customer.id)
-    @projects = @customer.projects
     @invited_users = User.where("parent_user_id = ?", current_user.id)
-    @projects = current_user.parent.projects if current_user.parent.present?
+    @projects = current_user.projects
 
   end
 
