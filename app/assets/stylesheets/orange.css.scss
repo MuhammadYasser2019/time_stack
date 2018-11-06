@@ -40,3 +40,9 @@ thead{
 table tr:nth-of-type(even) {
       background: rgba(255, 176, 57, 0.19);
 }
+
+.session-timeout-prompter-modal {
+  .modal-content{
+    border: 2px solid #ffedda;
+  }
+}
