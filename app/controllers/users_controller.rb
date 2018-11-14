@@ -44,7 +44,7 @@ class UsersController < ApplicationController
   end
   
   def admin
-    @users = User.where("parent_user_id IS nil").all
+    @users = User.where("parent_user_id IS null").all
     @holidays = Holiday.where(global: true)
     @customers = Customer.all
     @invited_users = User.where("invited_by_id = ?", current_user.id)
@@ -79,7 +79,7 @@ class UsersController < ApplicationController
   end
   
   def index
-    @users = User.where("parent_user_id IS nil").all
+    @users = User.where("parent_user_id IS null").all
   end
   
   def update
