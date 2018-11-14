@@ -31,13 +31,13 @@ class Customer < ApplicationRecord
 
 
     if current_month == "current_month"
-      last_day = Time.now.end_of_month.to_date.to_s
+      end_date = Time.now.end_of_month.to_date.to_s
     elsif current_month == "last_month"
-      last_day = (Time.now.end_of_month-1.month).to_date.to_s
+      end_date = (Time.now - 1.month).end_of_month.to_date.to_s
     elsif end_date.nil? || current_week == "true"
-      last_day = Time.now.end_of_week.to_date.to_s
+      end_date = Time.now.end_of_week.to_date.to_s
     else
-      last_day = end_date
+      end_date = end_date
     end
 
     logger.debug "consultant_ids: #{consultant_ids}"
@@ -126,7 +126,7 @@ class Customer < ApplicationRecord
     if current_month == "current_month"
       last_day = Time.now.end_of_month
     elsif current_month == "last_month"
-      last_day = Time.now.end_of_month-1.month
+      last_day = (Time.now - 1.month).end_of_month
     elsif proj_report_end_date.nil? || current_week == "true"
       last_day = start_day.end_of_week
     else
