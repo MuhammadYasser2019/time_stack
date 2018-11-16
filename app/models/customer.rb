@@ -50,7 +50,7 @@ class Customer < ApplicationRecord
     consultant_ids.each do |c|
      total_hours = 0
      project_list.each do |p|
-      time_entries = TimeEntry.where(user_id: c, project_id: p.id, date_of_activity: start_date..end_date).order(:date_of_activity)
+      time_entries = TimeEntry.where(user_id: c, project_id: p.id, date_of_activity: start_day..end_date).order(:date_of_activity)
       logger.debug "consultant is #{c}"
       employee_time_hash = Hash.new
       daily_hours = 0
