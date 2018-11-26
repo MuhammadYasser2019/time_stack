@@ -28,7 +28,7 @@
             /= hidden_field_tag 'id', @user.id
             td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
             td = button_tag "Show User Report", class: "orange-button"
-            td = link_to "Show weekly report", "/show_user_weekly_reports/#{params[:id]}", class: "orange-button"
+            td = link_to "Show weekly report", "/show_user_weekly_reports/#{params[:id]}?&proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", class: "orange-button"
     .grid-y
       a(href="#{@url}") Convert to Excel Document 
     table border="1"
