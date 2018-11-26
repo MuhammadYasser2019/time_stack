@@ -302,11 +302,13 @@ class UsersController < ApplicationController
 
 
   def show_user_weekly_reports
-
     if params[:id].blank?
       @user = current_user
     else
       @user = User.find(params[:id])
+    end
+    if params["proj_report_end_date"].present?
+      params[:month] = params["proj_report_end_date"].to_date.month
     end
     if params[:month].blank?
       logger.debug("Are you in here or there$%^&$%^&$%&$%^&$%&$%^^&$%^&$%^&$&$%^&$%^&$%^&$%^&$%^&")
@@ -329,7 +331,7 @@ class UsersController < ApplicationController
     user_id = @user.id
     @users = User.all
     user_project = @user.projects
-    @user_projects = user_project & Project.where(customer_id: current_user.customer_id)
+    @user_projects = user_project
 
     @current_user_id = current_user.id
     time_period = proj_report_start_date..proj_report_end_date
