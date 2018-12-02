@@ -62,7 +62,7 @@ class WeeksController < ApplicationController
       aw.project_id = t.project_id
       aw.sick = t.sick
       aw.personal_day = t.personal_day
-      aw.updated_by = t.updated_by.
+      aw.updated_by = t.updated_by
       aw.status_id = t.status_id
       aw.approved_by = t.approved_by
       aw.approved_date = t.approved_date
