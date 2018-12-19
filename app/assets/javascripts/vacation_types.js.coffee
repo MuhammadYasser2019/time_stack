@@ -15,3 +15,4 @@ jQuery ($) ->
   $(document).on("click", "#accural", ->
     console.log("Testing Accural")
   )
+  
