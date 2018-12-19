@@ -116,6 +116,7 @@ Rails.application.routes.draw do
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
   get 'customers/:id/theme' => 'customers#set_theme'
+  get 'pre_vacation_request' => "customers#pre_vacation_request"
   # Form to reset status_id and duplicate exist
   get '/reset_timesheet/:customer_id' => 'users#reset'
   post '/reset_timesheet/:customer_id' => 'users#reset'
@@ -185,7 +186,7 @@ Rails.application.routes.draw do
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
 
-  mount SessionTimeoutPrompter::Engine, at: "/session_timeout_prompter"
+  #mount SessionTimeoutPrompter::Engine, at: "/session_timeout_prompter"
   
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products

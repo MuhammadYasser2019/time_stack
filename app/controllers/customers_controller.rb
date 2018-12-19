@@ -38,7 +38,7 @@
 
   # GET /customers/new
   def new
-    @customer = Customer.new
+    @customer = Customer.new 
     @users_eligible_to_be_manager = User.where("admin = ?", 1)
   end
 
@@ -282,6 +282,94 @@
     end
   end
 
+  def pre_vacation_request
+      #Move this logic into the Model
+      #Build Use Case Test (scenarios)
+      logger.debug("Am i holding v_id#{params[:vacation_type_id]}")
+      @user = current_user
+      @vacation_type = VacationType.find(params[:vacation_type_id])
+        logger.debug("Accrual: #{@vacation_type.accrual}")
+        logger.debug("Accrual: #{@vacation_type.id}")
+
+      uvt = UserVacationTable.where("vacation_id=? and user_id=?",params[:vacation_type_id], @user.id )
+      days_requested = params[:days_requested]
+        logger.debug("days requested #{params[:days_requested]}")
+
+    #If statement to figure out days_allowed
+      if (@vacation_type.accrual == true && uvt.length > 0 )
+            logger.debug(" A =TRUE && UVT != 0")
+          #Total Days Used Logic
+            total_used = []
+            uvt.each do |x|
+              total_used.push(x.days_used)
+            end
+            total_days_used = total_used.inject :+  #Important
+
+            #Accural Logic(!First) 
+                today = Date.today.strftime('%m').to_f
+                user_start_date = @user.invitation_start_date.strftime('%m').to_f
+                months_at_job = today - user_start_date
+                day_rate = @vacation_type.vacation_bank.to_f/12
+              current_days_allowed = day_rate * months_at_job #This changes***
+
+              logger.debug("current days allowed #{current_days_allowed} Total days Used #{total_days_used}")
+              days_allowed = current_days_allowed - total_days_used 
+              logger.debug("Days allowed #{days_allowed}")
+
+      elsif (@vacation_type.accrual == true && uvt.length <= 0)
+          logger.debug(" A =TRUE && UVT is 0")
+          
+          #Accural Logic(First) 
+          today = Date.today.strftime('%m').to_f
+          user_start_date = @user.invitation_start_date.strftime('%m').to_f
+          months_at_job = today - user_start_date
+          logger.debug("months at job #{months_at_job}")
+          day_rate = @vacation_type.vacation_bank.to_f/12
+          logger.debug("days per month#{day_rate}")
+
+          days_allowed = day_rate * months_at_job  
+      elsif (@vacation_type.accrual == false && uvt.length > 0)
+          logger.debug(" A != FALSE && UVT != 0")
+              total_used = []
+              uvt.each do |x|
+                total_used.push(x.days_used)
+              end
+              total_days_used = total_used.inject :+
+
+            days_allowed = @vacation_type.vacation_bank - total_days_used
+            logger.debug(" Vacation bank is #{@vacation_type.vacation_bank} and total_days_used is #{total_days_used}")
+      elsif (@vacation_type.accrual == false && uvt.length <= 0)
+        logger.debug(" A = FALSE && UVT = 0")
+              days_allowed = @vacation_type.vacation_bank
+      else
+          logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
+      end #end if else for days_allowed 
+
+
+        #Can't run this method until they submit the vacation_request
+          if days_requested.to_f > days_allowed.to_f 
+            logger.debug("NO NOT TODAY!")
+            @comment = "Did this display"
+            respond_to do |format|
+              format.js
+              @comment = "Sorry, you only have #{days_allowed} days avaliable, but requested #{days_requested} days"
+            end 
+
+          else
+              logger.debug("Success, this should showwww")
+              respond_to do |format|
+                format.js{ render :template => "customers/pre_vacation_request_approve.js.erb" }
+            end 
+              #  new_uvt = UserVacationTable.new
+              #    new_uvt.user_id = @user.id
+              #    new_uvt.vacation_id = params[:vacation_type_id]
+              #    new_uvt.days_used = params[:days_requested]
+              #  new_uvt.save
+              #  logger.debug("new UVT #{new_uvt}")
+
+          end
+  end 
+
   def vacation_request
     logger.debug("THE PARAMETERS ARE:  #{params.inspect}")
     @user = current_user
@@ -294,6 +382,7 @@
     vacation_start_date = params[:vacation_start_date]
     vacetion_end_date = params[:vacation_end_date]
     reason_for_vacation = params[:vacation_comment]
+
     if !vacation_start_date.blank?
       new_vr = VacationRequest.new
       new_vr.vacation_start_date = params[:vacation_start_date]
@@ -305,6 +394,7 @@
       new_vr.vacation_type_id = params[:vacation_type_id]
       new_vr.save
     end
+
     #logger.debug("sick_leave: #{sick_leave}******personal_leave: #{personal_leave} ")
     customer_manager = Customer.find(user_customer).user_id
     logger.debug("customer manager id IS : #{customer_manager}")

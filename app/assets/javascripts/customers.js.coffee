@@ -313,6 +313,17 @@ jQuery ($) ->
 
     build_task(emp_id, $(this).val())
   )
+  $(document).off("change")
+  $(document).on("change", '.vc_end', '.vc_start', ->
+    start = $('.vc_start').val().split('-')[2]
+    end = $('.vc_end').val().split('-')[2]
+    console.log("start", start, "end", end )
+    console.log("days requested", end-start)
+    days_requested = end-start
+    $.get "/pre_vacation_request",
+      days_requested: days_requested,
+      vacation_type_id: $('#vacation_type_id').val()
+  )
 
   build_task = (content_id, vacation_id) ->
     my_url = '/get_employment'

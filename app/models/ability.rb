@@ -13,7 +13,7 @@ class Ability
       can [:read, :available_tasks], Task
       can [:read, :edit, :create, :update, :new, :report, :copy_timesheet, :clear_timesheet, :previous_comments, :add_previous_comments, :expense_records, :delete_expense], Week
       can [:read, :permission_denied, :show_old_timesheets], Project
-      can [:vacation_request], Customer
+      can [:vacation_request, :pre_vacation_request], Customer
 
       if user.admin
        can :crud, :all
