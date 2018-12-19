@@ -252,7 +252,7 @@ jQuery ($) ->
     console.log("THE EXPENSE recorD USER ID IS: " + user_id)
     $.get '/expense_records',
       user_id: user_id,
-      week_id: week_id
+      week_id: week_id 
     return
   )
 
@@ -293,6 +293,11 @@ jQuery ($) ->
     $.get '/get_notification',
       notification_id: notification_id
     return
+  )
+  $(document).on("change",".vacation-change", ->
+    console.log("look here",$('.vacation-change').val()) 
+    $.get "/single_vacation_request",
+      vacation_type_id: $('.vacation-change').val()
   )
 
 

@@ -282,9 +282,8 @@
     end
   end
 
-  def pre_vacation_request
+  def pre_vacation_request 
       #Move this logic into the Model
-      #Build Use Case Test (scenarios)
       logger.debug("Am i holding v_id#{params[:vacation_type_id]}")
       @user = current_user
       @vacation_type = VacationType.find(params[:vacation_type_id])
@@ -343,30 +342,20 @@
               days_allowed = @vacation_type.vacation_bank
       else
           logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
-      end #end if else for days_allowed 
+      end #end days_allowed 
 
-
-        #Can't run this method until they submit the vacation_request
           if days_requested.to_f > days_allowed.to_f 
             logger.debug("NO NOT TODAY!")
             @comment = "Did this display"
-            respond_to do |format|
-              format.js
-              @comment = "Sorry, you only have #{days_allowed} days avaliable, but requested #{days_requested} days"
-            end 
-
+              respond_to do |format|
+                format.js
+                @comment = "Sorry, you only have #{days_allowed} days avaliable, but requested #{days_requested} days"
+              end 
           else
               logger.debug("Success, this should showwww")
-              respond_to do |format|
-                format.js{ render :template => "customers/pre_vacation_request_approve.js.erb" }
-            end 
-              #  new_uvt = UserVacationTable.new
-              #    new_uvt.user_id = @user.id
-              #    new_uvt.vacation_id = params[:vacation_type_id]
-              #    new_uvt.days_used = params[:days_requested]
-              #  new_uvt.save
-              #  logger.debug("new UVT #{new_uvt}")
-
+                respond_to do |format|
+                  format.js{ render :template => "customers/pre_vacation_request_approve.js.erb" }
+                end 
           end
   end 
 
@@ -382,29 +371,43 @@
     vacation_start_date = params[:vacation_start_date]
     vacetion_end_date = params[:vacation_end_date]
     reason_for_vacation = params[:vacation_comment]
+      #to calculate days_used
+    days_requested = (params[:vacation_end_date].to_s.split('-')[2]).to_f - (params[:vacation_start_date].to_s.split('-')[2]).to_f
+
+    logger.debug("blah #{days_requested}")
+
+
+
 
     if !vacation_start_date.blank?
-      new_vr = VacationRequest.new
-      new_vr.vacation_start_date = params[:vacation_start_date]
-      new_vr.vacation_end_date = params[:vacation_end_date]
-      new_vr.user_id = @user.id
-      new_vr.customer_id = @user.customer_id
-      new_vr.comment = reason_for_vacation
-      new_vr.status = "Requested"
-      new_vr.vacation_type_id = params[:vacation_type_id]
-      new_vr.save
+     new_vr = VacationRequest.new
+     new_vr.vacation_start_date = params[:vacation_start_date]
+     new_vr.vacation_end_date = params[:vacation_end_date]
+     new_vr.user_id = @user.id
+     new_vr.customer_id = @user.customer_id
+     new_vr.comment = reason_for_vacation
+     new_vr.status = "Requested"
+     new_vr.vacation_type_id = params[:vacation_type_id]
+     new_vr.save
+
+     new_uvt = UserVacationTable.new
+        new_uvt.user_id = @user.id
+        new_uvt.vacation_id = params[:vacation_type_id]
+        new_uvt.days_used = days_requested
+        new_uvt.save
+
     end
 
     #logger.debug("sick_leave: #{sick_leave}******personal_leave: #{personal_leave} ")
     customer_manager = Customer.find(user_customer).user_id
     logger.debug("customer manager id IS : #{customer_manager}")
 
-    if !vacation_start_date.blank?
-      VacationMailer.mail_to_customer_owner(@user, customer_manager,vacation_start_date,vacetion_end_date ).deliver
-      respond_to do |format|
-        format.html { redirect_to "/", notice: 'Vacation request sent successfully.' }
-      end
-    end
+    #if !vacation_start_date.blank?
+    #  VacationMailer.mail_to_customer_owner(@user, customer_manager,vacation_start_date,vacetion_end_date ).deliver
+    #  respond_to do |format|
+    #    format.html { redirect_to "/", notice: 'Vacation request sent successfully.' }
+    #  end
+    #end
   end
 
   def resend_vacation_request

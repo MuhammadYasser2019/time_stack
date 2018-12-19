@@ -502,7 +502,7 @@ class WeeksController < ApplicationController
 
   end
 
-  def delete_expense
+  def delete_expense 
     @week = Week.find(params[:week_id])
     @expense_row = ExpenseRecord.find(params[:expense].to_i)
     logger.debug("DELETING THE ROW #{@expense_row.inspect}")
@@ -533,7 +533,44 @@ class WeeksController < ApplicationController
     end
   end
 
+  def single_vacation_request
+      #Calculate Today Vacation Days Requested
+      #Partial Day should only add .5 to the days_used
+    logger.debug("triggered")
+    user = current_user
+    logger.debug("My User is #{user.id}")
+    uvt = UserVacationTable.where("vacation_id=? and user_id=?",params[:vacation_type_id], user.id )
+      total_used =[]
+      uvt.each do|x|
+        total_used.push(x.days_used)
+      end 
+       total_used = total_used.inject :+
+       logger.debug("total days used is #{total_used}")
+    vt = VacationType.find(params[:vacation_type_id])
+    vc_bank = vt.vacation_bank
+    logger.debug("bank #{vc_bank}")
+    
+
+      # Same Prior Logic (Link to customers#pre_vacation_request)
+        # If Accrual == true && UVT != nil
+          # math
+
+      days_requested = total_days_used
+        if days_requested > vc_bank
+          respond_to do |format|
+              format.js
+                @comment = "Sorry, you have used #{total_days_used} days out of  #{vc_bank} days"
+              end 
+
+      end 
+
+
+
+
+  end 
+
   def create_vacation_request(week)
+
     week.time_entries.each do |wtime|
       if wtime.vacation_type_id.present? 
         user = User.find wtime.user_id
@@ -549,6 +586,13 @@ class WeeksController < ApplicationController
         new_vr.save
       end
     end
+
+          #new_uvt = UserVacationTable.new
+              #    new_uvt.user_id = user.id
+              #    new_uvt.vacation_id = params[:vacation_type_id]
+              #    new_uvt.days_used = days_requested
+              #  new_uvt.save
+              #  logger.debug("new UVT #{new_uvt}")
   end
 
 

@@ -117,6 +117,7 @@ Rails.application.routes.draw do
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
   get 'customers/:id/theme' => 'customers#set_theme'
   get 'pre_vacation_request' => "customers#pre_vacation_request"
+  get 'single_vacation_request' => "weeks#single_vacation_request"
   # Form to reset status_id and duplicate exist
   get '/reset_timesheet/:customer_id' => 'users#reset'
   post '/reset_timesheet/:customer_id' => 'users#reset'
