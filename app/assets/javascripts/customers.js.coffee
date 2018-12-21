@@ -325,6 +325,15 @@ jQuery ($) ->
       vacation_type_id: $('#vacation_type_id').val()
   )
 
+  $(document).on("click", '.cancel_vacation_request', ->
+    vacation_request_row_id = parse_row_id($(this).attr('id'))
+    console.log("VR ROW ID: " + vacation_request_row_id)
+    vacation_request_id = parse_vacation_request_id($(this).attr('id'))
+    console.log("This is the ID", vacation_request_id)
+    $.get "/cancel_vacation_request",
+      vacation_id: vacation_request_id
+  )
+
   build_task = (content_id, vacation_id) ->
     my_url = '/get_employment'
     $.ajax my_url,

@@ -114,7 +114,9 @@ Rails.application.routes.draw do
   get 'vacation_request' => "customers#vacation_request"
   get 'customers/approve_vacation/:vr_id/:row_id' => 'customers#approve_vacation'
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
+  get 'customers/approve_cancel_request/:vr_id/:row_id' => 'customers#approve_cancel_request'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
+  get 'cancel_vacation_request' => 'customers#cancel_vacation_request' 
   get 'customers/:id/theme' => 'customers#set_theme'
   get 'pre_vacation_request' => "customers#pre_vacation_request"
   get 'single_vacation_request' => "weeks#single_vacation_request"

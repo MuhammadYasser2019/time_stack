@@ -282,6 +282,20 @@
     end
   end
 
+  def cancel_vacation_request
+    #change the value for this vacation_id
+    vr = VacationRequest.find(params[:vacation_id])
+      vr.status = "CancelRequest"
+    vr.save
+
+    logger.debug("This is the vacation #{vr}")
+    #Change the ID
+    @row_id = params[:vacation_id]
+    respond_to do |format|
+      format.js 
+    end
+  end 
+
   def pre_vacation_request 
       #Move this logic into the Model
       logger.debug("Am i holding v_id#{params[:vacation_type_id]}")
@@ -374,7 +388,6 @@
       #to calculate days_used
     days_requested = (params[:vacation_end_date].to_s.split('-')[2]).to_f - (params[:vacation_start_date].to_s.split('-')[2]).to_f
 
-    logger.debug("blah #{days_requested}")
 
 
 
@@ -465,6 +478,24 @@
     # @user.save
     respond_to do |format|
       format.html {flash[:notice] = "Rejected"}
+      format.js
+    end
+  end
+
+  def approve_cancel_request
+    #Create A Mailer
+    @vr = params[:vr_id]
+    logger.debug("888888888888888888 : #{@vr.inspect}")
+    @row_id = params[:row_id]
+    customer_manager = current_user
+    vacation_request = VacationRequest.find(@vr)
+    vacation_request.status = "Cancelled"
+    vacation_request.save
+
+    uvt = UserVacationTable.where("vacation_id=? and user_id=?",)
+
+    respond_to do |format|
+      format.html {flash[:notice] = "Cancellation has been approved"}
       format.js
     end
   end
@@ -623,7 +654,9 @@
     @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
     # @users= User.all
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
-    @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
+    # @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested" or "CancelRequest")
+    @vacation_requests = VacationRequest.where("customer_id = ? and status IN (?,?)", params[:customer_id],"CancelRequest", "Requested")
+
     @adhoc_projects = Project.where("adhoc_pm_id is not null")
     @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")

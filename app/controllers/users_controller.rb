@@ -32,6 +32,13 @@ class UsersController < ApplicationController
     logger.debug("TimeEntry ID #{@time_entry.inspect}")
     logger.debug("USER ID #{params[:email]}")
     logger.debug "Week ID #{params[:start_date]}"
+
+    # this logic will show what VR are associated the selected approved weeks
+    sd = @approved_week[0].start_date
+    ed = @approved_week[0].end_date
+    vrt = VacationRequest.where(vacation_start_date: sd..ed)
+    logger.debug("These are the VR in this Week. #{vrt.inspect}")
+      #Have a pop up that shows the associated vacation
    end 
 
   def user_account

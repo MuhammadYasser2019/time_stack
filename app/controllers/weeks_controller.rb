@@ -534,7 +534,8 @@ class WeeksController < ApplicationController
   end
 
   def single_vacation_request
-      #Calculate Today Vacation Days Requested
+      #Calculate Total Vacation Days Requested
+          #
       #Partial Day should only add .5 to the days_used
     logger.debug("triggered")
     user = current_user
@@ -561,7 +562,6 @@ class WeeksController < ApplicationController
               format.js
                 @comment = "Sorry, you have used #{total_days_used} days out of  #{vc_bank} days"
               end 
-
       end 
 
 

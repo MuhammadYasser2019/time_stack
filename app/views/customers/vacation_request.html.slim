@@ -17,7 +17,6 @@ div.report
       tbody
         tr
           = hidden_field_tag 'hidden_print_report', false
-          = hidden_field_tag 'crazy_report', false
           td = select_tag "vacation_type_id", options_from_collection_for_select(@vacation_types, "id", "vacation_title"), include_blank: true, required: 'required'
           td = date_field_tag 'vacation_start_date', params[:vacation_start_date], {required: "required", class: "vc_start"}
           /= hidden_field_tag 'id', @user.id
@@ -34,10 +33,11 @@ div.report
         th Description
         th Status
         th Vacation Type
+        th Cancel Vacation 
 
     tbody
-      -@users_vacations.each_with_index do |usv,i|
-        tr id = "#{usv.id}"
+      -@users_vacations.each_with_index do |usv,i| 
+        tr id = "vacation_table_#{usv.id}"
           td = date_field_tag 'vacation_start', usv.vacation_start_date.strftime("%Y-%m-%d"),id: "vacation_start_#{i}",class: "vacation_start_#{i}"
           td = date_field_tag 'vacation_end', usv.vacation_end_date.strftime("%Y-%m-%d"), id: "vacation_end_#{i}",class: "vacation_end_#{i}"
           td = text_area_tag "comment", usv.comment, id: "vacation_comment_#{i}"
@@ -49,5 +49,6 @@ div.report
           /td = button_tag "Resend Request",class: "resend_vacation_request", id:"resend_vacation_request_#{usv.id}_#{i}" , type: "button", remote: true
           -if !usv.vacation_start_date.past?
             td = button_tag "Delete Vacation Request",class: "resend_vacation_request", id:"resend_vacation_request_#{usv.id}_#{i}" , type: "button", remote: true
-
+          -if usv.status == "Approved"
+            td = button_tag "Cancel Vacation Request",class: "button primary orange-button cancel_vacation_request", id:"cancel_vacation_request_#{usv.id}_#{i}" , type: "button", remote: true 
 
