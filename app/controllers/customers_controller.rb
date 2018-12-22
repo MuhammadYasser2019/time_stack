@@ -302,32 +302,43 @@
       @user = current_user
       @vacation_type = VacationType.find(params[:vacation_type_id])
         logger.debug("Accrual: #{@vacation_type.accrual}")
-        logger.debug("Accrual: #{@vacation_type.id}")
+        logger.debug("V-Id: #{@vacation_type.id}")
 
-      uvt = UserVacationTable.where("vacation_id=? and user_id=?",params[:vacation_type_id], @user.id )
-      days_requested = params[:days_requested]
-        logger.debug("days requested #{params[:days_requested]}")
+      #what about the status???
+      #uvt = UserVacationTable.where("vacation_id=? and user_id=?",params[:vacation_type_id], @user.id )
+      
+      #  logger.debug("days requested #{params[:days_requested]}")
+      #what about the status???
+      uvt = VacationRequest.where("vacation_type_id=? and user_id=?",params[:vacation_type_id], @user.id )
 
-    #If statement to figure out days_allowed
+      hours_requested = params[:days_requested].to_f * 8
+      logger.debug("What is my params #{params[:days_requested]}")
+      logger.debug("Hours Requested #{hours_requested}")
+
+    #HOURS_ALLOWED
       if (@vacation_type.accrual == true && uvt.length > 0 )
             logger.debug(" A =TRUE && UVT != 0")
           #Total Days Used Logic
             total_used = []
             uvt.each do |x|
-              total_used.push(x.days_used)
+              if x.hours_used != nil
+              total_used.push(x.hours_used)
+               end 
             end
-            total_days_used = total_used.inject :+  #Important
+            logger.debug("Total Hours Used #{total_used}")
+            total_hours_used = total_used.inject :+  #Important
 
             #Accural Logic(!First) 
                 today = Date.today.strftime('%m').to_f
                 user_start_date = @user.invitation_start_date.strftime('%m').to_f
                 months_at_job = today - user_start_date
-                day_rate = @vacation_type.vacation_bank.to_f/12
-              current_days_allowed = day_rate * months_at_job #This changes***
+                hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
+              current_hours_allowed = hour_rate * months_at_job #This changes***
 
-              logger.debug("current days allowed #{current_days_allowed} Total days Used #{total_days_used}")
-              days_allowed = current_days_allowed - total_days_used 
-              logger.debug("Days allowed #{days_allowed}")
+              logger.debug("current days allowed #{current_hours_allowed} Total hours Used #{total_hours_used}")
+
+              hours_allowed = current_hours_allowed - total_hours_used 
+              logger.debug("Hours allowed #{hours_allowed}")
 
       elsif (@vacation_type.accrual == true && uvt.length <= 0)
           logger.debug(" A =TRUE && UVT is 0")
@@ -336,34 +347,38 @@
           today = Date.today.strftime('%m').to_f
           user_start_date = @user.invitation_start_date.strftime('%m').to_f
           months_at_job = today - user_start_date
-          logger.debug("months at job #{months_at_job}")
-          day_rate = @vacation_type.vacation_bank.to_f/12
-          logger.debug("days per month#{day_rate}")
+          hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
+          hours_allowed = hour_rate * months_at_job  
 
-          days_allowed = day_rate * months_at_job  
       elsif (@vacation_type.accrual == false && uvt.length > 0)
           logger.debug(" A != FALSE && UVT != 0")
               total_used = []
               uvt.each do |x|
-                total_used.push(x.days_used)
+                total_used.push(x.hours_used)
               end
-              total_days_used = total_used.inject :+
-
-            days_allowed = @vacation_type.vacation_bank - total_days_used
-            logger.debug(" Vacation bank is #{@vacation_type.vacation_bank} and total_days_used is #{total_days_used}")
+              total_hours_used = total_used.inject :+
+            vb  = @vacation_type.vacation_bank * 8 #VB is days!
+            hours_allowed = vb.to_f - total_hours_used
+            logger.debug(" VB Hours #{vb} and total_hours_used is #{total_hours_used}")
       elsif (@vacation_type.accrual == false && uvt.length <= 0)
         logger.debug(" A = FALSE && UVT = 0")
-              days_allowed = @vacation_type.vacation_bank
+              hours_allowed = @vacation_type.vacation_bank * 8
       else
           logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
-      end #end days_allowed 
+      end #End Hours Allowed
 
-          if days_requested.to_f > days_allowed.to_f 
+      logger.debug("THE MATH...vb allows #{@vacation_type.vacation_bank * 8} hours  & hours requested #{hours_requested}")
+      logger.debug("THE MATH The hourly rate is #{@vacation_type.vacation_bank}day times 8 hr/day divided by 12months so #{hour_rate} hr/m")
+      logger.debug("THE MATH -Accural-...time at job #{months_at_job} months times& hour rate #{hour_rate} is current hours allowed #{current_hours_allowed}")
+      logger.debug("THE MATH- Accural - ... total hours used for this vacation type is #{total_hours_used}")
+      logger.debug("THE MATH...Pass if hours allowed #{hours_allowed} is greater than hours requested #{hours_requested}")
+
+
+          if hours_requested.to_f > hours_allowed.to_f 
             logger.debug("NO NOT TODAY!")
-            @comment = "Did this display"
               respond_to do |format|
                 format.js
-                @comment = "Sorry, you only have #{days_allowed} days avaliable, but requested #{days_requested} days"
+                @comment = "Sorry, you only have #{hours_allowed} hours avaliable, but requested #{hours_requested} hours"
               end 
           else
               logger.debug("Success, this should showwww")
@@ -387,10 +402,7 @@
     reason_for_vacation = params[:vacation_comment]
       #to calculate days_used
     days_requested = (params[:vacation_end_date].to_s.split('-')[2]).to_f - (params[:vacation_start_date].to_s.split('-')[2]).to_f
-
-
-
-
+    hours_requested = days_requested * 8.0
 
     if !vacation_start_date.blank?
      new_vr = VacationRequest.new
@@ -401,14 +413,8 @@
      new_vr.comment = reason_for_vacation
      new_vr.status = "Requested"
      new_vr.vacation_type_id = params[:vacation_type_id]
+     new_vr.hours_used = hours_requested
      new_vr.save
-
-     new_uvt = UserVacationTable.new
-        new_uvt.user_id = @user.id
-        new_uvt.vacation_id = params[:vacation_type_id]
-        new_uvt.days_used = days_requested
-        new_uvt.save
-
     end
 
     #logger.debug("sick_leave: #{sick_leave}******personal_leave: #{personal_leave} ")
@@ -489,10 +495,7 @@
     @row_id = params[:row_id]
     customer_manager = current_user
     vacation_request = VacationRequest.find(@vr)
-    vacation_request.status = "Cancelled"
-    vacation_request.save
-
-    uvt = UserVacationTable.where("vacation_id=? and user_id=?",)
+    vacation_request.destroy
 
     respond_to do |format|
       format.html {flash[:notice] = "Cancellation has been approved"}

@@ -534,39 +534,96 @@ class WeeksController < ApplicationController
   end
 
   def single_vacation_request
-      #Calculate Total Vacation Days Requested
-          #
-      #Partial Day should only add .5 to the days_used
-    logger.debug("triggered")
-    user = current_user
-    logger.debug("My User is #{user.id}")
-    uvt = UserVacationTable.where("vacation_id=? and user_id=?",params[:vacation_type_id], user.id )
-      total_used =[]
-      uvt.each do|x|
-        total_used.push(x.days_used)
-      end 
-       total_used = total_used.inject :+
-       logger.debug("total days used is #{total_used}")
-    vt = VacationType.find(params[:vacation_type_id])
-    vc_bank = vt.vacation_bank
-    logger.debug("bank #{vc_bank}")
-    
+    #need code incase vacation_id is blank.. if vc_id != "" run method
+    weekEntry = params[:bigArray]
+        weekEntry.each do |key, array|  ### ITERATION
+            logger.debug("Index #{key} ARRAY::::: Hours:#{array[0]} Partial:#{array[1]} VC_ID: #{array[2]}")
+              hours_worked = array[0]
+              partial_day = array[1]
+              vacation_id = array[2]
+              logger.debug("WHAT DOES THIS SAY?! #{vacation_id.present?}")
 
-      # Same Prior Logic (Link to customers#pre_vacation_request)
-        # If Accrual == true && UVT != nil
-          # math
-
-      days_requested = total_days_used
-        if days_requested > vc_bank
-          respond_to do |format|
-              format.js
-                @comment = "Sorry, you have used #{total_days_used} days out of  #{vc_bank} days"
+          if vacation_id.present?
+            @user = current_user
+            logger.debug(" My User is #{@user}")
+            @vacation_type = VacationType.find(vacation_id)
+            logger.debug("my vacation type is #{@vacation_type}")
+            uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , @user.id )
+            logger.debug("VR found #{uvt.length}")
+    ################### PARTIAL DAY
+              if partial_day == false 
+                  hours_requested = 8
+              else 
+                  hours_requested = 8 - hours_worked.to_f
               end 
-      end 
+              logger.debug("hours requested is #{hours_requested}")
+    ################# HOURS_ALLOWED/Accural Logic 
+              if (@vacation_type.accrual == true && uvt.length > 0 )
+                    logger.debug(" A =TRUE && UVT != 0")
+                  #Total Days Used Logic
+                    total_used = []
+                    uvt.each do |x|
+                      if x.hours_used != nil
+                      total_used.push(x.hours_used)
+                       end 
+                    end
+                    logger.debug("Total Hours Used #{total_used}")
+                    total_hours_used = total_used.inject :+  #Important
 
+                    #Accural Logic(!First) 
+                        today = Date.today.strftime('%m').to_f
+                        user_start_date = @user.invitation_start_date.strftime('%m').to_f
+                        months_at_job = today - user_start_date
+                        hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
+                      current_hours_allowed = hour_rate * months_at_job #This changes***
 
+                      logger.debug("current days allowed #{current_hours_allowed} Total hours Used #{total_hours_used}")
 
+                      hours_allowed = current_hours_allowed - total_hours_used 
+                      logger.debug("Hours allowed #{hours_allowed}")
 
+              elsif (@vacation_type.accrual == true && uvt.length <= 0)
+                  logger.debug(" A =TRUE && UVT is 0")
+                  
+                  #Accural Logic(First) 
+                  today = Date.today.strftime('%m').to_f
+                  user_start_date = @user.invitation_start_date.strftime('%m').to_f
+                  months_at_job = today - user_start_date
+                  hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
+                  hours_allowed = hour_rate * months_at_job  
+
+              elsif (@vacation_type.accrual == false && uvt.length > 0)
+                  logger.debug(" A != FALSE && UVT != 0")
+                      total_used = []
+                      uvt.each do |x|
+                        total_used.push(x.hours_used)
+                      end
+                      total_hours_used = total_used.inject :+
+                    vb  = @vacation_type.vacation_bank * 8 #VB is in days!
+                    hours_allowed = vb.to_f - total_hours_used
+                    logger.debug(" VB Hours #{vb} and total_hours_used is #{total_hours_used}")
+              elsif (@vacation_type.accrual == false && uvt.length <= 0)
+                logger.debug(" A = FALSE && UVT = 0")
+                      hours_allowed = @vacation_type.vacation_bank * 8
+              else
+                  logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
+              end #end days_allowed 
+              logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
+              ###############
+                if hours_requested.to_f < hours_allowed.to_f
+                  respond_to do |format|
+                      format.js
+                        @comment = "Sorry, you only have #{hours_allowed} hours avaliable, but requested #{hours_requested} hours"
+                      end
+                else
+                  respond_to do |format|
+                      format.js
+                        @comment = "successfully "
+                      end 
+                end 
+          end #if vacation.id present?
+           logger.debug("THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION ")   
+        end### End Iteration
   end 
 
   def create_vacation_request(week)
@@ -586,13 +643,6 @@ class WeeksController < ApplicationController
         new_vr.save
       end
     end
-
-          #new_uvt = UserVacationTable.new
-              #    new_uvt.user_id = user.id
-              #    new_uvt.vacation_id = params[:vacation_type_id]
-              #    new_uvt.days_used = days_requested
-              #  new_uvt.save
-              #  logger.debug("new UVT #{new_uvt}")
   end
 
 

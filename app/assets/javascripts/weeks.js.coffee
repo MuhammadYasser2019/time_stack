@@ -15,7 +15,7 @@ jQuery ($) ->
       id: task_id,
       row_id: tokens[4]
     return
-  )
+  ) 
 
 
   $("tbody").on("change", ".project_id", ->
@@ -294,10 +294,38 @@ jQuery ($) ->
       notification_id: notification_id
     return
   )
-  $(document).on("change",".vacation-change", ->
-    console.log("look here",$('.vacation-change').val()) 
+
+  $(document).on("click", "#add_time", ->
+    bigArray = []
+    smoothie = $('.smoothie')
+
+    smoothie.each (index ) ->
+      index = index
+      lilArray = []
+      hours = $('.hours-input')
+      myhours = hours.find('.hours-input')
+      console.log("VALUE IS", myhours.prevObject[index].value)
+      hr = myhours.prevObject[index].value
+      lilArray.push(hr)
+
+      partial = $('.partial_day')
+      mypartial = partial.find('mypartial')
+      console.log("partial", mypartial.prevObject[index].checked)
+      pr = mypartial.prevObject[index].checked
+      lilArray.push(pr)
+
+      vacation_id = $('.vacation-change')
+      myvac = vacation_id.find('vacation-change')
+      console.log("VAC", myvac.prevObject[index].value)
+      vcid = myvac.prevObject[index].value
+      lilArray.push(vcid)
+      bigArray.push(lilArray)
+      lilArray = []
+      console.log("did this work",bigArray) 
+
     $.get "/single_vacation_request",
-      vacation_type_id: $('.vacation-change').val()
+      bigArray: bigArray
+    
   )
 
 
