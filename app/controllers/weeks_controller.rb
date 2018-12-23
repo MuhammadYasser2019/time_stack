@@ -534,29 +534,44 @@ class WeeksController < ApplicationController
   end
 
   def single_vacation_request
-    #need code incase vacation_id is blank.. if vc_id != "" run method
-    weekEntry = params[:bigArray]
-        weekEntry.each do |key, array|  ### ITERATION
+  weekEntry = params[:bigArray]
+        new_h = {}
+        weekEntry.each do |key, val|
+          x1 = val[1]
+          x2 = val[2]
+          found = false
+
+          new_h.each do |key1, val2|
+            y1 = val2[1]
+            y2 = val2[2]
+            if x1 === y1 && x2 === y2
+              found = true
+              arr = [val2[0].to_i + val[0].to_i, x1, x2]
+              new_h[key1] = arr
+            end
+          end
+          if !found
+            new_h[new_h.length] = val
+          end
+          if new_h.empty?
+            new_h[key] = val
+          end
+        end
+
+        logger.debug( "#{new_h}")
+        new_h.each do |key, array|  ### ITERATION
             logger.debug("Index #{key} ARRAY::::: Hours:#{array[0]} Partial:#{array[1]} VC_ID: #{array[2]}")
-              hours_worked = array[0]
+              #hours_worked = array[0]
+              hours_requested = array[0]
               partial_day = array[1]
               vacation_id = array[2]
               logger.debug("WHAT DOES THIS SAY?! #{vacation_id.present?}")
 
           if vacation_id.present?
             @user = current_user
-            logger.debug(" My User is #{@user}")
             @vacation_type = VacationType.find(vacation_id)
-            logger.debug("my vacation type is #{@vacation_type}")
             uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , @user.id )
-            logger.debug("VR found #{uvt.length}")
-    ################### PARTIAL DAY
-              if partial_day == false 
-                  hours_requested = 8
-              else 
-                  hours_requested = 8 - hours_worked.to_f
-              end 
-              logger.debug("hours requested is #{hours_requested}")
+            logger.debug("Num Of VcRqst #{uvt.length}")
     ################# HOURS_ALLOWED/Accural Logic 
               if (@vacation_type.accrual == true && uvt.length > 0 )
                     logger.debug(" A =TRUE && UVT != 0")
@@ -610,7 +625,7 @@ class WeeksController < ApplicationController
               end #end days_allowed 
               logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
               ###############
-                if hours_requested.to_f < hours_allowed.to_f
+                if hours_requested.to_f > hours_allowed.to_f
                   respond_to do |format|
                       format.js
                         @comment = "Sorry, you only have #{hours_allowed} hours avaliable, but requested #{hours_requested} hours"
