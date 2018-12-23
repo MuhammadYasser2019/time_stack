@@ -534,17 +534,18 @@ class WeeksController < ApplicationController
   end
 
   def single_vacation_request
+              #[hours, partial, vc_id ]
   weekEntry = params[:bigArray]
         new_h = {}
         weekEntry.each do |key, val|
           x1 = val[1]
           x2 = val[2]
           found = false
-
           new_h.each do |key1, val2|
-            y1 = val2[1]
+            #y1 = val2[1]
             y2 = val2[2]
-            if x1 === y1 && x2 === y2
+            #if x1 === y1 && x2 === y2
+            if  x2 ===  y2
               found = true
               arr = [val2[0].to_i + val[0].to_i, x1, x2]
               new_h[key1] = arr
