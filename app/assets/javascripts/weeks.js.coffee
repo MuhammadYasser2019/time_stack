@@ -331,8 +331,11 @@ jQuery ($) ->
       lilArray = []
       console.log("did this work",bigArray) 
 
-    $.get "/single_vacation_request",
-      bigArray: bigArray
+    url = "/weeks/"+ 2266
+    $.ajax url,
+    data: {bigArray}
+    type: "POST"
+    dataType: "json"
     
   )
 

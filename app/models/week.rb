@@ -8,6 +8,8 @@ class Week < ApplicationRecord
   accepts_nested_attributes_for :upload_timesheets
   #mount_uploader :time_sheet, TimeSheetUploader
   EXPENSE_TYPE = ["Travel", "Stay","Food", "Gas", "Misc"]
+  #before_update :something 
+
 
   def self.current_user_time_entries(current_user)
     logger.debug "Week - current_user_time_entries entering"
@@ -22,9 +24,152 @@ class Week < ApplicationRecord
     weeks = weeks.join(user_week_statuses, Arel::Nodes::OuterJoin).
                   on(weeks[:id].eq(user_week_statuses[:week_id]), user_week_statuses[:user_id].eq(some_user)).
                   join_sources
-                  
+                   
     joins(weeks)
   end
+
+  def self.something(data, user)
+    logger.debug("data #{data} ")
+
+    @user = user
+    data = data.to_h
+    logger.debug("my user #{@user}")
+    meoHash = {}
+    littleArray = []
+    data.each do |key, value |
+
+        logger.debug("Index #{key} ARRAY::::: Hours:#{value["hours"]} Partial:#{value["partial_day"]} VC_ID: #{value["vacation_type_id"]}")
+
+   
+      hr = value["hours"] 
+      pr = value["partial_day"]
+      vc_id = value["vacation_type_id"]
+        if hr != nil && pr == "true" && vc_id != nil
+          logger.debug("Partial Day")
+        elsif hr != nil && pr == nil && vc_id == ""
+          logger.debug ("Actual Work Day")
+        elsif vc_id != nil && pr == nil 
+          logger.debug("Full Day Vacation REQUEST")
+        elsif (hr == nil||0) && pr == nil && vc_id == nil
+          logger.debug("Full Day Save")
+        else
+          logger.debug("lord have mercy on my soul")
+        end
+      littleArray.push(hr)
+      littleArray.push(pr)
+      littleArray.push(vc_id)
+      logger.debug("my little #{littleArray}")
+      meoHash[key] = littleArray 
+      littleArray = []
+      logger.debug("my big #{meoHash}")
+    end 
+
+
+     #weekEntry = params[:bigArray]
+        new_h = {}
+        meoHash.each do |key, val|
+          x1 = val[1]
+          x2 = val[2]
+          found = false
+          new_h.each do |key1, val2|
+            #y1 = val2[1]
+            y2 = val2[2]
+            #if x1 === y1 && x2 === y2
+            if  x2 ===  y2
+              found = true
+              arr = [val2[0].to_i + val[0].to_i, x1, x2]
+              new_h[key1] = arr
+            end
+          end
+          if !found
+            new_h[new_h.length] = val
+          end
+          if new_h.empty?
+            new_h[key] = val
+          end
+        end
+
+        logger.debug( "Array Merge #{new_h}")
+
+        new_h.each do |key, array|  ### ITERATION
+            logger.debug("Index #{key} ARRAY::::: Hours:#{array[0]} Partial:#{array[1]} VC_ID: #{array[2]}")
+              #hours_worked = array[0]
+              hours_requested = array[0]
+              partial_day = array[1]
+              vacation_id = array[2]
+              logger.debug("WHAT DOES THIS SAY?! #{vacation_id.present?}")
+
+          if vacation_id.present?
+            @vacation_type = VacationType.find(vacation_id)
+            uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , @user )
+            logger.debug("Num Of VcRqst #{uvt.length}")
+    ################# HOURS_ALLOWED/Accural Logic 
+              if (@vacation_type.accrual == true && uvt.length > 0 )
+                    logger.debug(" A =TRUE && UVT != 0")
+                  #Total Days Used Logic
+                    total_used = []
+                    uvt.each do |x|
+                      if x.hours_used != nil
+                      total_used.push(x.hours_used)
+                       end 
+                    end
+                    logger.debug("Total Hours Used #{total_used}")
+                    total_hours_used = total_used.inject :+  #Important
+                    #Accural Logic(!First) 
+                        today = Date.today.strftime('%m').to_f
+                        user_start_date = @user.invitation_start_date.strftime('%m').to_f
+                        months_at_job = today - user_start_date
+                        hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
+                      current_hours_allowed = hour_rate * months_at_job #This changes***
+                      logger.debug("current days allowed #{current_hours_allowed} Total hours Used #{total_hours_used}")
+                      hours_allowed = current_hours_allowed - total_hours_used 
+                      logger.debug("Hours allowed #{hours_allowed}")
+
+              elsif (@vacation_type.accrual == true && uvt.length <= 0)
+                  logger.debug(" A =TRUE && UVT is 0")
+                  #Accural Logic(First) 
+                  today = Date.today.strftime('%m').to_f
+                  user_start_date = @user.invitation_start_date.strftime('%m').to_f
+                  months_at_job = today - user_start_date
+                  hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
+                  hours_allowed = hour_rate * months_at_job  
+
+              elsif (@vacation_type.accrual == false && uvt.length > 0)
+                  logger.debug(" A != FALSE && UVT != 0")
+                      total_used = []
+                      uvt.each do |x|
+                        total_used.push(x.hours_used)
+                      end
+                      total_hours_used = total_used.inject :+
+                    vb  = @vacation_type.vacation_bank * 8 #VB is in days!
+                    hours_allowed = vb.to_f - total_hours_used
+                    logger.debug(" VB Hours #{vb} and total_hours_used is #{total_hours_used}")
+              elsif (@vacation_type.accrual == false && uvt.length <= 0)
+                logger.debug(" A = FALSE && UVT = 0")
+                      hours_allowed = @vacation_type.vacation_bank * 8
+              else
+                  logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
+              end #end days_allowed 
+              logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
+              ############### should be >
+
+                if hours_requested.to_f < hours_allowed.to_f
+                  logger.debug("Vacation Request Does Not Have The Hours")
+                  #errors.add(:base, "cant be saved because of reason x,y,z")
+                  #throw :abort
+                  smash = { vacation_valid: false, hours_requested: hours_requested, hours_allowed: hours_allowed }
+                  return smash 
+
+                else
+                  logger.debug("Vacation Request Valid")
+                  smash = { vacation_valid: true, hours_requested: hours_requested, hours_allowed: hours_allowed }
+                  return smash 
+                  
+                end 
+          end #if vacation.id present?
+           logger.debug("THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION ")   
+        end### End Iteration
+  end 
 
   def self.left_joins_user_week_statuses(some_user, week_id)
     weeks = Week.where("weeks.id = ?", week_id).weeks_with_user_week_statuses(some_user)

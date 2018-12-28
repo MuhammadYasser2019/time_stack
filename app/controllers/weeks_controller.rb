@@ -1,6 +1,8 @@
 class WeeksController < ApplicationController
   before_action :set_week, only: [:show, :edit, :update, :destroy]
   before_action :redirect_to_root, only: [:show]
+
+
   load_and_authorize_resource
   # GET /weeks
   # GET /weeks.json
@@ -288,6 +290,7 @@ class WeeksController < ApplicationController
   # PATCH/PUT /weeks/1
   # PATCH/PUT /weeks/1.json
   def update
+
     logger.debug("week params: #{params.inspect}")
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
     week = Week.find(params[:id])
@@ -295,6 +298,7 @@ class WeeksController < ApplicationController
     week_user = week.user_id
     logger.debug("THE USER ON THE WEEK IS: #{week_user}")
     prev_date_of_activity =""
+
     week_params["time_entries_attributes"].permit!.to_h.each do |t|
       # store the date of activity from previous row
       if !t[1][:date_of_activity].nil?
@@ -313,7 +317,7 @@ class WeeksController < ApplicationController
         new_day.partial_day = t[1][:partial_day]
         
         @week.time_entries.push(new_day)
-      end
+      end                                   #End if !t[1]
       logger.debug "#{t[0]}"
       if t[1]["project_id"] == ""
        t[1]["project_id"] = nil
@@ -321,11 +325,12 @@ class WeeksController < ApplicationController
 
        unless TimeEntry.where(id: t[1]["id"]).empty?
         TimeEntry.find(t[1]["id"]).update(project_id: nil, task_id: nil) 
-       end
-      end
+       end # unless
+      end # if t[1] project
+
       if t[1]["vacation_type_id"].present? && t[1]["hours"].nil? && TimeEntry.where(id: t[1]["id"]).present?
         TimeEntry.find(t[1]["id"]).update(hours: nil, partial_day: "false",project_id: nil, task_id: nil, activity_log: nil)
-      end
+      end #end if t[1] vacation_type
 
       # if t[0].to_i > 6
       #   logger.debug "t[1][project_id]: #{t[1]['project_id']}"
@@ -338,67 +343,170 @@ class WeeksController < ApplicationController
        test_array.push("true")
       end
 
-    end
+    end #End Of Iteration for week_params
     test_array
     logger.debug("TEST ARRAY ---------------------#{test_array.inspect}")
+
     if params[:commit] == "Save Timesheet"
-        # if test_array.empty?
-        #   @week.status_id = 1
-        # else
-        #   @week.status_id = 5
-        # end
-        @week.status_id = 5
-        @week.time_entries.where(status_id: [nil,1,4]).each do |t|
-          t.update(status_id: 5)
-        end
-    elsif params[:commit] == "Submit Timesheet"
+
+        my_hash  = week_params["time_entries_attributes"]
+        status = Week.something(my_hash.to_h, current_user.id)
+          if status[:vacation_valid] == false ### DO NOT SAVE
+              logger.debug("Invalid Request!")
+              @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"
+               flash[:alert] = @comment
+               redirect_to :back
+          else  ### SAVE THE CHANGES 
+              logger.debug("Valid Request!")
+              @week.status_id = 5
+              @week.time_entries.where(status_id: [nil,1,4]).each do |t|
+                t.update(status_id: 5)
+              end # End iteration for @week.time_entries
+########## MOVED LOGIC
+              logger.debug "STATUS ID IS #{week_params[:status_id]}"
+              logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
+              respond_to do |format|
+                 if @week.update_attributes(week_params) 
+                   week_params['time_entries_attributes'].each_with_index  do |t,i|
+                     logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
+                     @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
+                   end
+                   logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
+                   params.require(:week).permit(upload_timesheets_attributes: [:time_sheet]).to_h.each do |attr, row|
+                     row.each do |i, timesheet|
+                       @upload_timesheet = @week.upload_timesheets.create(timesheet) if timesheet.present?
+                     end
+                   end
+                   @week.proxy_user_id = current_user.id
+                   @week.proxy_updated_date = Time.now
+                   @week.save
+                   @week.time_entries.where(user_id: nil).each do |we|
+                     we.update(user_id: week_user)  
+                     logger.debug("USER IS UPDATED ***************")
+                   end
+                   @expenses = ExpenseRecord.where(week_id: @week.id)
+                   logger.debug "THE EXPENSES IN WEEKS-UPDATE #{@expenses.inspect}"
+                   create_vacation_request(@week) if params[:commit] == "Submit Timesheet"
+                   if @week.status_id == 2
+                     ApprovalMailer.mail_to_manager(@week, @expenses, User.find(@week.user_id)).deliver
+                   end
+                   if @week.status_id == 2
+                     format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
+                     format.json { render :show, status: :ok, location: @week }
+                     return
+                   else
+                     format.html { redirect_to "/weeks/#{@week.id}/edit", notice: 'Week was successfully updated.' }
+                     format.json { render :show, status: :ok, location: @week }
+                     return
+                   end
+                 else
+                   format.html { render :edit }
+                   format.json { render json: @week.errors, status: :unprocessable_entity }
+                end
+              end
+########## END MOVED LOGIC
+          end # End Internal If Statement 
+    elsif params[:commit] == "Submit Timesheet" 
+        my_hash  = week_params["time_entries_attributes"]
+        status = Week.something(my_hash.to_h, current_user.id)
+          if status[:vacation_valid] == false ### DO NOT SAVE
+              logger.debug("Invalid Request!")
+              @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"
+               flash[:alert] = @comment
+               redirect_to :back #Will deprecate use redirect_back(fallback_location: fallback_location)
+          else  ### SAVE THE CHANGES   
         @week.status_id = 2
         @week.time_entries.where(status_id: [nil,1,4,5]).each do |t|
           t.update(status_id: 2)
-        end
-    end
+        end #end of iteration for week.time_entries
+########## MOVED LOGIC
+              logger.debug "STATUS ID IS #{week_params[:status_id]}"
+              logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
+              respond_to do |format|
+                 if @week.update_attributes(week_params) 
+                   week_params['time_entries_attributes'].each_with_index  do |t,i|
+                     logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
+                     @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
+                   end
+                   logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
+                   params.require(:week).permit(upload_timesheets_attributes: [:time_sheet]).to_h.each do |attr, row|
+                     row.each do |i, timesheet|
+                       @upload_timesheet = @week.upload_timesheets.create(timesheet) if timesheet.present?
+                     end
+                   end
+                   @week.proxy_user_id = current_user.id
+                   @week.proxy_updated_date = Time.now
+                   @week.save
+                   @week.time_entries.where(user_id: nil).each do |we|
+                     we.update(user_id: week_user)  
+                     logger.debug("USER IS UPDATED ***************")
+                   end
+                   @expenses = ExpenseRecord.where(week_id: @week.id)
+                   logger.debug "THE EXPENSES IN WEEKS-UPDATE #{@expenses.inspect}"
+                   create_vacation_request(@week) if params[:commit] == "Submit Timesheet"
+                   if @week.status_id == 2
+                     ApprovalMailer.mail_to_manager(@week, @expenses, User.find(@week.user_id)).deliver
+                   end
+                   if @week.status_id == 2
+                     format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
+                     format.json { render :show, status: :ok, location: @week }
+                     return
+                   else
+                     format.html { redirect_to "/weeks/#{@week.id}/edit", notice: 'Week was successfully updated.' }
+                     format.json { render :show, status: :ok, location: @week }
+                     return
+                   end
+                 else
+                   format.html { render :edit }
+                   format.json { render json: @week.errors, status: :unprocessable_entity }
+                end
+              end
+########## END MOVED LOGIC
+          end# End internal if/else 
+    end  
+    ### Move This 
+    #logger.debug "STATUS ID IS #{week_params[:status_id]}"
+    #logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
 
-    logger.debug "STATUS ID IS #{week_params[:status_id]}"
-    logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
-    
-    respond_to do |format|
-      if @week.update_attributes(week_params)
-        week_params['time_entries_attributes'].each_with_index  do |t,i|
-          logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
-          @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
-        end
-        logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
-        params.require(:week).permit(upload_timesheets_attributes: [:time_sheet]).to_h.each do |attr, row|
-          row.each do |i, timesheet|
-            @upload_timesheet = @week.upload_timesheets.create(timesheet) if timesheet.present?
-          end
-        end
-        @week.proxy_user_id = current_user.id
-        @week.proxy_updated_date = Time.now
-        @week.save
-        @week.time_entries.where(user_id: nil).each do |we|
-          we.update(user_id: week_user)  
-          logger.debug("USER IS UPDATED ***************")
-        end
-        @expenses = ExpenseRecord.where(week_id: @week.id)
-        logger.debug "THE EXPENSES IN WEEKS-UPDATE #{@expenses.inspect}"
-        create_vacation_request(@week) if params[:commit] == "Submit Timesheet"
+    #respond_to do |format|
+      # if @week.update_attributes(week_params) 
+      #   week_params['time_entries_attributes'].each_with_index  do |t,i|
+      #     logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
+      #     @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
+      #   end
+      #   logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
+      #   params.require(:week).permit(upload_timesheets_attributes: [:time_sheet]).to_h.each do |attr, row|
+      #     row.each do |i, timesheet|
+      #       @upload_timesheet = @week.upload_timesheets.create(timesheet) if timesheet.present?
+      #     end
+      #   end
+      #   @week.proxy_user_id = current_user.id
+      #   @week.proxy_updated_date = Time.now
+      #   @week.save
+      #   @week.time_entries.where(user_id: nil).each do |we|
+      #     we.update(user_id: week_user)  
+      #     logger.debug("USER IS UPDATED ***************")
+      #   end
+      #   @expenses = ExpenseRecord.where(week_id: @week.id)
+      #   logger.debug "THE EXPENSES IN WEEKS-UPDATE #{@expenses.inspect}"
+      #   create_vacation_request(@week) if params[:commit] == "Submit Timesheet"
 
-        if @week.status_id == 2
-          ApprovalMailer.mail_to_manager(@week, @expenses, User.find(@week.user_id)).deliver
-        end
-        if @week.status_id == 2
-          format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
-          format.json { render :show, status: :ok, location: @week }
-        else
-          format.html { redirect_to "/weeks/#{@week.id}/edit", notice: 'Week was successfully updated.' }
-          format.json { render :show, status: :ok, location: @week }
-        end
-      else
-        format.html { render :edit }
-        format.json { render json: @week.errors, status: :unprocessable_entity }
-      end
-    end
+      #   if @week.status_id == 2
+      #     ApprovalMailer.mail_to_manager(@week, @expenses, User.find(@week.user_id)).deliver
+      #   end
+      #   if @week.status_id == 2
+      #     format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
+      #     format.json { render :show, status: :ok, location: @week }
+      #   else
+      #     format.html { redirect_to "/weeks/#{@week.id}/edit", notice: 'Week was successfully updated.' }
+      #     format.json { render :show, status: :ok, location: @week }
+      #   end
+      # else
+      #   format.html { render :edit }
+      #   format.json { render json: @week.errors, status: :unprocessable_entity }
+      #end
+    #end
+  ############ End Move This 
   end
   
   def proxy_week
@@ -534,112 +642,27 @@ class WeeksController < ApplicationController
   end
 
   def single_vacation_request
-              #[hours, partial, vc_id ]
-  weekEntry = params[:bigArray]
-        new_h = {}
-        weekEntry.each do |key, val|
-          x1 = val[1]
-          x2 = val[2]
-          found = false
-          new_h.each do |key1, val2|
-            #y1 = val2[1]
-            y2 = val2[2]
-            #if x1 === y1 && x2 === y2
-            if  x2 ===  y2
-              found = true
-              arr = [val2[0].to_i + val[0].to_i, x1, x2]
-              new_h[key1] = arr
-            end
+
+    user = current_user
+    status = Week.check_vacation_status(params[:bigArray], user)
+      logger.debug("look #{status[:hours_requested]}")
+    if status[:vacation_status] == false 
+      logger.debug("HELLO FROM HERE!")
+          respond_to do |format|
+           format.js
+           @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"
           end
-          if !found
-            new_h[new_h.length] = val
-          end
-          if new_h.empty?
-            new_h[key] = val
-          end
-        end
+          return
+    else
+      logger.debug("HELLO FROM THEREHREHREHREHREHRHEREHERE!")
+        respond_to do |format|
+         format.js{ render :template => "weeks/single_vacation_request_approve.js.erb"}
+         @comment = "Valid requested" 
+         return
+        end 
+    end 
 
-        logger.debug( "#{new_h}")
-        new_h.each do |key, array|  ### ITERATION
-            logger.debug("Index #{key} ARRAY::::: Hours:#{array[0]} Partial:#{array[1]} VC_ID: #{array[2]}")
-              #hours_worked = array[0]
-              hours_requested = array[0]
-              partial_day = array[1]
-              vacation_id = array[2]
-              logger.debug("WHAT DOES THIS SAY?! #{vacation_id.present?}")
-
-          if vacation_id.present?
-            @user = current_user
-            @vacation_type = VacationType.find(vacation_id)
-            uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , @user.id )
-            logger.debug("Num Of VcRqst #{uvt.length}")
-    ################# HOURS_ALLOWED/Accural Logic 
-              if (@vacation_type.accrual == true && uvt.length > 0 )
-                    logger.debug(" A =TRUE && UVT != 0")
-                  #Total Days Used Logic
-                    total_used = []
-                    uvt.each do |x|
-                      if x.hours_used != nil
-                      total_used.push(x.hours_used)
-                       end 
-                    end
-                    logger.debug("Total Hours Used #{total_used}")
-                    total_hours_used = total_used.inject :+  #Important
-
-                    #Accural Logic(!First) 
-                        today = Date.today.strftime('%m').to_f
-                        user_start_date = @user.invitation_start_date.strftime('%m').to_f
-                        months_at_job = today - user_start_date
-                        hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
-                      current_hours_allowed = hour_rate * months_at_job #This changes***
-
-                      logger.debug("current days allowed #{current_hours_allowed} Total hours Used #{total_hours_used}")
-
-                      hours_allowed = current_hours_allowed - total_hours_used 
-                      logger.debug("Hours allowed #{hours_allowed}")
-
-              elsif (@vacation_type.accrual == true && uvt.length <= 0)
-                  logger.debug(" A =TRUE && UVT is 0")
-                  
-                  #Accural Logic(First) 
-                  today = Date.today.strftime('%m').to_f
-                  user_start_date = @user.invitation_start_date.strftime('%m').to_f
-                  months_at_job = today - user_start_date
-                  hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
-                  hours_allowed = hour_rate * months_at_job  
-
-              elsif (@vacation_type.accrual == false && uvt.length > 0)
-                  logger.debug(" A != FALSE && UVT != 0")
-                      total_used = []
-                      uvt.each do |x|
-                        total_used.push(x.hours_used)
-                      end
-                      total_hours_used = total_used.inject :+
-                    vb  = @vacation_type.vacation_bank * 8 #VB is in days!
-                    hours_allowed = vb.to_f - total_hours_used
-                    logger.debug(" VB Hours #{vb} and total_hours_used is #{total_hours_used}")
-              elsif (@vacation_type.accrual == false && uvt.length <= 0)
-                logger.debug(" A = FALSE && UVT = 0")
-                      hours_allowed = @vacation_type.vacation_bank * 8
-              else
-                  logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
-              end #end days_allowed 
-              logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
-              ###############
-                if hours_requested.to_f > hours_allowed.to_f
-                  respond_to do |format|
-                      format.js
-                        @comment = "Sorry, you only have #{hours_allowed} hours avaliable, but requested #{hours_requested} hours"
-                      end
-                else
-                  respond_to do |format|
-                      format.js
-                        @comment = "successfully "
-                      end 
-                end 
-          end #if vacation.id present?
-           logger.debug("THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION ")   
-        end### End Iteration
+      
   end 
 
   def create_vacation_request(week)
