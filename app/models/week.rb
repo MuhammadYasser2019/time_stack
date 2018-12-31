@@ -28,8 +28,36 @@ class Week < ApplicationRecord
     joins(weeks)
   end
 
-  def self.something(data, user)
+  def self.something(data, user, week)
+    #Compare the exisiting TimeEnteries to the new
+      #If there are matching enteries, remove them
     logger.debug("data #{data} ")
+      cte = TimeEntry.where(:week_id => week)
+      current_values_array = []
+      current_hash = {}
+
+      cte.each_with_index do |x, i|
+        #logger.debug("Current Index #{i}")
+        current_hr = x.hours
+        current_pr =x.partial_day
+        current_vc_id= x.vacation_type_id
+
+        if current_hr != nil && current_pr == "true" && current_vc_id != nil
+          #logger.debug("Partial Day")
+          current_hr = 8 - current_hr.to_i
+        elsif current_hr != nil && (current_pr == nil||"false") && current_vc_id == nil
+          #logger.debug ("Actual Work Day")
+        elsif current_hr == nil && current_pr == "false" && current_vc_id != nil
+         # logger.debug("Full Day Save")
+        else
+          logger.debug("lord have mercy on my soul")
+        end
+        current_values_array.push(current_hr,current_pr, current_vc_id)
+
+        current_hash[i] = current_values_array
+        current_values_array =[]
+        logger.debug("Current_DB VALUES #{current_hash}")
+      end 
 
     @user = user
     data = data.to_h
@@ -38,36 +66,57 @@ class Week < ApplicationRecord
     littleArray = []
     data.each do |key, value |
 
-        logger.debug("Index #{key} ARRAY::::: Hours:#{value["hours"]} Partial:#{value["partial_day"]} VC_ID: #{value["vacation_type_id"]}")
+        #logger.debug("Index #{key} ARRAY::::: Hours:#{value["hours"]} Partial:#{value["partial_day"]} VC_ID: #{value["vacation_type_id"]}")
 
    
       hr = value["hours"] 
       pr = value["partial_day"]
       vc_id = value["vacation_type_id"]
         if hr != nil && pr == "true" && vc_id != nil
-          logger.debug("Partial Day")
+          #logger.debug("Partial Day")
+          hr = 8 - hr.to_i
         elsif hr != nil && pr == nil && vc_id == ""
-          logger.debug ("Actual Work Day")
+          #logger.debug ("Actual Work Day")
+            hr = hr.to_i
         elsif vc_id != nil && pr == nil 
-          logger.debug("Full Day Vacation REQUEST")
+          #ogger.debug("Full Day Vacation REQUEST")
+          hr = 8
         elsif (hr == nil||0) && pr == nil && vc_id == nil
-          logger.debug("Full Day Save")
+          #logger.debug("Full Day Save")
         else
           logger.debug("lord have mercy on my soul")
         end
       littleArray.push(hr)
       littleArray.push(pr)
-      littleArray.push(vc_id)
-      logger.debug("my little #{littleArray}")
-      meoHash[key] = littleArray 
+      littleArray.push(vc_id.to_i)
+      #logger.debug("my little #{littleArray}")
+      meoHash[key.to_i] = littleArray 
       littleArray = []
-      logger.debug("my big #{meoHash}")
+      logger.debug("Requested Values #{meoHash}")
     end 
 
+#After the comparison is done, then run the following method
+
+
+##Build an array that only shows requested values. So values that are not the same in the requested compared to the current_db values
+      array_to_eval = {}
+      meoHash.each_with_index do |value,i|
+            logger.debug(" I am Comparing #{meoHash[i]} to  #{current_hash[i]}")
+
+          if meoHash[i] == current_hash[i] 
+              logger.debug("Do nothing")
+          elsif meoHash[i] != current_hash[i] && meoHash[i][2] != 0
+
+                logger.debug ("add this value #{meoHash[i]}")
+            array_to_eval[i]= meoHash[i]
+          end
+          logger.debug("Hash to Eval... #{array_to_eval} ")
+      end
+#####
 
      #weekEntry = params[:bigArray]
         new_h = {}
-        meoHash.each do |key, val|
+        array_to_eval.each do |key, val|
           x1 = val[1]
           x2 = val[2]
           found = false
@@ -99,7 +148,7 @@ class Week < ApplicationRecord
               vacation_id = array[2]
               logger.debug("WHAT DOES THIS SAY?! #{vacation_id.present?}")
 
-          if vacation_id.present?
+          if vacation_id.present? 
             @vacation_type = VacationType.find(vacation_id)
             uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , @user )
             logger.debug("Num Of VcRqst #{uvt.length}")

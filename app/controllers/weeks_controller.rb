@@ -294,6 +294,7 @@ class WeeksController < ApplicationController
     logger.debug("week params: #{params.inspect}")
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
     week = Week.find(params[:id])
+    logger.debug(" WHAT IS THIS #{week.id}")
     test_array = []
     week_user = week.user_id
     logger.debug("THE USER ON THE WEEK IS: #{week_user}")
@@ -350,7 +351,7 @@ class WeeksController < ApplicationController
     if params[:commit] == "Save Timesheet"
 
         my_hash  = week_params["time_entries_attributes"]
-        status = Week.something(my_hash.to_h, current_user.id)
+        status = Week.something(my_hash.to_h, current_user.id, week.id)
           if status[:vacation_valid] == false ### DO NOT SAVE
               logger.debug("Invalid Request!")
               @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"
@@ -408,7 +409,7 @@ class WeeksController < ApplicationController
           end # End Internal If Statement 
     elsif params[:commit] == "Submit Timesheet" 
         my_hash  = week_params["time_entries_attributes"]
-        status = Week.something(my_hash.to_h, current_user.id)
+        status = Week.something(my_hash.to_h, current_user.id, week.id)
           if status[:vacation_valid] == false ### DO NOT SAVE
               logger.debug("Invalid Request!")
               @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"
