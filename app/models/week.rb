@@ -29,14 +29,14 @@ class Week < ApplicationRecord
   end
 
   def self.something(data, user, week)
-    #Compare the exisiting TimeEnteries to the new
-      #If there are matching enteries, remove them
-    logger.debug("data #{data} ")
-      cte = TimeEntry.where(:week_id => week)
-      current_values_array = []
-      current_hash = {}
 
-      cte.each_with_index do |x, i|
+    logger.debug("data #{data} ")
+    cte = TimeEntry.where(:week_id => week)
+
+    ### FIRST LOGIC FIND THE CURRENT VALUES SAVED IN THE DB BY THE USER
+    current_values_array = []
+    current_hash = {}
+    cte.each_with_index do |x, i|
         #logger.debug("Current Index #{i}")
         current_hr = x.hours
         current_pr =x.partial_day
@@ -50,25 +50,22 @@ class Week < ApplicationRecord
         elsif current_hr == nil && current_pr == "false" && current_vc_id != nil
          # logger.debug("Full Day Save")
         else
-          logger.debug("lord have mercy on my soul")
+          logger.debug("Issue with current index of #{i}")
         end
         current_values_array.push(current_hr,current_pr, current_vc_id)
 
         current_hash[i] = current_values_array
         current_values_array =[]
-        logger.debug("Current_DB VALUES #{current_hash}")
-      end 
+        
+    end 
+      logger.debug("Current_DB VALUES #{current_hash}")
 
     @user = user
     data = data.to_h
-    logger.debug("my user #{@user}")
     meoHash = {}
     littleArray = []
+    #The Second HASH FINDS REQUESTED VALUES FROM THE PARAMETERS
     data.each do |key, value |
-
-        #logger.debug("Index #{key} ARRAY::::: Hours:#{value["hours"]} Partial:#{value["partial_day"]} VC_ID: #{value["vacation_type_id"]}")
-
-   
       hr = value["hours"] 
       pr = value["partial_day"]
       vc_id = value["vacation_type_id"]
@@ -84,39 +81,28 @@ class Week < ApplicationRecord
         elsif (hr == nil||0) && pr == nil && vc_id == nil
           #logger.debug("Full Day Save")
         else
-          logger.debug("lord have mercy on my soul")
+          logger.debug("issue with requested at index #{key}")
         end
       littleArray.push(hr)
       littleArray.push(pr)
       littleArray.push(vc_id.to_i)
-      #logger.debug("my little #{littleArray}")
       meoHash[key.to_i] = littleArray 
       littleArray = []
-      logger.debug("Requested Values #{meoHash}")
     end 
-
-#After the comparison is done, then run the following method
-
-
-##Build an array that only shows requested values. So values that are not the same in the requested compared to the current_db values
-      array_to_eval = {}
-      meoHash.each_with_index do |value,i|
-            logger.debug(" I am Comparing #{meoHash[i]} to  #{current_hash[i]}")
-
-          if meoHash[i] == current_hash[i] 
-              logger.debug("Do nothing")
-          elsif meoHash[i] != current_hash[i] && meoHash[i][2] != 0
-
-                logger.debug ("add this value #{meoHash[i]}")
-            array_to_eval[i]= meoHash[i]
+      logger.debug("Requested Values #{meoHash}")
+      
+    ### Builds A Hash where DB values != Requested && VC_ID != 0 (0 means Full Day Vacation Or Worked Day)
+    array_to_eval = {}
+    meoHash.each_with_index do |value,i|
+          if meoHash[i] != current_hash[i] && meoHash[i][2] != 0
+                array_to_eval[i]= meoHash[i]
           end
-          logger.debug("Hash to Eval... #{array_to_eval} ")
-      end
-#####
+    end
+    logger.debug("Hash to Eval... #{array_to_eval} ")
 
-     #weekEntry = params[:bigArray]
-        new_h = {}
-        array_to_eval.each do |key, val|
+      ### Merges the arrays with the same VC_ID. 
+      new_h = {}
+      array_to_eval.each do |key, val|
           x1 = val[1]
           x2 = val[2]
           found = false
@@ -136,11 +122,11 @@ class Week < ApplicationRecord
           if new_h.empty?
             new_h[key] = val
           end
-        end
+      end
+      logger.debug( "Array Merge #{new_h}")
 
-        logger.debug( "Array Merge #{new_h}")
-
-        new_h.each do |key, array|  ### ITERATION
+      #### This logic calculates if the user has enough hours to make the requested vacation
+      new_h.each do |key, array|  ### ITERATION
             logger.debug("Index #{key} ARRAY::::: Hours:#{array[0]} Partial:#{array[1]} VC_ID: #{array[2]}")
               #hours_worked = array[0]
               hours_requested = array[0]
@@ -152,9 +138,8 @@ class Week < ApplicationRecord
             @vacation_type = VacationType.find(vacation_id)
             uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , @user )
             logger.debug("Num Of VcRqst #{uvt.length}")
-    ################# HOURS_ALLOWED/Accural Logic 
               if (@vacation_type.accrual == true && uvt.length > 0 )
-                    logger.debug(" A =TRUE && UVT != 0")
+                    logger.debug(" A = TRUE && UVT != 0")
                   #Total Days Used Logic
                     total_used = []
                     uvt.each do |x|
@@ -162,7 +147,6 @@ class Week < ApplicationRecord
                       total_used.push(x.hours_used)
                        end 
                     end
-                    logger.debug("Total Hours Used #{total_used}")
                     total_hours_used = total_used.inject :+  #Important
                     #Accural Logic(!First) 
                         today = Date.today.strftime('%m').to_f
@@ -200,20 +184,16 @@ class Week < ApplicationRecord
                   logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
               end #end days_allowed 
               logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
-              ############### should be >
 
-                if hours_requested.to_f < hours_allowed.to_f
+              ############### should be >. ### Easy to test if you change it to "<"
+                if hours_requested.to_f > hours_allowed.to_f
                   logger.debug("Vacation Request Does Not Have The Hours")
-                  #errors.add(:base, "cant be saved because of reason x,y,z")
-                  #throw :abort
                   smash = { vacation_valid: false, hours_requested: hours_requested, hours_allowed: hours_allowed }
                   return smash 
-
                 else
                   logger.debug("Vacation Request Valid")
                   smash = { vacation_valid: true, hours_requested: hours_requested, hours_allowed: hours_allowed }
                   return smash 
-                  
                 end 
           end #if vacation.id present?
            logger.debug("THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION ")   
