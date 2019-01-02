@@ -31,7 +31,12 @@ class Week < ApplicationRecord
   def self.something(data, user, week)
 
     logger.debug("data #{data} ")
+    logger.debug("looking for the user #{user}")
+    @user = User.find(user)
     cte = TimeEntry.where(:week_id => week)
+    full_work_day = Customer.find(@user.customer_id).regular_hours
+    hours_over_month = (full_work_day.to_f/12).to_f
+
 
     ### FIRST LOGIC FIND THE CURRENT VALUES SAVED IN THE DB BY THE USER
     current_values_array = []
@@ -60,7 +65,7 @@ class Week < ApplicationRecord
     end 
       logger.debug("Current_DB VALUES #{current_hash}")
 
-    @user = user
+
     data = data.to_h
     meoHash = {}
     littleArray = []
@@ -136,53 +141,111 @@ class Week < ApplicationRecord
 
           if vacation_id.present? 
             @vacation_type = VacationType.find(vacation_id)
-            uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , @user )
+            uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , user )
             logger.debug("Num Of VcRqst #{uvt.length}")
-              if (@vacation_type.accrual == true && uvt.length > 0 )
-                    logger.debug(" A = TRUE && UVT != 0")
-                  #Total Days Used Logic
-                    total_used = []
-                    uvt.each do |x|
-                      if x.hours_used != nil
+            #HOURS_ALLOWED
+          if (@vacation_type.accrual == true && uvt.length > 0 )
+                logger.debug(" A = TRUE && UVT != 0")
+              #Total Days Used Logic
+                total_used = []
+                uvt.each do |x|
+                  if x.hours_used == nil
+                    total_used.push(0)
+                  else 
                       total_used.push(x.hours_used)
-                       end 
+                  end 
+                end
+                logger.debug("Total Hours Used #{total_used}")
+                total_hours_used = total_used.inject :+  #Important
+
+                #Accural Logic(!First) 
+                    months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
+                    #Logic for calculating with a new year
+                       year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
+                        logger.debug("year calculation is #{year}")
+                      if @vacation_type.rollover == true
+                        year = year * 12 #conversion to months
+                        months_at_job = year + months_at_job
+                      else 
+                           if year == 0 
+                               months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
+                           else 
+                             months_at_job = Date.today.strftime('%m').to_f
+                           end 
+                      end 
+                      logger.debug("After RollOver Logic, what is the months_at_job #{months_at_job}")
+                    # end rollover logic
+                    hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
+                    logger.debug("PEEK A BOO hour rate is #{hour_rate}")
+                    current_hours_allowed = hour_rate * months_at_job #This changes***
+
+                  logger.debug("current days allowed #{current_hours_allowed} Total hours Used #{total_hours_used}")
+
+                  hours_allowed = current_hours_allowed - total_hours_used 
+                  logger.debug("Hours allowed #{hours_allowed}")
+
+          elsif (@vacation_type.accrual == true && uvt.length <= 0)
+              logger.debug(" A = TRUE && UVT is 0")
+              
+              #Accural Logic(First) 
+                    #Logic for calculating with a new year
+                    year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
+                    months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
+                    logger.debug("year calculation is #{year}")
+                    if @vacation_type.rollover == true
+                      year = year * 12 #conversion to months
+                      months_at_job = year + months_at_job
+                    else 
+                         if year == 0 
+                             months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
+                         else 
+                           months_at_job = Date.today.strftime('%m').to_f
+                         end 
+                    end 
+                    # end rollover logic
+              hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
+              hours_allowed = hour_rate * months_at_job  
+
+          elsif (@vacation_type.accrual == false && uvt.length > 0)
+              logger.debug(" A == FALSE && UVT != 0")
+                  total_used = []
+                  uvt.each do |x|
+                    if x.hours_used != nil
+                      total_used.push(x.hours_used)
+                    else 
+                        total_used.push(0)
+                    end 
+                  end
+                  total_hours_used = total_used.inject :+
+                  #logic for Rollover
+                  year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
+                  logger.debug("today #{(Date.today.strftime('%Y').to_f)}")
+                  logger.debug("start date #{(@user.invitation_start_date.strftime('%Y').to_f)}")
+                  year = year + 1
+                  vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
+                    if @vacation_type.rollover == true
+                      logger.debug("nvb is #{vb} x #{year}")
+                      nvb = vb * year 
+                    else 
+                      nvb = vb
                     end
-                    total_hours_used = total_used.inject :+  #Important
-                    #Accural Logic(!First) 
-                        today = Date.today.strftime('%m').to_f
-                        user_start_date = @user.invitation_start_date.strftime('%m').to_f
-                        months_at_job = today - user_start_date
-                        hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
-                      current_hours_allowed = hour_rate * months_at_job #This changes***
-                      logger.debug("current days allowed #{current_hours_allowed} Total hours Used #{total_hours_used}")
-                      hours_allowed = current_hours_allowed - total_hours_used 
-                      logger.debug("Hours allowed #{hours_allowed}")
-
-              elsif (@vacation_type.accrual == true && uvt.length <= 0)
-                  logger.debug(" A =TRUE && UVT is 0")
-                  #Accural Logic(First) 
-                  today = Date.today.strftime('%m').to_f
-                  user_start_date = @user.invitation_start_date.strftime('%m').to_f
-                  months_at_job = today - user_start_date
-                  hour_rate = @vacation_type.vacation_bank.to_f * 0.667 #8hr/12months
-                  hours_allowed = hour_rate * months_at_job  
-
-              elsif (@vacation_type.accrual == false && uvt.length > 0)
-                  logger.debug(" A != FALSE && UVT != 0")
-                      total_used = []
-                      uvt.each do |x|
-                        total_used.push(x.hours_used)
-                      end
-                      total_hours_used = total_used.inject :+
-                    vb  = @vacation_type.vacation_bank * 8 #VB is in days!
-                    hours_allowed = vb.to_f - total_hours_used
-                    logger.debug(" VB Hours #{vb} and total_hours_used is #{total_hours_used}")
-              elsif (@vacation_type.accrual == false && uvt.length <= 0)
-                logger.debug(" A = FALSE && UVT = 0")
-                      hours_allowed = @vacation_type.vacation_bank * 8
-              else
-                  logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
-              end #end days_allowed 
+                hours_allowed = nvb.to_f - total_hours_used
+                logger.debug(" VB Hours #{nvb} and total_hours_used is #{total_hours_used}")
+          elsif (@vacation_type.accrual == false && uvt.length <= 0)
+            logger.debug(" A = FALSE && UVT = 0")
+              year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
+              year = year + 1
+              vb  = @vacation_type.vacation_bank * full_work_day
+                if @vacation_type.rollover == true
+                  nvb = vb * year
+                  else 
+                 nvb = vb
+                             end
+              hours_allowed = nvb.to_f - total_hours_used
+                  hours_allowed = nvb
+          else
+              logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
+          end #End Hours Allowed
               logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
 
               ############### should be >. ### Easy to test if you change it to "<"
