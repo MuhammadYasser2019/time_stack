@@ -394,11 +394,11 @@ class WeeksController < ApplicationController
                    if @week.status_id == 2
                      format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
                      format.json { render :show, status: :ok, location: @week }
-                     return
+                     #return
                    else
                      format.html { redirect_to "/weeks/#{@week.id}/edit", notice: 'Week was successfully updated.' }
                      format.json { render :show, status: :ok, location: @week }
-                     return
+                     #return
                    end
                  else
                    format.html { render :edit }
@@ -416,10 +416,10 @@ class WeeksController < ApplicationController
                flash[:alert] = @comment
                redirect_to :back #Will deprecate use redirect_back(fallback_location: fallback_location)
           else  ### SAVE THE CHANGES   
-        @week.status_id = 2
-        @week.time_entries.where(status_id: [nil,1,4,5]).each do |t|
-          t.update(status_id: 2)
-        end #end of iteration for week.time_entries
+            @week.status_id = 2
+            @week.time_entries.where(status_id: [nil,1,4,5]).each do |t|
+              t.update(status_id: 2)
+             end #end of iteration for week.time_entries
 ########## MOVED LOGIC
               logger.debug "STATUS ID IS #{week_params[:status_id]}"
               logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
@@ -451,17 +451,17 @@ class WeeksController < ApplicationController
                    if @week.status_id == 2
                      format.html { redirect_to "/weeks/#{@week.id}/report", notice: 'Week was successfully updated.' }
                      format.json { render :show, status: :ok, location: @week }
-                     return
+                     #return
                    else
                      format.html { redirect_to "/weeks/#{@week.id}/edit", notice: 'Week was successfully updated.' }
                      format.json { render :show, status: :ok, location: @week }
-                     return
+                     #return
                    end
                  else
                    format.html { render :edit }
                    format.json { render json: @week.errors, status: :unprocessable_entity }
                 end
-              end
+              end 
 ########## END MOVED LOGIC
           end# End internal if/else 
     end  
