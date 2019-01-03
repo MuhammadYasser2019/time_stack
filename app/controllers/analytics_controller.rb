@@ -250,6 +250,30 @@ class AnalyticsController < ApplicationController
     @project_ids = @cus_projects.pluck(:id)
   end
 
+  def vacation_types
+    
+    #Find The Customer
+    @customer_id = params[:customer_id]
+    
+    #Find the Vacation Types that belong to that customer
+    @vacation_types = VacationType.where(customer_id: params[:customer_id])
+        @customer_types = @vacation_types.uniq{|x| x.id} ## Change to distinct 
+        logger.debug("current types are #{@current_types}")
+
+    
+    #Find The Users that belong to that customer
+    @users = User.where(customer_id: params[:customer_id])
+        @users.each do |user|
+            @customer_types.each do |ct|
+                @uvr = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
+                    #while the user is the same and the vc_id is the same, find the sum
+                    @uvr.each do | val |
+
+                    end 
+            end 
+        end      
+  end 
+
   def customer_reports
     @customer_id = params[:customer_id]
     @customer = Customer.find(@customer_id)
