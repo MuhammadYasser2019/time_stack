@@ -315,14 +315,21 @@ jQuery ($) ->
   )
   $(document).off("change")
   $(document).on("change", '.vc_end', '.vc_start', ->
-    start = $('.vc_start').val().split('-')[2]
-    end = $('.vc_end').val().split('-')[2]
-    console.log("start", start, "end", end )
-    console.log("days requested", end-start)
-    days_requested = end-start
-    $.get "/pre_vacation_request",
-      days_requested: days_requested,
-      vacation_type_id: $('#vacation_type_id').val()
+    start_date = new Date($('.vc_start').val());
+    end_date = new Date($('.vc_end').val());
+
+    if (start_date > end_date)
+      $('.vc_end').val('');
+      alert("end date should be greater than start date");
+    else
+      start = $('.vc_start').val().split('-')[2]
+      end = $('.vc_end').val().split('-')[2]
+      console.log("start", start, "end", end )
+      console.log("days requested", end_date-start_date)
+      days_requested = end-start
+      $.get "/pre_vacation_request",
+        days_requested: days_requested,
+        vacation_type_id: $('#vacation_type_id').val()
   )
 
   $(document).on("click", '.cancel_vacation_request', ->
