@@ -263,13 +263,24 @@ class AnalyticsController < ApplicationController
     
     #Find The Users that belong to that customer
     @users = User.where(customer_id: params[:customer_id])
+        user_hash = {}
         @users.each do |user|
             @customer_types.each do |ct|
+                vt_hash = {}
                 @uvr = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
-                    #while the user is the same and the vc_id is the same, find the sum
+                    
+                    
                     @uvr.each do | val |
-
+                        logger.debug("User is  #{val.user_id} & VC_ID is  #{val.vacation_type_id} ::: hours #{val.hours_used}")
+                        currentuser = val.user_id
+                        current_vc_id = val.vacation_type_id
+                        hours = val.hours_used
+                        #find the sum of the hours used for that vt_id
+                        vt_hash[current_vc_id] = hours.to_i
+                        user_hash[currentuser] = vt_hash
                     end 
+                    user_hash = user_hash
+                    logger.debug("hash... #{user_hash}")
             end 
         end      
   end 
