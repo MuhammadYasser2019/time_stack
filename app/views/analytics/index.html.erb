@@ -124,9 +124,13 @@
 	<div class = "orange-button customer-reports" >
 		<%= link_to('Reports', "/customer_reports/#{params[:customer_id]}", target: :_blank ) %>
 	</div>
-	<br>
+	<br> 
 	<div class = "orange-button vacation-reports">
 		<%= link_to('Vacation Reports',"vacation_reports/customer/#{params[:customer_id]}", target: :_blank) %>
+	</div>
+	<br> 
+	<div class = "orange-button vacation-reports">
+		<%= link_to('Vacation Types',"vacation_types/#{params[:customer_id]}", target: :_blank) %>
 	</div>
 
 </div>

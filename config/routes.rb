@@ -181,7 +181,9 @@ Rails.application.routes.draw do
   get 'get_employment/' => 'customers#get_employment'
 
   get "analytics/vacation_reports/customer/:customer_id" => 'analytics#vacation_report'
-  get "/analytics/user_activities/:customer_id" => 'analytics#user_activities'
+  get "/analytics/user_activities/:customer_id" => 'analytics#user_activities' 
+  get "analytics/vacation_types/:customer_id" => 'analytics#vacation_types' 
+
   match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
   post "/bar_graph" => 'analytics#bar_graph'
   match "analytics/:customer_id" => "analytics#index", via: [:get, :post]
