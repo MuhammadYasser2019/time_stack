@@ -1,0 +1,30 @@
+
+
+<div>
+	<div class = "row">
+<h2>User Vacation Request Summary Table</h2>
+
+<table>
+
+  <tr>
+  	<th> Users Email </th>
+  	<% @current_types.each do |ct|%>
+    <th> <%= ct.vacation_title %> </th>
+    <% end %>
+  </tr>
+  
+  <% @users.each do |user| %>
+  <tr>
+    <td><%= user.email %></td>
+    <td>45 hours used</td>
+    <td>16 hours used</td>
+    <td>16 hours used</td>
+    <td>16 hours used</td>
+  </tr>
+  <% end %>
+ 
+  
+</table>
+
+	</div>
+</div>
