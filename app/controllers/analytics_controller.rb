@@ -265,18 +265,29 @@ class AnalyticsController < ApplicationController
     @users = User.where(customer_id: params[:customer_id])
         user_hash = {}
         @users.each do |user|
+            vt_hash = {}
             @customer_types.each do |ct|
-                vt_hash = {}
                 @uvr = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
-                    
-                    
                     @uvr.each do | val |
                         logger.debug("User is  #{val.user_id} & VC_ID is  #{val.vacation_type_id} ::: hours #{val.hours_used}")
                         currentuser = val.user_id
                         current_vc_id = val.vacation_type_id
                         hours = val.hours_used
-                        #find the sum of the hours used for that vt_id
-                        vt_hash[current_vc_id] = hours.to_i
+                        
+                        @singleRequest = VacationRequest.where("user_id =? and vacation_type_id = ?", currentuser, current_vc_id)
+
+                            sumOf = []
+                            @singleRequest.each do |sr|
+                                if hours = nil
+                                    hours = 0
+                                end 
+                                sumOf.push(sr.hours_used.to_i)
+                                logger.debug("my array #{sumOf}")
+                                
+                            end 
+                                sumOf = sumOf.inject :+
+                                logger.debug("The Sum #{sumOf}")
+                        vt_hash[current_vc_id] = sumOf
                         user_hash[currentuser] = vt_hash
                     end 
                     user_hash = user_hash
