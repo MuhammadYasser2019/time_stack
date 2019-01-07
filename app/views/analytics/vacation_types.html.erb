@@ -1,29 +1,23 @@
-
-
 <div>
 	<div class = "row">
-<h2>User Vacation Request Summary Table</h2>
-
-<table>
-
-  <tr>
-  	<th> Users Email </th>
-  	<% @customer_types.each do |ct|%>
-    <th> <%= ct.vacation_title %> </th>
-    <% end %>
-  </tr>
-  
-  <% @user_hash.each do |key, value| %>
-    
-    <tr>
-        <td> <%= key %> </td>
-        <% value.each do |x| %>
-        <td> <%= x.last %></td>
+    <h2>Users Remaining Vacation Hours</h2>
+    <table>
+      <tr>
+      	<th> Users Email </th>
+      	<% @customer_types.each do |ct|%>
+        <th> <%= ct.vacation_title %> </th>
         <% end %>
-    </tr>
-    <% end %>
-
-</table>
+      </tr>
+      <% @user_hash.each do |key, value| %>
+        <tr>
+            <td> <%= key %> </td>
+            <% value.each do |x| %>
+            <td> <%= x.last %> Hours Available</td>
+            <% end %>
+        </tr>
+        <% end %>
+      
+    </table>
 
 	</div>
 

@@ -259,37 +259,37 @@ class AnalyticsController < ApplicationController
     @vacation_types = VacationType.where(customer_id: params[:customer_id])
         @customer_types = @vacation_types.uniq{|x| x.id} ## Change to distinct 
         logger.debug("current types are #{@current_types}")
-
-    
     #Find The Users that belong to that customer
-    @users = User.where(customer_id: params[:customer_id])
+    @users = User.where(customer_id: params[:customer_id]) 
         @user_hash = {}
         @users.each do |user|
-            logger.debug("who are my users #{user.email}")
             vt_hash = {}
             @customer_types.each do |ct|
+                hours_avaliable = ct.vacation_bank
+                logger.debug(" Customer Type VB #{hours_avaliable}")
                 @uvr = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
-                    @uvr.each do | val |
-                        logger.debug("User is  #{val.user_id} & VC_ID is  #{val.vacation_type_id} ::: hours #{val.hours_used}")
-                        currentuser = User.find(val.user_id)
-                        logger.debug("Looking for the email #{currentuser.email}")
+                    currentuser = user.email
+                    if @uvr.length < 1 
+                        logger.debug("length less than 0")
+                        vt_hash[ct.id] = hours_avaliable.to_i
+                    else 
+                        ttt = @uvr.pluck(:hours_used) 
+                        zzz = []
+                            ttt.each do |x|
+                                x = x.to_i 
+                                zzz.push(x)
+                            end
+                        zzz = zzz.sum 
+                    end
 
-                        current_vc_id = val.vacation_type_id
-                        hours = val.hours_used
-                            @singleRequest = VacationRequest.where("user_id =? and vacation_type_id = ?", currentuser, current_vc_id)
-                                sumOf = []
-                                @singleRequest.each do |sr|
-                                    if hours = nil
-                                        hours = 0
-                                    end 
-                                    sumOf.push(sr.hours_used.to_i)
-                                end 
-                                sumOf = sumOf.inject :+
-                                logger.debug("The Sum #{sumOf}")
-                                vt_hash[current_vc_id] = sumOf
-                                @user_hash[currentuser.email] = vt_hash
-                    end 
-                    @user_hash = @user_hash
+                    if zzz == nil
+                        zzz = hours_avaliable.to_i
+                    else 
+                        zzz = hours_avaliable - zzz
+                    end
+                    vt_hash[ct.id] = zzz
+                    zzz =[]
+                    @user_hash[currentuser] = vt_hash
                     logger.debug("hash... #{@user_hash}")
             end 
         end      
