@@ -34,8 +34,12 @@ class Week < ApplicationRecord
     logger.debug("looking for the user #{user}")
     @user = User.find(user)
     cte = TimeEntry.where(:week_id => week)
-    full_work_day = Customer.find(@user.customer_id).regular_hours
+
+    #full_work_day = Customer.find(@user.customer_id).regular_hours : 8 
+    customer = Customer.find(@user.customer_id)
+    full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
     hours_over_month = (full_work_day.to_f/12).to_f
+ 
 
 
     ### FIRST LOGIC FIND THE CURRENT VALUES SAVED IN THE DB BY THE USER

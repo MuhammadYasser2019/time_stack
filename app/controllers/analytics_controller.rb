@@ -263,35 +263,34 @@ class AnalyticsController < ApplicationController
     
     #Find The Users that belong to that customer
     @users = User.where(customer_id: params[:customer_id])
-        user_hash = {}
+        @user_hash = {}
         @users.each do |user|
+            logger.debug("who are my users #{user.email}")
             vt_hash = {}
             @customer_types.each do |ct|
                 @uvr = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
                     @uvr.each do | val |
                         logger.debug("User is  #{val.user_id} & VC_ID is  #{val.vacation_type_id} ::: hours #{val.hours_used}")
-                        currentuser = val.user_id
+                        currentuser = User.find(val.user_id)
+                        logger.debug("Looking for the email #{currentuser.email}")
+
                         current_vc_id = val.vacation_type_id
                         hours = val.hours_used
-                        
-                        @singleRequest = VacationRequest.where("user_id =? and vacation_type_id = ?", currentuser, current_vc_id)
-
-                            sumOf = []
-                            @singleRequest.each do |sr|
-                                if hours = nil
-                                    hours = 0
+                            @singleRequest = VacationRequest.where("user_id =? and vacation_type_id = ?", currentuser, current_vc_id)
+                                sumOf = []
+                                @singleRequest.each do |sr|
+                                    if hours = nil
+                                        hours = 0
+                                    end 
+                                    sumOf.push(sr.hours_used.to_i)
                                 end 
-                                sumOf.push(sr.hours_used.to_i)
-                                logger.debug("my array #{sumOf}")
-                                
-                            end 
                                 sumOf = sumOf.inject :+
                                 logger.debug("The Sum #{sumOf}")
-                        vt_hash[current_vc_id] = sumOf
-                        user_hash[currentuser] = vt_hash
+                                vt_hash[current_vc_id] = sumOf
+                                @user_hash[currentuser.email] = vt_hash
                     end 
-                    user_hash = user_hash
-                    logger.debug("hash... #{user_hash}")
+                    @user_hash = @user_hash
+                    logger.debug("hash... #{@user_hash}")
             end 
         end      
   end 

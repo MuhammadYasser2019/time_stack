@@ -13,18 +13,18 @@
     <% end %>
   </tr>
   
-  <% @users.each do |user| %>
-  <tr>
-    <td><%= user.email %></td>
-    <td>45 hours used</td>
-    <td>16 hours used</td>
-    <td>16 hours used</td>
-    <td>16 hours used</td>
-  </tr>
-  <% end %>
- 
-  
+  <% @user_hash.each do |key, value| %>
+    
+    <tr>
+        <td> <%= key %> </td>
+        <% value.each do |x| %>
+        <td> <%= x.last %></td>
+        <% end %>
+    </tr>
+    <% end %>
+
 </table>
 
 	</div>
+
 </div>
