@@ -297,20 +297,59 @@
   end 
 
   def pre_vacation_request 
-      logger.debug("Am i holding v_id#{params[:vacation_type_id]}")
+
+      logger.debug("Am i holding v_id#{params[:vacation_type_id]}") 
+        start_date = params[:start_date]
+        end_date = params[:end_date]
+        logger.debug("checking #{end_date.to_date.on_weekend?}")
+        num_of_days = (end_date.to_date - start_date.to_date).to_i
+
+          #Now Holidays 
+          customer_holidays = CustomersHoliday.where(:customer_id => current_user.customer_id)
+          
+          holiday_array = []
+          customer_holidays.each do |x|
+            h_date = Holiday.find(x.holiday_id)
+            holiday_array.push(h_date.date)
+          end
+          #### Weekend Calc
+          a_range = (start_date.to_date .. end_date.to_date)
+          weekend_counter = 0
+          a_range.each do |date|
+            if date.on_weekend? == true
+              weekend_counter = weekend_counter + 1
+            end 
+          end
+
+          logger.debug("Wekend Count #{weekend_counter}")
+          holiday_array.each do |ww|
+            b = a_range.cover?(ww.to_date)
+            if b == true
+              weekend_counter = weekend_counter + 1
+            end 
+            logger.debug(" #{ww.to_date} is a holiday #{b}")
+          end 
+          logger.debug("Wekend Count + holiday #{weekend_counter}")
+          ####
+
+
+      ###
       @user = current_user
       @vacation_type = VacationType.find(params[:vacation_type_id])
         logger.debug("Accrual: #{@vacation_type.accrual}")
         logger.debug("V-Id: #{@vacation_type.id}")
 
       uvt = VacationRequest.where("vacation_type_id=? and user_id=?",params[:vacation_type_id], @user.id )
-      full_work_day = Customer.find(@user.customer_id).regular_hours
-      hours_over_month = (full_work_day.to_f/12).to_f
-      logger.debug("FULL WORK DAY IS #{full_work_day}")
-      logger.debug("uvt is #{uvt}")
+      
 
-      hours_requested = params[:days_requested].to_f * full_work_day
-      logger.debug("What is my params #{params[:days_requested]}")
+       customer = Customer.find(@user.customer_id)
+       full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+       hours_over_month = (full_work_day.to_f/12).to_f
+
+      logger.debug("FULL WORK DAY IS #{full_work_day}") 
+      logger.debug("uvt is #{uvt}")
+      correct_days = num_of_days - weekend_counter
+      hours_requested = correct_days * full_work_day
       logger.debug("Hours Requested #{hours_requested}")
 
     #HOURS_ALLOWED
@@ -449,11 +488,14 @@
     vacation_start_date = params[:vacation_start_date]
     vacetion_end_date = params[:vacation_end_date]
     reason_for_vacation = params[:vacation_comment]
-      #to calculate days_used
-    days_requested = (params[:vacation_end_date].to_s.split('-')[2]).to_f - (params[:vacation_start_date].to_s.split('-')[2]).to_f
-    hours_requested = days_requested * 8.0
+    customer = Customer.find(@user.customer_id)
+    full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
 
     if !vacation_start_date.blank?
+      days_requested = (params[:vacation_end_date].to_date - params[:vacation_start_date].to_date).to_i
+      logger.debug("test #{days_requested}")
+      hours_requested = days_requested * full_work_day
+
      new_vr = VacationRequest.new
      new_vr.vacation_start_date = params[:vacation_start_date]
      new_vr.vacation_end_date = params[:vacation_end_date]

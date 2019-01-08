@@ -251,44 +251,39 @@ class AnalyticsController < ApplicationController
   end
 
   def vacation_types
-    
-    #Find The Customer
+
     @customer_id = params[:customer_id]
-    
-    #Find the Vacation Types that belong to that customer
     @vacation_types = VacationType.where(customer_id: params[:customer_id])
         @customer_types = @vacation_types.uniq{|x| x.id} ## Change to distinct 
         logger.debug("current types are #{@current_types}")
-    #Find The Users that belong to that customer
     @users = User.where(customer_id: params[:customer_id]) 
         @user_hash = {}
         @users.each do |user|
             vt_hash = {}
             @customer_types.each do |ct|
                 hours_avaliable = ct.vacation_bank
-                logger.debug(" Customer Type VB #{hours_avaliable}")
                 @uvr = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
                     currentuser = user.email
                     if @uvr.length < 1 
                         logger.debug("length less than 0")
                         vt_hash[ct.id] = hours_avaliable.to_i
                     else 
-                        ttt = @uvr.pluck(:hours_used) 
-                        zzz = []
-                            ttt.each do |x|
+                        total_hours_used = @uvr.pluck(:hours_used) 
+                        sum_of_hours = []
+                            total_hours_used.each do |x|
                                 x = x.to_i 
                                 zzz.push(x)
                             end
-                        zzz = zzz.sum 
+                        sum_of_hours = sum_of_hours.sum 
                     end
 
-                    if zzz == nil
-                        zzz = hours_avaliable.to_i
+                    if sum_of_hours == nil
+                        sum_of_hours = hours_avaliable.to_i
                     else 
-                        zzz = hours_avaliable - zzz
+                        sum_of_hours = hours_avaliable - sum_of_hours
                     end
-                    vt_hash[ct.id] = zzz
-                    zzz =[]
+                    vt_hash[ct.id] = sum_of_hours
+                    sum_of_hours =[]
                     @user_hash[currentuser] = vt_hash
                     logger.debug("hash... #{@user_hash}")
             end 

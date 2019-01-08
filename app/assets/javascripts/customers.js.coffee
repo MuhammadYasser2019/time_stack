@@ -322,13 +322,17 @@ jQuery ($) ->
       $('.vc_end').val('');
       alert("end date should be greater than start date");
     else
+      console.log("wtf", $('.vc_start').val())
       start = $('.vc_start').val().split('-')[2]
+      console.log("wtf", $('.vc_end').val())
       end = $('.vc_end').val().split('-')[2]
       console.log("start", start, "end", end )
-      console.log("days requested", end_date-start_date)
-      days_requested = end-start
+      console.log("days requested", end - start)
+      days_requested = (end - start)
       $.get "/pre_vacation_request",
         days_requested: days_requested,
+        start_date: $('.vc_start').val(),
+        end_date: $('.vc_end').val(),
         vacation_type_id: $('#vacation_type_id').val()
   )
 
