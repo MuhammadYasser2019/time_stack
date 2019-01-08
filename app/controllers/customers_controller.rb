@@ -310,9 +310,31 @@
           holiday_array = []
           customer_holidays.each do |x|
             h_date = Holiday.find(x.holiday_id)
-            holiday_array.push(h_date.date)
+            holiday_array.push(h_date.date.to_date)
           end
-          #### Weekend Calc
+          logger.debug(" HOLIDAY DATES #{holiday_array}")
+
+          # CURRENT SOLUTION TO CHECK IF IT IS A HOLIDAY
+          start_year_array = []
+          end_year_array = []
+          holiday_array.each do |correct|
+            #correct_year = correct.to_date + 365
+            #logger.debug(" before #{correct} and after #{correct_year}")
+            #current_year = Date.today.strftime('%Y')
+            #plus_year = current_year.to_i
+            #proper_year = plus_year.to_s + '-' + correct.to_s.split('-')[1] + '-' + correct.to_s.split('-')[2]
+
+            requested_start_year  = start_date.to_s.split('-')[0]
+            year_start = requested_start_year.to_s + '-' + correct.to_s.split('-')[1] + '-' + correct.to_s.split('-')[2]
+            start_year_array.push(year_start.to_date)
+
+            requested_end_year = end_date.to_s.split('-')[0] 
+            year_end = requested_end_year.to_s + '-' + correct.to_s.split('-')[1] + '-' + correct.to_s.split('-')[2]
+            end_year_array.push(year_end.to_date)
+          end 
+            logger.debug("Start year Array is #{start_year_array}")
+            logger.debug("End year array is #{end_year_array}")
+            
           a_range = (start_date.to_date .. end_date.to_date)
           weekend_counter = 0
           a_range.each do |date|
@@ -321,14 +343,32 @@
             end 
           end
 
-          logger.debug("Wekend Count #{weekend_counter}")
-          holiday_array.each do |ww|
+          start_year_array.each do |ww|
             b = a_range.cover?(ww.to_date)
             if b == true
               weekend_counter = weekend_counter + 1
             end 
             logger.debug(" #{ww.to_date} is a holiday #{b}")
           end 
+
+          end_year_array.each do |ww|
+            b = a_range.cover?(ww.to_date)
+            if b == true
+              weekend_counter = weekend_counter + 1
+            end 
+            logger.debug(" #{ww.to_date} is a holiday #{b}")
+          end 
+
+
+          ### Holiday Check (use if holiday.dates year updates)
+         #logger.debug("Wekend Count #{weekend_counter}")
+         #holiday_array.each do |ww|
+         #  b = a_range.cover?(ww.to_date)
+         #  if b == true
+         #    weekend_counter = weekend_counter + 1
+         #  end 
+         #  logger.debug(" #{ww.to_date} is a holiday #{b}")
+         #end 
           logger.debug("Wekend Count + holiday #{weekend_counter}")
           ####
 
