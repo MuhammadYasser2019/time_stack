@@ -304,7 +304,7 @@
         logger.debug("checking #{end_date.to_date.on_weekend?}")
         num_of_days = (end_date.to_date - start_date.to_date).to_i
 
-          #Now Holidays 
+##########Now Holidays 
           customer_holidays = CustomersHoliday.where(:customer_id => current_user.customer_id)
           
           holiday_array = []
@@ -318,12 +318,6 @@
           start_year_array = []
           end_year_array = []
           holiday_array.each do |correct|
-            #correct_year = correct.to_date + 365
-            #logger.debug(" before #{correct} and after #{correct_year}")
-            #current_year = Date.today.strftime('%Y')
-            #plus_year = current_year.to_i
-            #proper_year = plus_year.to_s + '-' + correct.to_s.split('-')[1] + '-' + correct.to_s.split('-')[2]
-
             requested_start_year  = start_date.to_s.split('-')[0]
             year_start = requested_start_year.to_s + '-' + correct.to_s.split('-')[1] + '-' + correct.to_s.split('-')[2]
             start_year_array.push(year_start.to_date)
@@ -334,7 +328,7 @@
           end 
             logger.debug("Start year Array is #{start_year_array}")
             logger.debug("End year array is #{end_year_array}")
-            
+
           a_range = (start_date.to_date .. end_date.to_date)
           weekend_counter = 0
           a_range.each do |date|

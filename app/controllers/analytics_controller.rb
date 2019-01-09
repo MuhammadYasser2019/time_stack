@@ -272,7 +272,7 @@ class AnalyticsController < ApplicationController
                         sum_of_hours = []
                             total_hours_used.each do |x|
                                 x = x.to_i 
-                                zzz.push(x)
+                                sum_of_hours.push(x)
                             end
                         sum_of_hours = sum_of_hours.sum 
                     end
