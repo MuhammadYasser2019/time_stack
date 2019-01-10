@@ -296,6 +296,41 @@
     end
   end 
 
+  def pre_vacation_request 
+      start_date = params[:start_date]
+      end_date = params[:end_date]
+      num_of_days = (end_date.to_date - start_date.to_date).to_i
+      ###
+      @user = current_user
+      customer = Customer.find(@user.customer_id)
+      full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+      hours_over_month = (full_work_day.to_f/12).to_f
+      ###
+      @vacation_type = VacationType.find(params[:vacation_type_id])
+      uvt = VacationRequest.where("vacation_type_id=? and user_id=?",params[:vacation_type_id], @user.id )
+      ####
+      weekend_counter = Customer.holiday_weekend_count(@user,start_date,end_date)
+        logger.debug("the weekend/holiday count is #{weekend_counter}")
+        correct_days = num_of_days - weekend_counter
+        hours_requested = correct_days * full_work_day
+      hours_allowed = Customer.is_vacation_allowed(uvt, @vacation_type, @user, full_work_day)
+
+        logger.debug("Hours That Are Allowed #{hours_allowed}")
+          #should be > #### easy to test if you use <
+          if hours_requested.to_f > hours_allowed.to_f 
+            logger.debug("NO NOT TODAY!")
+              respond_to do |format|
+                format.js
+                @comment = "Sorry, you only have #{hours_allowed} hours avaliable, but requested #{hours_requested} hours"
+              end 
+          else
+              logger.debug("Success, this should showwww")
+                respond_to do |format|
+                  format.js{ render :template => "customers/pre_vacation_request_approve.js.erb" }
+                end 
+          end
+  end
+
   def vacation_request
     logger.debug("THE PARAMETERS ARE:  #{params.inspect}")
     @user = current_user
@@ -313,8 +348,9 @@
 
     if !vacation_start_date.blank?
       days_requested = (params[:vacation_end_date].to_date - params[:vacation_start_date].to_date).to_i
-      logger.debug("test #{days_requested}")
-      hours_requested = days_requested * full_work_day
+      weekend_counter = Customer.holiday_weekend_count(current_user, params[:vacation_start_date].to_date, params[:vacation_end_date].to_date)
+      correct_days = days_requested - weekend_counter
+      hours_requested = correct_days * full_work_day
 
      new_vr = VacationRequest.new
      new_vr.vacation_start_date = params[:vacation_start_date]
@@ -594,159 +630,160 @@
      end   
   end 
 
-def pre_vacation_request 
-        start_date = params[:start_date]
-        end_date = params[:end_date]
-        num_of_days = (end_date.to_date - start_date.to_date).to_i
-##########Now Holidays 
-          customer_holidays = CustomersHoliday.where(:customer_id => current_user.customer_id)
-          holiday_array = []
-            customer_holidays.each do |x|
-              h_date = Holiday.find(x.holiday_id)
-              holiday_array.push(h_date.date.to_date)
-            end
-          logger.debug(" HOLIDAY DATES #{holiday_array}")
-##########CURRENT SOLUTION TO CHECK IF IT IS A HOLIDAY
-          start_year_array = []
-          end_year_array = []
-          holiday_array.each do |correct|
-            requested_start_year  = start_date.to_s.split('-')[0]
-            year_start = requested_start_year.to_s + '-' + correct.to_s.split('-')[1] + '-' + correct.to_s.split('-')[2]
-            start_year_array.push(year_start.to_date)
+#def pre_vacation_request 
+#        start_date = params[:start_date]
+#        end_date = params[:end_date]
+#        num_of_days = (end_date.to_date - start_date.to_date).to_i
+###########Now Holidays 
+#          customer_holidays = CustomersHoliday.where(:customer_id => current_user.customer_id)
+#          holiday_array = []
+#            customer_holidays.each do |x|
+#              h_date = Holiday.find(x.holiday_id)
+#              holiday_array.push(h_date.date.to_date)
+#            end
+#          logger.debug(" HOLIDAY DATES #{holiday_array}")
+###########CURRENT SOLUTION TO CHECK IF IT IS A HOLIDAY
+#          start_year_array = []
+#          end_year_array = []
+#          holiday_array.each do |correct|
+#            requested_start_year  = start_date.to_s.split('-')[0]
+#            year_start = requested_start_year.to_s + '-' + correct.to_s.split('-')[1] + '-' + correct.to_s.split('-')[2]
+#            start_year_array.push(year_start.to_date)
+#
+#            requested_end_year = end_date.to_s.split('-')[0] 
+#            year_end = requested_end_year.to_s + '-' + correct.to_s.split('-')[1] + '-' + correct.to_s.split('-')[2]
+#            end_year_array.push(year_end.to_date)
+#          end 
+#            logger.debug("Start year Array is #{start_year_array}")
+#            logger.debug("End year array is #{end_year_array}")
+##########Dates Requested on weekend ?
+#          a_range = (start_date.to_date .. end_date.to_date)
+#          weekend_counter = 0
+#          a_range.each do |date|
+#            if date.on_weekend? == true
+#              weekend_counter = weekend_counter + 1
+#            end 
+#          end
+########### Prevents the same array from being checked
+#          if start_year_array == end_year_array
+#            logger.debug("both arrays are not needed")
+#          else
+#            start_year_array.each do |ww|
+#              b = a_range.cover?(ww.to_date)
+#              if b == true
+#                weekend_counter = weekend_counter + 1
+#              end 
+#              logger.debug(" #{ww.to_date} is a holiday #{b}")
+#            end 
+#          end 
+#          end_year_array.each do |ww|
+#            b = a_range.cover?(ww.to_date)
+#            if b == true
+#              weekend_counter = weekend_counter + 1
+#            end 
+#            logger.debug(" #{ww.to_date} is a holiday #{b}")
+#          end 
+#        ### Holiday Check (use if holiday.dates updates automatically)
+#         #logger.debug("Wekend Count #{weekend_counter}")
+#         #holiday_array.each do |ww|
+#         #  b = a_range.cover?(ww.to_date)
+#         #  if b == true
+#         #    weekend_counter = weekend_counter + 1
+#         #  end 
+#         #  logger.debug(" #{ww.to_date} is a holiday #{b}")
+#         #end 
+#          logger.debug("Wekend Count + holiday #{weekend_counter}")
+#          ####
+#      ###
+#      @user = current_user
+#      @vacation_type = VacationType.find(params[:vacation_type_id])
+#      uvt = VacationRequest.where("vacation_type_id=? and user_id=?",params[:vacation_type_id], @user.id )
+#      customer = Customer.find(@user.customer_id)
+#      ##
+#      full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+#      hours_over_month = (full_work_day.to_f/12).to_f
+#      correct_days = num_of_days - weekend_counter
+#      hours_requested = correct_days * full_work_day
+#      ###
+#      logger.debug("Hours Requested #{hours_requested}")
+#      ###
+#      year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
+#      months = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
+#      vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
+#      ###
+#
+#    #HOURS_ALLOWED
+#              ###Calculate Total Hours
+#                total_used = []
+#                uvt.each do |x|
+#                  if x.hours_used != nil
+#                    total_used.push(x.hours_used)
+#                  else 
+#                      total_used.push(0)
+#                  end 
+#                end
+#                total_hours_used = total_used.inject :+ 
+#                ### Accrual Rollover/NewYear Logic
+#                if @vacation_type.rollover == true && @vacation_type.accrual == true
+#                          year = year * 12
+#                          if year == 0 
+#                                months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
+#                          else 
+#                                months_at_job = year + months
+#                          end 
+#                elsif @vacation_type.rollover == false && @vacation_type.accrual == true 
+#                          #Start accrual over at 0. ie) start 3-2018, its 3-2019.. they have 3 months at job for vacation matters
+#                          months_at_job = Date.today.strftime('%m').to_f
+#                elsif @vacation_type.rollover == true && @vacation_type.accrual == false
+#                          year = year + 1
+#                          nvb = vb * year 
+#                elsif @vacation_type.rollover == false && @vacation_type.accrual == false
+#                          nvb = vb
+#                else 
+#                    logger.debug("Vacation Type is nil in either/both rollover/accrual")
+#                end
+#
+#                ####Hour Allowed Logic 
+#                if (@vacation_type.accrual == true && uvt.length > 0 )
+#                    logger.debug(" A = TRUE && UVT != 0")
+#                    hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
+#                    current_hours_allowed = hour_rate * months_at_job #This changes***
+#                    hours_allowed = current_hours_allowed - total_hours_used 
+#                elsif (@vacation_type.accrual == true && uvt.length <= 0)
+#                    logger.debug(" A = TRUE && UVT is 0")
+#                    hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
+#                    hours_allowed = hour_rate * months_at_job  
+#                elsif (@vacation_type.accrual == false && uvt.length > 0)
+#                      logger.debug(" A == FALSE && UVT != 0")                    
+#                      hours_allowed = nvb.to_f - total_hours_used
+#                elsif (@vacation_type.accrual == false && uvt.length <= 0)
+#                    logger.debug(" A = FALSE && UVT = 0")
+#                    hours_allowed = nvb.to_f
+#                else
+#                    logger.debug("$$$$$$$$ Vacation Type.accrual is NIL #{@vacation_type.accrual}")
+#                end #End Hours Allowed
+#                logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
+#
+#      logger.debug("THE MATH...vb allows #{@vacation_type.vacation_bank * full_work_day} hours  & hours requested #{hours_requested}")
+#      logger.debug("THE MATH The hourly rate is #{@vacation_type.vacation_bank}day times 8 hr/day divided by 12months so #{hour_rate} hr/m")
+#      logger.debug("THE MATH -Accural-...time at job #{months_at_job} months times& hour rate #{hour_rate} is current hours allowed #{current_hours_allowed}")
+#      logger.debug("THE MATH- Accural - ... total hours used for this vacation type is #{total_hours_used}")
+#      logger.debug("THE MATH...Pass if hours allowed #{hours_allowed} is greater than hours requested #{hours_requested}")
+#
+#          if hours_requested.to_f > hours_allowed.to_f 
+#            logger.debug("NO NOT TODAY!")
+#              respond_to do |format|
+#                format.js
+#                @comment = "Sorry, you only have #{hours_allowed} hours avaliable, but requested #{hours_requested} hours"
+#              end 
+#          else
+#              logger.debug("Success, this should showwww")
+#                respond_to do |format|
+#                  format.js{ render :template => "customers/pre_vacation_request_approve.js.erb" }
+#                end 
+#          end
+#  end 
 
-            requested_end_year = end_date.to_s.split('-')[0] 
-            year_end = requested_end_year.to_s + '-' + correct.to_s.split('-')[1] + '-' + correct.to_s.split('-')[2]
-            end_year_array.push(year_end.to_date)
-          end 
-            logger.debug("Start year Array is #{start_year_array}")
-            logger.debug("End year array is #{end_year_array}")
-#########Dates Requested on weekend ?
-          a_range = (start_date.to_date .. end_date.to_date)
-          weekend_counter = 0
-          a_range.each do |date|
-            if date.on_weekend? == true
-              weekend_counter = weekend_counter + 1
-            end 
-          end
-########## Prevents the same array from being checked
-          if start_year_array == end_year_array
-            logger.debug("both arrays are not needed")
-          else
-            start_year_array.each do |ww|
-              b = a_range.cover?(ww.to_date)
-              if b == true
-                weekend_counter = weekend_counter + 1
-              end 
-              logger.debug(" #{ww.to_date} is a holiday #{b}")
-            end 
-          end 
-          end_year_array.each do |ww|
-            b = a_range.cover?(ww.to_date)
-            if b == true
-              weekend_counter = weekend_counter + 1
-            end 
-            logger.debug(" #{ww.to_date} is a holiday #{b}")
-          end 
-        ### Holiday Check (use if holiday.dates updates automatically)
-         #logger.debug("Wekend Count #{weekend_counter}")
-         #holiday_array.each do |ww|
-         #  b = a_range.cover?(ww.to_date)
-         #  if b == true
-         #    weekend_counter = weekend_counter + 1
-         #  end 
-         #  logger.debug(" #{ww.to_date} is a holiday #{b}")
-         #end 
-          logger.debug("Wekend Count + holiday #{weekend_counter}")
-          ####
-      ###
-      @user = current_user
-      @vacation_type = VacationType.find(params[:vacation_type_id])
-      uvt = VacationRequest.where("vacation_type_id=? and user_id=?",params[:vacation_type_id], @user.id )
-      customer = Customer.find(@user.customer_id)
-      ##
-      full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
-      hours_over_month = (full_work_day.to_f/12).to_f
-      correct_days = num_of_days - weekend_counter
-      hours_requested = correct_days * full_work_day
-      ###
-      logger.debug("Hours Requested #{hours_requested}")
-      ###
-      year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
-      months = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-      vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
-      ###
-
-    #HOURS_ALLOWED
-              ###Calculate Total Hours
-                total_used = []
-                uvt.each do |x|
-                  if x.hours_used != nil
-                    total_used.push(x.hours_used)
-                  else 
-                      total_used.push(0)
-                  end 
-                end
-                total_hours_used = total_used.inject :+
-                ### Accrual Rollover/NewYear Logic
-                if @vacation_type.rollover == true && @vacation_type.accrual == true
-                          year = year * 12
-                          if year == 0 
-                                months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-                          else 
-                                months_at_job = year + months
-                          end 
-                elsif @vacation_type.rollover == false && @vacation_type.accrual == true 
-                          #Start accrual over at 0. ie) start 3-2018, its 3-2019.. they have 3 months at job for vacation matters
-                          months_at_job = Date.today.strftime('%m').to_f
-                elsif @vacation_type.rollover == true && @vacation_type.accrual == false
-                          year = year + 1
-                          nvb = vb * year 
-                elsif @vacation_type.rollover == false && @vacation_type.accrual == false
-                          nvb = vb
-                else 
-                    logger.debug("Vacation Type is nil in either/both rollover/accrual")
-                end
-
-                ####Hour Allowed Logic 
-                if (@vacation_type.accrual == true && uvt.length > 0 )
-                    logger.debug(" A = TRUE && UVT != 0")
-                    hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
-                    current_hours_allowed = hour_rate * months_at_job #This changes***
-                    hours_allowed = current_hours_allowed - total_hours_used 
-                elsif (@vacation_type.accrual == true && uvt.length <= 0)
-                    logger.debug(" A = TRUE && UVT is 0")
-                    hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
-                    hours_allowed = hour_rate * months_at_job  
-                elsif (@vacation_type.accrual == false && uvt.length > 0)
-                      logger.debug(" A == FALSE && UVT != 0")                    
-                      hours_allowed = nvb.to_f - total_hours_used
-                elsif (@vacation_type.accrual == false && uvt.length <= 0)
-                    logger.debug(" A = FALSE && UVT = 0")
-                    hours_allowed = nvb.to_f
-                else
-                    logger.debug("$$$$$$$$ Vacation Type.accrual is NIL #{@vacation_type.accrual}")
-                end #End Hours Allowed
-                logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
-
-      logger.debug("THE MATH...vb allows #{@vacation_type.vacation_bank * full_work_day} hours  & hours requested #{hours_requested}")
-      logger.debug("THE MATH The hourly rate is #{@vacation_type.vacation_bank}day times 8 hr/day divided by 12months so #{hour_rate} hr/m")
-      logger.debug("THE MATH -Accural-...time at job #{months_at_job} months times& hour rate #{hour_rate} is current hours allowed #{current_hours_allowed}")
-      logger.debug("THE MATH- Accural - ... total hours used for this vacation type is #{total_hours_used}")
-      logger.debug("THE MATH...Pass if hours allowed #{hours_allowed} is greater than hours requested #{hours_requested}")
-
-          if hours_requested.to_f > hours_allowed.to_f 
-            logger.debug("NO NOT TODAY!")
-              respond_to do |format|
-                format.js
-                @comment = "Sorry, you only have #{hours_allowed} hours avaliable, but requested #{hours_requested} hours"
-              end 
-          else
-              logger.debug("Success, this should showwww")
-                respond_to do |format|
-                  format.js{ render :template => "customers/pre_vacation_request_approve.js.erb" }
-                end 
-          end
-  end 
 
   private
     # Use callbacks to share common setup or constraints between actions.
