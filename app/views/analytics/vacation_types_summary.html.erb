@@ -22,20 +22,24 @@
       <% end %>       
     </div>
 
-    <table id="show_vacation_summary" class="display" width="100%" cellspacing="0">
-      <tr>
-      	<th> Users Email </th>
-      	<% @customer_types.each do |ct|%>
-        <th> <%= ct.vacation_title %> (<%= ct.vacation_bank %> hr)</th>
-        <% end %>
-      </tr>
+    <table id="show_vacation_summary" class="display">
+      <thead>
+        <tr>
+        	<th> Users Email </th>
+        	<% @customer_types.each do |ct|%>
+          <th> <%= ct.vacation_title %> (<%= ct.vacation_bank %> hr)</th>
+          <% end %>
+        </tr>
+      </thead>
       <% @user_hash.each do |key, value| %>
+      <tbody>
         <tr>
             <td> <%= key %> </td>
             <% value.each do |x| %>
               <td> <%= x.last %></td>
             <% end %>
         </tr>
+        </tbody>
         <% end %>
     </table>
 	</div>

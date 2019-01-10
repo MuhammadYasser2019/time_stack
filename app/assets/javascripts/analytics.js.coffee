@@ -134,11 +134,9 @@ jQuery ($) ->
 	  buttons: [
 	    {
 	      extend: 'excel',
-	      title: customer_name,
 	    },
 	    {
 	      extend: 'pdf',
-	      title: customer_name,
 	      orientation:'landscape',
 	      pageSize: 'TABLOID'
 	    }
