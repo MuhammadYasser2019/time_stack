@@ -130,7 +130,6 @@ jQuery ($) ->
 
 	$('#show_vacation_summary').DataTable({
 	  dom: 'lBfrtip', 
-	  "retrieve": true,
 	  buttons: [
 	    {
 	      extend: 'excel',

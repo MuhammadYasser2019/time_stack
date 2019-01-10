@@ -31,16 +31,16 @@
           <% end %>
         </tr>
       </thead>
-      <% @user_hash.each do |key, value| %>
       <tbody>
-        <tr>
-            <td> <%= key %> </td>
-            <% value.each do |x| %>
-              <td> <%= x.last %></td>
-            <% end %>
-        </tr>
-        </tbody>
+        <% @user_hash.each do |key, value| %>
+          <tr>
+              <td> <%= key %> </td>
+              <% value.each do |x| %>
+                <td> <%= x.last %></td>
+              <% end %>
+          </tr>
         <% end %>
+      </tbody>
     </table>
 	</div>
 </div> 
