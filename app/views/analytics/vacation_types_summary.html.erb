@@ -1,7 +1,6 @@
 <div>
 	<div class = "row">
     <h1>Vacation Hours Avaliable</h1>
-    <caption>User Vacation Hours Avaliable</caption> <!-- hide this -->
     <div>
       <h1> Select Options </h1>
       <%= form_tag do %>
@@ -23,6 +22,7 @@
     </div>
 
     <table id="show_vacation_summary" class="display">
+      <caption style="visibility:hidden;"> User Vacation Hours Avaliable</caption>
       <thead>
         <tr>
         	<th> Users Email </th>

@@ -29,7 +29,7 @@ class WeeksController < ApplicationController
     elsif current_user.pm?
       return redirect_to projects_path
     end
-  end
+  end 
 
   # GET /weeks/1
   # GET /weeks/1.json
@@ -347,11 +347,28 @@ class WeeksController < ApplicationController
     end #End Of Iteration for week_params
     test_array
     logger.debug("TEST ARRAY ---------------------#{test_array.inspect}")
-
-    if params[:commit] == "Save Timesheet"
-
+        ##
+        @user = current_user
+        customer = Customer.find(@user.customer_id)
+        full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+        hours_over_month = (full_work_day.to_f/12).to_f
         my_hash  = week_params["time_entries_attributes"]
-        status = Week.something(my_hash.to_h, current_user.id, week.id)
+        ##
+    if params[:commit] == "Save Timesheet"
+      #####
+        old_data = Week.old_data(full_work_day, week.id)
+          #returns current_hash
+          logger.debug("what is the old_data #{old_data}")
+        new_data = Week.new_data(my_hash.to_h, full_work_day, old_data)
+          #returns array_to_eval
+          logger.debug("what is the new_data #{new_data}")
+        final_data = Week.final_data(new_data)
+          #returns n_hash
+          logger.debug("what is the final_data #{final_data}")
+        status = Week.is_vacation_allowed(final_data, @user, full_work_day)
+          #returns true or false
+          logger.debug("what is the status #{status[:vacation_valid]}")
+      ####
           if status[:vacation_valid] == false ### DO NOT SAVE
               logger.debug("Invalid Request!")
               @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"
@@ -408,8 +425,20 @@ class WeeksController < ApplicationController
 ########## END MOVED LOGIC
           end # End Internal If Statement 
     elsif params[:commit] == "Submit Timesheet" 
-        my_hash  = week_params["time_entries_attributes"]
-        status = Week.something(my_hash.to_h, current_user.id, week.id)
+      #####
+        old_data = Week.old_data(full_work_day, week.id)
+          #returns current_hash
+          logger.debug("what is the old_data #{old_data}")
+        new_data = Week.new_data(my_hash.to_h, full_work_day, old_data)
+          #returns array_to_eval
+          logger.debug("what is the new_data #{new_data}")
+        final_data = Week.final_data(new_data)
+          #returns n_hash
+          logger.debug("what is the final_data #{final_data}")
+        status = Week.is_vacation_allowed(final_data, @user, full_work_day)
+          #returns true or false
+          logger.debug("what is the status #{status[:vacation_valid]}")
+      ####
           if status[:vacation_valid] == false ### DO NOT SAVE
               logger.debug("Invalid Request!")
               @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"

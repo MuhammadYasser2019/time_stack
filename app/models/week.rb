@@ -8,7 +8,6 @@ class Week < ApplicationRecord
   accepts_nested_attributes_for :upload_timesheets
   #mount_uploader :time_sheet, TimeSheetUploader
   EXPENSE_TYPE = ["Travel", "Stay","Food", "Gas", "Misc"]
-  #before_update :something 
 
 
   def self.current_user_time_entries(current_user)
@@ -27,245 +26,6 @@ class Week < ApplicationRecord
                    
     joins(weeks)
   end
-
-  def self.something(data, user, week)
-
-    logger.debug("data #{data} ")
-    logger.debug("looking for the user #{user}")
-    @user = User.find(user)
-    cte = TimeEntry.where(:week_id => week)
-
-    #full_work_day = Customer.find(@user.customer_id).regular_hours : 8 
-    customer = Customer.find(@user.customer_id)
-    full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
-    hours_over_month = (full_work_day.to_f/12).to_f
- 
-
-
-    ### FIRST LOGIC FIND THE CURRENT VALUES SAVED IN THE DB BY THE USER
-    current_values_array = []
-    current_hash = {}
-    cte.each_with_index do |x, i|
-        #logger.debug("Current Index #{i}")
-        current_hr = x.hours
-        current_pr =x.partial_day
-        current_vc_id= x.vacation_type_id
-
-        if current_hr != nil && current_pr == "true" && current_vc_id != nil
-          #logger.debug("Partial Day")
-          current_hr = 8 - current_hr.to_i
-        elsif current_hr != nil && (current_pr == nil||"false") && current_vc_id == nil
-          #logger.debug ("Actual Work Day")
-        elsif current_hr == nil && current_pr == "false" && current_vc_id != nil
-         # logger.debug("Full Day Save")
-        else
-          logger.debug("Issue with current index of #{i}")
-        end
-        current_values_array.push(current_hr,current_pr, current_vc_id)
-
-        current_hash[i] = current_values_array
-        current_values_array =[]
-        
-    end 
-      logger.debug("Current_DB VALUES #{current_hash}")
-
-
-    data = data.to_h
-    meoHash = {}
-    littleArray = []
-    #The Second HASH FINDS REQUESTED VALUES FROM THE PARAMETERS
-    data.each do |key, value |
-      hr = value["hours"] 
-      pr = value["partial_day"]
-      vc_id = value["vacation_type_id"]
-        if hr != nil && pr == "true" && vc_id != nil
-          #logger.debug("Partial Day")
-          hr = 8 - hr.to_i
-        elsif hr != nil && pr == nil && vc_id == ""
-          #logger.debug ("Actual Work Day")
-            hr = hr.to_i
-        elsif vc_id != nil && pr == nil 
-          #ogger.debug("Full Day Vacation REQUEST")
-          hr = 8
-        elsif (hr == nil||0) && pr == nil && vc_id == nil
-          #logger.debug("Full Day Save")
-        else
-          logger.debug("issue with requested at index #{key}")
-        end
-      littleArray.push(hr)
-      littleArray.push(pr)
-      littleArray.push(vc_id.to_i)
-      meoHash[key.to_i] = littleArray 
-      littleArray = []
-    end 
-      logger.debug("Requested Values #{meoHash}")
-      
-    ### Builds A Hash where DB values != Requested && VC_ID != 0 (0 means Full Day Vacation Or Worked Day)
-    array_to_eval = {}
-    meoHash.each_with_index do |value,i|
-          if meoHash[i] != current_hash[i] && meoHash[i][2] != 0
-                array_to_eval[i]= meoHash[i]
-          end
-    end
-    logger.debug("Hash to Eval... #{array_to_eval} ")
-
-      ### Merges the arrays with the same VC_ID. 
-      new_h = {}
-      array_to_eval.each do |key, val|
-          x1 = val[1]
-          x2 = val[2]
-          found = false
-          new_h.each do |key1, val2|
-            #y1 = val2[1]
-            y2 = val2[2]
-            #if x1 === y1 && x2 === y2
-            if  x2 ===  y2
-              found = true
-              arr = [val2[0].to_i + val[0].to_i, x1, x2]
-              new_h[key1] = arr
-            end
-          end
-          if !found
-            new_h[new_h.length] = val
-          end
-          if new_h.empty?
-            new_h[key] = val
-          end
-      end
-      logger.debug( "Array Merge #{new_h}")
-
-      #### This logic calculates if the user has enough hours to make the requested vacation
-      new_h.each do |key, array|  ### ITERATION
-            logger.debug("Index #{key} ARRAY::::: Hours:#{array[0]} Partial:#{array[1]} VC_ID: #{array[2]}")
-              #hours_worked = array[0]
-              hours_requested = array[0]
-              partial_day = array[1]
-              vacation_id = array[2]
-              logger.debug("WHAT DOES THIS SAY?! #{vacation_id.present?}")
-
-          if vacation_id.present? 
-            @vacation_type = VacationType.find(vacation_id)
-            uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , user )
-            logger.debug("Num Of VcRqst #{uvt.length}")
-            #HOURS_ALLOWED
-          if (@vacation_type.accrual == true && uvt.length > 0 )
-                logger.debug(" A = TRUE && UVT != 0")
-              #Total Days Used Logic
-                total_used = []
-                uvt.each do |x|
-                  if x.hours_used == nil
-                    total_used.push(0)
-                  else 
-                      total_used.push(x.hours_used)
-                  end 
-                end
-                logger.debug("Total Hours Used #{total_used}")
-                total_hours_used = total_used.inject :+  #Important
-
-                #Accural Logic(!First) 
-                    months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-                    #Logic for calculating with a new year
-                       year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
-                        logger.debug("year calculation is #{year}")
-                      if @vacation_type.rollover == true
-                        year = year * 12 #conversion to months
-                        months_at_job = year + months_at_job
-                      else 
-                           if year == 0 
-                               months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-                           else 
-                             months_at_job = Date.today.strftime('%m').to_f
-                           end 
-                      end 
-                      logger.debug("After RollOver Logic, what is the months_at_job #{months_at_job}")
-                    # end rollover logic
-                    hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
-                    logger.debug("PEEK A BOO hour rate is #{hour_rate}")
-                    current_hours_allowed = hour_rate * months_at_job #This changes***
-
-                  logger.debug("current days allowed #{current_hours_allowed} Total hours Used #{total_hours_used}")
-
-                  hours_allowed = current_hours_allowed - total_hours_used 
-                  logger.debug("Hours allowed #{hours_allowed}")
-
-          elsif (@vacation_type.accrual == true && uvt.length <= 0)
-              logger.debug(" A = TRUE && UVT is 0")
-              
-              #Accural Logic(First) 
-                    #Logic for calculating with a new year
-                    year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
-                    months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-                    logger.debug("year calculation is #{year}")
-                    if @vacation_type.rollover == true
-                      year = year * 12 #conversion to months
-                      months_at_job = year + months_at_job
-                    else 
-                         if year == 0 
-                             months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-                         else 
-                           months_at_job = Date.today.strftime('%m').to_f
-                         end 
-                    end 
-                    # end rollover logic
-              hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
-              hours_allowed = hour_rate * months_at_job  
-
-          elsif (@vacation_type.accrual == false && uvt.length > 0)
-              logger.debug(" A == FALSE && UVT != 0")
-                  total_used = []
-                  uvt.each do |x|
-                    if x.hours_used != nil
-                      total_used.push(x.hours_used)
-                    else 
-                        total_used.push(0)
-                    end 
-                  end
-                  total_hours_used = total_used.inject :+
-                  #logic for Rollover
-                  year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
-                  logger.debug("today #{(Date.today.strftime('%Y').to_f)}")
-                  logger.debug("start date #{(@user.invitation_start_date.strftime('%Y').to_f)}")
-                  year = year + 1
-                  vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
-                    if @vacation_type.rollover == true
-                      logger.debug("nvb is #{vb} x #{year}")
-                      nvb = vb * year 
-                    else 
-                      nvb = vb
-                    end
-                hours_allowed = nvb.to_f - total_hours_used
-                logger.debug(" VB Hours #{nvb} and total_hours_used is #{total_hours_used}")
-          elsif (@vacation_type.accrual == false && uvt.length <= 0)
-            logger.debug(" A = FALSE && UVT = 0")
-              year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
-              year = year + 1
-              vb  = @vacation_type.vacation_bank * full_work_day
-                if @vacation_type.rollover == true
-                  nvb = vb * year
-                  else 
-                 nvb = vb
-                             end
-              hours_allowed = nvb.to_f - total_hours_used
-                  hours_allowed = nvb
-          else
-              logger.debug("$$$$$$$$   something went WRONGGGGGGG !!!!!!!")
-          end #End Hours Allowed
-              logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
-
-              ############### should be >. ### Easy to test if you change it to "<"
-                if hours_requested.to_f > hours_allowed.to_f
-                  logger.debug("Vacation Request Does Not Have The Hours")
-                  smash = { vacation_valid: false, hours_requested: hours_requested, hours_allowed: hours_allowed }
-                  return smash 
-                else
-                  logger.debug("Vacation Request Valid")
-                  smash = { vacation_valid: true, hours_requested: hours_requested, hours_allowed: hours_allowed }
-                  return smash 
-                end 
-          end #if vacation.id present?
-           logger.debug("THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION THIS IS THE END OF THE ITERATION ")   
-        end### End Iteration
-  end 
 
   def self.left_joins_user_week_statuses(some_user, week_id)
     weeks = Week.where("weeks.id = ?", week_id).weeks_with_user_week_statuses(some_user)
@@ -421,4 +181,190 @@ class Week < ApplicationRecord
 
   
     end 
+
+
+
+def self.old_data(full_work_day, week)
+    ### FIRST LOGIC FIND THE CURRENT VALUES SAVED IN THE DB BY THE USER
+        cte = TimeEntry.where(:week_id => week)
+        current_values_array = []
+        current_hash = {}
+        cte.each_with_index do |x, i|
+            current_hr = x.hours
+            current_pr =x.partial_day
+            current_vc_id= x.vacation_type_id
+              #The Database saves these values different then the request are made. Reason it is different
+              if current_hr != nil && current_pr == "true" && current_vc_id != nil
+                #Partial Day
+                current_hr = full_work_day - current_hr.to_i
+              elsif current_hr != nil && (current_pr == nil||"false") && current_vc_id == nil
+                #logger.debug ("Actual Work Day")
+              elsif current_hr == nil && current_pr == "false" && current_vc_id != nil
+               # logger.debug("Full Day Save")
+              else
+                logger.debug("index of #{i} is not partial, requested or saved?")
+              end
+            current_values_array.push(current_hr,current_pr, current_vc_id)
+            current_hash[i] = current_values_array
+            current_values_array =[]
+        end 
+        return current_hash
+end 
+
+def self.new_data(data, full_work_day, current_hash)
+  logger.debug(" In New")
+  full_work_day = full_work_day
+  current_hash = current_hash
+   data = data.to_h
+   ##Second Hash is requested values.
+      requested_hash = {}
+      littleArray = []
+      data.each do |key, value |
+        hr = value["hours"] 
+        pr = value["partial_day"]
+        vc_id = value["vacation_type_id"]
+          #The Database saves these values different then the request are made. Reason it is different
+          if hr != nil && pr == "true" && vc_id != nil
+            #logger.debug("Partial Day")
+            hr = full_work_day - hr.to_i
+          elsif hr != nil && pr == nil && vc_id == ""
+            #logger.debug ("Actual Work Day")
+              hr = hr.to_i
+          elsif vc_id != nil && pr == nil 
+            #ogger.debug("Full Day Vacation REQUEST")
+            hr = full_work_day
+          elsif (hr == nil||0) && pr == nil && vc_id == nil
+            #logger.debug("Full Day Save")
+          else
+            logger.debug("issue with requested at index #{key}")
+          end
+        littleArray.push(hr)
+        littleArray.push(pr)
+        littleArray.push(vc_id.to_i)
+        requested_hash[key.to_i] = littleArray 
+        littleArray = []
+      end 
+        logger.debug("Requested Values #{requested_hash}")
+        
+      ### Builds A Hash where DB values != Requested && VC_ID != 0 (0 means Requested Full Day Vacation Or Worked Day)
+      array_to_eval = {}
+      requested_hash.each_with_index do |value,i|
+            if requested_hash[i] != current_hash[i] && requested_hash[i][2] != 0
+                  array_to_eval[i]= requested_hash[i]
+            end
+      end
+      return array_to_eval
+end 
+
+def self.final_data(array_to_eval)
+  ### Merges the arrays with the same VC_ID. 
+        new_h = {}
+        array_to_eval.each do |key, val|
+            x1 = val[1]
+            x2 = val[2]
+            found = false
+            new_h.each do |key1, val2|
+              y2 = val2[2]
+              if  x2 ===  y2
+                found = true
+                arr = [val2[0].to_i + val[0].to_i, x1, x2]
+                new_h[key1] = arr
+              end
+            end
+            if !found
+              new_h[new_h.length] = val
+            end
+            if new_h.empty?
+              new_h[key] = val
+            end
+        end
+        return new_h
+end 
+
+  def self.is_vacation_allowed(data, user, full_work_day) 
+    new_h = data
+    @user = User.find(user.id)
+    hours_over_month = (full_work_day.to_f/12).to_f
+
+      #### This logic calculates if the user has enough hours to make the requested vacation
+      new_h.each do |key, array|  ### ITERATION
+            logger.debug("Index #{key} ARRAY::::: Hours:#{array[0]} Partial:#{array[1]} VC_ID: #{array[2]}")
+              hours_requested = array[0]
+              partial_day = array[1]
+              vacation_id = array[2]
+
+          if vacation_id.present? 
+              @vacation_type = VacationType.find(vacation_id)
+              uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , user )
+              logger.debug("Num Of VcRqst #{uvt.length}")
+              year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
+              months = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
+              vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
+              #HOURS_ALLOWED
+              ###Calculate Total Hours
+                total_used = []
+                uvt.each do |x|
+                  if x.hours_used != nil
+                    total_used.push(x.hours_used)
+                  else 
+                      total_used.push(0)
+                  end 
+                end
+                total_hours_used = total_used.inject :+
+                ### Accrual Rollover/NewYear Logic
+                if @vacation_type.rollover == true && @vacation_type.accrual == true
+                          year = year * 12
+                          if year == 0 
+                                months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
+                          else 
+                                months_at_job = year + months
+                          end 
+                elsif @vacation_type.rollover == false && @vacation_type.accrual == true 
+                          #Start accrual over at 0. ie) start 3-2018, its 3-2019.. they have 3 months at job for vacation matters
+                          months_at_job = Date.today.strftime('%m').to_f
+                elsif @vacation_type.rollover == true && @vacation_type.accrual == false
+                          year = year + 1
+                          nvb = vb * year 
+                elsif @vacation_type.rollover == false && @vacation_type.accrual == false
+                          nvb = vb
+                else 
+                    logger.debug("Vacation Type is nil in either/both rollover/accrual")
+                end
+
+                ####Hour Allowed Logic 
+                if (@vacation_type.accrual == true && uvt.length > 0 )
+                    logger.debug(" A = TRUE && UVT != 0")
+                    hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
+                    current_hours_allowed = hour_rate * months_at_job #This changes***
+                    hours_allowed = current_hours_allowed - total_hours_used 
+                elsif (@vacation_type.accrual == true && uvt.length <= 0)
+                    logger.debug(" A = TRUE && UVT is 0")
+                    hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
+                    hours_allowed = hour_rate * months_at_job  
+                elsif (@vacation_type.accrual == false && uvt.length > 0)
+                      logger.debug(" A == FALSE && UVT != 0")                    
+                      hours_allowed = nvb.to_f - total_hours_used
+                elsif (@vacation_type.accrual == false && uvt.length <= 0)
+                    logger.debug(" A = FALSE && UVT = 0")
+                    hours_allowed = nvb.to_f
+                else
+                    logger.debug("$$$$$$$$ Vacation Type.accrual is NIL #{@vacation_type.accrual}")
+                end #End Hours Allowed
+                logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
+
+                ############### should be >. ### Easy to test if you change it to "<"
+                  if hours_requested.to_f > hours_allowed.to_f
+                    logger.debug("Vacation Request Does Not Have The Hours")
+                    smash = { vacation_valid: false, hours_requested: hours_requested, hours_allowed: hours_allowed }
+                    return smash 
+                  else
+                    logger.debug("Vacation Request Valid")
+                    smash = { vacation_valid: true, hours_requested: hours_requested, hours_allowed: hours_allowed }
+                    return smash 
+                  end 
+          end #if vacation.id present?
+           logger.debug("There was no Vacation_id to eval")   
+        end### End Iteration
+  end
+
 end
