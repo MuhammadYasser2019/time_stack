@@ -5,31 +5,35 @@
 				<%= f.label :vacation_title %>
 				<%= f.text_field :vacation_title %>
 			</div> 
-			<div id ="active" class="medium-2 columns">
-				<%= f.label :Active %> 
-				<%= f.check_box :active,  :id => "active_boolean"%>
-			</div>
-			<div id="paid_c" class="medium-2 columns">
-				<%= f.label :Paid %>
-				<%= f.check_box :paid, :id => "paid_boolean" %>
-			</div>
-			<div id="rollover" class="medium-2 columns">
-				<%= f.label :Rollover %>
-				<%= f.check_box :rollover, :id => "rollover_boolean" %> 
+			<div class="row">
+				<div id ="active" class="medium-4 columns">
+					<%= f.label :Active %> 
+					<%= f.check_box :active,  :id => "active_boolean"%>
+				</div>
+				<div id="paid_c" class="medium-4 columns rbtn">
+					<%= f.label :Paid %>
+					<%= f.check_box :paid, :id => "paid_boolean" %>
+				</div>
+				<div id="rollover" class="medium-4 columns rbtn">
+					<%= f.label :Rollover %>
+					<%= f.check_box :rollover, :id => "rollover_boolean" %> 
+				</div>
 			</div>
 		</div>
-
-
+<br>
+<br>
+<br>
 	<div id="active_display" class="active_display">
 		<div class="row">
-			<div class=" medium-4 columns">
+			<div class=" medium-6 columns">
 				<%= f.label :Number_of_Days%>
 				<%= f.number_field(:vacation_bank, in: 1..31) %>
-			</div>
-
-			<div id ="accural" class=" medium-4 columns">
-				<%= f.label :Accural %> 
-				<%= f.check_box :accrual%>
+			</div> 
+			<div class="row">
+				<div id ="accural" class=" medium-4 columns">
+					<%= f.label :Accural %> 
+					<%= f.check_box :accrual%>
+				</div>
 			</div>
 		</div>
 	</div>
