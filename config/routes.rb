@@ -182,7 +182,9 @@ Rails.application.routes.draw do
 
   get "analytics/vacation_reports/customer/:customer_id" => 'analytics#vacation_report'
   get "/analytics/user_activities/:customer_id" => 'analytics#user_activities' 
-  get "analytics/vacation_types/:customer_id" => 'analytics#vacation_types' 
+  get "analytics/vacation_types_summary/:customer_id" => 'analytics#vacation_types_summary' 
+  post "analytics/vacation_types_summary/:customer_id" => 'analytics#vacation_types_summary' 
+  get 'user_summary' => "analytics#user_summary"
 
   match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
   post "/bar_graph" => 'analytics#bar_graph'

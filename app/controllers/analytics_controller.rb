@@ -250,44 +250,76 @@ class AnalyticsController < ApplicationController
     @project_ids = @cus_projects.pluck(:id)
   end
 
-  def vacation_types
-
-    @customer_id = params[:customer_id]
-    @vacation_types = VacationType.where(customer_id: params[:customer_id])
-        @customer_types = @vacation_types.uniq{|x| x.id} ## Change to distinct 
-        logger.debug("current types are #{@current_types}")
-    @users = User.where(customer_id: params[:customer_id]) 
-        @user_hash = {}
-        @users.each do |user|
-            vt_hash = {}
-            @customer_types.each do |ct|
-                hours_avaliable = ct.vacation_bank
-                @uvr = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
-                    currentuser = user.email
-                    if @uvr.length < 1 
-                        logger.debug("length less than 0")
-                        vt_hash[ct.id] = hours_avaliable.to_i
-                    else 
-                        total_hours_used = @uvr.pluck(:hours_used) 
-                        sum_of_hours = []
-                            total_hours_used.each do |x|
-                                x = x.to_i 
-                                sum_of_hours.push(x)
-                            end
-                        sum_of_hours = sum_of_hours.sum 
-                    end
-
-                    if sum_of_hours == nil
-                        sum_of_hours = hours_avaliable.to_i
-                    else 
-                        sum_of_hours = hours_avaliable - sum_of_hours
-                    end
-                    vt_hash[ct.id] = sum_of_hours
-                    sum_of_hours =[]
-                    @user_hash[currentuser] = vt_hash
-                    logger.debug("hash... #{@user_hash}")
+  def vacation_types_summary
+###
+            if params[:user_status] == "Not Active"
+                is_active = false
+            else 
+                is_active = true
             end 
-        end      
+             #If user doesnt pick a date, default is 01-01-thisyear
+            if params[:start_date].present?
+                start_date = params[:start_date]
+            else 
+                s_year = Date.today.strftime('%Y').to_i
+                start_date = s_year.to_s + "-01-01"
+            end 
+
+            #if no end date, today is the end date
+            if params[:end_date].present?
+                end_date = params[:end_date]
+            else 
+                end_date = Date.today
+            end 
+            logger.debug(" Look #{start_date} and #{end_date} and finally #{is_active}")
+
+###
+        @customer_id = params[:customer_id]
+        @vacation_types = VacationType.where(customer_id: params[:customer_id])
+            @customer_types = @vacation_types.uniq{|x| x.id} ## Change to distinct 
+            logger.debug("current types are #{@current_types}")
+            @users = User.where("customer_id=? and is_active=?", params[:customer_id], is_active) 
+            @user_hash = {}
+            @users.each do |user|
+                vt_hash = {}
+                @customer_types.each do |ct|
+                    hours_avaliable = ct.vacation_bank
+                    @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
+                         d_range = (start_date.to_date .. end_date.to_date)
+                         @uvr=[]
+                         @uvrF.each do |ww|
+                            in_range = d_range.cover?(ww.vacation_start_date)
+                            logger.debug("is #{ww.vacation_start_date.to_date} within #{d_range}... #{in_range}")
+                            if in_range == true
+                                @uvr.push(ww)
+                            end 
+                          end 
+
+                            currentuser = user.email
+                            if @uvr.length < 1 
+                                vt_hash[ct.id] = hours_avaliable.to_i
+                            else 
+                                logger.debug("value added")
+                                total_hours_used = @uvr.pluck(:hours_used) 
+                                sum_of_hours = []
+                                    total_hours_used.each do |x|
+                                        x = x.to_i 
+                                        sum_of_hours.push(x)
+                                    end
+                                sum_of_hours = sum_of_hours.sum 
+                            end
+
+                            if sum_of_hours == nil
+                                sum_of_hours = hours_avaliable.to_i
+                            else 
+                                sum_of_hours = hours_avaliable - sum_of_hours
+                            end
+                            vt_hash[ct.id] = sum_of_hours
+                            sum_of_hours =[]
+                            @user_hash[currentuser] = vt_hash
+                           ## logger.debug("hash... #{@user_hash}")
+                end 
+            end 
   end 
 
   def customer_reports
