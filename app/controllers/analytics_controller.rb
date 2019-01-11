@@ -251,7 +251,9 @@ class AnalyticsController < ApplicationController
   end
 
   def vacation_types_summary
-###
+# update the days available displayed in the column and convert to hours 
+
+
             if params[:user_status] == "Not Active"
                 is_active = false
             else 
@@ -264,19 +266,21 @@ class AnalyticsController < ApplicationController
                 s_year = Date.today.strftime('%Y').to_i
                 start_date = s_year.to_s + "-01-01"
             end 
-
+                @sss = start_date
             #if no end date, today is the end date
             if params[:end_date].present?
                 end_date = params[:end_date]
             else 
                 end_date = Date.today
             end 
+                @eee = end_date
             logger.debug(" Look #{start_date} and #{end_date} and finally #{is_active}")
 
 ###
         @customer_id = params[:customer_id]
-        #@vacation_types = VacationType.where(customer_id: params[:customer_id])
-        @vacation_types = VacationType.where("customer_id=? and paid=?", params[:customer_id], true) 
+        @vacation_types = VacationType.where(customer_id: params[:customer_id])
+        #@vacation_types = VacationType.where("customer_id=? and paid=?", params[:customer_id], true) 
+
         logger.debug("what is the length #{@vacation_types.length}")
             @customer_types = @vacation_types.uniq{|x| x.id} ## Change to distinct 
             logger.debug("current types are #{@current_types}")
@@ -288,8 +292,58 @@ class AnalyticsController < ApplicationController
             @user_hash = {}
             @users.each do |user|
                 vt_hash = {}
+                @hours_array = []
                 @customer_types.each do |ct|
-                    hours_avaliable = ct.vacation_bank.to_i * full_work_day.to_i
+                    ###Shared Logic
+                        request_year = (end_date.to_date.strftime('%Y').to_f) - (start_date.to_date.strftime('%Y').to_f)
+                        request_months = (end_date.to_date.year * 12 + end_date.to_date.month) - (start_date.to_date.year * 12 + start_date.to_date.month)
+                        months_to_date = Date.today.strftime('%m').to_f
+                        hours_over_month = (full_work_day.to_f/12).to_f
+                        ###
+                        days_to_hours = ct.vacation_bank.to_f * full_work_day.to_f
+                        hours_per_month = (days_to_hours/12).to_f
+                        logger.debug("what is hours #{hours_over_month} and what is fwd #{full_work_day}")
+
+                    ###
+                    logger.debug(" What is ct #{ct.inspect}")
+                    logger.debug("Is it Accural #{ct.accrual}")
+                    logger.debug("Is it Rollover #{ct.rollover}")
+                    logger.debug(" ONE #{request_year}")
+                    logger.debug("two #{request_months}")
+
+                    ###Calc the hours Avaliable in that time frame
+                        if ct.accrual == false || nil && ct.rollover == false || nil
+                            logger.debug(" Non Accural and No Rollover")
+                            hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
+
+                        elsif ct.accrual == false || nil && ct.rollover == true
+                            logger.debug(" Non Accural and Rollover")
+                            year_hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
+                            request_year = request_year + 1
+                            hours_avaliable = year_hours_avaliable.to_f * request_year
+
+                        elsif ct.accrual == true && ct.rollover == false || nil
+                            logger.debug("Accural and No Rollover")
+                                days_to_hours = ct.vacation_bank.to_f * full_work_day.to_f
+                                hours_per_month = (days_to_hours/12).to_f
+                                hours_avaliable = (hours_per_month * months_to_date).to_f
+
+                        elsif ct.accrual == true && ct.rollover == true
+                            logger.debug("Accural and Rollover")
+                                hours_avaliable = (hours_per_month * request_months).to_f
+                            if hours_avaliable == 0
+                                hours_avaliable = hours_per_month.to_f
+                            end 
+                        end
+
+                       # if hours_avaliable == 0 
+                        #    @hours_array.push(0)
+                        #else 
+                            @hours_array.push(hours_avaliable)
+                        #end 
+
+                        logger.debug("what is hour array #{@hours_array}")
+                    # hours_avaliable = ct.vacation_bank.to_i * full_work_day.to_i
                     @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
                          d_range = (start_date.to_date .. end_date.to_date)
                          @uvr=[]
@@ -304,21 +358,21 @@ class AnalyticsController < ApplicationController
                           #######
                             currentuser = user.email 
                             if @uvr.length < 1 
-                                vt_hash[ct.id] = hours_avaliable.to_i
+                                vt_hash[ct.id] = hours_avaliable.to_f
                             else 
                                 logger.debug("value added")
                                 total_hours_used = @uvr.pluck(:hours_used) 
 
                                 sum_of_hours = []
                                     total_hours_used.each do |x|
-                                        x = x.to_i 
+                                        x = x.to_f
                                         sum_of_hours.push(x)
                                     end
                                 sum_of_hours = sum_of_hours.sum 
                             end
                             #######
                             if sum_of_hours == nil
-                                sum_of_hours = hours_avaliable.to_i
+                                sum_of_hours = hours_avaliable.to_f
                             else 
                                 sum_of_hours = hours_avaliable - sum_of_hours
                             end

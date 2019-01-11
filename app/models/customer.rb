@@ -229,7 +229,10 @@ class Customer < ApplicationRecord
 
   def self.is_vacation_allowed(uvt, vacation_type, user,full_work_day)
       @vacation_type = vacation_type
+
       hours_over_month = (full_work_day.to_f/12).to_f
+      hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
+      
     if @vacation_type.vacation_bank <= 0 || @vacation_type.vacation_bank == nil
         logger.debug("The User needs to update the VacationBank for this VacationType")
         hours_allowed = "BANANA"
@@ -278,19 +281,18 @@ class Customer < ApplicationRecord
         ####Hour Allowed Logic 
                     if (@vacation_type.accrual == true && uvt.length > 0 )
                         logger.debug(" A = TRUE && UVT != 0")
-
-                        hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
-                        logger.debug("Accrual breakdown hour rate #{hour_rate}")
                         current_hours_allowed = hour_rate * months_at_job #This changes***
                         logger.debug("Accrual current_hours_allowed #{current_hours_allowed}")
                         hours_allowed = current_hours_allowed - total_hours_used 
+
                     elsif (@vacation_type.accrual == true && uvt.length <= 0)
                         logger.debug(" A = TRUE && UVT is 0")
-                        hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
                         hours_allowed = hour_rate * months_at_job  
+
                     elsif (@vacation_type.accrual == false && uvt.length > 0)
                           logger.debug(" A == FALSE && UVT != 0")                    
                           hours_allowed = nvb.to_f - total_hours_used
+
                     elsif (@vacation_type.accrual == false && uvt.length <= 0)
                         logger.debug(" A = FALSE && UVT = 0")
                         hours_allowed = nvb.to_f

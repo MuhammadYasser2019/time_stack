@@ -2,7 +2,7 @@
 	<div class = "row">
     <h1>Vacation Hours Avaliable</h1>
     <div>
-      <h1> Select Options </h1>
+      <h1> Select Options</h1>
       <%= form_tag do %>
         <table>
           <tr>
@@ -12,8 +12,8 @@
             <th>Update</th>
           </tr>
           <tr>
-            <th><%= date_field_tag 'start_date', params[:start_date], {class: "start_date"} %></th>
-            <th><%= date_field_tag 'end_date', params[:end_date], { class: "end_date"} %> </th>
+            <th><%= date_field_tag 'start_date', params[:start_date], {class: "start_date", value: @sss.to_date} %></th>
+            <th><%= date_field_tag 'end_date', params[:end_date], { class: "end_date", value: @eee.to_date} %> </th>
             <th> <%= select_tag "user_status", options_for_select(["Active", "Not Active"]) , {class: "user_status"} %> </th>
             <th> <%= button_tag "Submit" %> </th>
           </tr>
@@ -23,14 +23,24 @@
 
     <table id="show_vacation_summary" class="display">
       <caption style="visibility:hidden;"> User Vacation Hours Avaliable</caption>
+
       <thead>
         <tr>
         	<th> Users Email </th>
         	<% @customer_types.each do |ct|%>
-          <th> <%= ct.vacation_title %> (<%= ct.vacation_bank %> days)</th>
+          <th> <%= ct.vacation_title %> </th>
           <% end %>
         </tr>
       </thead>
+
+      <tfoot>
+        <tr>
+          <th>Hours Avaliable Per Request</th>
+          <% @hours_array.each do |hr| %>
+          <th><%= hr %></th>
+          <% end %>
+        </tr>
+      </tfoot>
       <tbody>
         <% @user_hash.each do |key, value| %>
           <tr>
