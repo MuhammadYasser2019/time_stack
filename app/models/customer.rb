@@ -229,10 +229,22 @@ class Customer < ApplicationRecord
 
   def self.is_vacation_allowed(uvt, vacation_type, user,full_work_day)
       @vacation_type = vacation_type
+      hours_over_month = (full_work_day.to_f/12).to_f
+      logger.debug("what is v #{@vacation_type.inspect}")
+
+    if @vacation_type.vacation_bank == 0 || nil
+      hours_allowed = "BANANA"
+      return hours_allowed
+    else
       @user = user
       year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
       months = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-      vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
+
+      if @vacation_type.vacation_bank == nil 
+        vb = 0
+      else 
+        vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
+      end
       ###Calculate Total Hours
                   total_used = []
                   uvt.each do |x|
@@ -251,6 +263,7 @@ class Customer < ApplicationRecord
                             else 
                                   months_at_job = year + months
                             end 
+                            logger.debug("in the rollover logic maj #{months_at_job}")
                   elsif @vacation_type.rollover == false && @vacation_type.accrual == true 
                             #Start accrual over at 0. ie) start 3-2018, its 3-2019.. they have 3 months at job for vacation matters
                             months_at_job = Date.today.strftime('%m').to_f
@@ -266,8 +279,11 @@ class Customer < ApplicationRecord
       ####Hour Allowed Logic 
                   if (@vacation_type.accrual == true && uvt.length > 0 )
                       logger.debug(" A = TRUE && UVT != 0")
+
                       hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
+                      logger.debug("Accrual breakdown hour rate #{hour_rate}")
                       current_hours_allowed = hour_rate * months_at_job #This changes***
+                      logger.debug("Accrual current_hours_allowed #{current_hours_allowed}")
                       hours_allowed = current_hours_allowed - total_hours_used 
                   elsif (@vacation_type.accrual == true && uvt.length <= 0)
                       logger.debug(" A = TRUE && UVT is 0")
@@ -283,6 +299,7 @@ class Customer < ApplicationRecord
                       logger.debug("$$$$$$$$ Vacation Type.accrual is NIL #{@vacation_type.accrual}")
                   end #End Hours Allowed
           return hours_allowed
+        end #End If for vacation_type.length
   end 
 
 end

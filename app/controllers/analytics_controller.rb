@@ -275,7 +275,9 @@ class AnalyticsController < ApplicationController
 
 ###
         @customer_id = params[:customer_id]
-        @vacation_types = VacationType.where(customer_id: params[:customer_id])
+        #@vacation_types = VacationType.where(customer_id: params[:customer_id])
+        @vacation_types = VacationType.where("customer_id=? and paid=?", params[:customer_id], true) 
+        logger.debug("what is the length #{@vacation_types.length}")
             @customer_types = @vacation_types.uniq{|x| x.id} ## Change to distinct 
             logger.debug("current types are #{@current_types}")
             @users = User.where("customer_id=? and is_active=?", params[:customer_id], is_active) 

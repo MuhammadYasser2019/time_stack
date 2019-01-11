@@ -282,6 +282,7 @@ def self.final_data(array_to_eval)
 end 
 
   def self.is_vacation_allowed(data, user, full_work_day) 
+    ### Gonna have to pop value from array where that vacation_type_id: paid false||nil 
     new_h = data
     @user = User.find(user.id)
     hours_over_month = (full_work_day.to_f/12).to_f
@@ -293,8 +294,18 @@ end
               partial_day = array[1]
               vacation_id = array[2]
 
-          if vacation_id.present? 
               @vacation_type = VacationType.find(vacation_id)
+              logger.debug("what does this return #{@vacation_type.inspect}")
+          if (@vacation_type.paid == nil || false ) || (@vacation_type.vacation_bank == nil || 0 )
+            
+            logger.debug("this shouldn't run")
+
+          else vacation_id.present? 
+              
+             # if @vacation_type.paid == nil || @vacation_type.present?
+                logger.debug("This is an issue")
+                #skip the logic
+              #@vacation_types = VacationType.where("customer_id=? and paid=?", params[:customer_id], true)
               uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , user )
               logger.debug("Num Of VcRqst #{uvt.length}")
               year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
