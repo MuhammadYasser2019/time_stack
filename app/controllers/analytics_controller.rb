@@ -283,25 +283,25 @@ class AnalyticsController < ApplicationController
 
              customer = Customer.find(params[:customer_id])
              full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
-
-
+             logger.debug("full work day #{full_work_day}")
             @users = User.where("customer_id=? and is_active=?", params[:customer_id], is_active) 
             @user_hash = {}
             @users.each do |user|
                 vt_hash = {}
                 @customer_types.each do |ct|
-                    hours_avaliable = ct.vacation_bank * full_work_day
+                    hours_avaliable = ct.vacation_bank.to_i * full_work_day.to_i
                     @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
                          d_range = (start_date.to_date .. end_date.to_date)
                          @uvr=[]
+                         logger.debug("what is uvr #{@uvr}")
                          @uvrF.each do |ww|
-                            in_range = d_range.cover?(ww.vacation_start_date)
-                            logger.debug("is #{ww.vacation_start_date.to_date} within #{d_range}... #{in_range}")
-                            if in_range == true
-                                @uvr.push(ww)
-                            end 
+                                in_range = d_range.cover?(ww.vacation_start_date)
+                                logger.debug("is #{ww.vacation_start_date.to_date} within #{d_range}... #{in_range}")
+                                if in_range == true
+                                    @uvr.push(ww)
+                                end 
                           end 
-
+                          #######
                             currentuser = user.email 
                             if @uvr.length < 1 
                                 vt_hash[ct.id] = hours_avaliable.to_i
@@ -316,7 +316,7 @@ class AnalyticsController < ApplicationController
                                     end
                                 sum_of_hours = sum_of_hours.sum 
                             end
-
+                            #######
                             if sum_of_hours == nil
                                 sum_of_hours = hours_avaliable.to_i
                             else 
@@ -325,7 +325,7 @@ class AnalyticsController < ApplicationController
                             vt_hash[ct.id] = sum_of_hours
                             sum_of_hours =[]
                             @user_hash[currentuser] = vt_hash
-                           ## logger.debug("hash... #{@user_hash}")
+                           ##logger.debug("hash... #{@user_hash}")
                 end 
             end 
   end 
