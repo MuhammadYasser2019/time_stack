@@ -280,12 +280,17 @@ class AnalyticsController < ApplicationController
         logger.debug("what is the length #{@vacation_types.length}")
             @customer_types = @vacation_types.uniq{|x| x.id} ## Change to distinct 
             logger.debug("current types are #{@current_types}")
+
+             customer = Customer.find(params[:customer_id])
+             full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+
+
             @users = User.where("customer_id=? and is_active=?", params[:customer_id], is_active) 
             @user_hash = {}
             @users.each do |user|
                 vt_hash = {}
                 @customer_types.each do |ct|
-                    hours_avaliable = ct.vacation_bank
+                    hours_avaliable = ct.vacation_bank * full_work_day
                     @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
                          d_range = (start_date.to_date .. end_date.to_date)
                          @uvr=[]
@@ -297,12 +302,13 @@ class AnalyticsController < ApplicationController
                             end 
                           end 
 
-                            currentuser = user.email
+                            currentuser = user.email 
                             if @uvr.length < 1 
                                 vt_hash[ct.id] = hours_avaliable.to_i
                             else 
                                 logger.debug("value added")
                                 total_hours_used = @uvr.pluck(:hours_used) 
+
                                 sum_of_hours = []
                                     total_hours_used.each do |x|
                                         x = x.to_i 
