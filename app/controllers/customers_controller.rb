@@ -309,7 +309,6 @@
       logger.debug("what is what is what is #{@vacation_type.inspect}")
       if @vacation_type.paid == true
           uvt = VacationRequest.where("vacation_type_id=? and user_id=?",params[:vacation_type_id], @user.id )
-          ####
           weekend_counter = Customer.holiday_weekend_count(@user, start_date, end_date)
             logger.debug("the weekend/holiday count is #{weekend_counter}")
             correct_days = num_of_days - weekend_counter
@@ -322,14 +321,15 @@
             hours_allowed = 0
           end 
             logger.debug("Hours That Are Allowed #{hours_allowed}")
-      else
-        if hours_allowed == "BANANA"
-          logger.debug("ITS A BANANA")
-          #situation for unpaid VT
-          hours_requested = 0
-          hours_allowed = 0
-        end 
+      else ### VACATIONTYPE IS FALSE
+          if hours_allowed == "BANANA"
+            logger.debug("ITS A BANANA")
+            #situation for unpaid VT
+            hours_requested = 0
+            hours_allowed = 0
+          end 
       end 
+      
           #should be > #### easy to test if you use <
           if hours_requested.to_f > hours_allowed.to_f 
             logger.debug("NO NOT TODAY!")
