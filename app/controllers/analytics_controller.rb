@@ -297,36 +297,38 @@ class AnalyticsController < ApplicationController
                     ###Shared Logic
                         request_year = (end_date.to_date.strftime('%Y').to_f) - (start_date.to_date.strftime('%Y').to_f)
                         request_months = (end_date.to_date.year * 12 + end_date.to_date.month) - (start_date.to_date.year * 12 + start_date.to_date.month)
-                        months_to_date = Date.today.strftime('%m').to_f
-                        hours_over_month = (full_work_day.to_f/12).to_f
+                        months_to_date = end_date.to_date.strftime('%m').to_f
                         ###
                         days_to_hours = ct.vacation_bank.to_f * full_work_day.to_f
                         hours_per_month = (days_to_hours/12).to_f
-                        logger.debug("what is hours #{hours_over_month} and what is fwd #{full_work_day}")
+
+                        logger.debug("request_months#{request_months} x hours_per_month#{hours_per_month} ")
 
                     ###
                     logger.debug(" What is ct #{ct.inspect}")
-                    logger.debug("Is it Accural #{ct.accrual}")
-                    logger.debug("Is it Rollover #{ct.rollover}")
-                    logger.debug(" ONE #{request_year}")
-                    logger.debug("two #{request_months}")
+                    logger.debug("Rollover? #{ct.rollover}")
+                    logger.debug("Accural? #{ct.accrual}")
+
+
 
                     ###Calc the hours Avaliable in that time frame
                         if ct.accrual == false || nil && ct.rollover == false || nil
                             logger.debug(" Non Accural and No Rollover")
                             hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
+                            logger.debug("hours_avaliable is #{hours_avaliable}")
 
                         elsif ct.accrual == false || nil && ct.rollover == true
                             logger.debug(" Non Accural and Rollover")
                             year_hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
                             request_year = request_year + 1
                             hours_avaliable = year_hours_avaliable.to_f * request_year
+                            logger.debug("hours_avaliable is #{hours_avaliable}")
 
                         elsif ct.accrual == true && ct.rollover == false || nil
                             logger.debug("Accural and No Rollover")
-                                days_to_hours = ct.vacation_bank.to_f * full_work_day.to_f
-                                hours_per_month = (days_to_hours/12).to_f
-                                hours_avaliable = (hours_per_month * months_to_date).to_f
+                                hours_avaliable = (hours_per_month.to_f * months_to_date.to_f).to_f
+
+                                logger.debug("hours_avaliable is #{hours_avaliable}")
 
                         elsif ct.accrual == true && ct.rollover == true
                             logger.debug("Accural and Rollover")
@@ -334,15 +336,16 @@ class AnalyticsController < ApplicationController
                             if hours_avaliable == 0
                                 hours_avaliable = hours_per_month.to_f
                             end 
+                            logger.debug("hours_avaliable is #{hours_avaliable}")
                         end
 
                        # if hours_avaliable == 0 
                         #    @hours_array.push(0)
                         #else 
-                            @hours_array.push(hours_avaliable)
+                            @hours_array.push(hours_avaliable.round(2))
                         #end 
 
-                        logger.debug("what is hour array #{@hours_array}")
+                        #logger.debug("what is hour array #{@hours_array}")
                     # hours_avaliable = ct.vacation_bank.to_i * full_work_day.to_i
                     @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
                          d_range = (start_date.to_date .. end_date.to_date)
@@ -350,7 +353,7 @@ class AnalyticsController < ApplicationController
                          logger.debug("what is uvr #{@uvr}")
                          @uvrF.each do |ww|
                                 in_range = d_range.cover?(ww.vacation_start_date)
-                                logger.debug("is #{ww.vacation_start_date.to_date} within #{d_range}... #{in_range}")
+                                #logger.debug("is #{ww.vacation_start_date.to_date} within #{d_range}... #{in_range}")
                                 if in_range == true
                                     @uvr.push(ww)
                                 end 
@@ -358,9 +361,8 @@ class AnalyticsController < ApplicationController
                           #######
                             currentuser = user.email 
                             if @uvr.length < 1 
-                                vt_hash[ct.id] = hours_avaliable.to_f
+                                vt_hash[ct.id] = hours_avaliable.round(2)
                             else 
-                                logger.debug("value added")
                                 total_hours_used = @uvr.pluck(:hours_used) 
 
                                 sum_of_hours = []
@@ -370,14 +372,16 @@ class AnalyticsController < ApplicationController
                                     end
                                 sum_of_hours = sum_of_hours.sum 
                             end
+
                             #######
                             if sum_of_hours == nil
                                 sum_of_hours = hours_avaliable.to_f
                             else 
                                 sum_of_hours = hours_avaliable - sum_of_hours
                             end
-                            vt_hash[ct.id] = sum_of_hours
+                            vt_hash[ct.id] = sum_of_hours.round(2)
                             sum_of_hours =[]
+                            logger.debug("What is the VT_HASH #{vt_hash}")
                             @user_hash[currentuser] = vt_hash
                            ##logger.debug("hash... #{@user_hash}")
                 end 
