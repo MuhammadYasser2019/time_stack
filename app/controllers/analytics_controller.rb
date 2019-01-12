@@ -275,8 +275,8 @@ class AnalyticsController < ApplicationController
 
 ###
         @customer_id = params[:customer_id]
-        @vacation_types = VacationType.where(customer_id: params[:customer_id])
-        #@vacation_types = VacationType.where("customer_id=? and paid=?", params[:customer_id], true) 
+        #@vacation_types = VacationType.where(customer_id: params[:customer_id])
+        @vacation_types = VacationType.where("customer_id=? and paid=?", params[:customer_id], true) 
         logger.debug("what is the length #{@vacation_types.length}")
             @customer_types = @vacation_types.distinct{|x| x.id} 
              customer = Customer.find(params[:customer_id])

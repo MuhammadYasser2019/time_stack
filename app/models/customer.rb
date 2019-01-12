@@ -233,8 +233,8 @@ class Customer < ApplicationRecord
       hours_over_month = (full_work_day.to_f/12).to_f
       hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
       
-    if @vacation_type.vacation_bank <= 0 || @vacation_type.vacation_bank == nil
-        logger.debug("The User needs to update the VacationBank for this VacationType")
+    if @vacation_type.vacation_bank == 0 || @vacation_type.vacation_bank == nil
+        logger.debug("This VacationType.vacation_bank is 0 or NIL")
         hours_allowed = "BANANA"
         return hours_allowed
     else
