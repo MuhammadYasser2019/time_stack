@@ -251,40 +251,34 @@ class AnalyticsController < ApplicationController
   end
 
   def vacation_types_summary
-# update the days available displayed in the column and convert to hours 
-
-
-            if params[:user_status] == "Not Active"
-                is_active = false
-            else 
-                is_active = true
-            end 
-             #If user doesnt pick a date, default is 01-01-thisyear
-            if params[:start_date].present?
-                start_date = params[:start_date]
-            else 
-                s_year = Date.today.strftime('%Y').to_i
-                start_date = s_year.to_s + "-01-01"
-            end 
-                @sss = start_date
-            #if no end date, today is the end date
-            if params[:end_date].present?
-                end_date = params[:end_date]
-            else 
-                end_date = Date.today
-            end 
-                @eee = end_date
-            logger.debug(" Look #{start_date} and #{end_date} and finally #{is_active}")
+        if params[:user_status] == "Not Active"
+            is_active = false
+        else 
+            is_active = true
+        end 
+         #If user doesnt pick a date, default is 01-01-thisyear
+        if params[:start_date].present?
+            start_date = params[:start_date]
+        else 
+            s_year = Date.today.strftime('%Y').to_i
+            start_date = s_year.to_s + "-01-01"
+        end 
+            @sss = start_date
+        #if no end date, today is the end date
+        if params[:end_date].present?
+            end_date = params[:end_date]
+        else 
+            end_date = Date.today
+        end 
+            @eee = end_date
+        logger.debug(" Look #{start_date} and #{end_date} and finally #{is_active}")
 
 ###
         @customer_id = params[:customer_id]
         @vacation_types = VacationType.where(customer_id: params[:customer_id])
         #@vacation_types = VacationType.where("customer_id=? and paid=?", params[:customer_id], true) 
-
         logger.debug("what is the length #{@vacation_types.length}")
-            @customer_types = @vacation_types.uniq{|x| x.id} ## Change to distinct 
-            logger.debug("current types are #{@current_types}")
-
+            @customer_types = @vacation_types.distinct{|x| x.id} 
              customer = Customer.find(params[:customer_id])
              full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
              logger.debug("full work day #{full_work_day}")
@@ -306,6 +300,7 @@ class AnalyticsController < ApplicationController
                     logger.debug(" What is ct #{ct.inspect}")
 
                     ###Calc the hours Avaliable in that time frame
+                    logger.debug("Checking the vacation bank #{ct.vacation_bank}")
                     if ct.vacation_bank?
                         if ct.accrual == false || nil && ct.rollover == false || nil
                             logger.debug(" Non Accural and No Rollover")
@@ -338,7 +333,7 @@ class AnalyticsController < ApplicationController
                         end
                         @hours_array.push(hours_avaliable.round(2))
                     else
-                         @hours_array.push(0)
+                         @hours_array.push("NA")
                     end 
 
                      @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
@@ -355,7 +350,7 @@ class AnalyticsController < ApplicationController
                           #######
                             currentuser = user.email 
                             if @uvr.length < 1 
-                                vt_hash[ct.id] = hours_avaliable.round(2)
+                                vt_hash[ct.id] = hours_avaliable
                             else 
                                 total_hours_used = @uvr.pluck(:hours_used) 
 
@@ -371,7 +366,7 @@ class AnalyticsController < ApplicationController
                             if sum_of_hours == nil
                                 sum_of_hours = hours_avaliable.to_f
                             else 
-                                sum_of_hours = hours_avaliable - sum_of_hours
+                                sum_of_hours = hours_avaliable.to_f - sum_of_hours.to_f
                             end
                             vt_hash[ct.id] = sum_of_hours.round(2)
                             sum_of_hours =[]
