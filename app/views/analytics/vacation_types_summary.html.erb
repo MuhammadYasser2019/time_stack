@@ -21,6 +21,12 @@
       <% end %>       
     </div>
 
+    <% if flash[:alert] %>
+  <div class="notification is-danger global-notification">
+    <p class="alert"><%= alert %></p>
+  </div>
+<% end %>
+
     <table id="show_vacation_summary" class="display">
       <caption style="visibility:hidden;"> User Vacation Hours Avaliable</caption>
 
@@ -47,7 +53,7 @@
       <tfoot>
         <tr>
           <th>Hours Avaliable Per Request</th>
-          <% @hours_array.each do |hr| %>
+          <% @hours_array.each do |hr| %> 
           <th><%= hr %></th>
           <% end %>
         </tr>
