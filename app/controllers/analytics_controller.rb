@@ -303,14 +303,7 @@ class AnalyticsController < ApplicationController
                         hours_per_month = (days_to_hours/12).to_f
 
                         logger.debug("request_months#{request_months} x hours_per_month#{hours_per_month} ")
-
-                    ###
                     logger.debug(" What is ct #{ct.inspect}")
-                    logger.debug("Rollover? #{ct.rollover}")
-                    logger.debug("Accural? #{ct.accrual}")
-
-
-
                     ###Calc the hours Avaliable in that time frame
                         if ct.accrual == false || nil && ct.rollover == false || nil
                             logger.debug(" Non Accural and No Rollover")
@@ -338,16 +331,8 @@ class AnalyticsController < ApplicationController
                             end 
                             logger.debug("hours_avaliable is #{hours_avaliable}")
                         end
-
-                       # if hours_avaliable == 0 
-                        #    @hours_array.push(0)
-                        #else 
-                            @hours_array.push(hours_avaliable.round(2))
-                        #end 
-
-                        #logger.debug("what is hour array #{@hours_array}")
-                    # hours_avaliable = ct.vacation_bank.to_i * full_work_day.to_i
-                    @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
+                        @hours_array.push(hours_avaliable.round(2))
+                     @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", user, ct)
                          d_range = (start_date.to_date .. end_date.to_date)
                          @uvr=[]
                          logger.debug("what is uvr #{@uvr}")
