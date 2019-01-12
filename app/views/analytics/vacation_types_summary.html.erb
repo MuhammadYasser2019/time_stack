@@ -14,7 +14,7 @@
           <tr>
             <th><%= date_field_tag 'start_date', params[:start_date], {class: "start_date", value: @sss.to_date} %></th>
             <th><%= date_field_tag 'end_date', params[:end_date], { class: "end_date", value: @eee.to_date} %> </th>
-            <th> <%= select_tag "user_status", options_for_select(["Active", "Not Active"]) , {class: "user_status"} %> </th>
+            <th> <%= select_tag "user_status", options_for_select(["Active", "Not Active"]) , {class: "user_status" } %> </th>
             <th> <%= button_tag "Submit" %> </th>
           </tr>
         </table>
@@ -22,10 +22,10 @@
     </div>
 
     <% if flash[:alert] %>
-  <div class="notification is-danger global-notification">
-    <p class="alert"><%= alert %></p>
-  </div>
-<% end %>
+      <div class="notification is-danger global-notification">
+        <p class="alert"><%= alert %></p>
+      </div>
+    <% end %>
 
     <table id="show_vacation_summary" class="display">
       <caption style="visibility:hidden;"> User Vacation Hours Avaliable</caption>

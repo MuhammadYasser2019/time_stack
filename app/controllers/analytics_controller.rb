@@ -256,6 +256,7 @@ class AnalyticsController < ApplicationController
         else 
             is_active = true
         end 
+            @ooo = is_active
          #If user doesnt pick a date, default is 01-01-thisyear
         if params[:start_date].present?
             start_date = params[:start_date]
@@ -378,8 +379,9 @@ class AnalyticsController < ApplicationController
                 end 
             else
             logger.debug("we got here")
-            flash[:alert] = "There is no user data to show"
+            flash[:alert] = "There are no data to display"
                redirect_to :back
+               #redirect_to ("/analytics/vacation_types_summary/"+ params[:customer_id])
             end 
   end 
 
