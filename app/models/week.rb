@@ -225,16 +225,16 @@ def self.new_data(data, full_work_day, current_hash)
         vc_id = value["vacation_type_id"]
           #The Database saves these values different then the request are made. Reason it is different
           if hr != nil && pr == "true" && vc_id != nil
-            #logger.debug("Partial Day")
+            logger.debug("Partial Day")
             hr = full_work_day - hr.to_i
           elsif hr != nil && pr == nil && vc_id == ""
-            #logger.debug ("Actual Work Day")
+            logger.debug ("Actual Work Day")
               hr = hr.to_i
           elsif vc_id != nil && pr == nil 
-            #ogger.debug("Full Day Vacation REQUEST")
+            logger.debug("Full Day Vacation REQUEST")
             hr = full_work_day
           elsif (hr == nil||0) && pr == nil && vc_id == nil
-            #logger.debug("Full Day Save")
+            logger.debug("Full Day Save")
           else
             logger.debug("issue with requested at index #{key}")
           end
@@ -296,21 +296,25 @@ end
 
               @vacation_type = VacationType.find(vacation_id)
               logger.debug("what does this return #{@vacation_type.inspect}")
-          if (@vacation_type.paid == nil || false ) || (@vacation_type.vacation_bank == nil || 0 )
-            
-            logger.debug("this shouldn't run")
+              paid = @vacation_type.paid 
+              vcbbb = @vacation_type.vacation_bank.to_f
+              logger.debug("is vc_id present? #{vacation_id.present? }")
 
-          else vacation_id.present? 
-              
-             # if @vacation_type.paid == nil || @vacation_type.present?
-                logger.debug("This is an issue")
-                #skip the logic
-              #@vacation_types = VacationType.where("customer_id=? and paid=?", params[:customer_id], true)
+          #if (vcbbb != nil || 0 ) || (paid != true )
+          #  logger.debug(" what is paid #{paid} and vcb #{vcbbb}")
+          #  logger.debug("this shouldn't run")
+          #else vacation_id.present? 
+          if vacation_id.present? && paid == true
+              logger.debug("Vacation Id Present")
               uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , user )
               logger.debug("Num Of VcRqst #{uvt.length}")
               year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
               months = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-              vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
+              if @vacation_type.vacation_bank == nil 
+                vb = 0 
+              else 
+                vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
+              end 
               #HOURS_ALLOWED
               ###Calculate Total Hours
                 total_used = []
