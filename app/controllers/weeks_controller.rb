@@ -320,7 +320,7 @@ class WeeksController < ApplicationController
         @week.time_entries.push(new_day)
       end                                   #End if !t[1]
       logger.debug "#{t[0]}"
-      if t[1]["project_id"] == ""
+      if t[1]["project_id"] == "" 
        t[1]["project_id"] = nil
        t[1]["task_id"] = nil
 

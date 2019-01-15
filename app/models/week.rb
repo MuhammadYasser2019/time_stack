@@ -307,7 +307,9 @@ end
               uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , user )
               logger.debug("Num Of VcRqst #{uvt.length}")
               year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
-              months = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
+                logger.debug("years at job #{year}")
+              months = (Date.today.to_date.year * 12 + (Date.today.to_date.month) - (@user.invitation_start_date.to_date.year * 12 + @user.invitation_start_date.to_date.month))
+               logger.debug("months at job #{months}")
               vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
               ###Calculate Total Hours
                 total_used = []
@@ -344,7 +346,7 @@ end
                 elsif @vacation_type.rollover == false && @vacation_type.accrual == false
                   logger.debug("rollover is false and accural is false ")
                           nvb = vb
-                          logger.debug("nvb is #{nvb}")
+                          logger.debug("nvb is #{nvb}") 
                 else  
                     logger.debug("Vacation Type is nil in either/both rollover/accrual")
                 end
@@ -359,7 +361,7 @@ end
                     logger.debug(" what is current hours allowed #{current_hours_allowed}")
 
                     hours_allowed = current_hours_allowed - total_hours_used 
-                    
+
                 elsif (@vacation_type.accrual == true && uvt.length <= 0)
                     logger.debug(" A = TRUE && UVT is 0")
                     hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
