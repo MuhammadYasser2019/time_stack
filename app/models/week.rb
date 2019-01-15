@@ -322,20 +322,29 @@ end
                 logger.debug(" Total Hours Used for #{@vacation_type.vacation_title} #{total_hours_used}")
                 ### Accrual Rollover/NewYear Logic
                 if @vacation_type.rollover == true && @vacation_type.accrual == true
+                    logger.debug("rollover is true and accural is true")
                           year = year * 12
                           if year == 0 
                                 months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
                           else 
                                 months_at_job = year + months
                           end 
+                      logger.debug("months at job #{months_at_job}")
                 elsif @vacation_type.rollover == false && @vacation_type.accrual == true 
+                  logger.debug("rollover is false and accural is true")
                           #Start accrual over at 0. ie) start 3-2018, its 3-2019.. they have 3 months at job for vacation matters
                           months_at_job = Date.today.strftime('%m').to_f
+                          logger.debug("months at job #{months_at_job}")
                 elsif @vacation_type.rollover == true && @vacation_type.accrual == false
+                  logger.debug("rollover is true and accural is false  ")
+
                           year = year + 1
                           nvb = vb * year 
+                          logger.debug("months at job #{nvb}")
                 elsif @vacation_type.rollover == false && @vacation_type.accrual == false
+                  logger.debug("rollover is false and accural is false ")
                           nvb = vb
+                          logger.debug("nvb is #{nvb}")
                 else  
                     logger.debug("Vacation Type is nil in either/both rollover/accrual")
                 end
@@ -343,9 +352,14 @@ end
                 ####Hour Allowed Logic 
                 if (@vacation_type.accrual == true && uvt.length > 0 )
                     logger.debug(" A = TRUE && UVT != 0")
+
                     hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
+
                     current_hours_allowed = hour_rate * months_at_job #This changes***
+                    logger.debug(" what is current hours allowed #{current_hours_allowed}")
+
                     hours_allowed = current_hours_allowed - total_hours_used 
+                    
                 elsif (@vacation_type.accrual == true && uvt.length <= 0)
                     logger.debug(" A = TRUE && UVT is 0")
                     hour_rate = @vacation_type.vacation_bank.to_f * hours_over_month
