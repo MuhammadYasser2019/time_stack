@@ -671,33 +671,31 @@ class WeeksController < ApplicationController
     end
   end
 
-  def single_vacation_request
-
-    user = current_user
-    status = Week.check_vacation_status(params[:bigArray], user)
-      logger.debug("look #{status[:hours_requested]}")
-    if status[:vacation_status] == false 
-      logger.debug("HELLO FROM HERE!")
-          respond_to do |format|
-           format.js
-           @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"
-          end
-          return
-    else
-      logger.debug("HELLO FROM THEREHREHREHREHREHRHEREHERE!")
-        respond_to do |format|
-         format.js{ render :template => "weeks/single_vacation_request_approve.js.erb"}
-         @comment = "Valid requested" 
-         return
-        end 
-    end 
-
-      
-  end 
-
   def create_vacation_request(week)
+  #need this logic for saving proper vacation request
+  @user = current_user
+  customer = Customer.find(@user.customer_id)
+  full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+  #  
 
     week.time_entries.each do |wtime|
+      logger.debug("Inspecting the #{wtime.inspect}")
+
+      if wtime.partial_day == "false"
+        hours_used = full_work_day
+        partial = "false"
+      elsif wtime.partial_day == "true"
+        hours_used = full_work_day - wtime.hours
+          ### Incase a user hour is greater than regular-work hours
+        if hours_used < 0
+          hours_used = full_work_day
+        end 
+        partial = "true" 
+      end 
+      logger.debug("@createVacationRequest..hours_used #{hours_used} and partial #{partial}")
+
+
+
       if wtime.vacation_type_id.present? 
         user = User.find wtime.user_id
         new_vr = VacationRequest.new
@@ -705,10 +703,11 @@ class WeeksController < ApplicationController
         new_vr.vacation_end_date = wtime.date_of_activity
         new_vr.user_id = wtime.user_id
         new_vr.customer_id = user.customer_id
-      
+        new_vr.comment = "Time Sheet Single Vacation Request"
         new_vr.status = "Requested"
         new_vr.vacation_type_id =wtime.vacation_type_id
-        new_vr.partial_day = "true" if wtime.partial_day
+        new_vr.partial_day = partial
+        new_vr.hours_used = hours_used
         new_vr.save
       end
     end

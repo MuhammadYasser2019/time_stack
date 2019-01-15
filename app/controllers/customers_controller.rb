@@ -298,7 +298,9 @@
   def pre_vacation_request 
       start_date = params[:start_date]
       end_date = params[:end_date]
-      num_of_days = (end_date.to_date - start_date.to_date).to_i
+      num_days = (end_date.to_date - start_date.to_date).to_i
+      num_of_days = num_days + 1 
+      ## ex 1-5 to 1-8 = 3... 5(1),6(1),7(1),8(1) = 4
       ###
       @user = current_user
       customer = Customer.find(@user.customer_id)
@@ -306,31 +308,31 @@
       hours_over_month = (full_work_day.to_f/12).to_f
       ###
       @vacation_type = VacationType.find(params[:vacation_type_id])
-      logger.debug("what is what is what is #{@vacation_type.inspect}")
+      logger.debug("VacationType Is...#{@vacation_type.inspect}")
       if @vacation_type.paid == true
           uvt = VacationRequest.where("vacation_type_id=? and user_id=?",params[:vacation_type_id], @user.id )
           weekend_counter = Customer.holiday_weekend_count(@user, start_date, end_date)
             logger.debug("the weekend/holiday count is #{weekend_counter}")
             correct_days = num_of_days - weekend_counter
+            logger.debug(" Days Request - (wknd/holidays) #{correct_days}")
+            if correct_days < 0
+              #For Some odd reason a user requests a vacation on a holiday that is on a weekend.
+              correct_days = 0
+            end 
             hours_requested = correct_days * full_work_day
           hours_allowed = Customer.is_vacation_allowed(uvt, @vacation_type, @user, full_work_day) 
+
           if hours_allowed == "BANANA"
-            logger.debug("ITS A BANANA")
-            #situation for unpaid VT
+            logger.debug("@vacation_type.vacation_bank == 0 || @vacation_type.vacation_bank == nil")
             hours_requested = 0
             hours_allowed = 0
           end 
-            logger.debug("Hours That Are Allowed #{hours_allowed}")
-      else ### VACATIONTYPE IS FALSE
-          if hours_allowed == "BANANA"
-            logger.debug("ITS A BANANA")
-            #situation for unpaid VT
+      else ### VACATIONTYPE.PAID IS FALSE
             hours_requested = 0
             hours_allowed = 0
-          end 
       end 
-      
-          #should be > #### easy to test if you use <
+      logger.debug("The Important Values.. hr #{hours_requested} and ha #{hours_allowed}")
+          ##############should be > 
           if hours_requested.to_f > hours_allowed.to_f 
             logger.debug("NO NOT TODAY!")
               respond_to do |format|
@@ -338,7 +340,7 @@
                 @comment = "Sorry, you only have #{hours_allowed} hours avaliable, but requested #{hours_requested} hours"
               end 
           else
-              logger.debug("Success, this should showwww")
+              logger.debug("Success, this should showwww") 
                 respond_to do |format|
                   format.js{ render :template => "customers/pre_vacation_request_approve.js.erb" }
                 end 
@@ -361,9 +363,15 @@
     full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
 
     if !vacation_start_date.blank?
-      days_requested = (params[:vacation_end_date].to_date - params[:vacation_start_date].to_date).to_i
+      days = (params[:vacation_end_date].to_date - params[:vacation_start_date].to_date).to_i
+      days_requested = days + 1 
+      ## ex 1-5 to 1-8 = 3... 5(1),6(1),7(1),8(1) = 4
       weekend_counter = Customer.holiday_weekend_count(current_user, params[:vacation_start_date].to_date, params[:vacation_end_date].to_date)
+      logger.debug("Request #{days_requested} and weekend/holiday #{weekend_counter}")
       correct_days = days_requested - weekend_counter
+      if correct_days < 0
+          correct_days = 0
+      end 
       hours_requested = correct_days * full_work_day
 
      new_vr = VacationRequest.new

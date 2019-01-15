@@ -16,7 +16,7 @@ class Week < ApplicationRecord
     logger.debug "Week - current_user_time_entries leaving"
   end
   
-  def self.left_join_weeks(some_user, status)
+  def self.left_join_weeks(some_user, status) 
     weeks = Week.arel_table
     user_week_statuses = UserWeekStatus.arel_table
 
@@ -197,7 +197,7 @@ def self.old_data(full_work_day, week)
               if current_hr != nil && current_pr == "true" && current_vc_id != nil
                 #Partial Day
                 current_hr = full_work_day - current_hr.to_i
-              elsif current_hr != nil && (current_pr == nil||"false") && current_vc_id == nil
+              elsif current_hr != nil && current_pr != "true" && current_vc_id == nil
                 #logger.debug ("Actual Work Day")
               elsif current_hr == nil && current_pr == "false" && current_vc_id != nil
                # logger.debug("Full Day Save")
@@ -233,7 +233,8 @@ def self.new_data(data, full_work_day, current_hash)
           elsif vc_id != nil && pr == nil 
             logger.debug("Full Day Vacation REQUEST")
             hr = full_work_day
-          elsif (hr == nil||0) && pr == nil && vc_id == nil
+            ###This might break
+          elsif hr == nil || hr == 0 && pr == nil && vc_id == nil
             logger.debug("Full Day Save")
           else
             logger.debug("issue with requested at index #{key}")
@@ -295,37 +296,30 @@ end
               vacation_id = array[2]
 
               @vacation_type = VacationType.find(vacation_id)
-              logger.debug("what does this return #{@vacation_type.inspect}")
-              paid = @vacation_type.paid 
-              vcbbb = @vacation_type.vacation_bank.to_f
+              logger.debug("what does this return #{@vacation_type.inspect}")    
               logger.debug("is vc_id present? #{vacation_id.present? }")
 
-          #if (vcbbb != nil || 0 ) || (paid != true )
-          #  logger.debug(" what is paid #{paid} and vcb #{vcbbb}")
-          #  logger.debug("this shouldn't run")
-          #else vacation_id.present? 
-          if vacation_id.present? && paid == true
+          if @vacation_type.vacation_bank == nil || @vacation_type.vacation_bank == 0 || @vacation_type.paid == false || @vacation_type.paid == nil             
+            logger.debug(" VacationBank and/or paid is nil or 0.")
+            logger.debug(" what is paid #{@vacation_type.paid} and vcb #{@vacation_type.vacation_bank}")  
+          elsif vacation_id.present? 
               logger.debug("Vacation Id Present")
               uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , user )
               logger.debug("Num Of VcRqst #{uvt.length}")
               year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
               months = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-              if @vacation_type.vacation_bank == nil 
-                vb = 0 
-              else 
-                vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
-              end 
-              #HOURS_ALLOWED
+              vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
               ###Calculate Total Hours
                 total_used = []
                 uvt.each do |x|
                   if x.hours_used != nil
-                    total_used.push(x.hours_used)
+                    total_used.push(x.hours_used.to_f)
                   else 
                       total_used.push(0)
                   end 
                 end
                 total_hours_used = total_used.inject :+
+                logger.debug(" Total Hours Used for #{@vacation_type.vacation_title} #{total_hours_used}")
                 ### Accrual Rollover/NewYear Logic
                 if @vacation_type.rollover == true && @vacation_type.accrual == true
                           year = year * 12
@@ -342,7 +336,7 @@ end
                           nvb = vb * year 
                 elsif @vacation_type.rollover == false && @vacation_type.accrual == false
                           nvb = vb
-                else 
+                else  
                     logger.debug("Vacation Type is nil in either/both rollover/accrual")
                 end
 
@@ -365,6 +359,7 @@ end
                 else
                     logger.debug("$$$$$$$$ Vacation Type.accrual is NIL #{@vacation_type.accrual}")
                 end #End Hours Allowed
+                
                 logger.debug("hours_allowed #{hours_allowed} and hours requested #{hours_requested}")
 
                 ############### should be >. ### Easy to test if you change it to "<"
@@ -376,9 +371,9 @@ end
                     logger.debug("Vacation Request Valid")
                     smash = { vacation_valid: true, hours_requested: hours_requested, hours_allowed: hours_allowed }
                     return smash 
-                  end 
+                  end  
           end #if vacation.id present?
-           logger.debug("There was no Vacation_id to eval")   
+           logger.debug("No Vacation ID or Not Paid")   
         end### End Iteration
   end
 

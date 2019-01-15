@@ -304,22 +304,21 @@ class AnalyticsController < ApplicationController
                         ###Calc the hours Avaliable in that time frame
                         logger.debug("Checking the vacation bank #{ct.vacation_bank}")
                         if ct.vacation_bank?
-                            if ct.accrual == false || nil && ct.rollover == false || nil
+                            if ct.accrual == false  && ct.rollover == false 
                                 logger.debug(" Non Accural and No Rollover")
                                 hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
                                 logger.debug("hours_avaliable is #{hours_avaliable}")
 
-                            elsif ct.accrual == false || nil && ct.rollover == true
+                            elsif ct.accrual == false && ct.rollover == true
                                 logger.debug(" Non Accural and Rollover")
                                 year_hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
                                 request_year = request_year + 1
                                 hours_avaliable = year_hours_avaliable.to_f * request_year
                                 logger.debug("hours_avaliable is #{hours_avaliable}")
 
-                            elsif ct.accrual == true && ct.rollover == false || nil
+                            elsif ct.accrual == true && ct.rollover == false 
                                 logger.debug("Accural and No Rollover")
                                     hours_avaliable = (hours_per_month.to_f * months_to_date.to_f).to_f
-
                                     logger.debug("hours_avaliable is #{hours_avaliable}")
 
                             elsif ct.accrual == true && ct.rollover == true
