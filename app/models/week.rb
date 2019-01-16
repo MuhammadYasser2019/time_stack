@@ -302,14 +302,16 @@ end
           if @vacation_type.vacation_bank == nil || @vacation_type.vacation_bank == 0 || @vacation_type.paid == false || @vacation_type.paid == nil             
             logger.debug(" VacationBank and/or paid is nil or 0.")
             logger.debug(" what is paid #{@vacation_type.paid} and vcb #{@vacation_type.vacation_bank}")  
+
           elsif vacation_id.present? 
+
               logger.debug("Vacation Id Present")
               uvt = VacationRequest.where("vacation_type_id=? and user_id=?", vacation_id , user )
               logger.debug("Num Of VcRqst #{uvt.length}")
               year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
                 logger.debug("years at job #{year}")
               months = (Date.today.to_date.year * 12 + (Date.today.to_date.month) - (@user.invitation_start_date.to_date.year * 12 + @user.invitation_start_date.to_date.month))
-               logger.debug("months at job #{months}")
+               logger.debug("REAL months at job #{months}")
               vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
               ###Calculate Total Hours
                 total_used = []
@@ -322,21 +324,20 @@ end
                 end
                 total_hours_used = total_used.inject :+
                 logger.debug(" Total Hours Used for #{@vacation_type.vacation_title} #{total_hours_used}")
+
+
                 ### Accrual Rollover/NewYear Logic
                 if @vacation_type.rollover == true && @vacation_type.accrual == true
-                    logger.debug("rollover is true and accural is true")
-                          year = year * 12
-                          if year == 0 
-                                months_at_job = (Date.today.strftime('%m').to_f) - (@user.invitation_start_date.strftime('%m').to_f)
-                          else 
-                                months_at_job = year + months
-                          end 
+                      logger.debug("rollover is true and accural is true")
+                    months_at_job = months
                       logger.debug("months at job #{months_at_job}")
+
                 elsif @vacation_type.rollover == false && @vacation_type.accrual == true 
-                  logger.debug("rollover is false and accural is true")
+                      logger.debug("rollover is false and accural is true")
                           #Start accrual over at 0. ie) start 3-2018, its 3-2019.. they have 3 months at job for vacation matters
-                          months_at_job = Date.today.strftime('%m').to_f
+                      months_at_job = Date.today.strftime('%m').to_f
                           logger.debug("months at job #{months_at_job}")
+
                 elsif @vacation_type.rollover == true && @vacation_type.accrual == false
                   logger.debug("rollover is true and accural is false  ")
 
