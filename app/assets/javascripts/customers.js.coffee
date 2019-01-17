@@ -313,8 +313,9 @@ jQuery ($) ->
 
     build_task(emp_id, $(this).val())
   )
+
   $(document).off("change")
-  $(document).on("change", '.vc_end', '.vc_start', ->
+  $(document).on("change", '.vc_end', ->
     start_date = new Date($('.vc_start').val());
     end_date = new Date($('.vc_end').val());
 
@@ -329,11 +330,26 @@ jQuery ($) ->
       console.log("start", start, "end", end )
       console.log("days requested", end - start)
       days_requested = (end - start)
+
+    if $('.vc_start').val() == '' || $('#vacation_type_id').val() == ''
+      alert('All three vacation fields are required')
+      $('.vc_end').val('')
+    else
       $.get "/pre_vacation_request",
         days_requested: days_requested,
         start_date: $('.vc_start').val(),
         end_date: $('.vc_end').val(),
         vacation_type_id: $('#vacation_type_id').val()
+  ) 
+
+  $(document).on("change", '.vc_start', ->
+    console.log("wtf")
+    $('.vc_end').val('')
+  )
+
+  $(document).on("change", '#vacation_type_id', ->
+    console.log("wtf")
+    $('.vc_end').val('')
   )
 
   $(document).on("click", '.cancel_vacation_request', ->
