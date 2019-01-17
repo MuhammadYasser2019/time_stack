@@ -321,18 +321,18 @@ class WeeksController < ApplicationController
       end                                   #End if !t[1]
       logger.debug "#{t[0]}"
       if t[1]["project_id"] == "" 
-       t[1]["project_id"] = nil
-       t[1]["task_id"] = nil
+        t[1]["project_id"] = nil
+        t[1]["task_id"] = nil
 
-       unless TimeEntry.where(id: t[1]["id"]).empty?
-        TimeEntry.find(t[1]["id"]).update(project_id: nil, task_id: nil) 
-       end # unless
+        unless TimeEntry.where(id: t[1]["id"]).empty?
+          TimeEntry.find(t[1]["id"]).update(project_id: nil, task_id: nil) 
+        end # unless
       end # if t[1] project
 
       if t[1]["vacation_type_id"].present? && t[1]["hours"].nil? && TimeEntry.where(id: t[1]["id"]).present?
         TimeEntry.find(t[1]["id"]).update(hours: nil, partial_day: "false",project_id: nil, task_id: nil, activity_log: nil)
       end #end if t[1] vacation_type
-
+ 
       # if t[0].to_i > 6
       #   logger.debug "t[1][project_id]: #{t[1]['project_id']}"
       #   logger.debug "t[1][task_id]: #{t[1]['task_id']}"
@@ -384,11 +384,18 @@ class WeeksController < ApplicationController
               logger.debug "STATUS ID IS #{week_params[:status_id]}"
               logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
               respond_to do |format|
+                
                  if @week.update_attributes(week_params) 
                    week_params['time_entries_attributes'].each_with_index  do |t,i|
                      logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
                      @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
+  
+                     if t[1]["vacation_type_id"].present? && t[1]["partial_day"].nil? && TimeEntry.where(id: t[1]["id"]).present?  
+                      TimeEntry.find(t[1]["id"]).update(hours: 0, partial_day: "false")
+                    end
                    end
+                   
+                   
                    logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
                    params.require(:week).permit(upload_timesheets_attributes: [:time_sheet]).to_h.each do |attr, row|
                      row.each do |i, timesheet|
@@ -457,7 +464,11 @@ class WeeksController < ApplicationController
                    week_params['time_entries_attributes'].each_with_index  do |t,i|
                      logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
                      @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
+                    if t[1]["vacation_type_id"].present? && t[1]["partial_day"].nil? && TimeEntry.where(id: t[1]["id"]).present?  
+                      TimeEntry.find(t[1]["id"]).update(hours: 0, partial_day: "false")
+                    end
                    end
+                   
                    logger.debug "weeks_controller - update - After update @week  is #{@week.time_entries.inspect}"
                    params.require(:week).permit(upload_timesheets_attributes: [:time_sheet]).to_h.each do |attr, row|
                      row.each do |i, timesheet|
