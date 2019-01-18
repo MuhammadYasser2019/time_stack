@@ -239,8 +239,19 @@ class Customer < ApplicationRecord
         return hours_allowed
     else
         @user = user
-        year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
-        months = (Date.today.to_date.year * 12 + (Date.today.to_date.month) - (@user.invitation_start_date.to_date.year * 12 + @user.invitation_start_date.to_date.month))
+        
+        if @user.invitation_start_date?
+          year = (Date.today.strftime('%Y').to_f) - (@user.invitation_start_date.strftime('%Y').to_f)
+            logger.debug("years at job #{year}")
+          months = (Date.today.to_date.year * 12 + (Date.today.to_date.month) - (@user.invitation_start_date.to_date.year * 12 + @user.invitation_start_date.to_date.month))
+           logger.debug("REAL months at job #{months}")
+        else 
+          logger.debug("user has no invitation_start_date, using created at.")
+          year = (Date.today.strftime('%Y').to_f) - (@user.created_at.strftime('%Y').to_f)
+            logger.debug("years at job #{year}")
+          months = (Date.today.to_date.year * 12 + (Date.today.to_date.month) - (@user.created_at.to_date.year * 12 + @user.created_at.to_date.month))
+           logger.debug("REAL months at job #{months}")
+        end
 
         if @vacation_type.vacation_bank == nil 
           vb = 0
