@@ -44,6 +44,17 @@ h7 {
    display: flex;
 }
 
+.alert{
+  width: 50%;
+  margin: 0 auto;
+  text-align: center;
+  background: red;
+  opacity: .5;
+  border-radius: 25px;
+  font-size: 20px;
+  font-weight: bold;
+}
+
 
 .top-bar{
   width:100%;

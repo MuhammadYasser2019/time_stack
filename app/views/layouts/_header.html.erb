@@ -13,8 +13,8 @@
 			  <% end %>
 			<% else %>
 			  <a href="/", class="header_logo"><%= image_tag "chronstack.jpg", class: 'logo' %></a>
-		    <% end %>
-		    <%= init_session_timeout_prompter(session_timeout_in_seconds: 1800, seconds_to_warn_before_timeout: 300, scope: :user) %>
+		  <% end %>
+			<%= init_session_timeout_prompter(session_timeout_in_seconds: 1800, seconds_to_warn_before_timeout: 300, scope: :user) %>
 		<% end %>
 	</div>
 	<% if current_user.nil?%>
@@ -90,4 +90,3 @@
 	  <% end %>
 	  </div>
 </div>
-

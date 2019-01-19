@@ -50,9 +50,9 @@ class VacationTypesController < ApplicationController
     end
   end
 
-  private
+  private 
 
   def vacation_type_params
-    params.require(:vacation_type).permit(:vacation_title, :customer_id, :active)
+    params.require(:vacation_type).permit(:vacation_title, :customer_id, :active, :vacation_bank, :paid, :accrual, :rollover)
   end
 end

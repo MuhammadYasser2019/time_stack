@@ -114,8 +114,12 @@ Rails.application.routes.draw do
   get 'vacation_request' => "customers#vacation_request"
   get 'customers/approve_vacation/:vr_id/:row_id' => 'customers#approve_vacation'
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
+  get 'customers/approve_cancel_request/:vr_id/:row_id' => 'customers#approve_cancel_request'
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
+  get 'cancel_vacation_request' => 'customers#cancel_vacation_request' 
   get 'customers/:id/theme' => 'customers#set_theme'
+  get 'pre_vacation_request' => "customers#pre_vacation_request"
+  get 'single_vacation_request' => "weeks#single_vacation_request"
   # Form to reset status_id and duplicate exist
   get '/reset_timesheet/:customer_id' => 'users#reset'
   post '/reset_timesheet/:customer_id' => 'users#reset'
@@ -177,7 +181,11 @@ Rails.application.routes.draw do
   get 'get_employment/' => 'customers#get_employment'
 
   get "analytics/vacation_reports/customer/:customer_id" => 'analytics#vacation_report'
-  get "/analytics/user_activities/:customer_id" => 'analytics#user_activities'
+  get "/analytics/user_activities/:customer_id" => 'analytics#user_activities' 
+  get "analytics/vacation_types_summary/:customer_id" => 'analytics#vacation_types_summary' 
+  post "analytics/vacation_types_summary/:customer_id" => 'analytics#vacation_types_summary' 
+  get 'user_summary' => "analytics#user_summary"
+
   match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
   post "/bar_graph" => 'analytics#bar_graph'
   match "analytics/:customer_id" => "analytics#index", via: [:get, :post]

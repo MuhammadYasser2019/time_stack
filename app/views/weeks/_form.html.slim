@@ -12,6 +12,8 @@
   .field
     = f.label :end_date
     = f.text_field :end_date, readonly: true
+  #display_comment
+    h3
 
   table border="1" id="mytable" style="width:100%;"
     thead
@@ -28,7 +30,7 @@
     tbody
     - @count = 0
     = f.fields_for :time_entries, @time_entries do |cf|
-      tr = render :partial => 'time_entry_fields', :locals => {:f => cf}
+      tr.smoothie = render :partial => 'time_entry_fields', :locals => {:f => cf}
       - @count += 1
   - if f.object.status_id == 2 || f.object.status_id == 3
 

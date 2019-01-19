@@ -314,6 +314,53 @@ jQuery ($) ->
     build_task(emp_id, $(this).val())
   )
 
+  $(document).off("change")
+  $(document).on("change", '.vc_end', ->
+    start_date = new Date($('.vc_start').val());
+    end_date = new Date($('.vc_end').val());
+
+    if (start_date > end_date)
+      $('.vc_end').val('');
+      alert("end date should be greater than start date");
+    else
+      console.log("wtf", $('.vc_start').val())
+      start = $('.vc_start').val().split('-')[2]
+      console.log("wtf", $('.vc_end').val())
+      end = $('.vc_end').val().split('-')[2]
+      console.log("start", start, "end", end )
+      console.log("days requested", end - start)
+      days_requested = (end - start)
+
+    if $('.vc_start').val() == '' || $('#vacation_type_id').val() == ''
+      alert('All three vacation fields are required')
+      $('.vc_end').val('')
+    else
+      $.get "/pre_vacation_request",
+        days_requested: days_requested,
+        start_date: $('.vc_start').val(),
+        end_date: $('.vc_end').val(),
+        vacation_type_id: $('#vacation_type_id').val()
+  ) 
+
+  $(document).on("change", '.vc_start', ->
+    console.log("wtf")
+    $('.vc_end').val('')
+  )
+
+  $(document).on("change", '#vacation_type_id', ->
+    console.log("wtf")
+    $('.vc_end').val('')
+  )
+
+  $(document).on("click", '.cancel_vacation_request', ->
+    vacation_request_row_id = parse_row_id($(this).attr('id'))
+    console.log("VR ROW ID: " + vacation_request_row_id)
+    vacation_request_id = parse_vacation_request_id($(this).attr('id'))
+    console.log("This is the ID", vacation_request_id)
+    $.get "/cancel_vacation_request",
+      vacation_id: vacation_request_id
+  )
+
   build_task = (content_id, vacation_id) ->
     my_url = '/get_employment'
     $.ajax my_url,

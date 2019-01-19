@@ -1,0 +1,66 @@
+<div>
+	<div class = "row">
+    <h1>Vacation Hours Avaliable</h1>
+    <div>
+      <h1> Select Options</h1>
+      <%= form_tag do %>
+        <table>
+          <tr>
+            <th><%= label_tag :start_date %></th>
+            <th><%= label_tag :End_Date %></th>
+            <th><%= label_tag :user_status %></th>
+            <th>Update</th>
+          </tr>
+          <tr>
+            <th><%= date_field_tag 'start_date', params[:start_date], {class: "start_date", value: @sss.to_date} %></th>
+            <th><%= date_field_tag 'end_date', params[:end_date], { class: "end_date", value: @eee.to_date} %> </th>
+            <th> <%= select_tag "user_status", options_for_select(["Active", "Not Active"]) , {class: "user_status" } %> </th>
+            <th> <%= button_tag "Submit" %> </th>
+          </tr>
+        </table>
+      <% end %>       
+    </div>
+
+    <% if flash[:alert] %>
+      <div class="notification is-danger global-notification">
+        <p class="alert"><%= alert %></p>
+      </div>
+    <% end %>
+
+    <table id="show_vacation_summary" class="display">
+      <caption style="visibility:hidden;"> User Vacation Hours Avaliable</caption>
+
+      <thead>
+        <tr>
+        	<th> Users Email </th>
+        	<% @customer_types.each do |ct|%>
+          <th> <%= ct.vacation_title %> </th>
+          <% end %>
+        </tr>
+      </thead>
+
+      <tbody>
+        <% @user_hash.each do |key, value| %>
+          <tr>
+              <td> <%= key %> </td>
+              <% value.each do |x| %>
+                <td> <%= x.last %></td>
+              <% end %>
+          </tr>
+        <% end %>
+      </tbody>
+
+      <tfoot>
+        <tr>
+          <th>Hours Avaliable Per Request</th>
+          <% @hours_array.each do |hr| %> 
+          <th><%= hr %></th>
+          <% end %>
+        </tr>
+      </tfoot>
+    </table>
+	</div>
+</div> 
+
+
+

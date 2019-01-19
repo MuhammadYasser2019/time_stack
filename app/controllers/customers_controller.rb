@@ -4,7 +4,6 @@
   # GET /customers
   # GET /customers.json
   def index
-    
     @customers = Customer.where(user_id: current_user.id)
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     if @customers.present?
@@ -38,7 +37,7 @@
 
   # GET /customers/new
   def new
-    @customer = Customer.new
+    @customer = Customer.new 
     @users_eligible_to_be_manager = User.where("admin = ?", 1)
   end
 
@@ -282,6 +281,72 @@
     end
   end
 
+  def cancel_vacation_request
+    #change the value for this vacation_id
+    vr = VacationRequest.find(params[:vacation_id])
+      vr.status = "CancelRequest"
+    vr.save
+
+    logger.debug("This is the vacation #{vr}")
+    #Change the ID
+    @row_id = params[:vacation_id]
+    respond_to do |format|
+      format.js 
+    end
+  end 
+
+  def pre_vacation_request 
+      start_date = params[:start_date]
+      end_date = params[:end_date]
+      num_days = (end_date.to_date - start_date.to_date).to_i
+      num_of_days = num_days + 1 
+      ## ex 1-5 to 1-8 = 3... 5(1),6(1),7(1),8(1) = 4
+      ###
+      @user = current_user
+      customer = Customer.find(@user.customer_id)
+      full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+      hours_over_month = (full_work_day.to_f/12).to_f
+      ###
+      @vacation_type = VacationType.find(params[:vacation_type_id])
+      logger.debug("VacationType Is...#{@vacation_type.inspect}")
+      if @vacation_type.paid == true
+          uvt = VacationRequest.where("vacation_type_id=? and user_id=?",params[:vacation_type_id], @user.id )
+          weekend_counter = Customer.holiday_weekend_count(@user, start_date, end_date)
+            logger.debug("the weekend/holiday count is #{weekend_counter}")
+            correct_days = num_of_days - weekend_counter
+            logger.debug(" Days Request - (wknd/holidays) #{correct_days}")
+            if correct_days < 0
+              #For Some odd reason a user requests a vacation on a holiday that is on a weekend.
+              correct_days = 0
+            end 
+            hours_requested = correct_days * full_work_day
+          hours_allowed = Customer.is_vacation_allowed(uvt, @vacation_type, @user, full_work_day) 
+
+          if hours_allowed == "BANANA"
+            logger.debug("@vacation_type.vacation_bank == 0 || @vacation_type.vacation_bank == nil")
+            hours_requested = 0
+            hours_allowed = 0
+          end 
+      else ### VACATIONTYPE.PAID IS FALSE
+            hours_requested = 0
+            hours_allowed = 0
+      end 
+      logger.debug("The Important Values.. hr #{hours_requested} and ha #{hours_allowed}")
+          ##############should be > 
+          if hours_requested.to_f > hours_allowed.to_f 
+            logger.debug("NO NOT TODAY!")
+              respond_to do |format|
+                format.js
+                @comment = "Sorry, you only have #{hours_allowed} hours avaliable, but requested #{hours_requested} hours"
+              end 
+          else
+              logger.debug("Success, this should showwww") 
+                respond_to do |format|
+                  format.js{ render :template => "customers/pre_vacation_request_approve.js.erb" }
+                end 
+          end
+  end
+
   def vacation_request
     logger.debug("THE PARAMETERS ARE:  #{params.inspect}")
     @user = current_user
@@ -294,27 +359,43 @@
     vacation_start_date = params[:vacation_start_date]
     vacetion_end_date = params[:vacation_end_date]
     reason_for_vacation = params[:vacation_comment]
+    customer = Customer.find(@user.customer_id)
+    full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+
     if !vacation_start_date.blank?
-      new_vr = VacationRequest.new
-      new_vr.vacation_start_date = params[:vacation_start_date]
-      new_vr.vacation_end_date = params[:vacation_end_date]
-      new_vr.user_id = @user.id
-      new_vr.customer_id = @user.customer_id
-      new_vr.comment = reason_for_vacation
-      new_vr.status = "Requested"
-      new_vr.vacation_type_id = params[:vacation_type_id]
-      new_vr.save
+      days = (params[:vacation_end_date].to_date - params[:vacation_start_date].to_date).to_i
+      days_requested = days + 1 
+      ## ex 1-5 to 1-8 = 3... 5(1),6(1),7(1),8(1) = 4
+      weekend_counter = Customer.holiday_weekend_count(current_user, params[:vacation_start_date].to_date, params[:vacation_end_date].to_date)
+      logger.debug("Request #{days_requested} and weekend/holiday #{weekend_counter}")
+      correct_days = days_requested - weekend_counter
+      if correct_days < 0
+          correct_days = 0
+      end 
+      hours_requested = correct_days * full_work_day
+
+     new_vr = VacationRequest.new
+     new_vr.vacation_start_date = params[:vacation_start_date]
+     new_vr.vacation_end_date = params[:vacation_end_date]
+     new_vr.user_id = @user.id
+     new_vr.customer_id = @user.customer_id
+     new_vr.comment = reason_for_vacation
+     new_vr.status = "Requested"
+     new_vr.vacation_type_id = params[:vacation_type_id]
+     new_vr.hours_used = hours_requested
+     new_vr.save
     end
+
     #logger.debug("sick_leave: #{sick_leave}******personal_leave: #{personal_leave} ")
     customer_manager = Customer.find(user_customer).user_id
     logger.debug("customer manager id IS : #{customer_manager}")
 
-    if !vacation_start_date.blank?
-      VacationMailer.mail_to_customer_owner(@user, customer_manager,vacation_start_date,vacetion_end_date ).deliver
-      respond_to do |format|
-        format.html { redirect_to "/", notice: 'Vacation request sent successfully.' }
-      end
-    end
+    #if !vacation_start_date.blank?
+    #  VacationMailer.mail_to_customer_owner(@user, customer_manager,vacation_start_date,vacetion_end_date ).deliver
+    #  respond_to do |format|
+    #    format.html { redirect_to "/", notice: 'Vacation request sent successfully.' }
+    #  end
+    #end
   end
 
   def resend_vacation_request
@@ -372,6 +453,21 @@
     # @user.save
     respond_to do |format|
       format.html {flash[:notice] = "Rejected"}
+      format.js
+    end
+  end
+
+  def approve_cancel_request
+    #Create A Mailer
+    @vr = params[:vr_id]
+    logger.debug("888888888888888888 : #{@vr.inspect}")
+    @row_id = params[:row_id]
+    customer_manager = current_user
+    vacation_request = VacationRequest.find(@vr)
+    vacation_request.destroy
+
+    respond_to do |format|
+      format.html {flash[:notice] = "Cancellation has been approved"}
       format.js
     end
   end
@@ -530,7 +626,9 @@
     @user_with_pm_role = User.where("customer_id =? and pm=?", @customer.id, true)
     # @users= User.all
     logger.debug("CUSTOMER EMPLOYEES ARE: #{@users.inspect}")
-    @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
+    # @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested" or "CancelRequest")
+    @vacation_requests = VacationRequest.where("customer_id = ? and status IN (?,?)", params[:customer_id],"CancelRequest", "Requested")
+
     @adhoc_projects = Project.where("adhoc_pm_id is not null")
     @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")

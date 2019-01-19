@@ -2,7 +2,10 @@
 - if @week.status_id == 2
   h3(style="text-align:center;") This Timesheet is currently awaiting Approval
 - else
+
   h1 Editing week
+  - if flash[:alert]
+  	.alert= flash[:alert]
   
   == render 'form'
 

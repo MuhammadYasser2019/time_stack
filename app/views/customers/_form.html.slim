@@ -119,16 +119,22 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
                       th Employee
                       th Vacation Start Date
                       th Vacation End Date
-                      th
-                      th
+                      th Approve
+                      th Reject
+                      th Approve Cancellation
 				tbody
 					- @vacation_requests.each_with_index do |vu, i|
 						tr id = "vacation_#{i}"
 							td = User.find(VacationRequest.find(vu).user_id).email.truncate(20)
 							td = vu.vacation_start_date.strftime('%Y-%m-%d')
 							td = vu.vacation_end_date.strftime('%Y-%m-%d')
-							td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "orange-button approve-vacation", type: "button", remote: true, :style=>"width:100%;"
+							- if vu.status == "CancelRequest"
+								td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "orange-button approve-vacation", type: "button", remote: true, :style=>"display:none;"
+							- else
+								td = link_to "Approve","/customers/approve_vacation/#{vu.id}/#{i}", class: "orange-button approve-vacation", type: "button", remote: true, :style=>"width:100%;"
 							td = link_to "Reject","/customers/reject_vacation/#{vu.id}/#{i}", class: "orange-button reject-vacation", type: "button", remote: true, :style=>"width:100%;"
+							- if vu.status == "CancelRequest"
+								td = link_to "Approve Cancel","/customers/approve_cancel_request/#{vu.id}/#{i}", class: "orange-button", type: "button", remote: true, :style=>"width:100%;"
 
   div class="tabs-panel" id="user_invitation"
 		  h1.left_row Invite Users	

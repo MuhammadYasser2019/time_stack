@@ -15,7 +15,7 @@ jQuery ($) ->
       id: task_id,
       row_id: tokens[4]
     return
-  )
+  ) 
 
 
   $("tbody").on("change", ".project_id", ->
@@ -252,7 +252,7 @@ jQuery ($) ->
     console.log("THE EXPENSE recorD USER ID IS: " + user_id)
     $.get '/expense_records',
       user_id: user_id,
-      week_id: week_id
+      week_id: week_id 
     return
   )
 
@@ -293,6 +293,50 @@ jQuery ($) ->
     $.get '/get_notification',
       notification_id: notification_id
     return
+  )
+
+  $(document).on("click", "#add_time", ->
+    bigArray = []
+    smoothie = $('.smoothie')
+
+    smoothie.each (index ) ->
+      index = index
+      lilArray = []
+
+      hours = $('.hours-input')
+      myhours = hours.find('.hours-input')
+      console.log("Hours Worked", myhours.prevObject[index].value)
+      hr = myhours.prevObject[index].value
+      
+      partial = $('.partial_day')
+      mypartial = partial.find('mypartial')
+      console.log("partial", mypartial.prevObject[index].checked)
+      pr = mypartial.prevObject[index].checked
+
+      if pr == false && hr == 0
+        hr = 8 
+      else 
+        hr = 8 - hr
+      console.log("hours used", hr)
+
+      lilArray.push(hr)
+      lilArray.push(pr)
+
+      vacation_id = $('.vacation-change')
+      myvac = vacation_id.find('vacation-change')
+      console.log("VAC", myvac.prevObject[index].value)
+      vcid = myvac.prevObject[index].value
+      lilArray.push(vcid)
+      bigArray.push(lilArray)
+      lilArray = []
+      console.log("did this work",bigArray) 
+
+    url = "/weeks/"+ 2266
+    $.ajax url,
+    data: {bigArray}
+    type: "POST"
+    dataType: "json"
+    
   )
 
 

@@ -1,9 +1,8 @@
 # Place all the behaviors and hooks related to the matching controller here.
 # All this logic will automatically be available in application.js.
 # You can use CoffeeScript in this file: http://coffeescript.org/
-jQuery ($) ->
+jQuery ($) -> 
 
-	
 	$(document).on("change", '#date_range', ->
 		value = $(this).val()
 		console.log("The value in the date range " + value)
@@ -128,6 +127,23 @@ jQuery ($) ->
 	    buttons: [ 'excel', 'pdf']
 	  
 	})
+
+	$('#show_vacation_summary').DataTable({
+	  dom: 'lBfrtip', 
+	  buttons: [
+	    {
+	      extend: 'excel',
+	    },
+	    {
+	      extend: 'pdf',
+	      orientation:'landscape',
+	      pageSize: 'TABLOID'
+	    }
+	  ]
+	})
+
+
+  
 
 	
 
