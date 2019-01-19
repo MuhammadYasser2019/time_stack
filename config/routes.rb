@@ -193,7 +193,7 @@ Rails.application.routes.draw do
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
 
-  #mount SessionTimeoutPrompter::Engine, at: "/session_timeout_prompter"
+  mount SessionTimeoutPrompter::Engine, at: "/session_timeout_prompter"
   
   # Example resource route (maps HTTP verbs to controller actions automatically):
   #   resources :products
