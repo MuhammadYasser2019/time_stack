@@ -2,9 +2,10 @@ source 'https://rubygems.org'
 
 #gem 'mysql 2', '0.3.21'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
-ruby '2.3.0'
-gem 'rails', '5.0'
-gem 'sprockets-rails', '2.3.3'
+ruby '2.4.1'
+gem 'rails'
+gem 'sprockets-rails' #, '2.3.3'
+gem 'sprockets-es6'
 # Use sqlite3 as the database for Active Record
 # Use SCSS for stylesheets
 gem 'sass-rails'
@@ -58,7 +59,7 @@ gem 'cocoon'
 gem 'foundation-rails'
 gem 'foundation-datetimepicker-rails'
 gem 'high_voltage'
-gem 'mysql2', '>= 0.3.18'
+gem 'mysql2' #, '0.3.18'
 gem 'pundit'
 gem 'simple_form'
 #gem 'slim-rails'
@@ -80,7 +81,7 @@ gem 'whenever', :require => false
 gem 'capistrano'
 
 #For Excel Exporting
-gem 'axlsx', '2.1.0.pre'
+gem 'axlsx' #, '2.1.0.pre'
 gem 'axlsx_rails'
 gem 'fastimage'
 gem 'axlsx_styler'
