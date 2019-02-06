@@ -379,7 +379,7 @@ class AnalyticsController < ApplicationController
             else
             logger.debug("we got here")
             flash[:alert] = "There are no data to display"
-               redirect_to :back
+               redirect_back fallback_location: root_path
                #redirect_to ("/analytics/vacation_types_summary/"+ params[:customer_id])
             end 
   end 

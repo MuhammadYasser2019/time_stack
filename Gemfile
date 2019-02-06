@@ -3,7 +3,7 @@ source 'https://rubygems.org'
 #gem 'mysql 2', '0.3.21'
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 ruby '2.4.1'
-gem 'rails'
+gem 'rails', '5.2.2'
 gem 'sprockets-rails' #, '2.3.3'
 gem 'sprockets-es6'
 # Use sqlite3 as the database for Active Record
@@ -60,7 +60,8 @@ gem 'foundation-rails'
 gem 'foundation-datetimepicker-rails'
 gem 'high_voltage'
 gem 'mysql2' #, '0.3.18'
-gem 'pundit'
+#gem 'pundit'
+gem 'pundit', '~> 1.1'
 gem 'simple_form'
 #gem 'slim-rails'
 gem 'slim-rails', '3.1.1'
@@ -84,7 +85,8 @@ gem 'capistrano'
 gem 'axlsx' #, '2.1.0.pre'
 gem 'axlsx_rails'
 gem 'fastimage'
-gem 'axlsx_styler'
+#gem 'axlsx_styler'
+gem 'axlsx_styler', '~> 0.1.2'
 
 gem "omniauth-google-oauth2"
 gem 'ckeditor'
@@ -93,8 +95,6 @@ gem 'airbrake', '~> 7.2'
 #Authentication 
 gem 'rack-cors', :require => 'rack/cors'
 gem 'simple_token_authentication', '~> 1.0'
-
-
 
 group :development do
   gem 'better_errors'
@@ -117,7 +117,8 @@ group :development do
 end
 
 group :development, :test do
-  gem 'factory_bot_rails'
+  #gem 'factory_bot_rails'
+  gem 'factory_bot_rails', '~> 4.8', '>= 4.8.2'
   gem 'faker'
   gem 'pry-rails'
   gem 'pry-rescue'
