@@ -385,7 +385,6 @@ class WeeksController < ApplicationController
               respond_to do |format|
                 
                  if @week.update_attributes(week_params) 
-                  debugger
                    week_params['time_entries_attributes'].each do |t|
                      logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
                      @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
