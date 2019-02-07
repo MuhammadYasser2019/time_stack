@@ -132,7 +132,6 @@ class WeeksController < ApplicationController
     @week.time_entries.each_with_index do |te, i|
       logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
       logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
-      logger.debug "i #{i}"
       @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
       @week.time_entries[i].user_id = @week.user_id
     end
@@ -386,7 +385,8 @@ class WeeksController < ApplicationController
               respond_to do |format|
                 
                  if @week.update_attributes(week_params) 
-                   week_params['time_entries_attributes'].each_with_index  do |t,i|
+                  debugger
+                   week_params['time_entries_attributes'].each do |t|
                      logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
                      @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
   
@@ -461,7 +461,7 @@ class WeeksController < ApplicationController
               logger.debug "weeks_controller - update - params sent in are #{params.inspect}, whereas week_params are #{week_params}"
               respond_to do |format|
                  if @week.update_attributes(week_params) 
-                   week_params['time_entries_attributes'].each_with_index  do |t,i|
+                   week_params['time_entries_attributes'].each do |t|
                      logger.debug "weeks_controller - update - forcibly trying to find the activerecord  object for id  #{t[1].inspect} "
                      @week.time_entries.find(t[1]['id'].to_i).update(t[1]) if !t[1]['id'].blank?
                     if t[1]["vacation_type_id"].present? && t[1]["partial_day"].nil? && TimeEntry.where(id: t[1]["id"]).present?  
