@@ -331,7 +331,11 @@ class UsersController < ApplicationController
       if (Time.now.end_of_month - mon.month).wday ==0
         proj_report_end_date = (Time.now.end_of_month - mon.month) + 6.days
       else
-        proj_report_end_date = (Time.now.end_of_month - mon.month)
+        if Time.now.month == 2 
+          proj_report_end_date = ((Time.now + 1.month).end_of_month - mon.month)
+        else
+          proj_report_end_date = (Time.now.end_of_month - mon.month)
+        end
       end
     end 
 
