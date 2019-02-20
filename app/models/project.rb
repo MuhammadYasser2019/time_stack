@@ -26,7 +26,7 @@ class Project < ApplicationRecord
     return previous_codes
   end
 
-  def self.find_jira_projects(customer_id)
+  def self.find_jira_projects(customer_id, project_id=nil)
     current_user = User.find customer_id
     customer = Customer.find current_user.customer_id
     @configuration = customer.external_configurations.where(system_type: 'jira').first
@@ -41,8 +41,11 @@ class Project < ApplicationRecord
 	    }
       
 	    client = JIRA::Client.new(options)
-
-	    project = client.Project.all
+      if project_id.present? 
+        project = client.Project.find project_id
+      else
+	      project = client.Project.all
+      end
 		else
 			return nil
 		end

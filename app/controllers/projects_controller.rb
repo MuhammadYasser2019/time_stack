@@ -76,6 +76,38 @@ end
     #end
   end
 
+  def create_project_from_system
+    if  params[:system_type].blank? ||  params[:system_project].blank?
+      flash[:error]= 'Please seelct the fields'
+      redirect to new_project_path
+    end
+    if params[:system_type] == 'jira'
+      @jira_project = Project.find_jira_projects(current_user.id, params[:system_project])
+
+      @project = Project.where(external_type_id: @jira_project.id, customer_id: params[:customer_id]).first
+      unless @project.present?
+        @project = Project.new
+        @project.name = @jira_project.name
+        @project.customer_id = params[:customer_id]
+        @project.user_id = current_user.id
+        @project.external_type_id = @jira_project.id
+        @project.save
+      end
+     
+      @jira_project.issues.each do |issue|
+        if issue.status.name == 'In Progress'
+          unless @project.tasks.where(imported_from: issue.id).present?
+            @project.tasks.build(code: issue.id, description: issue.summary, active: true, imported_from: issue.id )
+          end
+        end
+      end
+
+    end
+    @customers = Customer.all
+    @project_id = @project.id
+    #render partial: 'new_form' 
+  end
+
   # GET /projects/1/edit
   def edit
     @customers = Customer.all
