@@ -9,6 +9,10 @@
   .field
     = f.label :name
     = f.text_field :name
+  - if @jira_projects.present?
+    .field
+      = f.label :name
+      = f.select :name, @jira_projects.collect { |m| [ m.name, m.id ] }, include_blank: true 
   
     = f.hidden_field :customer_id, value: current_user.customer_id.present? ? current_user.customer_id : Customer.find_by_name("Resource Stack, Inc.").id
     = f.hidden_field :user_id, value: current_user.id

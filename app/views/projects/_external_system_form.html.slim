@@ -1,0 +1,18 @@
+= form_tag create_project_from_system_path, id: "system_form", method: :post
+		= hidden_field_tag :customer_id, params[:customer_id]
+		table
+			thead
+				tr
+					th External System
+					th Select Project
+					th
+			
+			tbody
+				tr
+					td
+						= select_tag :system_type, options_for_select(Customer::EXTERNAL_SYSTEMS), required: true, include_blank: true, class: "fetch_project"
+					td
+						= select_tag :system_project,'', :include_blank => true
+					td
+						= submit_tag 'Import'
+				

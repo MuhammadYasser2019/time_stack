@@ -1,4 +1,8 @@
 class Project < ApplicationRecord
+  require 'rubygems'
+  require 'jira-ruby'
+
+
   belongs_to :customer
   has_many :tasks
   has_many :time_entries
@@ -20,6 +24,28 @@ class Project < ApplicationRecord
     previous_codes |= task_value
     logger.debug "PREVIOUS CODES: #{previous_codes.inspect}"
     return previous_codes
+  end
+
+  def self.find_jira_projects(customer_id)
+    current_user = User.find customer_id
+    customer = Customer.find current_user.customer_id
+    @configuration = customer.external_configurations.where(system_type: 'jira').first
+    
+    if @configuration.present?
+	    options = {
+	      :username     => @configuration.jira_email,
+	      :password     => @configuration.password,
+	      :site         => @configuration.url+':443/',
+	      :context_path => '',
+	      :auth_type    => :basic
+	    }
+      
+	    client = JIRA::Client.new(options)
+
+	    project = client.Project.all
+		else
+			return nil
+		end
   end
   
   def self.previous_codes(project)

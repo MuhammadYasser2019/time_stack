@@ -1,5 +1,16 @@
 h1 New project
+div.new_project_page
+	p What would you like to do
 
-== render 'new_form'
+	= radio_button_tag :import_from_system, '', false
+	label Import from External Systems
+	= radio_button_tag :create_new_project, '', false
+	label Create New Project
+
+	div.new_project style="display:none;"
+		== render 'new_form'
+	div.import style="display:none;"
+		== render 'external_system_form'
+
 
 = link_to 'Back', projects_path

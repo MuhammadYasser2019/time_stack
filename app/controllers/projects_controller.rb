@@ -65,6 +65,15 @@ end
     @customers = Customer.all
     @project = Project.new
     @users_on_project = User.where("parent_user_id IS null").all
+    @jira_projects = Project.find_jira_projects(current_user.id)
+
+  end
+
+  def show_projects
+    @jira_projects = Project.find_jira_projects(current_user.id)
+    #respond_to do |format|
+    # format.js
+    #end
   end
 
   # GET /projects/1/edit

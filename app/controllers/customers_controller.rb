@@ -27,6 +27,7 @@
       @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
       logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
       logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
+      @current_systems = ExternalConfiguration.where(customer_id: @customer.id)
     end
   end 
 
@@ -106,6 +107,7 @@
     @customer.save
     @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
     logger.debug("CHECK FOR CUSTOMER params#{@cutomer.inspect}")
+    
     respond_to do |format|
       if @customer.update(customer_params)
     	  @projects = @customer.projects
@@ -294,6 +296,38 @@
       format.js 
     end
   end 
+
+  def add_configuration
+    @customer = Customer.where(id: params[:customer_id]).first
+    if @customer.present?
+      @configuration = ExternalConfiguration.where(system_type: params[:system_type], customer_id: @customer.id).first
+      unless @configuration.present?
+        @configuration = ExternalConfiguration.new
+        @configuration.system_type = params[:system_type]
+        @configuration.url = params[:url]
+        @configuration.jira_email = params[:jira_email]
+        @configuration.password = params[:password]
+        @configuration.confirm_password = params[:confirm_password]
+        @configuration.customer_id = @customer.id
+        @configuration.created_by = current_user.id
+        @configuration.save
+      end
+    end
+    @current_systems = ExternalConfiguration.where(customer_id: params[:customer_id])
+
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def remove_configuration
+    if params[:id].present?
+      @configuration = ExternalConfiguration.find(params[:sys_id])
+      @configuration.destroy
+    end
+    @current_systems = ExternalConfiguration.where(customer_id: params[:ids])
+
+  end
 
   def pre_vacation_request 
       start_date = params[:start_date]
@@ -662,4 +696,5 @@
     def customer_params
       params.require(:customer).permit(:name, :address, :city, :state, :zipcode, :regular_hours, :logo, holiday_ids: [])
     end
+
 end
