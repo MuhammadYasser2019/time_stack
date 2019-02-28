@@ -62,23 +62,41 @@ end
 
   # GET /projects/new
   def new
-    @customers = Customer.all
     @project = Project.new
     @users_on_project = User.where("parent_user_id IS null").all
-    @jira_projects = Project.find_jira_projects(current_user.id)
+    @customer = Customer.find current_user.customer_id
+    @configuration = @customer.external_configurations.where(system_type: 'jira').first
 
   end
 
   def show_projects
-    @jira_projects = Project.find_jira_projects(current_user.id)
-    #respond_to do |format|
-    # format.js
+    
+    if params["system"].present? && params["system"] == 'jira'
+      
+      @jira_projects = Project.find_jira_projects(current_user.id)
+      if @jira_projects == 'error'
+        @error = "Please update valid credentials"
+        #redirect_to new_project_path
+        #redirect_to new_project_path(format: :json)
+
+        render :json => {:error => @error}
+      end
+    elsif params["system"].present? && params["system"] == 'redmine'
+      @error = "Please update valid credentials"
+        #redirect_to new_project_path
+      render :json => {:error => @error}
+    end
+
+    #respond_to do |format|   
+     # format.html { redirect_to new_project_path, error: @error }
+      #format.json {render json: error: @error }
+      
     #end
   end
 
   def create_project_from_system
     if  params[:system_type].blank? ||  params[:system_project].blank?
-      flash[:error]= 'Please seelct the fields'
+      flash[:error]= 'Please select the fields'
       redirect to new_project_path
     end
     if params[:system_type] == 'jira'
@@ -92,17 +110,18 @@ end
         @project.user_id = current_user.id
         @project.external_type_id = @jira_project.id
         @project.save
-      end
-     
+      end 
       @jira_project.issues.each do |issue|
+        
         if issue.status.name == 'In Progress'
           unless @project.tasks.where(imported_from: issue.id).present?
-            @project.tasks.build(code: issue.id, description: issue.summary, active: true, imported_from: issue.id )
+            @project.tasks.build(code: issue.key, description: issue.summary, active: true, imported_from: issue.id )
           end
         end
       end
 
     end
+    
     @customers = Customer.all
     @project_id = @project.id
     #render partial: 'new_form' 
@@ -172,9 +191,9 @@ end
           t[1]["id"] = Task.all.count + 1
         end
         if Task.where(id: t[1]["id"]).present?
-          @task = Task.find(t[1]["id"]).update(code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"])
+          @task = Task.find(t[1]["id"]).update(code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"], imported_from: t[1]["imported_from"])
         else
-          @task = Task.create(id: t[1]["id"], code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"], project_id: @project.id)
+          @task = Task.create(id: t[1]["id"], code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"], imported_from: t[1]["imported_from"], project_id: @project.id)
         end
       end
     end

@@ -298,7 +298,7 @@
   end 
 
   def add_configuration
-    @customer = Customer.where(id: params[:customer_id]).first
+    @customer = Customer.where(id: current_user.customer_id).first
     if @customer.present?
       @configuration = ExternalConfiguration.where(system_type: params[:system_type], customer_id: @customer.id).first
       unless @configuration.present?
@@ -313,7 +313,7 @@
         @configuration.save
       end
     end
-    @current_systems = ExternalConfiguration.where(customer_id: params[:customer_id])
+    @current_systems = ExternalConfiguration.where(customer_id: current_user.customer_id)
 
     respond_to do |format|
       format.js

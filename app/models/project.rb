@@ -30,7 +30,6 @@ class Project < ApplicationRecord
     current_user = User.find customer_id
     customer = Customer.find current_user.customer_id
     @configuration = customer.external_configurations.where(system_type: 'jira').first
-    
     if @configuration.present?
 	    options = {
 	      :username     => @configuration.jira_email,
@@ -39,12 +38,17 @@ class Project < ApplicationRecord
 	      :context_path => '',
 	      :auth_type    => :basic
 	    }
+      begin
+	      client = JIRA::Client.new(options)
       
-	    client = JIRA::Client.new(options)
-      if project_id.present? 
-        project = client.Project.find project_id
-      else
-	      project = client.Project.all
+        
+        if project_id.present? 
+          project = client.Project.find project_id
+        else
+  	      project = client.Project.all
+        end
+      rescue
+        return "error"
       end
 		else
 			return nil
