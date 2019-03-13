@@ -107,7 +107,7 @@
     @customer.save
     @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
     logger.debug("CHECK FOR CUSTOMER params#{@cutomer.inspect}")
-    
+    @current_systems = ExternalConfiguration.where(customer_id: @customer.id)
     respond_to do |format|
       if @customer.update(customer_params)
     	  @projects = @customer.projects
@@ -667,7 +667,7 @@
     @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
     logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
-	
+	  @current_systems = ExternalConfiguration.where(customer_id: @customer.id)
     respond_to do |format|  
       format.js
     end
