@@ -11,6 +11,8 @@ class ProjectsController < ApplicationController
     @adhoc_pm_projects = Project.where(adhoc_pm_id: current_user.id)
     @adhoc_pm_project = @adhoc_pm_projects.first
     @adhoc = params["adhoc"]
+    @default_project = current_user.default_project
+    @project_tasks = Task.where(project_id: @default_project)
     if @projects.present?
       params[:project_id] = @project_id = @projects.first.id
       logger.debug("project-index- @project_id #{@project_id}")

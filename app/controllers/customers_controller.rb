@@ -25,6 +25,8 @@
       @vacation_requests = VacationRequest.where("customer_id= ? and status = ?", params[:customer_id], "Requested")
       @adhoc_projects = Project.where("adhoc_pm_id is not null")
       @vacation_types = VacationType.where("customer_id=? && active=?", @customer.id, true)
+      @default_project = current_user.default_project
+      @project_tasks = Task.where(project_id: @default_project)
       logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
       logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
     end

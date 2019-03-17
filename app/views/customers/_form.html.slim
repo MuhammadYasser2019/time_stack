@@ -145,13 +145,13 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
                   th
                     = form_tag(action: :invite_to_project, html: {class: 'form-inline'}) do
                       = label_tag "Email",nil, :style=>"text-align: left;"
-                      = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email"
+                      = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email", required: true
                       = label_tag "Select Start Date",nil, :style=>"text-align: left;"
                       = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required"}
                       = label_tag "Employment Type",nil, :style=>"text-align: left;"
                       = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type", required: "required"
                       = label_tag "Project",nil, :style=>"text-align: left;"
-                      = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), style: "margin-top:5px;"
+                      = select_tag :project_id, options_from_collection_for_select(@projects, :id, :name), required: true, style: "margin-top:5px;"
                       = hidden_field_tag :invited_by_id, current_user.id
                       = hidden_field_tag :customer_id, @customer.id
                       .grid-x(style="margin-top: 10px;margin-left: 10px;")
@@ -196,4 +196,7 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
   div class="tabs-panel" id="vacation_types"
 			 div(id="dynamic_add_vacation_types")
 			 	== render partial: 'add_vacation_types'
+
+  - if !current_user.default_project? && current_user.parent_user_id.blank?
+  	== render partial: 'users/default_projects'
 				

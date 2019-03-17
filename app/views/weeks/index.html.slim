@@ -87,18 +87,6 @@
 		      td
 		      td
 
-	- if current_user.parent_user_id.blank?
-		br
-		h4 Set Default Project
-		= form_tag "/set_default_project", method: :get do
-			table
-				thead
-					tr 
-						th Project
-						th Task
-						th Set Default
-				tbody	
-					tr
-						td = select_tag :default_project_id, options_from_collection_for_select(@user.projects,"id", "name",@default_project),class: "default_project_id", :include_blank => true
-						td = select_tag :default_task_id, options_from_collection_for_select(@project_tasks,"id", "description",@default_task ), class: "default_task_id", :include_blank => true
-						td = button_tag "Set Defaults", class: "tiny orange-button"
+	
+	- if !current_user.default_project? && current_user.parent_user_id.blank?
+		== render partial: 'users/default_projects'
