@@ -111,6 +111,40 @@ jQuery ($) ->
       checked: check
     return
 
+  $('#import_from_system_').click ->
+    $('#create_new_project_').prop("checked", false)
+    $('.import').show()
+    $('.new_project').hide()
+
+  $('#create_new_project_').click ->
+    $('#import_from_system_').prop("checked", false)
+    $('.new_project').show()
+    $('.import').hide()
+
+
+  $(document).on("change", ".fetch_project", ->
+    console.log "Inside system change" + $(this).attr('id') +  " the value selected is " + $(this).val()    
+    system_select_id = $(this).val()
+    customer_id = $('#customer_id').val()
+    build_project(system_select_id, $(this).val())
+  )
+
+  build_project = (system_select_id, customer_id) ->
+    
+    my_url = '/show_projects/'+system_select_id
+    $.ajax my_url,
+      data: {}
+      type: 'GET',
+      async: false,
+      dataType: 'json'
+      success: (data, textStatus, jqXHR) ->
+        $my_data = data
+        console.log "data is  " + data.length + " my_data is  " + $my_data.length
+        for item in $my_data
+          console.log "data is "+item.name + "  "  + item.id
+          $('#system_project').append($("<option></option>").attr("value",item.id).text(item.name))
+
+
 
   #$('.invite_user_button').click ->
 #

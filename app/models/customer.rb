@@ -5,12 +5,16 @@ class Customer < ApplicationRecord
   has_many :vacation_requests
   has_many :employment_types
   mount_uploader :logo, LogoUploader
-  has_many :vacation_types 
+  has_many :vacation_types
+  has_many :external_configurations
 
 
   validates_numericality_of :zipcode
 
-
+  EXTERNAL_SYSTEMS= {
+    'Jira' => 'jira',
+    'Redmine' => 'redmine'
+  }
   
 
   def build_consultant_hash(customer_id, dates_array, start_date, end_date, users, projects, current_week=nil, current_month=nil, billable)

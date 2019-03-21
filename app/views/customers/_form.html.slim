@@ -18,9 +18,12 @@ ul(class="tabs" data-tabs id="customer-tabs" style="margin: 0 55px 0 64px;")
   	 a data-tabs-target="assign_pm" href="#assign_pm" Projects
   li class="tabs-title"
   	 a data-tabs-target="vacation_types" href="#vacation_types" Vacation Types
+  li class="tabs-title"
+  	 a data-tabs-target="configuration" href="#configuration" Configuration
 
 div.tabs-content.white-background data-tabs-content="customer-tabs"
   div class="tabs-panel is-active" id="information"
+  	div class= "display-text"
     h1 Editing customer
 	= form_for @customer, remote: true do |f|
 	  - if @customer.errors.any?
@@ -197,6 +200,12 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
 			 div(id="dynamic_add_vacation_types")
 			 	== render partial: 'add_vacation_types'
 
+  div class="tabs-panel" id="configuration"
+			 div(id="dynamic_add_configuration")
+			 	== render partial: 'add_configuration'
+			 	
   - if !current_user.default_project? && current_user.parent_user_id.blank?
   	== render partial: 'users/default_projects'
+
+  
 				

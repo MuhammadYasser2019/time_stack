@@ -7,20 +7,25 @@
           li = message
 
   .field
+
     = f.label :name
     = f.text_field :name
   
     = f.hidden_field :customer_id, value: current_user.customer_id.present? ? current_user.customer_id : Customer.find_by_name("Resource Stack, Inc.").id
     = f.hidden_field :user_id, value: current_user.id
-  fieldset class="form-inline"
   table border="1" id="tasklist"
     thead
       tr 
         td Code
         td Description
+        td Comment
+        td Active
+        td Billable
+        td Include from Jira
     tbody
       = f.fields_for :tasks do |tf|
         == render 'task_fields', f: tf
 	tr 
           td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
+          
   .actions#new-project-actions = f.submit
