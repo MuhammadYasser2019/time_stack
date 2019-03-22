@@ -32,7 +32,7 @@
     = f.fields_for :time_entries, @time_entries do |cf|
       tr.smoothie = render :partial => 'time_entry_fields', :locals => {:f => cf}
       - @count += 1
-  - if f.object.status_id == 2 || f.object.status_id == 3
+  - if f.object.status_id == 2
 
   - else
     div.upload_text
