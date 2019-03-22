@@ -12,7 +12,7 @@
 					td
 						= select_tag :system_type, options_for_select(Customer::EXTERNAL_SYSTEMS), required: true, include_blank: true, class: "fetch_project"
 					td
-						= select_tag :system_project,'', :include_blank => true
+						= select_tag :system_project,'', :include_blank => true, required: true
 					td
 						= submit_tag 'Import'
 				

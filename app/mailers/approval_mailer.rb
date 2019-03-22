@@ -17,7 +17,7 @@ class ApprovalMailer < ActionMailer::Base
     end
   end
 
-  def mail_to_user(week, user)
+  def mail_to_user(week, user, subject)
     normal_user = User.find(week.user_id)
     if normal_user.parent.present?
       @user = normal_user.parent.email
@@ -28,7 +28,7 @@ class ApprovalMailer < ActionMailer::Base
 
     @time = week
 
-    mail(to:@user  , subject:"Timesheet Approval")
+    mail(to:@user  , subject: subject)
 
   end
 

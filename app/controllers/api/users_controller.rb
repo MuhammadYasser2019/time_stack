@@ -209,7 +209,7 @@ module Api
 	    week.save!
 
 	    manager = user
-	    ApprovalMailer.mail_to_user(week, manager).deliver
+	    ApprovalMailer.mail_to_user(week, manager, 'TimeSheet Approval').deliver
 	    render :json => {status: :ok}
 
 	  end
@@ -229,7 +229,7 @@ module Api
 	    #todo pass comment
 	    #week.comments = params[:comments]
 	    week.save!
-	    ApprovalMailer.mail_to_user(week, user).deliver
+	    ApprovalMailer.mail_to_user(week, user, 'Timesheet Rejected').deliver
 	    logger.debug "time_reject - leaving"
 	 		render :json => {status: :ok}
 		end

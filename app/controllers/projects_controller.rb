@@ -78,10 +78,11 @@ end
       @jira_projects = Project.find_jira_projects(current_user.id)
       if @jira_projects == 'error'
         @error = "Please update valid credentials"
+        #render text: @error
         #redirect_to new_project_path
         #redirect_to new_project_path(format: :json)
 
-        render :json => {:error => @error}
+        #render :json => {:error => @error}
       end
     elsif params["system"].present? && params["system"] == 'redmine'
       @error = "Please update valid credentials"
@@ -266,7 +267,7 @@ end
       @w.save!
 
     manager = current_user
-    ApprovalMailer.mail_to_user(@w, manager).deliver
+    ApprovalMailer.mail_to_user(@w, manager, 'Timesheet Approval').deliver
     respond_to do |format|
       format.html {flash[:notice] = "Approved"}
       format.js

@@ -7,20 +7,21 @@ h6 New Configuration Setup
 =form_tag add_configuration_path, id: "add_configuration_form", method: :post, remote: true
 
 	table.configuration_table
-		tr (style= "background: #98cde1;")
+		tr.dark_row
 			th External System
 			th Email
 			th Password
-		tr (style= "background: #f5f5f5;")
+		tr 
+
 			td = select_tag :system_type, options_for_select(Customer::EXTERNAL_SYSTEMS), required: true, include_blank: true
 			
 			td = text_field_tag :jira_email, '' , required: true
 			td = password_field_tag :password, '', required: true
-		tr (style= "background: #98cde1;")
+		tr.dark_row
 			th External Url
 			th
 			th Confirm Password
-		tr (style= "background: #f5f5f5;")
+		tr 
 			td = text_field_tag :url, '', required: true
 			td
 			
@@ -33,13 +34,13 @@ h6 Active External Systems
 
 -if @current_systems.present?
 	table
-		tr (style= "background: #98cde1;")
+		tr.dark_row 
 			th (style= "width: 25%;") External System
 			th (style= "width: 25%;") External Url
 			th (style= "width: 25%;") Username
 			th (style= "width: 25%;") Action
 		- @current_systems.each do |sys|
-			tr (style= "background: #f5f5f5;")
+			tr
 				td = sys.system_type
 				td = sys.url
 				td = sys.jira_email

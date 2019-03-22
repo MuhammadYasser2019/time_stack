@@ -673,7 +673,7 @@ class WeeksController < ApplicationController
     @row_id = params[:row_id]
     @week.save!
     @user = current_user
-    ApprovalMailer.mail_to_user(@week, @user).deliver
+    ApprovalMailer.mail_to_user(@week, @user, 'Timesheet Rejected').deliver
     logger.debug "time_reject - leaving"
     respond_to do |format|
       # format.html {flash[:notice] = "Reject"}
