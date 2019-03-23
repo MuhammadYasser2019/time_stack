@@ -523,10 +523,23 @@
   end
 
   def customer_reports
+    set_default_reports if params.keys.include?('default')
+
     @customer_id = params[:id]
     @customer = Customer.find(@customer_id)
+    default_report = @customer.default_report
     @users = Array.new
-    if params[:exclude_pending_users].present?
+    if default_report && !params.keys.include?('button')
+      params[:exclude_pending_users] = default_report.exclude_pending_user
+      params[:Tasks] = default_report.billable
+      params[:proj_report_start_date] = default_report.start_date.to_s
+      params[:proj_report_end_date] = default_report.end_date.to_s
+      params["current_week"] = default_report.current_week
+      params["current_month"] = default_report.month
+      params[:user] = default_report.user_id
+      params[:project] = default_report.project_id
+    end  
+    if params[:exclude_pending_users].present? && params[:exclude_pending_users] == true
       @customer.projects.each do |p|
         @users << p.users.where.not(invitation_accepted_at: nil)
       end
@@ -548,6 +561,8 @@
     @users_array = @users.pluck(:id)
     logger.debug("THE USER IDS ARE: #{@users_array}")
     @projects = @customer.projects
+    
+
     @dates_array = @customer.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date], params["current_week"], params["current_month"])
     @week_array = @customer.find_week_id(params[:proj_report_start_date], params[:proj_report_end_date],@users_array)
     logger.debug("THE WEEK ID YOU ARE LOOKING FOR ARE :  #{@week_array}")
@@ -697,6 +712,22 @@
     # Never trust parameters from the scary internet, only allow the white list through.
     def customer_params
       params.require(:customer).permit(:name, :address, :city, :state, :zipcode, :regular_hours, :logo, holiday_ids: [])
+    end
+
+    def set_default_reports
+      logger.debug("SETTING DEFAULT REPORT")
+      @default_report = DefaultReport.where(customer_id: current_user.customer_id).first_or_initialize
+      @default_report.customer_id = current_user.customer_id
+      @default_report.project_id = params[:project]
+      @default_report.user_id = params[:user]
+      @default_report.start_date = params[:proj_report_start_date]
+      @default_report.end_date = params[:proj_report_end_date]
+      @default_report.month = params[:current_month]
+      @default_report.current_week = params[:current_week]
+      @default_report.exclude_pending_user = params[:exclude_pending_users]
+      @default_report.billable = params[:Tasks]
+      @default_report.save
+      logger.debug("SETTING DEFAULT REPORT: set")
     end
 
 end

@@ -7,6 +7,7 @@ class Customer < ApplicationRecord
   mount_uploader :logo, LogoUploader
   has_many :vacation_types
   has_many :external_configurations
+  has_one :default_report
 
 
   validates_numericality_of :zipcode
