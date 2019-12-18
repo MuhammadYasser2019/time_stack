@@ -386,4 +386,14 @@ jQuery ($) ->
       alert("Password did not match")
      return false
   )
+
+  $(document).on('click', '#hideshow', ->
+    $('#show_hide').css("display", "block")
+    $('#hideshow').css("display", "none")
+  )
+
+  $(document).on('click', '#hideall', ->
+    $('#show_hide').css("display", "none")
+    $('#hide_button').css("display", "block")
+  )
  
