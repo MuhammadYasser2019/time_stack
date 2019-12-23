@@ -29,7 +29,7 @@ class Ability
         can [:read,:edit,:update], Task
         can [:manage, :permission_denied, :show_project_reports,:approve], Project
         can [:manage, :read,:edit,:update, :add_user_to_customer, :set_theme], Customer
-	can [:time_reject, :dismiss, :show_all_timesheets], Week
+	can [:time_reject, :dismiss, :show_all_timesheets, :change_status], Week
 	can [:reset,:approved_week, :default_week], User
         can [:check_holidays], Holiday
       end
