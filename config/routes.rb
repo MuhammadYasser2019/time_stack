@@ -80,6 +80,7 @@ Rails.application.routes.draw do
   get 'show_projects/:system' => 'projects#show_projects'
 
   get 'projects/:id/approve/:week_id/:row_id' => 'projects#approve'
+  match 'weeks/dismiss/:week_id/:row_id' => 'weeks#dismiss', via: [:get, :post]
   get 'projects/:id/reject/:week_id' => 'projects#reject'
   get 'show_project_reports' => 'projects#show_project_reports'
   post 'add_multiple_users_to_project' => "projects#add_multiple_users_to_project"
@@ -178,6 +179,7 @@ Rails.application.routes.draw do
   post "assign_pm/:id" => "customers#assign_pm", as: :assign_pm
   get "/clear_timesheet/:id" => "weeks#clear_timesheet"
   get "/show_old_timesheets" => "projects#show_old_timesheets"
+  get "/show_all_timesheets" => "weeks#show_all_timesheets"
   post "/add_previous_comments" => "weeks#add_previous_comments", as: :add_previous_comments
   get 'remove_emp_from_vacation' => "customers#remove_emp_from_vacation"
   match "/expense_records" => 'weeks#expense_records', via: [:get, :post]
