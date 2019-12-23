@@ -29,8 +29,8 @@ class Ability
         can [:read,:edit,:update], Task
         can [:manage, :permission_denied, :show_project_reports,:approve], Project
         can [:manage, :read,:edit,:update, :add_user_to_customer, :set_theme], Customer
-	can [:time_reject], Week
-	can [:reset], User
+	can [:time_reject, :dismiss, :show_all_timesheets], Week
+	can [:reset,:approved_week], User
       end
       if user.pm
        can :manage, TimeEntry
