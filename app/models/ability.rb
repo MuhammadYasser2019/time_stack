@@ -30,7 +30,8 @@ class Ability
         can [:manage, :permission_denied, :show_project_reports,:approve], Project
         can [:manage, :read,:edit,:update, :add_user_to_customer, :set_theme], Customer
 	can [:time_reject, :dismiss, :show_all_timesheets], Week
-	can [:reset,:approved_week], User
+	can [:reset,:approved_week, :default_week], User
+        can [:check_holidays], Holiday
       end
       if user.pm
        can :manage, TimeEntry
