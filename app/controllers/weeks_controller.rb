@@ -723,6 +723,38 @@ class WeeksController < ApplicationController
     end
   end
 
+  def dismiss
+    logger.debug"REACHING DISMISS"
+    id = params[:week_id]
+    logger.debug"IDDDD #{id.inspect}"
+    w = Week.find(id)
+    logger.debug("inside the dismiss #{w.inspect}")
+    w.dismiss = "true"
+    logger.debug("after the true in the dismiss #{w.inspect}")
+    w.save
+    
+    @row_id = params[:row_id]
+    #@w.approved_date = Time.now.strftime('%Y-%m-%d')
+    #@w.approved_by = current_user.id
+    #if @w.time_entries.where.not(hours:nil).count == @w.time_entries.where(status_id: 3).count
+    #  @w.status_id = 3
+    #  @w.save!
+
+    #manager = current_user
+    #ApprovalMailer.mail_to_user(@w, manager, 'Timesheet Approval').deliver
+    respond_to do |format|
+      format.html {flash[:notice] = "dismissed"}
+      format.js
+    end
+  end
+
+  def show_all_timesheets
+    @projects = Project.where(user_id: current_user.id)
+    respond_to do |format|  
+      format.html{}
+    end
+  end
+
 
   private
     # Use callbacks to share common setup or constraints between actions.
@@ -732,7 +764,7 @@ class WeeksController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
-      params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report,
+      params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report, :dismiss,
       time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id, :partial_day],expense_records_attributes:[:id, :expense_type, :description, :date, :amount, :attachment, :project_id])
     end
 
