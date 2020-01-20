@@ -1,8 +1,9 @@
-.white-background
-	.grid-x
+.container
+
+	.white-background
 		.left-row
-			h1 Listing customers
-	
+			h3 Listing customers
+
 			table
 				thead
 					tr
@@ -29,10 +30,10 @@
 		
 			br
 				= link_to(image_tag("plus.jpg", :width => 50, :height => 50), new_customer_path, title: "Create New Customer")
-               
-	
+	             
+
 		.right-row	
-				h1 Enter And Manage Time
+				h3 Enter And Manage Time
 				table
 					thead
 						tr
@@ -52,13 +53,14 @@
 								td = link_to "COPY", "/copy_timesheet/#{week.id}" 
 							-elsif (find_status(week) == @hours_sum) && @weeks.last.id != week.id
 								td = link_to "CLEAR", "/clear_timesheet/#{week.id}"
-	
+
 				= link_to "Enter Time for Current Week", "/weeks/new", id:"new_week" if current_week_available(current_user).blank?
 				br
 				= link_to "Show Old Timesheets","show_old_timesheets", target: :_blank
+		div style="clear:both;"
 
--if @customers.present?
-	== render partial: 'projects/timesheets_for_approval', locals: {projects: @pm_projects}
+	-if @customers.present?
+		== render partial: 'projects/timesheets_for_approval', locals: {projects: @pm_projects}
 	.(id="dynamic_customers")
 		== render 'new_edit_form'
 

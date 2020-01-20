@@ -1,28 +1,28 @@
-ul(class="tabs" data-tabs id="customer-tabs" style="margin: 0 55px 0 64px;")
+ul(class="nav nav-tabs" id="customer-tabs" role="tablist" )
  - unless current_page?(action: 'new')
-  li class="tabs-title is-active" style="margin: 0px;"
-  	a aria-selected="true" href="#information" Customer Information
-  li class="tabs-title"
-  	a data-tabs-target="holidays" href="#holidays" Holidays
-  li class="tabs-title"
-  	a data-tabs-target="employment_types" href="#employment_types" Employment Types
-  li class="tabs-title"
-  	a data-tabs-target="customer_employees" href="#customer_employees" Customer Employees
-  li class="tabs-title"
-  	a data-tabs-target="vacation_request" href="#vacation_request" Vacation Request	
-  li class="tabs-title"
-  	 a data-tabs-target="user_invitation" href="#user_invitation" Invite Users
-  li class="tabs-title"
-  	 a data-tabs-target="adhoc_pm" href="#adhoc_pm" Assign Adhoc PM
-  li class="tabs-title"
-  	 a data-tabs-target="assign_pm" href="#assign_pm" Projects
-  li class="tabs-title"
-  	 a data-tabs-target="vacation_types" href="#vacation_types" Vacation Types
-  li class="tabs-title"
-  	 a data-tabs-target="configuration" href="#configuration" Configuration
+  li class="nav-item"
+  	a class="nav-link active" id="information-tab" aria-selected="true" role="tab" data-toggle="tab" href="#information" Customer Information
+  li class="nav-item"
+  	a class="nav-link" id="holidays-tab" aria-selected="true" role="tab" data-toggle="tab" href="#holidays" Holidays
+  li class="nav-item"
+  	a class="nav-link" id="employment_types-tab" aria-selected="true" role="tab" data-toggle="tab" href="#employment_types" Employment Types
+  li class="nav-item"
+  	a class="nav-link" id="customer_employees-tab" aria-selected="true" role="tab" data-toggle="tab" href="#customer_employees" Customer Employees
+  li class="nav-item"
+  	a class="nav-link" id="vacation_request-tab" aria-selected="true" role="tab" data-toggle="tab" href="#vacation_request" Vacation Request	
+  li class="nav-item"
+  	 a class="nav-link" id="user_invitation-tab" aria-selected="true" role="tab" data-toggle="tab" href="#user_invitation" Invite Users
+  li class="nav-item"
+  	 a class="nav-link" id="adhoc_pm-tab" aria-selected="true" role="tab" data-toggle="tab" href="#adhoc_pm" Assign Adhoc PM
+  li class="nav-item"
+  	 a class="nav-link" id="assign_pm-tab" aria-selected="true" role="tab" data-toggle="tab" href="#assign_pm" Projects
+  li class="nav-item"
+  	 a class="nav-link" id="vacation_types-tab" aria-selected="true" role="tab" data-toggle="tab" href="#vacation_types" Vacation Types
+  li class="nav-item"
+  	 a class="nav-link" id="configuration-tab" aria-selected="true" role="tab" data-toggle="tab" href="#configuration" Configuration
 
-div.tabs-content.white-background data-tabs-content="customer-tabs"
-  div class="tabs-panel is-active" id="information"
+div.tab-content.white-background
+  div class="tab-pane fade show active" role="tabpanel" aria-labelledby="information-tab" id="information"
   	div class= "display-text"
     h1 Editing customer
 	= form_for @customer, remote: true do |f|
@@ -57,7 +57,7 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
 	  
 	  .actions = f.submit
 	  
-  div class="tabs-panel" id="holidays"
+  div class="tab-pane fade" role="tabpanel" aria-labelledby="holidays-tab" id="holidays"
    - unless current_page?(action: 'new')
 	  h3.text-center Holidays Setup
 	  - if @holidays.any?
@@ -82,11 +82,11 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
 	  
 	
 		      
-  div class="tabs-panel" id="employment_types"
+  div class="tab-pane fade" role="tabpanel" aria-labelledby="employment_types-tab" id="employment_types"
 			div(id="dynamic_employment")
 				== render partial: "employment_form"
 	
-  div class="tabs-panel" id="customer_employees"
+  div class="tab-pane fade" role="tabpanel" aria-labelledby="customer_employees-tab" id="customer_employees"
 	div class = "disp-message"
 			div class="vacation-left-row" 
 				h3.text-center Customer Employees
@@ -113,7 +113,7 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
 					div class = "shareduser-class"
 						div(id="sharedUser" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 
-  div class="tabs-panel" id="vacation_request"
+  div class="tab-pane fade" role="tabpanel" aria-labelledby="vacation_request-tab" id="vacation_request"
 		div class="vacation-right-row"
 			h3.text-center Vacation Request
 			table
@@ -139,7 +139,7 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
 							- if vu.status == "CancelRequest"
 								td = link_to "Approve Cancel","/customers/approve_cancel_request/#{vu.id}/#{i}", class: "orange-button", type: "button", remote: true, :style=>"width:100%;"
 
-  div class="tabs-panel" id="user_invitation"
+  div class="tab-pane fade" role="tabpanel" aria-labelledby="user_invitation-tab" id="user_invitation"
 		  h1.left_row Invite Users	
 		  table class="left-row"
 			thead
@@ -188,19 +188,19 @@ div.tabs-content.white-background data-tabs-content="customer-tabs"
 		  div class = "customerpending-class"
 			div(id="customersPendingEmail" class="reveal" aria-hidden="true" role="dialog" data-reveal)
 
-  div class="tabs-panel" id="adhoc_pm"
+  div class="tab-pane fade" role="tabpanel" aria-labelledby="adhoc_pm-tab" id="adhoc_pm"
 			 div(id="dynamic_adhoc_update")
 				== render partial: 'adhoc_pm_form'
 
-  div class="tabs-panel" id="assign_pm"
+  div class="tab-pane fade" role="tabpanel" aria-labelledby="assign_pm-tab" id="assign_pm"
 			 div(id="dynamic_assign_pm")
 				== render partial: 'assign_pm_form'
 
-  div class="tabs-panel" id="vacation_types"
+  div class="tab-pane fade" role="tabpanel" aria-labelledby="vacation_types-tab" id="vacation_types"
 			 div(id="dynamic_add_vacation_types")
 			 	== render partial: 'add_vacation_types'
 
-  div class="tabs-panel" id="configuration"
+  div class="tab-pane fade" role="tabpanel" aria-labelledby="configuration-tab" id="configuration"
 			 div(id="dynamic_add_configuration")
 			 	== render partial: 'add_configuration'
 			 	

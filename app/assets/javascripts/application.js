@@ -14,16 +14,18 @@
 //= require jquery.turbolinks
 //= require jquery_ujs
 //= require dataTables/jquery.dataTables
-//= require foundation.min
+// require foundation.min
 //= require what-input
-//= require ckeditor/init
+// require ckeditor/init
 //= require foundation-datetimepicker
 //= require turbolinks
 //= require chart
+//=  require bootstrap.min
 //= require turbolinks-compatibility
 // session_timeout_prompter
 //= require highcharts
 //= require_tree .
+
 
 
 

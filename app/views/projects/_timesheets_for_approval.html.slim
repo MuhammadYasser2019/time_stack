@@ -1,8 +1,7 @@
 .white-background
-	.grid-x
 	= form_tag approve_all_path, id: "approve_all_form", method: :post, remote: true
 		div id= "show_hide" style="display: block;"
-			h1 Time Sheets Submitted for Approval
+			h2 Time Sheets Submitted for Approval
 			table class="approve-table"style="width:90%;"
 				thead
 				  tr
