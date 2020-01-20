@@ -263,6 +263,12 @@ div {
   background-color: white;
   box-shadow: 2px 2px 2px rgba(1, 1, 1, 0.2)
 }
+.modal-backdrop.show{
+  opacity:0;
+}
+.modal{
+  z-indez:0;
+}
 
 .dark-foreground{
   background-color:rgba(0,0,0,0.3);
