@@ -17,9 +17,10 @@
             <label for="exampleInputPassword1">Password</label>
             <%= f.input :password, label: false, required: false, input_html: {class: 'form-control'} %>
           </div>
-          <div class="form-group">
-            <label class="form-check-label" for="exampleCheck1">
-            <span><%= f.input :remember_me, label: false, as: :boolean %></span>Remember Me</label>
+          <div class="form-check form-check-inline">
+            
+            <%= f.input :remember_me, label: false, as: :boolean, class: "form-check-input" %>
+            <label class="form-check-label" for="exampleCheck1">Remember Me</label>
           </div>
           <div class="form-group">
             <%= f.button :submit, "Log in", style:"background-color: DodgerBlue;"%>

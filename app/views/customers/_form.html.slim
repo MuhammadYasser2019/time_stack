@@ -35,25 +35,25 @@ div.tab-content.white-background
 	
 	  .field
 	    = f.label :name
-	    = f.text_field :name
+	    = f.text_field :name, class: 'form-control'
 	  .field
 	    = f.label :address
-	    = f.text_field :address
+	    = f.text_field :address, class: 'form-control'
 	  .field
 	    = f.label :city
-	    = f.text_field :city
+	    = f.text_field :city, class: 'form-control'
 	  .field
 	    = f.label :state
-	    = f.text_field :state
+	    = f.text_field :state, class: 'form-control'
 	  .field
 	    = f.label :zipcode
-	    = f.text_field :zipcode
+	    = f.text_field :zipcode, class: 'form-control'
 	  .field
 	  	= f.label :regular_hours_per_day
-	  	= f.number_field :regular_hours
+	  	= f.number_field :regular_hours, class: 'form-control'
 	  .field
 	    = f.label :customer_manager
-	    = f.select(:user_id, options_from_collection_for_select(@users_eligible_to_be_manager, "id", "email", @customer.user_id))
+	    = f.select(:user_id, options_from_collection_for_select(@users_eligible_to_be_manager, "id", "email", @customer.user_id), class: 'form-control form-control-lg')
 	  
 	  .actions = f.submit
 	  
@@ -90,7 +90,7 @@ div.tab-content.white-background
 	div class = "disp-message"
 			div class="vacation-left-row" 
 				h3.text-center Customer Employees
-				table 
+				table class="table"
 					thead
 						tr
                           th User
@@ -116,7 +116,7 @@ div.tab-content.white-background
   div class="tab-pane fade" role="tabpanel" aria-labelledby="vacation_request-tab" id="vacation_request"
 		div class="vacation-right-row"
 			h3.text-center Vacation Request
-			table
+			table class="table"
 				thead
 					tr
                       th Employee
@@ -141,7 +141,7 @@ div.tab-content.white-background
 
   div class="tab-pane fade" role="tabpanel" aria-labelledby="user_invitation-tab" id="user_invitation"
 		  h1.left_row Invite Users	
-		  table class="left-row"
+		  table class="left-row table"
 			thead
 			tbody
 				tr
@@ -167,7 +167,7 @@ div.tab-content.white-background
                         = submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
 	  
 		  h1.pending-right-row Pending Users
-		  table class="right-row"
+		  table class="right-row table"
 			thead
 			  tr
 			    th User Email
