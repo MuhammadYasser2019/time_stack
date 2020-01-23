@@ -11,17 +11,17 @@
 			tbody
 				tr
 					td
-						= select_tag :adhoc_pm_id, options_from_collection_for_select(@project.users, "id", "email"), :include_blank => true
+						= select_tag :adhoc_pm_id, options_from_collection_for_select(@project.users, "id", "email"), :include_blank => true, class:"form-control"
 					td
-						= date_field_tag 'adhoc_start_date', '', {required: "required"}
+						= date_field_tag 'adhoc_start_date', '', {required: "required", class:"form-control"}
 					td
-						= date_field_tag 'adhoc_end_date', '', {required: "required"}
+						= date_field_tag 'adhoc_end_date', '', {required: "required", class:"form-control"}
 				
 		.actions = submit_tag 'Assign PM'
 						
 .right-row-adhoc
 	h1 Assigned Adhoc PM
-	table
+	table class="table"
 		thead
 			tr
 				th User Email

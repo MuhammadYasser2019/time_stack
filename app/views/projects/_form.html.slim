@@ -112,20 +112,25 @@
 					== render partial: "holiday_exceptions_form"
 
 		div class="tab-pane fade" role="tabpanel" aria-labelledby="user_invitation-tab" id="user_invitation"
-			div.invited_users
-				h1.left_row Invite Users
-				= simple_form_for(User.new, url: user_invitation_path, html: {class: 'form-inline left-row'}) do |f|
-					
-					  	= f.label :body, label: 'Email'
-					    = f.input_field :email, placeholder: 'Email', required: true, class:"form-control"
-					    = f.hidden_field :project_id, value: @project_id
-					    = f.label :body, label: 'Select Start Date'
-					    = f.hidden_field :invited_by_id, value:  @current_user_id
-					    = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required", class:"form-control"}
-						= f.label :body, label: 'Employment Type'
-				    	= select_tag :employment_type, options_from_collection_for_select(EmploymentType.where(customer_id: @customer.id),:id, :name ), include_blank: "Select Employment Type", class:"form-control", required: "required"
-				    	
-				     	= f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'
+			h1.left_row Invite Users
+			table class="left-row"
+				thead
+				tbody
+					tr
+						th
+							= simple_form_for(User.new, url: user_invitation_path, html: {class: ' '}) do |f|
+							
+						  		= f.label :body, label: 'Email'
+						  	
+						    	= f.input_field :email, placeholder: 'Email', required: true, class:"form-control"
+						    	= f.hidden_field :project_id, value: @project_id
+						    	= f.label :body, label: 'Select Start Date'
+						    	= f.hidden_field :invited_by_id, value:  @current_user_id
+						    	= date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required", class:"form-control"}
+								= f.label :body, label: 'Employment Type'
+					    		= select_tag :employment_type, options_from_collection_for_select(EmploymentType.where(customer_id: @customer.id),:id, :name ), include_blank: "Select Employment Type", class:"form-control", required: "required"
+					    	
+					    		= f.button :submit, 'Invite Users', class: 'btn-primary invite_user_button'
 
 				h1.pending-right-row Pending Users 
 				table class="right-row table"

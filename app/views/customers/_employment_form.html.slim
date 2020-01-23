@@ -1,9 +1,18 @@
 h3.text-center Employment Type
 - if !@employment_type.blank?
-	- @employment_type.each do |et|
-		.grid-x 
-			.small-6.columns.text-center = link_to et.name, "/employment_types/#{et.id}/edit"
-			.small-6.columns.text-center = link_to "Delete", "/employment_types/#{et.id}", method: :delete , data: {confirm: 'Are you sure?'}, style: "color:#842929", remote: true
+	table class="table"
+		tbody
+		tr
+			th Name
+			th Action
+
+		- @employment_type.each do |et|
+			tr
+				td
+					= link_to et.name, "/employment_types/#{et.id}/edit"
+
+				td
+					= link_to "Delete", "/employment_types/#{et.id}", method: :delete , data: {confirm: 'Are you sure?'}, style: "color:#842929", remote: true
 - else
 	h3 No Employment Types
 = link_to "Create New Employment Type", new_employment_type_path(:customer_id => @customer.id ),id: "#{@customer.id}", class: "orange-button", style: "margin-top:30px;"

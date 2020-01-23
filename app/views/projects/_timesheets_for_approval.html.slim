@@ -35,7 +35,7 @@
 						        	= at.end_date.strftime('%Y-%m-%d')
 						      	td
 						      		= hidden_field_tag "project_id_#{i}", p.id
-						        	= button_tag TimeEntry.where(week_id: at.id, project_id: p.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {toggle: "showHours", target: "#showHours"}
+						        	= button_tag TimeEntry.where(week_id: at.id, project_id: p.id).sum(:hours), id: "show_hours_#{i}", class: "tiny secondary show-hours", type: "button", data: {toggle: "modal", target: "#showHours"}
 
 						      	td = link_to "Approve","/projects/#{p.id}/approve/#{at.id}/#{i}", class: "btn btn-primary approve-class orange-button", type: "button", remote: true
 						      	
@@ -49,8 +49,7 @@
 
 						        td = link_to "X","/weeks/dismiss/#{at.id}/#{i}", class: "dismiss-class red-button", type: "button", remote: true
 						    - i +=1	
-				    div class = "approval-class"
-					 div(id="showHours" class="reveal" aria-hidden="true" role="dialog" data-reveal)
+				    div id="showHours" class="modal" aria-hidden="true" role="dialog"
 
 			= submit_tag "Approve ALL" , :id=> "approve_all_button" , :class=> "approve_all_class"
 
