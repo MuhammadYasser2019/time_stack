@@ -318,7 +318,7 @@ input[type="submit"]{
   border: 1px solid black !important;
   text-align: center;
   display:block;
-  height: 400px;      
+  height: 350px;      
   overflow-y: auto;
   overflow-x: hidden;
 }
@@ -429,4 +429,17 @@ input[type="submit"]{
   width:200px; 
   border-radius: 10px;
   background-position: 169px 7px; 
+}
+
+.form-control:focus{
+  box-shadow: none;
+}
+.form-control{
+  width: auto;
+}
+.modal-content{
+  width: 1050px !important; 
+}
+.modal-dialog{
+  max-width: auto;
 }

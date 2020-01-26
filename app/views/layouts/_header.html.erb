@@ -54,8 +54,8 @@
 	      </li>
     	</ul>
 	    <form class="form-inline my-2 my-lg-0">
-	      <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
-	      <button class="btn btn-primary my-2 my-sm-0" type="submit">Search</button>
+	      <input class="form-control mr-sm-2 glyphicon glyphicon-search" type="search" placeholder="Search" aria-label="Search">
+	      <span class="glyphicon glyphicon-search"></span>
 	    </form>
 	  </div>
   <% else %>	
@@ -73,7 +73,7 @@
 	      </li>
 	      <% if current_user.admin? %>
 	      <li class="nav-item active">
-	        <a class="nav-link" href="/admin">Admin</a>
+	        <a class="nav-link btn" href="/admin">Admin</a>
 	      </li>
 	      <% end %>
 	      <li class="nav-item active">
