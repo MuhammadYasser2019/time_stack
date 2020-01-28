@@ -15,10 +15,10 @@
  
  *= require bootstrap.min
  *= require scaffolds
- 
+ *= require font-awesome
  *= require buttons.dataTables.min
  *= require jquery.dataTables.min
- * require foundation
+ * 	require foundation
  *= require normalize
  *= require customers.css.scss
  *= require projects.css.scss
@@ -35,6 +35,6 @@
  *= require_self
  */
 
-@import "font-awesome-sprockets";
-@import "font-awesome";
+/*@import "font-awesome-sprockets";
+@import "font-awesome";*/
 

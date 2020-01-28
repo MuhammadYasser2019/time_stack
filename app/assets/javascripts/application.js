@@ -25,10 +25,3 @@
 // session_timeout_prompter
 //= require highcharts
 //= require_tree .
-
-
-
-
-
-$(function(){ $(document).foundation(); });
-

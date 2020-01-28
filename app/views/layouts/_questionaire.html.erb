@@ -1,26 +1,28 @@
 <% if user_signed_in? %>
 
-  <button class ="tech-btn" id ="myBtn" ><i class="far fa-question-circle fa-3x"></i></button>
+  <button class ="tech-btn" id ="myBtn" ><i class="fa fa-question-circle fa-3x"></i></button>
 <% end %>
     <div id="myModal" class= "modal" style="display:none;"> 
       <div class = "modal-content">
-        <span class = "close"> &times;</span>
+        <div class="modal-header">
+          <span class = "close"> &times;</span>
+        </div>
         <p>Our goal is to provide you with the best user experience possible! Please leave a note on what you think! </p>
 
         <%= form_for :anything, scope: :customer, url: customers_questionaire_path ,multiple: true do |form| %>
           <div><%= form.label :email, 'E-mail:' %>
-            <%= form.email_field :email , placeholder: 'JohnDoe@yahoo.com' %>
+            <%= form.email_field :email , placeholder: 'JohnDoe@yahoo.com', class: "form-control" %>
           </div>
 
           <div><%= form.label :feedback, 'Type of feedback:' %>
-            <%= form.text_field :feedback, placeholder: 'Problem, Bug, Idea...' %>
+            <%= form.text_field :feedback, placeholder: 'Problem, Bug, Idea...', class: "form-control" %>
           </div>
 
           <div><%= form.label :notes, 'Notes: (Required)' %>
-            <%= form.text_field :notes, class: 'notes', id: 'notes', placeholder: "Your Feedback (Required)", required: true %>
+            <%= form.text_field :notes, class: 'notes form-control', id: 'notes', placeholder: "Your Feedback (Required)", required: true %>
           </div>
 
-          <%= form.submit "Submit", class: "btn1", id: "button" %>
+          <%= form.submit "Submit", class: "btn oragne-button", id: "button" %>
         <% end  %>
 
           
