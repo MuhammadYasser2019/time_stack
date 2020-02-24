@@ -18,7 +18,7 @@ Rails.application.routes.draw do
   resources :case_studies
   resources :vacation_types
   #resources :analytics
-  devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks", :sessions => 'sessions' }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
     match "/users/sign_in", :to => 'devise/sessions#new', via: [:get, :post]
@@ -34,6 +34,8 @@ Rails.application.routes.draw do
     root to: 'weeks#index', as: :authenticated_root
   end
 
+  
+  get "/get_user_projects" => "users#get_user_projects"
 
   #root 'weeks#index'
   root 'static_pages#home'

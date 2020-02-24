@@ -16,7 +16,7 @@
 //= require dataTables/jquery.dataTables
 //= require foundation.min
 //= require what-input
-//= require ckeditor/init
+
 //= require foundation-datetimepicker
 //= require turbolinks
 //= require chart
@@ -24,8 +24,6 @@
 // session_timeout_prompter
 //= require highcharts
 //= require_tree .
-
-
 
 
 $(function(){ $(document).foundation(); });

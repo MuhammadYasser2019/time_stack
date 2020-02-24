@@ -1,4 +1,4 @@
-class CreateUserWeekStatuses < ActiveRecord::Migration
+class CreateUserWeekStatuses < ActiveRecord::Migration[5.0]
   def change
     create_table :user_week_statuses do |t|
       t.integer :status_id

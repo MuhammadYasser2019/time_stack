@@ -1,7 +1,8 @@
 class UsersController < ApplicationController 
   load_and_authorize_resource 
-  acts_as_token_authentication_handler_for User
-
+  # acts_as_token_authentication_handler_for User
+  
+  skip_before_action :authenticate_user!, only: :get_user_projects
 
   def self.unread
       where(:read => false)
@@ -59,6 +60,17 @@ class UsersController < ApplicationController
     @users_with_logo= User.where("parent_user_id IS ? && report_logo IS NOT ? ", nil, nil)
     @features = Feature.all  
 
+  end
+
+  def get_user_projects
+    user_projects = current_user.projects.pluck(:name)
+    render json: format_response_json(
+      {
+        message: 'User projects retrieved!',
+        status: true,
+        result: user_projects
+      }
+  )
   end
   
   def new

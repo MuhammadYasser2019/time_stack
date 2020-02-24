@@ -1,4 +1,4 @@
-class CreateExpenseRecords < ActiveRecord::Migration
+class CreateExpenseRecords < ActiveRecord::Migration[5.0]
   def change
     create_table :expense_records do |t|
       t.string :expense_type
