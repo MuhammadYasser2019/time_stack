@@ -1,2 +1,2 @@
 # time_stack
-timesheet system
+time sheet system
