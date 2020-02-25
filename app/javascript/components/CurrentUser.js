@@ -1,6 +1,12 @@
 import React from "react"
 import PropTypes from "prop-types"
-class CurrentUser extends React.Component {
+import {isEmpty} from "../helpers/validator";
+import BaseComponent from "./BaseComponent";
+import {get_base_url} from "../helpers/requestHelper";
+
+const axios = require('axios');
+
+class CurrentUser extends BaseComponent {
     constructor(props) {
         super(props);
         this.state = {
@@ -10,18 +16,9 @@ class CurrentUser extends React.Component {
     }
 
     get_user_projects() {
-        fetch(`${localStorage.BaseURL}/get_user_projects`, {
-            headers: new Headers({
-                // 'Authorization': `Bearer ${localStorage.AccessToken}`
-            })
-        })
-            .then(res => res.json())
-            .then(res => {
-                this.setState({ user_projects: res.result })
-            })
-        //   .catch(error=>{
-        //     this.setState({message: "FAILED ADMIN CALL!"})
-        //   });
+        axios.get(`${get_base_url()}/get_user_projects`).then(res=>{
+            this.setState({ user_projects: res.data.result }) 
+        });
     }
 
     componentDidMount() {

@@ -51,9 +51,11 @@
   </body>
   <script>
     var access_url = document.getElementById("access_url");
-    if(localStorage.BaseURL = "" || localStorage.BaseURL != access_url.value){
-      localStorage.BaseURL = access_url.value;
+    
+    if(access_url!=null ){
+     localStorage.BaseURL = access_url.value;
     }
+    
     // var tokenInput = document.getElementById("user_token");  
     // var clearToken = document.getElementById("clear_token").value === "true";
     // if(tokenInput && tokenInput.value && !clearToken){
