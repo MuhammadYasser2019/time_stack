@@ -1,7 +1,7 @@
 <div class="white-background">
-	<%= javascript_pack_tag 'application'  %>
 	<%= react_component("CurrentUser", { first_name: @current_user.first_name , last_name: @current_user.last_name}) %>
 </div>
+
 
 <ul class="tabs" data-tabs id="admin-tab" style="margin: 0 30% 0 30%;">
 	<li class="tabs-title is-active"><a aria-selected="true" href="#user_permissions">User Permissions</a></li>
@@ -127,7 +127,7 @@
 			<% end %>
 
 			<%= link_to "Create Global Holiday", new_holiday_path, class: "orange-button", style: "margin-top:30px;"%>
-
+			<%= react_component("AddHoliday")%>
 		</div>
 	</div>
 	<div class="report-log-tab white-background tabs-panel" id="panel3">

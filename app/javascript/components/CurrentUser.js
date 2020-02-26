@@ -6,7 +6,7 @@ import {get_base_url} from "../helpers/requestHelper";
 
 const axios = require('axios');
 
-class CurrentUser extends BaseComponent {
+class CurrentUser extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
@@ -28,7 +28,7 @@ class CurrentUser extends BaseComponent {
 
     render() {
         return (
-            <React.Fragment>
+            <BaseComponent>
                 <i>Admin: {this.props.first_name + " " + this.props.last_name}</i>
                 {this.state.user_projects && this.state.user_projects.length > 0 ? <div>
                     <b>Total Projects: {this.state.user_projects.length}</b>
@@ -38,7 +38,7 @@ return <div key={`project_${index}`}>{`${index+1}. ${project}`}</div>
                         })}
                 </div>
                     : null}
-            </React.Fragment>
+            </BaseComponent>
         );
     }
 }

@@ -36,6 +36,7 @@
   </head>
   
   <body>
+  	<%= javascript_pack_tag 'application'  %>
     <% if @print_report == "true" %>
       <%= render "layouts/report_header" %>
     <% else %>

@@ -512,7 +512,6 @@ class UsersController < ApplicationController
   end
 
   def manage_profiles
-    
     @customer = Customer.where(id: current_user.customer_id).first
     @employment_type = EmploymentType.where(customer_id: @customer.id)
     @invited_users = User.where("parent_user_id = ?", current_user.id)

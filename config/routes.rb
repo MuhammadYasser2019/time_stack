@@ -154,6 +154,7 @@ Rails.application.routes.draw do
   get '/default_comment' => 'tasks#default_comment'
   
   get 'check_holidays/:id' => "holidays#check_holidays"
+  post 'holidays/create' => 'holidays#create'
 
   get 'customer_reports/:id' => 'customers#customer_reports'
   get 'customers/:id/customer_reports' => 'customers#customer_reports'
