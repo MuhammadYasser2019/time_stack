@@ -16,6 +16,7 @@ jQuery ($) ->
     if $(this).val().length >= 8
       row_id = parse_row_id($(this).attr('id'))
       $("#time_reject_" + row_id).show()
+      $('.reject_div').show()
     return
    ) 
   $(document).on('click', '.reject_class', ->

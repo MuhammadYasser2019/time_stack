@@ -12,14 +12,17 @@
  *
  
  * require dataTables/jquery.dataTables
+ 
+ *= require bootstrap.min
  *= require scaffolds
- *= require_self
+ *= require font-awesome
  *= require buttons.dataTables.min
  *= require jquery.dataTables.min
- *= require foundation
+ * 	require foundation
  *= require normalize
  *= require customers.css.scss
  *= require projects.css.scss
+ *= require employment_types.css.scss
  *= require orange.css.scss
  *= require blue.css.scss
  *= require neutral.css.scss
@@ -29,8 +32,9 @@
  *= require session_timeout_prompter
  *= require questionaire.scss
  *= require nvd3
+ *= require_self
  */
 
-@import "font-awesome-sprockets";
-@import "font-awesome";
+/*@import "font-awesome-sprockets";
+@import "font-awesome";*/
 

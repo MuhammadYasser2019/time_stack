@@ -1,14 +1,14 @@
-<ul class="tabs" data-tabs id="admin-tab" style="margin: 0 30% 0 30%;">
-  <li class="tabs-title is-active"><a aria-selected="true" href="#user_permissions">User Permissions</a></li>
-  <li class="tabs-title"><a data-tabs-target ="holidays" href="#holidays">Holidays</a></li>
-  <li class="tabs-title"><a data-tabs-target ="panel3" href="#panel3">Report Logo</a></li>
-  <li class="tabs-title"><a data-tabs-target ="panel4" href="#panel4">Manage Content</a></li>
+<ul class="nav nav-tabs" id="admin-tab" style="padding-left: 370px;">
+  <li class="nav-item"><a class="nav-link active" aria-selected="true" href="#user_permissions" role="tab" data-toggle="tab">User Permissions</a></li>
+  <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#holidays">Holidays</a></li>
+  <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" role="tab" data-toggle="tab" href="#panel3">Report Logo</a></li>
+  <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#panel4">Manage Content</a></li>
  </ul>
-<div class="tabs-content" data-tabs-content ="admin-tab">
-	<div class="tabs-panel is-active" id="user_permissions">
+<div class="tab-content">
+	<div class="tab-pane fade show active" id="user_permissions">
 		<div class="white-background">
 		  <%= form_tag users_path, method: :update do %>
-			<table>
+			<table class="table" style="width:80%;">
 				<thead>
 					<th>Username</th>
 					<th>User?</th>
@@ -37,7 +37,7 @@
 				  
 				</tbody>
 			</table>
-			<div style="margin-left: 47%">
+			<div>
 			   <%= submit_tag "Submit"%>
 		      <% end %>
 		    </div>
@@ -48,7 +48,7 @@
 			  <thead>
 			    <tr>
 			      <th>
-			        <h2>Invite Customer Manager</h2>
+			        <h5>Invite Customer Manager</h5>
 			      </th>
 			    </tr>
 			  </thead>
@@ -56,12 +56,12 @@
 			    <tr>
 			      <th>
 			        <%= form_tag(action: :invite_customer) do %>
-			          <%= text_field_tag :email, nil, placeholder: "Email", class: "invitation_email" %>
-			          <%= date_field_tag 'invite_start_date', params[:invite_start_date], {placeholder: "Select start date", required: "required"} %>
-			          <%= select_tag :customer_id, options_from_collection_for_select(@customers, :id, :name)%>
+			          <%= text_field_tag :email, nil, placeholder: "Email", class: "invitation_email form-control" %>
+			          <%= date_field_tag 'invite_start_date', params[:invite_start_date], {placeholder: "Select start date", required: "required", class: "form-control"} %>
+			          <%= select_tag :customer_id, options_from_collection_for_select(@customers, :id, :name), class: "form-control"%>
 			          <%= hidden_field_tag :invited_by_id, current_user.id %>
 
-			          <%= submit_tag 'Invite Customer Manager', class: 'btn-primary invite_user_button' %>
+			          <%= submit_tag 'Invite customers Manager', class: 'btn-primary invite_user_button' %>
 			        <% end %>
 			      </th>
 			    </tr>
@@ -71,7 +71,7 @@
 		<div class="white-background">
 
 			<h1> Pending Users</h1>
-			<table>
+			<table class="table" style="width: 80%;">
 			  <thead>
 			    <tr>
 			      <th> User Email</th>
@@ -96,7 +96,7 @@
 			</table>
 		</div>
 	</div>
-	<div class="tabs-panel white-background" id="holidays">
+	<div class="tab-pane white-background" id="holidays">
 		<div class="small-6 small-offset-3">
 			<h1 class="text-center">Holidays Setup</h1>
 			<% if @holidays.any? %>
@@ -122,7 +122,7 @@
 			
 		</div>
 	</div>
-	<div class="report-log-tab white-background tabs-panel"  id="panel3">
+	<div class="report-log-tab white-background tab-pane"  id="panel3">
 		<h1>Create Report Logo</h1>
 		<%= form_tag report_logos_path, :multipart => true, method: :post do%>
 		<table style="width:60%;">
@@ -135,7 +135,7 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td><%= text_field_tag :name, nil, placeholder: "Logo Name", class: "report_logo",required: "required" %></td>
+					<td><%= text_field_tag :name, nil, placeholder: "Logo Name", class: "report_logo form-control",required: "required" %></td>
 					<td><%= label_tag(:report_logo, "Upload Logo", for: "report-logo-upload")%></td>
 					<td><%= file_field_tag(:report_logo, id: "report-logo-upload") %></td>
 					<td><%= button_tag "Save Logo", class: "tiny orange-button"%></td>
@@ -155,8 +155,8 @@
 			</thead>
 			<tbody>
 				<tr>
-					<td><%= select_tag :report_logo, options_from_collection_for_select(@all_report_logos, "id", "name", params[:report_logo]), :include_blank => true%></td>
-					<td><%= select_tag :user, options_from_collection_for_select(@users, "id", "email", params[:user]), :include_blank => true %></td>
+					<td><%= select_tag :report_logo, options_from_collection_for_select(@all_report_logos, "id", "name", params[:report_logo]), :include_blank => true, class: "form-control" %></td>
+					<td><%= select_tag :user, options_from_collection_for_select(@users, "id", "email", params[:user]), :include_blank => true, class: "form-control" %></td>
 					<td><%= button_tag "Assign Logo", class: "tiny orange-button" %></td>
 					<td><%= %></td>
 				</tr>
@@ -184,7 +184,7 @@
 		</table>
 	<%= link_to "Back", root_path, class: "button large"%>
 	</div>
-	<div class="tabs-panel white-background" id="panel4">
+	<div class="tab-pane white-background" id="panel4">
 		<h1>Manage Login Page Content</h1>
 		<span class="success_message" style="color: green;"></span>
 		<%= form_tag update_front_page_content_path, id: "front_page_content", method: :post, remote: true %>

@@ -1,6 +1,6 @@
 td.date1
   = f.label f.object.date_of_activity.strftime('%Y-%m-%d'), :class =>"form-control date-#{f.object.date_of_activity.strftime('%Y-%m-%d')}"
-td.date2 = f.label f.object.date_of_activity.strftime("%A"), :class =>'form-control'
+td.date2 = f.label f.object.date_of_activity.strftime("%A")
 =f.hidden_field :id
 =f.hidden_field :date_of_activity
 td.project
@@ -9,25 +9,25 @@ td.project
     = Project.find(f.object.project_id).name
  -else
   -if !get_project_id(f.object.project_id).nil?
-    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id"})
+    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id form-control"})
   -else
     -if !@week_user.default_project.nil?
-      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name",@week_user.default_project ), {include_blank: true}, {class: "project_id"})
+      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name",@week_user.default_project ), {include_blank: true}, {class: "project_id form-control"})
     -else
-      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id"})
+      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id form-control"})
 td.task
  - if !f.object.task_id.nil?
   - if f.object.week.status_id == 2 || f.object.week.status_id == 3
     - if f.object.task_id != nil
       = Task.find(f.object.task_id).description
   - else
-   = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: f.object.project_id), "id", "description", f.object.task_id), {}, {:class =>'task_id'})
+   = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: f.object.project_id), "id", "description", f.object.task_id), {}, {:class =>'task_id form-control'})
  - else
   - if f.object.week.status_id == 2 || f.object.week.status_id == 3
     - if f.object.task_id != nil
       = Task.find(f.object.task_id).description
   - else
-   = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: @week_user.default_project), "id", "description", @week_user.default_task ), {}, {:class =>'task_id'})
+   = f.select(:task_id, options_from_collection_for_select(Task.where(project_id: @week_user.default_project), "id", "description", @week_user.default_task ), {}, {:class =>'task_id form-control'})
 td(class="hour")
 
   div(class="toggle hours-field")
@@ -37,11 +37,11 @@ td(class="hour")
     = f.text_field :hours, :class =>'form-control input-sm hours-input'
   div(class="toggle enter_time")
     Strong(class="thisisit") In:
-    = f.time_select(:time_in, ampm: true,ignore_date: true, include_blank: true,:default => {:hour => '', :minute => ''}, class: "time-in-move" )
+    = f.time_select(:time_in, ampm: true,ignore_date: true, include_blank: true,:default => {:hour => '', :minute => ''}, class: "time-in-move form-control" )
     strong(class="thisisit") Out:
-    = f.time_select(:time_out, ampm: true,ignore_date: true, include_blank: true,:default => {:hour => '', :minute => ''})
+    = f.time_select(:time_out, ampm: true,ignore_date: true, include_blank: true, class: "form-control", :default => {:hour => '', :minute => ''})
 td.activity_log
- = link_to image_tag("plus.jpg", :width => 15, :height => 15), "javascript:void()", id: "previous_comments_#{@week_user.id}_#{@count}", class: "previous_commment_icon", type: "link", data: {toggle: "userPreviousComments", target: "#userPreviousComments"}
+ = link_to image_tag("plus.jpg", :width => 15, :height => 15), "javascript:void()", id: "previous_comments_#{@week_user.id}_#{@count}", class: "previous_commment_icon", type: "link", data: {toggle: "modal", target: "#userPreviousComments"}
  - if f.object.week.status_id == 2 || f.object.week.status_id == 3
   = f.object.activity_log 
  - else
@@ -49,15 +49,15 @@ td.activity_log
   div (class="char_count")
 td.partial
   - if f.object.week.status_id == 2 || f.object.week.status_id == 3
-    = f.check_box :partial_day,{class: "partial_day", disabled: true}, params[:partial_day]
+    = f.check_box :partial_day,{class: "partial_day form-control", disabled: true}, params[:partial_day]
   - else
-    = f.check_box :partial_day, {class: "partial_day", checked: f.object.partial_day == "true" ? true: false}, true, false
+    = f.check_box :partial_day, {class: "partial_day form-control", checked: f.object.partial_day == "true" ? true: false}, true, false
 
 td.vacation_type
   - if f.object.week.status_id == 2 || f.object.week.status_id == 3
-    = f.select(:vacation_type_id, options_from_collection_for_select(@vacation_types, "id", "vacation_title", selected: f.object.vacation_type_id), {include_blank: true}, disabled: true, class: "vacation-change")
+    = f.select(:vacation_type_id, options_from_collection_for_select(@vacation_types, "id", "vacation_title", selected: f.object.vacation_type_id), {include_blank: true}, disabled: true, class: "vacation-change form-control")
   - else
-    = f.select(:vacation_type_id, options_from_collection_for_select(@vacation_types, "id", "vacation_title", selected: f.object.vacation_type_id), {include_blank: true}, class: "vacation-change")
+    = f.select(:vacation_type_id, options_from_collection_for_select(@vacation_types, "id", "vacation_title", selected: f.object.vacation_type_id), {include_blank: true}, class: "vacation-change form-control")
 
 td.add
  - if f.object.week.status_id == 2 || f.object.week.status_id == 3

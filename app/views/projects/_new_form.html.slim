@@ -22,10 +22,12 @@
         td Active
         td Billable
         td Include from Jira
+        td
     tbody
       = f.fields_for :tasks do |tf|
         == render 'task_fields', f: tf
-	tr 
-          td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
+	  tr 
+      td colspan="6"
+        = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
           
   .actions#new-project-actions = f.submit

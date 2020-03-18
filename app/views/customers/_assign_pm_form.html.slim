@@ -1,6 +1,6 @@
 h1 Change Project Manager
 = hidden_field_tag 'customer_id', @customer.id
-table
+table class="table"
 	thead
 		tr
 			th Project
@@ -16,7 +16,7 @@ table
 						
 				td = user ? user.email : ''
 				td
-					= select_tag "pm_user_id_#{p.id}", options_from_collection_for_select(@user_with_pm_role, "id", "email"), include_blank: true, class: "pm_user_id"
+					= select_tag "pm_user_id_#{p.id}", options_from_collection_for_select(@user_with_pm_role, "id", "email"), include_blank: true, class: "pm_user_id form-control"
 					= hidden_field_tag "pm_user_id_#{p.id}", ''
 				
 				td
