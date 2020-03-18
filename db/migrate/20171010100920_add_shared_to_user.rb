@@ -1,4 +1,4 @@
-class AddSharedToUser < ActiveRecord::Migration[5.0]
+class AddSharedToUser < ActiveRecord::Migration[5.2]
   def change
     add_column :users, :shared, :boolean
   end

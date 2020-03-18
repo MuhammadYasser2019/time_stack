@@ -1,4 +1,4 @@
-class CreateArchivedWeeks < ActiveRecord::Migration[5.0]
+class CreateArchivedWeeks < ActiveRecord::Migration[5.2]
   def change
     create_table :archived_weeks do |t|
 	    t.datetime :start_date
