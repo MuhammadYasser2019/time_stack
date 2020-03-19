@@ -1,4 +1,4 @@
-class CreateCaseStudies < ActiveRecord::Migration[5.0]
+class CreateCaseStudies < ActiveRecord::Migration[5.2]
   def change
     create_table :case_studies do |t|
       t.string :case_study_name
