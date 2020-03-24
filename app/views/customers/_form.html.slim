@@ -66,17 +66,17 @@ div.tab-content.white-background
 	   	  		th Name
 	        	th Date
 	        
-			   = form_for @customer do |f|
-				    = f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name) do |h|
+			= form_for @customer do |f|
+			    = f.collection_check_boxes(:holiday_ids, @holidays.all, :id, :name) do |h|
 				    tr
 				      	td = h.check_box
-				  		td = h.object.name
-				  		td = h.object.date.strftime("%m-%d-%y")
-				  		- if h.object.global != true
-				  		  td = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
-			        	- else
-			        	  .large-4.cell.text-center
-			        .actions = f.submit "Submit"
+			  			td = h.object.name
+			  			td = h.object.date.strftime("%m-%d-%y")
+			  			- if h.object.global != true
+			  		  		td = link_to "Delete Holiday", h.object, method: :delete, data: {confirm: 'Are you sure?'}, style: "color:#842929"
+		        		- else
+		        	  		.large-4.cell.text-center
+		        .actions = f.submit "Submit"
 	  - else 
 	    h3.text-center No Holidays created
 	  
