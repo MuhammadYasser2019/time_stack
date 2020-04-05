@@ -4,8 +4,10 @@ class User < ApplicationRecord
   # validates :password , presence: true, if: :not_google_account?
   # validates :password_confirmation , presence: true, if: :not_google_account?
 
+  mount_uploader :image, ImageUploader
   ## Token Authenticatable
   acts_as_token_authenticatable
+
 
   devise :invitable, :database_authenticatable, :registerable,
          :recoverable, :rememberable, :trackable,
@@ -18,6 +20,8 @@ class User < ApplicationRecord
   has_many :holiday_exceptions
   has_many :vacation_requests
   has_many :user_notifications
+
+
 
   def childs
     self.parent_user_id.present? ? nil : User.where(id: self.parent_user_id)

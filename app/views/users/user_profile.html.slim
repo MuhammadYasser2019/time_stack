@@ -3,6 +3,7 @@ div.report
 	table class="table"
 		thead
 			tr
+				th Image
 				th First Name
 				th Last Name
 				th Parent User
@@ -10,9 +11,10 @@ div.report
 				th User Employer
 				th Login as Parent
 		tbody
-			tr
-				td = @user.first_name
-				td = @user.last_name
+			tr	
+				td= image_tag  current_user.image.url , style: "height: 100px; width:100px;"
+				td= @user.first_name
+				td= @user.last_name
 				td
 					-if current_user.parent.present?
 						= @user.parent.name
