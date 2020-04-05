@@ -12,7 +12,7 @@ div.report
 				th Login as Parent
 		tbody
 			tr	
-				td= image_tag  current_user.image.url , style: "height: 100px; width:100px;"
+				td= image_tag  @user.image.url , style: "height: 100px; width:100px;" if @user.image.present?
 				td= @user.first_name
 				td= @user.last_name
 				td
