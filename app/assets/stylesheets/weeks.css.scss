@@ -2,7 +2,7 @@
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
 body{
-  background-color: #f3f3f3;
+  background-color: #fff;
 }
 
 h1,h2,h3,h4,h5{
@@ -10,8 +10,10 @@ h1,h2,h3,h4,h5{
   border-radius: 5px;
   font-weight: bold;
   max-width: 70%;
+  width:100%;
   margin-left: auto;
   margin-right: auto;
+  padding:5px;
 }
 
 h6 {
@@ -301,7 +303,6 @@ input[type="submit"]{
   background-color:white;
   border-radius: 5px;
   padding:10px;
-  max-width: 90%;
   box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
 }
 
@@ -317,13 +318,12 @@ input[type="submit"]{
   border: 1px solid black !important;
   text-align: center;
   display:block;
-  height: 400px;      
+  height: 350px;      
   overflow-y: auto;
   overflow-x: hidden;
 }
 
 .add_users_to_customers{
-  border: 1px solid black !important;
   text-align: center;
   display:block;
   height: 400px;      
@@ -429,4 +429,31 @@ input[type="submit"]{
   width:200px; 
   border-radius: 10px;
   background-position: 169px 7px; 
+}
+
+.form-control:focus{
+  box-shadow: none;
+}
+
+.modal-content{
+  width: 1050px !important; 
+}
+.modal-dialog{
+  max-width: auto;
+}
+
+.navbar-nav > li{
+  padding-left:15px;
+  padding-right:15px;
+}
+
+.navbar-brand {
+padding: 0px;
+}
+
+h3{
+  font-size:26px;
+}
+.table td, .table th{
+  vertical-align: center;
 }

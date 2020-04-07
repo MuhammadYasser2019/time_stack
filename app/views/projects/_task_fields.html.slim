@@ -1,15 +1,17 @@
 tr.task-row
   = f.hidden_field :imported_from, class: 'form-control'
   td.code
-   = f.hidden_field :id, class: 'form-control'
-   = f.text_field :code, class: 'form-control task-code'
+    = f.hidden_field :id, class: 'form-control'
+    = f.text_field :code, class: 'form-control task-code'
   td.desc
-   = f.text_field :description, :class =>'form-control task-description'
+    = f.text_field :description, :class =>'form-control task-description'
   td.default
-   = f.text_field :default_comment, :class =>'form-control default-comment'
+    = f.text_field :default_comment, :class =>'form-control default-comment'
   td.flag
-   = f.check_box 'active', :class =>'form-control active-flag'
+    = f.check_box 'active', :class =>'form-control active-flag'
   td.billable
-   = f.check_box :billable
+    = f.check_box :billable, class: "form-control"
+  
+
 
 

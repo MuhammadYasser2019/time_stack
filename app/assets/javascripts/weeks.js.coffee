@@ -273,7 +273,7 @@ jQuery ($) ->
 
   $("tbody").on("click", ".add_button", ->
     console.log("BEFORE REVEAL")
-    $("#userPreviousComments").foundation('reveal', 'close')
+    $("#userPreviousComments").bootstrap('show')
     console.log("AFTER REVEAL")
   )
 

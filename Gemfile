@@ -59,7 +59,7 @@ gem 'highcharts-rails'
 gem 'devise'
 gem 'devise_invitable'
 gem 'cocoon'
-gem 'foundation-rails'
+#gem 'foundation-rails'
 gem 'foundation-datetimepicker-rails'
 gem 'high_voltage'
 gem 'mysql2' #, '0.3.18'
@@ -71,7 +71,8 @@ gem 'slim-rails', '3.1.1'
 gem 'therubyracer', :platform=>:ruby
 gem 'bower-rails'
 gem 'cancancan', '~> 1.10'
-gem "font-awesome-sass"
+#gem "font-awesome-sass"
+gem "font-awesome-rails"
 gem 'jquery-datatables-rails', '~> 3.4.0'
 
 gem "recaptcha", '3.4.0', require: "recaptcha/rails"
