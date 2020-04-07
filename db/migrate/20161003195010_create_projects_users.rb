@@ -1,4 +1,4 @@
-class CreateProjectsUsers < ActiveRecord::Migration[5.0]
+class CreateProjectsUsers < ActiveRecord::Migration
   def change
     create_table :projects_users do |t|
       t.belongs_to :project, index: true

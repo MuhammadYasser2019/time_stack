@@ -1,4 +1,4 @@
-class AddStatusIdToWeeks < ActiveRecord::Migration[5.0]
+class AddStatusIdToWeeks < ActiveRecord::Migration
   def change
     add_column :weeks, :status_id, :integer
   end

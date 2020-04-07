@@ -1,4 +1,4 @@
-class AddNameAndOauthTokenToUsers < ActiveRecord::Migration[5.0]
+class AddNameAndOauthTokenToUsers < ActiveRecord::Migration
   def change
     add_column :users, :oauth_expires_at, :datetime
   end

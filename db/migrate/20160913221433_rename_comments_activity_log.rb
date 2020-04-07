@@ -1,4 +1,4 @@
-class RenameCommentsActivityLog < ActiveRecord::Migration[5.0]
+class RenameCommentsActivityLog < ActiveRecord::Migration
   def change
 	rename_column :time_entries, :comments, :activity_log
   end

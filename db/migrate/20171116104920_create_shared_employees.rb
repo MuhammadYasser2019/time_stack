@@ -1,4 +1,4 @@
-class CreateSharedEmployees < ActiveRecord::Migration[5.0]
+class CreateSharedEmployees < ActiveRecord::Migration
 	def change
 		create_table :shared_employees do |t|
 			t.integer :user_id
