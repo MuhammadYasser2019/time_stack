@@ -7,6 +7,8 @@ ul(class="nav nav-tabs" id="customer-tabs" role="tablist" )
   li class="nav-item"
   	a class="nav-link" id="employment_types-tab" aria-selected="true" role="tab" data-toggle="tab" href="#employment_types" Employment Types
   li class="nav-item"
+    a class="nav-link" id="shifts-tab" aria-selected="true" role="tab" data-toggle="tab" href="#shifts" Shifts
+  li class="nav-item"
   	a class="nav-link" id="customer_employees-tab" aria-selected="true" role="tab" data-toggle="tab" href="#customer_employees" Customer Employees
   li class="nav-item"
   	a class="nav-link" id="vacation_request-tab" aria-selected="true" role="tab" data-toggle="tab" href="#vacation_request" Vacation Request	
@@ -86,6 +88,24 @@ div.tab-content.white-background
   div class="tab-pane fade" role="tabpanel" aria-labelledby="employment_types-tab" id="employment_types"
 			div(id="dynamic_employment")
 				== render partial: "employment_form"
+
+  div class="tab-pane fade" role="tabpane1" aria-labelledby="shifts-tab" id="shifts"
+   h3.text-center Shifts
+   div class="shift_list"
+    table class="shift_table"
+     thead
+      tr
+       th Name
+       th Start Time
+       th End Time
+       th Regular Hours
+       th Active
+       th Location
+       th Capacity
+       tbody
+         - Shift.where(customer_id: current_user.customer_id.to_i).each do |shift|
+          == render partial: "shift_form", locals: { customer_id: current_user.customer_id.to_i, shift: shift }
+    = link_to "Create Shift", new_shift_path, class: "orange-button", type: "button"
 	
   div class="tab-pane fade" role="tabpanel" aria-labelledby="customer_employees-tab" id="customer_employees"
 		div class = "disp-message"

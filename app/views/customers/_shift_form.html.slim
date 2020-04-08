@@ -1,0 +1,11 @@
+
+   tr
+    td = shift.name
+    td = shift.start_time
+    td = shift.end_time
+    td = shift.regular_hours
+    td = shift.active
+    td = shift.location
+    td = shift.capacity
+    td = link_to "Edit Shift", edit_shift_path(shift.id), class: "orange-button", type: "button"
+
