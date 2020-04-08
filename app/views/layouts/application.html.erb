@@ -36,6 +36,7 @@
   </head>
   
   <body>
+  	<%= javascript_pack_tag 'application'  %>
     <% if @print_report == "true" %>
       <%= render "layouts/report_header" %>
     <% else %>
@@ -44,6 +45,14 @@
 
     <%= render "layouts/questionaire" %>
     <%= yield %> 
+    <input type="hidden" id="access_url" value = "<%=@base_url%>"/>
     <%= init_session_timeout_prompter(session_timeout_in_seconds: 1800, seconds_to_warn_before_timeout: 300, scope: :user) %>
   </body>
+  <script>
+    var access_url = document.getElementById("access_url");
+    
+    if(access_url!=null ){
+     localStorage.BaseURL = access_url.value;
+    }
+  </script>
 </html>

@@ -1,4 +1,4 @@
-class AddActiveToProjectsUsers < ActiveRecord::Migration[5.2]
+class AddActiveToProjectsUsers < ActiveRecord::Migration
   def change
     add_column :projects_users, :active, :boolean
   end

@@ -1,4 +1,4 @@
-class AddColumnGoogleAccountToUsers < ActiveRecord::Migration[5.2]
+class AddColumnGoogleAccountToUsers < ActiveRecord::Migration
   def change
     add_column :users, :google_account, :boolean
   end

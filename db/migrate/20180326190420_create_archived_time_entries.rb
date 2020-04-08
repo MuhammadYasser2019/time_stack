@@ -1,4 +1,4 @@
-class CreateArchivedTimeEntries < ActiveRecord::Migration[5.2]
+class CreateArchivedTimeEntries < ActiveRecord::Migration[5.0]
   def change
     create_table :archived_time_entries do |t|
     		t.datetime :date_of_activity

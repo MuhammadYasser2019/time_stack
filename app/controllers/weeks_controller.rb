@@ -9,6 +9,12 @@ class WeeksController < ApplicationController
   def index
     @user = current_user
     
+    if current_user.cm?
+      return redirect_to customers_path
+    elsif current_user.pm?
+      return redirect_to projects_path
+    end
+
     @default_project = @user.default_project
     @default_task = @user.default_task
     @project_tasks = Task.where(project_id: @default_project)
@@ -24,11 +30,7 @@ class WeeksController < ApplicationController
 	      p.save
       end
     end
-    if current_user.cm?
-      return redirect_to customers_path
-    elsif current_user.pm?
-      return redirect_to projects_path
-    end
+  
   end 
 
   # GET /weeks/1

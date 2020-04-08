@@ -1,4 +1,4 @@
-class CreateJoinTableCustomersHoliday < ActiveRecord::Migration[5.2]
+class CreateJoinTableCustomersHoliday < ActiveRecord::Migration[5.0]
   def change
     create_join_table :customers, :holidays do |t|
        t.integer :customer_id
