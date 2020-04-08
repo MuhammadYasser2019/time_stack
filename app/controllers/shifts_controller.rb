@@ -52,7 +52,11 @@ class ShiftsController < ApplicationController
   end
 
   def destroy
+    customer_id = @shift.customer_id
     if @shift.destroy!
+      if Shift.where(customer_id: customer_id).count == 1
+        Shift.last.update(default: true)
+      end
       redirect_to customers_path
     end
   end
