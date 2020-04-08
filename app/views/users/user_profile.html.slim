@@ -6,6 +6,7 @@ div.report
 				th Image
 				th First Name
 				th Last Name
+				th Emergency Contact
 				th Parent User
 				th Employment Type
 				th User Employer
@@ -15,6 +16,7 @@ div.report
 				td= image_tag  @user.image.url , style: "height: 100px; width:100px;" if @user.image.present?
 				td= @user.first_name
 				td= @user.last_name
+				td= @user.emergency_contact
 				td
 					-if current_user.parent.present?
 						= @user.parent.name

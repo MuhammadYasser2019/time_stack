@@ -4,7 +4,7 @@ div class="add_remove_user"
 		div class="add_remove_left_row"				
 			h1 Available Users
 			table
-				- (@available_users- @project.users).each_with_index do |uop,i|
+				- (@available_users- @project.users.active_users).each_with_index do |uop,i|
 				      tr
 				      	td
 				          = check_box_tag "add_user_id_#{i}", uop.id, false
@@ -22,7 +22,7 @@ div class="add_remove_user"
 		div class="add_remove_right_row"
 			h1 Users on the Project
 			table
-			  - @project.users.each_with_index do |uop,i|
+			  - @project.users.active_users.each_with_index do |uop,i|
 			   
 			      tr
 			      	td
