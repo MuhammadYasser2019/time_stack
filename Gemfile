@@ -90,7 +90,7 @@ gem 'fastimage'
 gem 'axlsx_styler', '~> 0.1.2'
 
 gem "omniauth-google-oauth2"
-gem 'ckeditor', '~> 4.3.0'
+gem 'ckeditor'
 gem 'airbrake', '~> 7.2'
 
 #Authentication 
