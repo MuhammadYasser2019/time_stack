@@ -509,7 +509,7 @@ DEPENDENCIES
   capybara-email
   carrierwave
   chart
-  ckeditor (~> 4.3.0)
+  ckeditor
   cocoon
   coffee-rails
   cucumber-rails
