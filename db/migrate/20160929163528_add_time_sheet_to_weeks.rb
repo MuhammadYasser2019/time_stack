@@ -1,4 +1,4 @@
-class AddTimeSheetToWeeks < ActiveRecord::Migration[5.2]
+class AddTimeSheetToWeeks < ActiveRecord::Migration
   def change
     add_column :weeks, :time_sheet, :string
   end

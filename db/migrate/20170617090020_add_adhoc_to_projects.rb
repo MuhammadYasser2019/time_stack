@@ -1,4 +1,4 @@
-class AddAdhocToProjects < ActiveRecord::Migration[5.2]
+class AddAdhocToProjects < ActiveRecord::Migration[5.0]
   def change
     add_column :projects, :adhoc_pm_id, :integer
     add_column :projects, :adhoc_start_date, :datetime
