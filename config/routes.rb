@@ -19,7 +19,7 @@ Rails.application.routes.draw do
   resources :vacation_types
   resources :shifts
   #resources :analytics
-  devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
+  devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks", :sessions => 'sessions' }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
   devise_scope :user do
     match "/users/sign_in", :to => 'devise/sessions#new', via: [:get, :post]
@@ -35,6 +35,8 @@ Rails.application.routes.draw do
     root to: 'weeks#index', as: :authenticated_root
   end
 
+  
+  get "/get_user_projects" => "users#get_user_projects"
 
   #root 'weeks#index'
   root 'static_pages#home'
@@ -153,6 +155,7 @@ Rails.application.routes.draw do
   get '/default_comment' => 'tasks#default_comment'
   
   get 'check_holidays/:id' => "holidays#check_holidays"
+  post 'holidays/create' => 'holidays#create'
 
   get 'customer_reports/:id' => 'customers#customer_reports'
   get 'customers/:id/customer_reports' => 'customers#customer_reports'

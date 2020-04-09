@@ -1,5 +1,6 @@
 class HolidaysController < ApplicationController
   before_action :set_holiday, only: [:show, :edit, :update, :destroy]
+  skip_before_action :verify_authenticity_token, only: :create
   
   def new
     @holiday = Holiday.new
@@ -14,15 +15,25 @@ class HolidaysController < ApplicationController
     @holiday = Holiday.new(holiday_params)
    
       if @holiday.save
-         if current_user.admin != true && Customer.where(user_id: current_user.id).present?
-            logger.debug "YEAH THIS IS HAPPENING"
-            CustomersHoliday.create(customer_id: Customer.find_by_user_id(current_user.id).id, holiday_id: @holiday.id)
-         end
-        if @holiday.global
-          redirect_to "/admin"
-        else
-          redirect_to customers_path
-        end
+          if current_user.admin != true && Customer.where(user_id: current_user.id).present?
+              logger.debug "YEAH THIS IS HAPPENING"
+              CustomersHoliday.create(customer_id: Customer.find_by_user_id(current_user.id).id, holiday_id: @holiday.id)
+          end
+
+          if params[:api] == "true"
+              render json: format_response_json(
+                {
+                  message: 'Holiday added!',
+                  status: true
+                })
+          else
+
+            if @holiday.global
+              redirect_to "/admin"
+            else
+              redirect_to customers_path
+            end
+          end
       end
   end
   
