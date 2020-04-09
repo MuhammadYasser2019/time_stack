@@ -25,6 +25,9 @@ class ShiftsController < ApplicationController
     @shift.end_time = end_time
     if @shift.save
       redirect_to customers_path
+    else
+      flash.now[:error]='The End Time cannot be before the Start Time.'
+      redirect_to new_shift_path(params: JSON.parse(@shift.to_json), type: params[:type])
     end
   end
 
@@ -45,6 +48,9 @@ class ShiftsController < ApplicationController
     end_time = params[:end_time_hour] + ':' + params[:end_time_minute] + " " + params[:end_time_period]
     if @shift.update(shift_params.merge(start_time: start_time, end_time: end_time))
       redirect_to customers_path
+    else
+      flash.now[:error]='The End Time cannot be before the Start Time.'
+      redirect_to edit_shift_path(@shift.id, type: params[:type])
     end
   end
 
