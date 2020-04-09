@@ -17,7 +17,7 @@
 /config/schedule.rb
 /config/database.yml
 cron_log.log
-Gemfile.lock
+# Gemfile.lock
 /public/uploads
 
 
