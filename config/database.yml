@@ -1,13 +1,8 @@
 defaults: &defaults
   adapter: mysql2
   encoding: utf8
-<<<<<<< HEAD
-  username: root
-  password: rsi1111
-=======
   username: sparsha
   password: root
->>>>>>> 4d4218ae641147311dcab58c902c872e54742267
   pool: 5
   host: localhost
 

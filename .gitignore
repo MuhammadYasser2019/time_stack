@@ -16,7 +16,6 @@
 /vendor/ruby/
 /config/schedule.rb
 /config/database.yml
-/db/schema.rb
 cron_log.log
 Gemfile.lock
 /public/uploads
