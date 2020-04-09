@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_06_214943) do
+ActiveRecord::Schema.define(version: 2020_04_09_063708) do
 
   create_table "archived_time_entries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "date_of_activity"
@@ -234,6 +234,7 @@ ActiveRecord::Schema.define(version: 2020_04_06_214943) do
     t.integer "customer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.integer "shift_supervisor_id"
   end
 
   create_table "statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
