@@ -172,6 +172,4 @@ jQuery ($) ->
     #rightArrow: '>>'
     #closeIcon: 'X'
     #closeButton: true
-
-
-
+    
