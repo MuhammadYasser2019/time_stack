@@ -1,0 +1,41 @@
+<div id="myRecommendationModel" class= "modal" style="display:none;"> 
+	<div class = "modal-content">
+     	<div class="modal-header">
+         	<span class = "close"> &times;</span>
+        </div>
+        <p> Please Leave Your Recommendation! </p>
+        	<%= form_tag add_multiple_user_recommendation_path , remote: true  do |form| %>
+         	<%= hidden_field_tag "user_ids", ''  %>
+         	<%= hidden_field_tag "project_id", @project.id %>
+          		<label>Recommendation:</label><br>
+            	<%= text_field_tag :recommendation, "",class: 'form-control' %>
+        		<br>
+        		<%= submit_tag "Add Recommendation", class: "btn oragne-button", id: "button1" %>
+        	<% end  %>
+     </div> 
+</div>
+   
+
+<script type="text/javascript">
+
+$('.recommend-button').click(function() {
+ 	var all_ids = [];
+	$('.recommend:checked').map(function(i) {
+    	all_ids[i] = $(this).val();
+		}).get().join(', ');
+
+	$('#user_ids').val(all_ids);
+
+	$('#button1').click(function(){
+    $("#myModal").modal('hide');
+    	location.reload();
+  	})
+
+ 	$(".close").click(function(){
+    	$("#myModal").modal('hide');
+    });
+
+	console.log(all_ids)
+
+});
+</script>

@@ -17,6 +17,7 @@ Rails.application.routes.draw do
   resources :features
   resources :case_studies
   resources :vacation_types
+
   #resources :analytics
   devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks" }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
@@ -197,6 +198,8 @@ Rails.application.routes.draw do
   post "/bar_graph" => 'analytics#bar_graph'
   match "analytics/:customer_id" => "analytics#index", via: [:get, :post]
   match "users_notification_date" => "users#user_notification_date", via: [:get, :post]
+  match "add_multiple_user_recommendation" => "users#add_multiple_user_recommendation", via: [:get, :post]
+
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
 

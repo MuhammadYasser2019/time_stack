@@ -26,7 +26,7 @@ div class="add_remove_user"
 			   
 			      tr
 			      	td
-			          = check_box_tag "remove_user_id_#{i}", uop.id, false
+			          = check_box_tag "remove_user_id_#{i}", uop.id, false , class: "recommend"
 			         
 			        td
 			          = uop.email
@@ -35,3 +35,11 @@ div class="add_remove_user"
 	    	    
 	  	  	= submit_tag "Remove user"
 div style="clear:both;"
+
+
+
+button.btn.btn-sm.orange-button.recommend-button[type="button" data-toggle="modal" data-target="#myRecommendationModel"]
+  | Recommend 
+
+
+= render partial: 'recommendation'

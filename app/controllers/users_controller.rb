@@ -618,10 +618,26 @@ class UsersController < ApplicationController
   end
 
 
+  def add_multiple_user_recommendation
+    @recommended_users = params[:user_ids].split(',').map(&:to_i)
+    if @recommended_users.count > 0
+      @recommended_users.each do|user|
+        u_recommendation  = UserRecommendation.new
+        u_recommendation.recommendation = params[:recommendation]
+        u_recommendation.user_id  = current_user.id
+        u_recommendation.project_id = params[:project_id]
+        u_recommendation.save
+      end
+    end
+    respond_to do |format|
+      format.html { redirect_to "/projects", notice: 'Recommendation is added successfully.' }
+    end  
+  end
+
 
   private
   
     def user_params
-      params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id)
+      params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id,:user_ids,:project_id,:recommendation)
     end
 end

@@ -77,7 +77,7 @@ gem "recaptcha", '3.4.0', require: "recaptcha/rails"
 #Following two gems are needed for uploading files functionality.
 gem 'carrierwave'
 gem "mini_magick"
-gem 'rmagick', '2.16.0'
+#gem 'rmagick', '2.16.0'
 gem 'whenever', :require => false
 
 gem 'capistrano'
