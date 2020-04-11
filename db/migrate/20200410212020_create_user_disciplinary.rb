@@ -1,8 +1,8 @@
-class CreateUserRecommendations < ActiveRecord::Migration[5.2]
+class CreateUserDisciplinary < ActiveRecord::Migration[5.2]
   def change
-    create_table :user_recommendations do |t|
+    create_table :user_disciplinaries do |t|
       t.integer :project_id
-      t.string :recommendation
+      t.string :disciplinary
       t.integer :submitted_by
       t.references :user, foreign_key: true
 

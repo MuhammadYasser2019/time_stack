@@ -405,15 +405,18 @@ end
     logger.debug(" add_multiple_user_to_project - #{params.inspect}")
     @project = Project.find(params[:project_id])
     @available_users = User.where("parent_user_id IS ? && (shared =? or customer_id IS ? OR customer_id = ?)",nil, true, nil , @project.customer.id)     
+    
     (0..(@available_users- @project.users.active_users).count).each  do |i|
 
       if params["add_user_id_#{i}"].present?
         user = User.find(params["add_user_id_#{i}"])
         if @project.users.inactive_users.include?(user)
           project_user = ProjectsUser.where("project_id = ? && user_id = ?", @project.id , user.id).last
-          project_user.sepration_date = nil
-          project_user.save
-          #@project.users.push(user)
+           project_user.sepration_date = nil
+           project_user.save
+          
+        else
+          @project.users.push(user)
         end
         @project.save
       end

@@ -130,6 +130,15 @@ jQuery ($) ->
     build_project(system_select_id, $(this).val())
   )
 
+  $(document).on("click", ".recommend", ->
+    if ($('.recommend:checked').length <1)
+      $('.pm_actions').hide();
+    else
+      $('.pm_actions').show();
+      $('.pm_actions').css("display", "flex");
+  )
+
+  
   build_project = (system_select_id, customer_id) ->
     
     my_url = '/show_projects/'+system_select_id
