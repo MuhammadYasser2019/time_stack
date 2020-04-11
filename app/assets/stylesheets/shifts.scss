@@ -10,6 +10,12 @@
   height: 100%;
 }
 
+.normal_shift {
+  width: 30%;
+  float: left;
+  height: 100%;
+}
+
 select {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -38,6 +44,12 @@ select {
 .large_time_container{
   float:left;
   width: 50%;
+}
+
+.shift-supervisor-label{
+  float: left;
+  width: 100%;
+  text-align: left;
 }
 
 .time_container{

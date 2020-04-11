@@ -30,7 +30,7 @@
     = hidden_field_tag :type, params[:type]
   - elsif params[:type] == 'project'
    div.form-group
-    = f.label "Shift Supervisor"
+    = f.label "Shift Supervisor", class: "shift-supervisor-label"
     = select_tag(:shift_supervisor_id, options_for_select(@potential_supervisors, @shift.shift_supervisor_id), class: "tiny_shift", required: true)
     = f.label :location, class: 'shift-label'
     = f.text_field :location, class: "form-control"
