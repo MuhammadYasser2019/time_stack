@@ -49,6 +49,8 @@ Rails.application.routes.draw do
     get 'submit_weekly_time_entry', to: "time_entries#submit_weekly_time_entry"
     get 'get_user_projects', to: "time_entries#get_user_projects"
     get 'get_project_tasks', to: "time_entries#get_project_tasks"
+    post 'save_device_info', to: "notifications#save_device_info"
+    get 'remove_device_info', to: "notifications#remove_device_info"
 
     post 'send_entry', to: "users#post_data"
     get 'send_entry', to: "users#post_data"
