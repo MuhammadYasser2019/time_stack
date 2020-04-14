@@ -9,6 +9,7 @@ gem 'webpacker'
 gem 'jwt'
 gem 'sprockets-rails' #, '2.3.3'
 gem 'sprockets-es6'
+gem 'exponent-server-sdk'
 # Use sqlite3 as the database for Active Record
 # Use SCSS for stylesheets
 gem 'sass-rails'
