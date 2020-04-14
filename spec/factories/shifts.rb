@@ -1,9 +1,9 @@
 FactoryBot.define do
   factory :shift do
     name { "MyString" }
-    start_time { "2020-04-06 17:49:44" }
-    end_time { "2020-04-06 17:49:44" }
-    regular_hours { 1.5 }
+    start_time { "2020-04-06 09:00:00" }
+    end_time { "2020-04-06 17:00:00" }
+    regular_hours { 8.0 }
     incharge { "MyString" }
     active { false }
     default { false }

@@ -4,6 +4,9 @@
     td = shift.start_time
     td = shift.end_time
     td = shift.regular_hours
-    td = shift.active
+    - if shift.active
+      td =("Yes")
+    - else
+      td =("No")
     td = link_to "Edit Shift", edit_shift_path(shift.id, type: 'customer'), class: "orange-button", type: "button"
 

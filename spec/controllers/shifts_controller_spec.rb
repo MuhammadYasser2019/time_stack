@@ -43,7 +43,7 @@ RSpec.describe ShiftsController, type: :controller do
       user = FactoryBot.create(:user)
       sign_in user
 
-      post :update, params: bad_params
+      patch :update, params: bad_params
       expect(response).to redirect_to edit_shift_path(shift.id)
     end
 
