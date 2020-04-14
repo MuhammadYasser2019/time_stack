@@ -1,25 +1,35 @@
 module Api
-  class UsersController < ActionController::Base
-		include UserHelper
-		before_action :authenticate_user_from_token, except: [:login_user]
-			
+  class UsersController < BaseController
+
+		skip_before_action :authenticate_user, only: :login_user
+
 		def login_user	
 		  user = User.find_by(email: params[:email])
 		  logger.debug("the user email you sent is : #{params[:email]}")
 		
 			if user&.valid_password?(params[:password])
 				user_type = (user.pm? || user.cm? || user.admin?) ?  "admin" : "user"
-		    render :json => {  status: :ok,
-		    									email: user.email,
-		    									authentication_token: user.authentication_token,
-		    									user_type: user_type
-		    								}
-		  else
-		    render :json => {status: :unauthorized ,message: "The email or password was incorrect. Please try again"}
-	    end
-	  end 
-
-	  def update_date
+				render json: format_response_json(
+					{
+					  message: 'User logged in succesfully!',
+					  status: true,
+					  result: {
+						  accessToken: user.authentication_token,
+						  userRole: user_type,
+						  userID: user.id,
+						  tokenExpirationTime: Time.now + 45*60 #45 min duration
+					  }
+					})
+		 	else
+				render json: format_response_json(
+					{
+					message: "The email or password was incorrect. Please try again",
+					status: false				
+					})
+	   		end
+		end 
+		  	
+		def update_date
     	
 			#Used to find week_id for today's time entry 
 			user = User.find_by(email: params[:email])
