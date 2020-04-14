@@ -34,6 +34,18 @@ Role.find_or_initialize_by(id: 4, name: "Admin") do |n|
   n.save!
 end
 
+Shift.find_or_initialize_by(id: 1, name: "Regular") do |n|
+  n.start_time = "9:00AM"
+  n.end_time = "5:00PM"
+  n.regular_hours = 8
+  n.incharge = nil
+  n.active = false
+  n.default = true
+  n.location = nil
+  n.capacity = nil
+  n.save!
+end
+
 weeks_with_no_status = TimeEntry.where(status_id: nil).select(:week_id).collect { |w| w.week_id }.uniq
 
 weeks_with_no_status.each do |w_id|

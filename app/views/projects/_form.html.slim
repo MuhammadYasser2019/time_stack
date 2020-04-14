@@ -16,6 +16,8 @@
 			  	  a class="nav-link" role="tab" id ="adhoc_pm-tab" data-toggle="tab" href="#adhoc_pm" Assign Adhoc PM
 			    li class="nav-item"
 			  	  a class="nav-link" role="tab" id="users_on_project-tab" data-toggle="tab" href="#users_on_project" Users on the Project
+                li class="nav-item"
+                  a class="nav-link" role="tab" id="shift-tab" data-toggle="tab" href="#shift" Shifts
 
 - if @adhoc && user_have_adhoc_permission(current_user)
 	.white-background
@@ -163,6 +165,24 @@
 	  	div class="tab-pane fade" role="tabpanel" aria-labelledby="users_on_project-tab" id="users_on_project"
 		 	div(id="dynamic_user_update")
 				== render partial: 'add_remove_users'
+
+        div class="tab-pane fade" role="tabpanel" aria-labelledby="shift-tab" id="shift"
+          h3.text-center Shifts
+          div class="shift_list"
+            table class="shift_table"
+             thead
+              tr
+               th Name
+               th Start Time
+               th End Time
+               th Regular Hours
+               th Location
+               th Capacity
+               th Shift Supervisor
+             tbody
+              - ProjectShift.where(project_id: @project.id).each do |project_shift|
+               == render partial: 'shift_projects', locals: { shift: Shift.find(project_shift.shift_id), project_shift: project_shift, project: @project }
+            = link_to "Create Project Shift", new_project_shift_path(project_id: @project.id), class: "orange-button", type: "button"
 
 	- if !current_user.default_project? && current_user.parent_user_id.blank?
 			== render partial: 'users/default_projects'

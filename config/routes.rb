@@ -17,6 +17,8 @@ Rails.application.routes.draw do
   resources :features
   resources :case_studies
   resources :vacation_types
+  resources :shifts
+  resources :project_shifts
   #resources :analytics
   devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks", :sessions => 'sessions' }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }

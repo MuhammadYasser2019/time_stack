@@ -191,6 +191,16 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.datetime "date"
   end
 
+  create_table "project_shifts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "shift_id"
+    t.integer "capacity"
+    t.string "location"
+    t.integer "shift_supervisor_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "project_id"
+  end
+
   create_table "projects", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.integer "customer_id"
@@ -213,6 +223,7 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "active"
+    t.integer "project_shift_id"
     t.index ["project_id"], name: "index_projects_users_on_project_id"
     t.index ["user_id"], name: "index_projects_users_on_user_id"
   end
@@ -280,6 +291,22 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.boolean "permanent", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "shifts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "name"
+    t.string "start_time"
+    t.string "end_time"
+    t.float "regular_hours"
+    t.string "incharge"
+    t.boolean "active"
+    t.boolean "default"
+    t.string "location"
+    t.integer "capacity"
+    t.integer "customer_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.integer "shift_supervisor_id"
   end
 
   create_table "statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
@@ -364,6 +391,7 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.time "time_out"
     t.integer "vacation_type_id"
     t.string "partial_day"
+    t.integer "project_shift_id"
     t.index ["task_id"], name: "index_time_entries_on_task_id"
     t.index ["user_id"], name: "index_time_entries_on_user_id"
     t.index ["week_id"], name: "index_time_entries_on_week_id"

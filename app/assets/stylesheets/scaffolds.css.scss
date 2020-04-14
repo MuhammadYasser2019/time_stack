@@ -25,8 +25,13 @@ a {
     color: #000;
   }
   &:hover {
-    color: #fff;
-    background-color: #000;
+    background-color: #69abef;
+    color: white;
+    border-radius: 3px;
+    transition: color .15s ease-in-out,
+    background-color .15s ease-in-out,
+    border-color .15s ease-in-out,
+    box-shadow .15s ease-in-out;
   }
 }
 
@@ -44,6 +49,10 @@ div {
   padding: 2px;
   background-color: red;
   display: table;
+  opacity: .8;
+  border-radius: 5px;
+  color: white;
+  font-weight: bold;
 }
 
 #error_explanation {

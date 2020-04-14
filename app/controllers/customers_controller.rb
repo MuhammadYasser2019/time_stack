@@ -73,6 +73,19 @@
     @customer.theme = "Orange" 
     respond_to do |format|
       if @customer.save
+        # add default 9-5 shift
+        default_shift = Shift.new
+        default_shift.name = "Regular"
+        default_shift.start_time = "9:00AM"
+        default_shift.end_time = "5:00PM"
+        default_shift.regular_hours = 8
+        default_shift.incharge = nil
+        default_shift.active = false
+        default_shift.default = true
+        default_shift.location = nil
+        default_shift.capacity = nil
+        default_shift.customer_id = @customer.id
+        default_shift.save!
         format.html { redirect_to customers_path, notice: 'Customer was successfully created.' }
         format.json { render :show, status: :created, location: @customer }
       else

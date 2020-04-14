@@ -8,6 +8,7 @@ class Customer < ApplicationRecord
   has_many :vacation_types
   has_many :external_configurations
   has_one :default_report
+  has_many :shifts
 
 
   validates_numericality_of :zipcode
