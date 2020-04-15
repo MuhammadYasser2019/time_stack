@@ -5,5 +5,9 @@ FactoryBot.define do
     end 
     password "secretPassword"
     password_confirmation "secretPassword"
+    pm true
+    cm true
+    admin true
+    user true
   end
 end

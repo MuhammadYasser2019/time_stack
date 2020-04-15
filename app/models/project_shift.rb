@@ -1,3 +1,4 @@
 class ProjectShift < ApplicationRecord
-  has_one :shift
+  belongs_to :shift
+  belongs_to :project
 end

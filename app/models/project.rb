@@ -9,6 +9,7 @@ class Project < ApplicationRecord
   has_many :projects_users
   has_many :users , :through => :projects_users
   has_many :holiday_exceptions
+  has_many :project_shifts
   accepts_nested_attributes_for :tasks, allow_destroy: true
   
   def self.task_value(task_attributes, previous_codes)
