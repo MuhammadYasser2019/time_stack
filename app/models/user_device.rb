@@ -2,36 +2,78 @@ class UserDevice < ApplicationRecord
     has_one :user
 
     def self.send_shift_notification
-        # GET ALL USER whose shift is starting or ending. If the user have not filled their time entry then fetch their token from the database and finally generate a message to send to the users. Make sure not to send the notification twice for the same entry. 
+        # GET ALL USER whose shift is starting or ending. If the user have not filled their time entry then fetch their token from the database and finally generate a message to send to the users. Make sure not to send the notification twice for the same entry.
 
-        messages = [{
-            to: "ExponentPushToken[dcZ4lePXiZATqWRqPfkjNO]",
-            sound: "default",
-            body: "Hello world!"
-          }, {
-            to: "ExponentPushToken[dcZ4lePXiZATqWRqPfkjNO]",
-            badge: 1,
-            body: "You've got mail"
-          }]
+        @start_time = "9:45 AM".to_time
+        @end_time = @start_time + 15 * 60 #15 min later
 
-        handle_push_notifications(messages)
+        #Starting shifts
+        @shift_ids = Shift.where("(TIME(start_time) BETWEEN TIME('#{@start_time}') AND TIME('#{@end_time}'))").pluck(:id)
+
+        @project_shift_ids = ProjectShift.where(:id=>@shift_ids).pluck(:id)
+
+        @shift_projects = ProjectsUser.where(:project_shift_id=> @project_shift_ids).joins(:user, :project).select("users.id as user_id,projects.id as project_id, projects.name").as_json
+
+        @user_ids = []
+
+        @shift_projects.map do |i|
+             @user_ids.push(i["user_id"]) 
+        end
+        @user_ids.uniq
+
+        @token_info = TimeEntry.where(:user_id=> @user_ids, :date_of_activity=> Date.today).joins(:user=> :user_devices).select("time_entries.id as entry_id, week_id, users.id as user_id, user_devices.user_token as user_token").as_json
+
+        @push_messages = []
+
+        @token_info.map do |ti|
+            cur_user_id = ti["user_id"]
+            token = ti["user_token"]
+            entry_id = ti["entry_id"]
+            week_id = ti["week_id"]
+
+            projects = []
+            a = @shift_projects.select{|i| i["user_id"] == cur_user_id}
+        
+            @shift_projects.select{|i| i["user_id"] == cur_user_id}.map do |p|
+                projects.push(p["name"])
+            end
+            projects.uniq
+
+            projects.map do |p|
+                @push_messages.push({
+                    to: token,
+                    title:"Timesheet Reminder - #{p}",
+                    sound: "default",
+                    data: {entryID: entry_id, weekID: week_id},
+                    body: "Are you ready to fill your time sheet for the day?"
+                })
+            end
+        end
+        UserDevice.handle_push_notifications(@push_messages)
     end
 
     private 
 
     def self.handle_push_notifications(messages)  
-        # MAX 100 messages at a time     
-        messages.each_slice(100){|message| send_push_notification(message)}
+        # MAX 100 messages at a time
+        if !messages.nil?
+            # TODO: ALLOW MULTIPLE MESSAGES, ALSO SLICE 100 at a TIME
+            # messages = messages[0]
+    
+            UserDevice.send_push_notification(messages)
+            # messages.each_slice(100){|message| UserDevice.send_push_notification(message)}
+        end
     end
 
     def self.send_push_notification(messages)
+    
         client = Exponent::Push::Client.new
-       
-        # MAX 100 messages at a time
-        handler = client.send_messages(messages)
 
-        # Array of all errors returned from the API
-        puts handler.errors
+        # MAX 100 messages at a time
+        # handler = client.publish(messages)
+
+        # # Array of all errors returned from the API
+        # puts handler.errors
 
         # you probably want to delay calling this because the service might take a few moments to send
         client.verify_deliveries(handler.receipt_ids)
