@@ -18,6 +18,7 @@ class User < ApplicationRecord
   has_many :holiday_exceptions
   has_many :vacation_requests
   has_many :user_notifications
+  has_many :user_devices
 
   def childs
     self.parent_user_id.present? ? nil : User.where(id: self.parent_user_id)
