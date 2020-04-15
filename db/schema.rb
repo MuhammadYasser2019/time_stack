@@ -10,11 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-<<<<<<< HEAD
-ActiveRecord::Schema.define(version: 2020_04_10_213905) do
-=======
 ActiveRecord::Schema.define(version: 2020_04_14_133931) do
->>>>>>> Add user_device model and apis to handle user notification
 
   create_table "archived_time_entries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "date_of_activity"
@@ -61,17 +57,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.text "case_study_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-<<<<<<< HEAD
-=======
-  end
-
-  create_table "case_suites", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "test_case_id"
-    t.integer "test_suite_id"
-    t.integer "sequence"
-    t.datetime "created_at"
-    t.datetime "updated_at"
->>>>>>> Add user_device model and apis to handle user notification
   end
 
   create_table "ckeditor_assets", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -135,24 +120,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.datetime "updated_at", null: false
   end
 
-<<<<<<< HEAD
-=======
-  create_table "environments", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.text "url"
-    t.string "username"
-    t.string "password"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.string "name"
-    t.string "login_field"
-    t.string "password_field"
-    t.string "action_button"
-    t.string "result_name"
-    t.string "result_value"
-    t.integer "default_suite_id"
-  end
-
->>>>>>> Add user_device model and apis to handle user notification
   create_table "expense_records", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "expense_type"
     t.text "description"
@@ -175,7 +142,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.integer "created_by"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
-<<<<<<< HEAD
   end
 
   create_table "features", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
@@ -185,17 +151,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.datetime "updated_at", null: false
   end
 
-=======
-  end
-
-  create_table "features", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
-    t.string "feature_type"
-    t.text "feature_data"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
->>>>>>> Add user_device model and apis to handle user notification
   create_table "holiday_exceptions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "project_id"
@@ -213,7 +168,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.datetime "date"
   end
 
-<<<<<<< HEAD
   create_table "project_shifts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "shift_id"
     t.integer "capacity"
@@ -224,8 +178,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.integer "project_id"
   end
 
-=======
->>>>>>> Add user_device model and apis to handle user notification
   create_table "projects", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.integer "customer_id"
@@ -248,10 +200,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "active"
-<<<<<<< HEAD
-    t.integer "project_shift_id"
-=======
->>>>>>> Add user_device model and apis to handle user notification
     t.index ["project_id"], name: "index_projects_users_on_project_id"
     t.index ["user_id"], name: "index_projects_users_on_user_id"
   end
@@ -263,37 +211,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.datetime "updated_at", null: false
   end
 
-<<<<<<< HEAD
-=======
-  create_table "result_cases", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "rd_id"
-    t.integer "test_case_id"
-    t.integer "result_suite_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.text "screenshot_file_location"
-    t.integer "scheduler_id"
-    t.text "error_description"
-  end
-
-  create_table "result_suites", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "rd_id"
-    t.integer "test_suite_id"
-    t.datetime "start_time"
-    t.datetime "end_time"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "user_id"
-    t.integer "scheduler_id"
-  end
-
-  create_table "results_dictionaries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.text "description"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
->>>>>>> Add user_device model and apis to handle user notification
   create_table "roles", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
@@ -306,19 +223,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id"
   end
 
-<<<<<<< HEAD
-=======
-  create_table "schedulers", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "test_suite_id"
-    t.datetime "scheduled_date"
-    t.datetime "completed_date"
-    t.string "status"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean "dependency", default: false
-  end
-
->>>>>>> Add user_device model and apis to handle user notification
   create_table "shared_employees", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.integer "user_id"
     t.integer "customer_id"
@@ -327,7 +231,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.datetime "updated_at", null: false
   end
 
-<<<<<<< HEAD
   create_table "shifts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "start_time"
@@ -346,18 +249,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
 
   create_table "statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "status"
-=======
-  create_table "statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "status"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "tasks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "code"
-    t.string "description"
-    t.integer "project_id"
->>>>>>> Add user_device model and apis to handle user notification
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "default_comment"
@@ -367,7 +258,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.index ["project_id"], name: "index_tasks_on_project_id"
   end
 
-<<<<<<< HEAD
   create_table "tasks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.string "code"
     t.string "description"
@@ -381,51 +271,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.index ["project_id"], name: "index_tasks_on_project_id"
   end
 
-=======
-  create_table "test_cases", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "field_name"
-    t.string "field_type"
-    t.string "read_element"
-    t.string "input_value"
-    t.string "string"
-    t.string "action"
-    t.text "action_url"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.boolean "dependency", default: false
-    t.text "base_url"
-    t.text "xpath"
-    t.integer "sleeps"
-  end
-
-  create_table "test_data", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "test_id"
-    t.integer "result_id"
-    t.datetime "date_of_test"
-    t.string "browser"
-    t.text "details"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
-  create_table "test_suites", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "name"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-    t.integer "environment_id"
-    t.boolean "dependency", default: false
-    t.text "base_url"
-  end
-
-  create_table "testing_cases", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.string "field_name"
-    t.string "field_type"
-    t.text "business_rules"
-    t.datetime "created_at"
-    t.datetime "updated_at"
-  end
-
->>>>>>> Add user_device model and apis to handle user notification
   create_table "time_entries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
     t.datetime "date_of_activity"
     t.float "hours"
@@ -446,10 +291,7 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.time "time_out"
     t.integer "vacation_type_id"
     t.string "partial_day"
-<<<<<<< HEAD
     t.integer "project_shift_id"
-=======
->>>>>>> Add user_device model and apis to handle user notification
     t.index ["task_id"], name: "index_time_entries_on_task_id"
     t.index ["user_id"], name: "index_time_entries_on_user_id"
     t.index ["week_id"], name: "index_time_entries_on_week_id"
@@ -462,8 +304,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.datetime "updated_at", null: false
   end
 
-<<<<<<< HEAD
-=======
   create_table "user_devices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.string "user_token"
@@ -472,7 +312,6 @@ ActiveRecord::Schema.define(version: 2020_04_14_133931) do
     t.index ["user_id"], name: "index_user_devices_on_user_id"
   end
 
->>>>>>> Add user_device model and apis to handle user notification
   create_table "user_notifications", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.string "notification_type"

@@ -21,9 +21,7 @@ module Api
 			begin
 				@week_id = params[:week_id] 
 
-				@entries = TimeEntry.where(:week_id=> @week_id).select("id as entryID, date_of_activity as date,status_id as entryStatus").as_json
-				# also get shift start as shiftStartTime, shift end as shiftEndTime
-
+				@entries = TimeEntry.where(:week_id=> @week_id).select("id as entryID, date_of_activity as date, status_id as entryStatus").as_json
 				render json: format_response_json({
 					message: 'Daily entries retrieved!',
 					status: true,
@@ -32,6 +30,50 @@ module Api
 			rescue
 			    render json: format_response_json({
 					message: 'Failed to retrieve daily time entries!',
+					status: false
+				})
+			end
+		end	
+
+		def get_time_entry_detail
+			begin
+				@entry_id = params[:entry_id] 
+
+				@entry_detail = TimeEntry.where(:id=> @entry_id).select("id as entryID, date_of_activity as date, activity_log as description, hours as totalHours, project_id as projectID, task_id as taskID, partial_day as partialDay").first.as_json
+
+				render json: format_response_json({
+					message: 'Entry detail retrieved!',
+					status: true,
+					result: @entry_detail
+				})        
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to retrieve time entry detail!',
+					status: false
+				})
+			end
+		end	
+
+		def save_time_entry
+			begin
+				@time_entry = params[:entry_data]
+				@entry_id =  @time_entry[:id]
+				@success = false
+				if @entry_id>0
+					# UPDATE
+					@success =  TimeEntry.find(@entry_id).update_attributes(time_entry_params(@time_entry)) 
+				else
+					# INSERT
+					@success =TimeEntry.new(time_entry_params(@time_entry.except(:id))).save
+				end
+
+				render json: format_response_json({
+					message:@success? "Time entry saved successfully!" : "Failed to save time entry!",
+					status: @success
+				})        
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to save time entry!',
 					status: false
 				})
 			end
@@ -54,6 +96,33 @@ module Api
 			rescue
 			    render json: format_response_json({
 					message: 'Failed to submit weekly entry!',
+					status: false
+				})
+			end
+		end	
+
+		def delete_time_entry
+			begin
+				@entry_id = params[:entry_id]
+
+				@entry = TimeEntry.where(:id=> @entry_id, :user_id => @user.id).first
+			
+				if !@entry.nil?
+					@entry.destroy
+
+					render json: format_response_json({
+						message: 'Time entry deleted succesfully!',
+						status: true
+					})
+				else
+					render json: format_response_json({
+						message: 'Time entry not found!',
+						status: false
+					})
+				end
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to delete time entry!',
 					status: false
 				})
 			end
@@ -86,7 +155,7 @@ module Api
 				render json: format_response_json({
 					message: 'Project tasks retrieved!',
 					status: true,
-					result: @projects
+					result: @tasks
 				})        
 			rescue
 			    render json: format_response_json({
@@ -95,5 +164,11 @@ module Api
 				})
 			end
 		end	
+
+		private 
+
+		def time_entry_params(entry)
+			entry.permit(:date_of_activity, :project_id, :hours, :activity_log, :task_id, :week_id, :user_id, :sick, :partial_day, :personal_day, :updated_by)
+		end
     end
 end

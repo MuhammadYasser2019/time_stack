@@ -19,7 +19,7 @@ module Api
                     @user_device.save
                 end
               
-                UserDevice.where_not(:user_id=> @user_id).update_all(user_token: nil)
+                UserDevice.where.not(:user_id => @user_id).update_all(user_token: nil)
     
                 render json: format_response_json({
                     status: true
