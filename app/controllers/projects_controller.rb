@@ -451,6 +451,18 @@ end
     
   end  
 
+  def set_selected_users
+    @sel_inv_users = User.find params[:invetory_users_ids]
+    @sel_inv_ids   = params[:invetory_users_ids].map(&:to_s)
+    @inv_sel_users = params[:inv_sel_users]
+    @project_id    = params[:project_id]
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
+
   def add_user_to_project
     # User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id").select("users.email, projects_users.project_id, projects_users.active").collect {|u| "#{u.email}, #{u.project_id}, Status #{u.active}"}
     logger.debug(" add_user_to_project - #{params.inspect}")

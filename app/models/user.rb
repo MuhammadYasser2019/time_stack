@@ -22,6 +22,7 @@ class User < ApplicationRecord
   has_many :user_notifications
   has_many :user_recommendations
   has_many :user_disciplinary
+  has_many :user_inventory_and_equipments
 
 
 

@@ -138,7 +138,22 @@ jQuery ($) ->
       $('.pm_actions').css("display", "flex");
   )
 
-  
+  $(document).on("click", ".inventory-equipment-button", ->
+    all_ids = []
+    sel_users = []
+    proj_id  = $('#project_id').val()
+    $('.recommend:checked').map((i) ->
+      all_ids[i] = $(this).val()
+      sel_users[i] = $("#show_" +$(this).val()).text();
+      return
+    ).get().join ', '
+    
+    $.ajax
+      url: 'set_selected_users'
+      type: 'GET'
+      data: invetory_users_ids: all_ids , inv_sel_users: sel_users, project_id: proj_id
+
+  )
   build_project = (system_select_id, customer_id) ->
     
     my_url = '/show_projects/'+system_select_id

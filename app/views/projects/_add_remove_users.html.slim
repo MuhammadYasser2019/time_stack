@@ -37,15 +37,17 @@ div class="add_remove_user"
 div style="clear:both;"
 
 
-div class="pm_actions" style="display:none;padding-top: 10px;width: 20%;position: relative;left: 65%;"
+div class="pm_actions" style="display:none;padding-top: 10px;width: 34%;position: relative;left: 65%;"
 	button.orange-button.recommend-button[type="button" data-toggle="modal" data-target="#myRecommendationModel" style="width:100px;"] 
 		| Recommend
 	button.orange-button.disciplinary-button[type="button" data-toggle="modal" data-target="#disciplinaryModel" style="width:100px;"] 
 		| Disciplinary 
-
-
-
+	button.orange-button.inventory-equipment-button[type="button" data-toggle="modal" data-target="#inventoryModel"
+	style="width:100px;"]
+		| Inventory 
 
 
 = render partial: 'recommendation'
 = render partial: 'disciplinary'
+
+div id="selected_inv"

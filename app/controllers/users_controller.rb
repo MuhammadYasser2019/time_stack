@@ -651,6 +651,29 @@ class UsersController < ApplicationController
   end
 
 
+  def add_multiple_user_inventory
+
+      @inventory_users = params[:inv_user_ids].split(/[" "]+/).map(&:to_i)
+        @inventory_users.each do|user|
+        u_env_and_equip                  = UserInventoryAndEquipment.new
+        u_env_and_equip.equipment_number = params["equipment_number_#{user}"]
+        u_env_and_equip.equipment_name   = params["equipment_name_#{user}"]
+        u_env_and_equip.user_id          = user
+        u_env_and_equip.project_id       = params[:project_id]
+        u_env_and_equip.issued_by        = params["issued_by_#{user}"]
+        u_env_and_equip.issued_date      = params["issued_date_#{user}"]
+        u_env_and_equip.submitted_date   = params["submitted_date_#{user}"]
+        u_env_and_equip.save
+      end
+      
+      respond_to do |format|
+        format.js
+      end
+      
+  end
+
+
+
 
   private
   
