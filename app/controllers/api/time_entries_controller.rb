@@ -131,7 +131,7 @@ module Api
 		def get_user_projects
 			begin
                 @user_id = @user.id
-                @project_ids = ProjectsUser.where(:user_id=>@user_id).pluck(:id)
+                @project_ids = ProjectsUser.where(:user_id=>@user_id).pluck(:project_id)
 				@projects=Project.where(:id=> @project_ids).select("id as projectID, name as projectName").as_json
 
 				render json: format_response_json({
