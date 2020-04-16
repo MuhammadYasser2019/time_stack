@@ -4,8 +4,9 @@ class UserDevice < ApplicationRecord
     def self.send_shift_notification
         # GET ALL USER whose shift is starting or ending. If the user have not filled their time entry then fetch their token from the database and finally generate a message to send to the users. Make sure not to send the notification twice for the same entry.
 
-        @start_time = "9:45 AM".to_time
-        @end_time = @start_time + 15 * 60 #15 min later
+        @start_time = Time.now
+        # @start_time = "9:42 AM".to_time
+        @end_time = @start_time + 60 * 60 #15 min later
 
         #Starting shifts
         @shift_ids = Shift.where("(TIME(start_time) BETWEEN TIME('#{@start_time}') AND TIME('#{@end_time}'))").pluck(:id)
@@ -21,7 +22,7 @@ class UserDevice < ApplicationRecord
         end
         @user_ids.uniq
 
-        @token_info = TimeEntry.where(:user_id=> @user_ids, :date_of_activity=> Date.today).joins(:user=> :user_devices).select("time_entries.id as entry_id, week_id, users.id as user_id, user_devices.user_token as user_token").as_json
+        @token_info = TimeEntry.where(:user_id=> @user_ids).where("DATE(date_of_activity)='#{Date.today}'").joins(:user=> :user_devices).select("time_entries.id as entry_id, week_id, users.id as user_id, user_devices.user_token as user_token").as_json
 
         @push_messages = []
 
@@ -32,19 +33,18 @@ class UserDevice < ApplicationRecord
             week_id = ti["week_id"]
 
             projects = []
-            a = @shift_projects.select{|i| i["user_id"] == cur_user_id}
-        
+                    
             @shift_projects.select{|i| i["user_id"] == cur_user_id}.map do |p|
-                projects.push(p["name"])
+                projects.push({id: p["project_id"], name: p["name"]})
             end
             projects.uniq
 
             projects.map do |p|
                 @push_messages.push({
                     to: token,
-                    title:"Timesheet Reminder - #{p}",
+                    title:"Timesheet Reminder - #{p[:name]}",
                     sound: "default",
-                    data: {entryID: entry_id, weekID: week_id},
+                    data: {entryID: entry_id, weekID: week_id, projectID: p[:project_id], userID: cur_user_id},
                     body: "Are you ready to fill your time sheet for the day?"
                 })
             end
@@ -58,25 +58,26 @@ class UserDevice < ApplicationRecord
         # MAX 100 messages at a time
         if !messages.nil?
             # TODO: ALLOW MULTIPLE MESSAGES, ALSO SLICE 100 at a TIME
-            # messages = messages[0]
-    
-            UserDevice.send_push_notification(messages)
-            # messages.each_slice(100){|message| UserDevice.send_push_notification(message)}
+            max_messages = 100
+            while messages.count>0 do
+                messages_to_process = messages.first(max_messages)
+                UserDevice.send_push_notification(messages_to_process)
+                messages = messages.drop(max_messages)
+            end
         end
     end
 
     def self.send_push_notification(messages)
-    
         client = Exponent::Push::Client.new
 
         # MAX 100 messages at a time
-        # handler = client.publish(messages)
+        handler = client.publish(messages)
 
-        # # Array of all errors returned from the API
+        # Array of all errors returned from the API
         # puts handler.errors
 
         # you probably want to delay calling this because the service might take a few moments to send
-        client.verify_deliveries(handler.receipt_ids)
+        # client.verify_deliveries(handler.receipt_ids)
     end
 end
   
