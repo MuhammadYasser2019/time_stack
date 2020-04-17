@@ -154,6 +154,19 @@ jQuery ($) ->
       data: invetory_users_ids: all_ids , inv_sel_users: sel_users, project_id: proj_id
 
   )
+
+ 
+  $(document).on("click", ".date-inv", -> 
+   
+    inventory = $(this).closest("tr").attr('id');
+    date = $("#date_inventory_" + inventory).val()
+     
+    $.ajax
+      url: 'set_inventory_submitted_date'
+      type: 'GET'
+      data:  inventory_dates: date, inventory_id: inventory
+  )
+
   build_project = (system_select_id, customer_id) ->
     
     my_url = '/show_projects/'+system_select_id

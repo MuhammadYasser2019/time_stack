@@ -198,6 +198,16 @@
 	width: 35%;
 }
 
+.add_inventory_right_row {
+	float: right;
+	width: 65%;
+	.oragne-button{
+		background-color: #ffd079 !important;
+    	border-radius: 10px;
+	}
+}
+
+
 .add_remove_right_row table{
 	float: right;
 	border: 2px solid black !important;
@@ -210,6 +220,25 @@
 	    overflow-x: hidden;
 	}
 }
+
+.add_inventory_left_row{
+    float: left;
+	width: 35%;
+}
+
+.add_inventory_left_row table{
+		float: left;
+		border: 2px solid black !important;
+		width: 100%;
+		tbody{
+			display:block;
+			height: 291px;      
+			overflow-y: auto;
+    		overflow-x: hidden;
+		}
+
+}
+
 
 .add_remove_right_row h1 {
 	max-width: 100%;

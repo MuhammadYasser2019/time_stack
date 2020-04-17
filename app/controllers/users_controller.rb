@@ -662,7 +662,6 @@ class UsersController < ApplicationController
         u_env_and_equip.project_id       = params[:project_id]
         u_env_and_equip.issued_by        = params["issued_by_#{user}"]
         u_env_and_equip.issued_date      = params["issued_date_#{user}"]
-        u_env_and_equip.submitted_date   = params["submitted_date_#{user}"]
         u_env_and_equip.save
       end
       
@@ -672,8 +671,14 @@ class UsersController < ApplicationController
       
   end
 
-
-
+  def set_inventory_submitted_date
+    u_env_and_equip = UserInventoryAndEquipment.find params[:inventory_id]
+    u_env_and_equip.submitted_date = params[:inventory_dates]
+    u_env_and_equip.save
+      respond_to do |format|
+          format.js
+      end
+  end
 
   private
   

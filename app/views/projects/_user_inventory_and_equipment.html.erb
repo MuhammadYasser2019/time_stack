@@ -19,7 +19,7 @@
               <th>Equipment Name</th>
               <th>Equipment Number:</th>
               <th>Issued Date</th>
-              <th>Submitted Date</th>
+             <!--  <th>Submitted Date</th> -->
           </tr>
           </thead>
           <tbody>
@@ -29,7 +29,7 @@
               <td><%= text_field_tag "equipment_name_#{user.id}", "", required: true %></td>
               <td><%= text_field_tag "equipment_number_#{user.id}", "" %></td>
               <td><%= date_field_tag("issued_date_#{user.id}", Date.today, required: true )%></td>
-              <td><%= date_field_tag("submitted_date_#{user.id}", Date.today)%></td>
+             <!--  <td><%= date_field_tag("submitted_date_#{user.id}", Date.today)%></td> -->
             </tr>
           <% end %>
         </tbody>
