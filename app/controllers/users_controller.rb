@@ -654,13 +654,14 @@ class UsersController < ApplicationController
   def add_multiple_user_inventory
 
       @inventory_users = params[:inv_user_ids].split(/[" "]+/).map(&:to_i)
+      @project = Project.find_by_id params[:project_id]
         @inventory_users.each do|user|
         u_env_and_equip                  = UserInventoryAndEquipment.new
         u_env_and_equip.equipment_number = params["equipment_number_#{user}"]
         u_env_and_equip.equipment_name   = params["equipment_name_#{user}"]
         u_env_and_equip.user_id          = user
         u_env_and_equip.project_id       = params[:project_id]
-        u_env_and_equip.issued_by        = params["issued_by_#{user}"]
+        u_env_and_equip.issued_by        = current_user.id
         u_env_and_equip.issued_date      = params["issued_date_#{user}"]
         u_env_and_equip.save
       end
@@ -673,6 +674,7 @@ class UsersController < ApplicationController
 
   def set_inventory_submitted_date
     u_env_and_equip = UserInventoryAndEquipment.find params[:inventory_id]
+    @project = Project.find_by_id u_env_and_equip.project_id
     u_env_and_equip.submitted_date = params[:inventory_dates]
     u_env_and_equip.save
       respond_to do |format|

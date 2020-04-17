@@ -39,10 +39,14 @@ div class="add_remove_user"
 	        		td
 	        			= "#{inventory.equipment_number}"
 	        		td
-	          			= date_field_tag("submitted_date_#{inventory.id}", Date.today ,id: "date_inventory_#{inventory.id}")
+	        			- if inventory.submitted_date.present?
+	        				= inventory.submitted_date
+	        			-else
+	          				= date_field_tag("submitted_date_#{inventory.id}", Date.today ,id: "date_inventory_#{inventory.id}")
 	            			|&nbsp;
 	          		td  
-	  					= link_to "Add","javascript:void(0)",class: "btn oragne-button date-inv"
+	          			- if !inventory.submitted_date.present?
+	  						= link_to "Add","javascript:void(0)",class: "btn oragne-button date-inv"
 	
 		
 	div style="clear:both;"
