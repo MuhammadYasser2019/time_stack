@@ -7,7 +7,7 @@ class CreateUserInventoryAndEquipments < ActiveRecord::Migration[5.2]
       t.datetime :issued_date
       t.datetime :submitted_date
       t.integer :project_id
-      t.references :user, foreign_key: true
+      t.references :user
 
       t.timestamps
     end
