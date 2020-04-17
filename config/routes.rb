@@ -202,6 +202,13 @@ Rails.application.routes.draw do
   post "/bar_graph" => 'analytics#bar_graph'
   match "analytics/:customer_id" => "analytics#index", via: [:get, :post]
   match "users_notification_date" => "users#user_notification_date", via: [:get, :post]
+  match "add_multiple_user_recommendation" => "users#add_multiple_user_recommendation", via: [:get, :post]
+  match "add_multiple_user_disciplinary" => "users#add_multiple_user_disciplinary", via: [:get, :post]
+  match "add_multiple_user_inventory" => "users#add_multiple_user_inventory", via: [:get,:post]
+  get 'set_selected_users' => 'projects#set_selected_users'
+
+  get 'set_inventory_submitted_date' => 'users#set_inventory_submitted_date', via: [:get,:post]
+  
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
 

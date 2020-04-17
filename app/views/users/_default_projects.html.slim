@@ -1,6 +1,6 @@
 div(id="defaultProject" class="modal" aria-hidden="true" role="dialog" data-reveal data-close-on-click="false" data-close-on-esc="false")
 	div class="modal-dialog" role="document"
-	  div.modal-content
+	  div.modal-content style="width: 500px !important;"
 	    div.modal-header
 	      h5 class="modal-title" Set Default Project
 	      button.close type="button" aria-label="Close" data-dismiss="modal"  
@@ -23,5 +23,5 @@ div(id="defaultProject" class="modal" aria-hidden="true" role="dialog" data-reve
 
 coffee:
 	$(document).ready ->
-		$('#defaultProject').bootstrap('show');
+		$('#defaultProject').modal('show');
 	

@@ -2,6 +2,7 @@
 table
   tr
     th User
+    th Emergency Contact
     th Last Logged In
     th Sign in Count
 
@@ -10,5 +11,6 @@ table
     - customer.projects.flat_map(&:users).uniq.each do |user|
       tr
         td= user.first_name
-        td= user.last_sign_in_at
+        td= user.emergency_contact
+        td= user.last_sign_in_at 
         td= user.sign_in_count
