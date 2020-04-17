@@ -23,8 +23,7 @@ class User < ApplicationRecord
   has_many :user_recommendations
   has_many :user_disciplinary
   has_many :user_inventory_and_equipments
-
-
+  has_many :user_devices
 
   def childs
     self.parent_user_id.present? ? nil : User.where(id: self.parent_user_id)
