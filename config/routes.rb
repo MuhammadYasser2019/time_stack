@@ -44,6 +44,11 @@ Rails.application.routes.draw do
   namespace :api do
     post 'login_user', to: "users#login_user"
     get 'login_user', to: "users#login_user"
+    get 'get_weekly_time_entries', to: "time_entries#get_weekly_time_entries"
+    get 'get_daily_time_entries', to: "time_entries#get_daily_time_entries"
+    get 'submit_weekly_time_entry', to: "time_entries#submit_weekly_time_entry"
+    get 'get_user_projects', to: "time_entries#get_user_projects"
+    get 'get_project_tasks', to: "time_entries#get_project_tasks"
 
     post 'send_entry', to: "users#post_data"
     get 'send_entry', to: "users#post_data"
