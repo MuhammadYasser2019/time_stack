@@ -7,13 +7,19 @@ module UserHelper
     # Notice how we use Devise.secure_compare to compare the token
     # in the database with the token given in the params, mitigating
     # timing attacks.
+
     if user && Devise.secure_compare(user.authentication_token, user_token)
       # sign_in user, store: false
       user
     else
       # render nothing: true, status: :unauthorized and return
       # return false
-      render :json => {status: :unauthorized ,message: "You have to login"}
+      response.headers["logout"] = "true";
+      render json: {
+        message: "You are unauthorized from making this request!",
+        status: false
+      }, status: 401
+      
     end
   end
 
