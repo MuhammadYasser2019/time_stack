@@ -19,6 +19,9 @@
                 li class="nav-item"
                   a class="nav-link" role="tab" id="shift-tab" data-toggle="tab" href="#shift" Shifts
 
+                li class="nav-item"
+			  	  a class="nav-link" role="tab" id="inventory_submit-tab" data-toggle="tab" href="#inventory_submit" Inventory
+			  	  
 - if @adhoc && user_have_adhoc_permission(current_user)
 	.white-background
 		h1 Time Sheets Submitted for Approval
@@ -183,6 +186,10 @@
               - ProjectShift.where(project_id: @project.id).each do |project_shift|
                == render partial: 'shift_projects', locals: { shift: Shift.find(project_shift.shift_id), project_shift: project_shift, project: @project }
             = link_to "Create Project Shift", new_project_shift_path(project_id: @project.id), class: "orange-button", type: "button"
+
+        div class="tab-pane fade" role="tabpanel" aria-labelleby="inventory_submit-tab" id="inventory_submit"
+			div(id="dynamic_inventory_update")
+				== render partial: "add_inventory_submit" 
 
 	- if !current_user.default_project? && current_user.parent_user_id.blank?
 			== render partial: 'users/default_projects'

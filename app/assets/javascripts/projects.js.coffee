@@ -130,6 +130,43 @@ jQuery ($) ->
     build_project(system_select_id, $(this).val())
   )
 
+  $(document).on("click", ".recommend", ->
+    if ($('.recommend:checked').length <1)
+      $('.pm_actions').hide();
+    else
+      $('.pm_actions').show();
+      $('.pm_actions').css("display", "flex");
+  )
+
+  $(document).on("click", ".inventory-equipment-button", ->
+    all_ids = []
+    sel_users = []
+    proj_id  = $('#project_id').val()
+    $('.recommend:checked').map((i) ->
+      all_ids[i] = $(this).val()
+      sel_users[i] = $("#show_" +$(this).val()).text();
+      return
+    ).get().join ', '
+    
+    $.ajax
+      url: 'set_selected_users'
+      type: 'GET'
+      data: invetory_users_ids: all_ids , inv_sel_users: sel_users, project_id: proj_id
+
+  )
+
+ 
+  $(document).on("click", ".date-inv", -> 
+   
+    inventory = $(this).closest("tr").attr('id');
+    date = $("#date_inventory_" + inventory).val()
+     
+    $.ajax
+      url: 'set_inventory_submitted_date'
+      type: 'GET'
+      data:  inventory_dates: date, inventory_id: inventory
+  )
+
   build_project = (system_select_id, customer_id) ->
     
     my_url = '/show_projects/'+system_select_id
@@ -172,3 +209,4 @@ jQuery ($) ->
     #rightArrow: '>>'
     #closeIcon: 'X'
     #closeButton: true
+    

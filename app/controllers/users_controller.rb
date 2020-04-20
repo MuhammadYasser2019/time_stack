@@ -629,10 +629,73 @@ class UsersController < ApplicationController
   end
 
 
+  def add_multiple_user_recommendation
+    @recommended_users = params[:user_ids].split(',').map(&:to_i)
+      @recommended_users.each do|user|
+        u_recommendation  = UserRecommendation.new
+        u_recommendation.recommendation = params[:recommendation]
+        u_recommendation.user_id  = user
+        u_recommendation.submitted_by = current_user.id
+        u_recommendation.project_id = params[:project_id]
+        u_recommendation.save
+      end
+    respond_to do |format|
+      format.js
+      #format.html { redirect_to "/projects", notice: 'Recommendation is added successfully.' }
+    end  
+  end
+
+  def add_multiple_user_disciplinary
+    @disciplinary_users = params[:disc_user_ids].split(',').map(&:to_i)
+      @disciplinary_users.each do|user|
+        u_disc  = UserDisciplinary.new
+        u_disc.disciplinary = params[:disciplinary]
+        u_disc.user_id  = user
+        u_disc.submitted_by = current_user.id
+        u_disc.project_id = params[:project_id]
+        u_disc.save
+      end
+    respond_to do |format|
+      format.js
+      #format.html { redirect_to "/projects", notice: 'Recommendation is added successfully.' }
+    end  
+  end
+
+
+  def add_multiple_user_inventory
+
+      @inventory_users = params[:inv_user_ids].split(/[" "]+/).map(&:to_i)
+      @project = Project.find_by_id params[:project_id]
+        @inventory_users.each do|user|
+        u_env_and_equip                  = UserInventoryAndEquipment.new
+        u_env_and_equip.equipment_number = params["equipment_number_#{user}"]
+        u_env_and_equip.equipment_name   = params["equipment_name_#{user}"]
+        u_env_and_equip.user_id          = user
+        u_env_and_equip.project_id       = params[:project_id]
+        u_env_and_equip.issued_by        = current_user.id
+        u_env_and_equip.issued_date      = params["issued_date_#{user}"]
+        u_env_and_equip.save
+      end
+      
+      respond_to do |format|
+        format.js
+      end
+      
+  end
+
+  def set_inventory_submitted_date
+    u_env_and_equip = UserInventoryAndEquipment.find params[:inventory_id]
+    @project = Project.find_by_id u_env_and_equip.project_id
+    u_env_and_equip.submitted_date = params[:inventory_dates]
+    u_env_and_equip.save
+      respond_to do |format|
+          format.js
+      end
+  end
 
   private
   
     def user_params
-      params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id)
+      params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id,:user_ids,:project_id,:recommendation)
     end
 end
