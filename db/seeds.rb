@@ -39,7 +39,7 @@ Shift.find_or_initialize_by(id: 1, name: "Regular") do |n|
   n.end_time = "5:00PM"
   n.regular_hours = 8
   n.incharge = nil
-  n.active = false
+  n.active = true
   n.default = true
   n.location = nil
   n.capacity = nil
