@@ -198,6 +198,23 @@ jQuery ($) ->
     ]
   })
 
+  $('#inventory_reports').DataTable({
+    dom: 'lBfrtip',
+    "retrieve": true,
+    buttons: [
+      {
+        extend: 'excel',
+        title: customer_name
+      },
+      {
+        extend: 'pdf',
+        title: customer_name
+        orientation:'landscape',
+        pageSize: 'TABLOID'
+      }
+    ]
+  })
+
 
   $('#show_weekly_reports').DataTable({
     dom: 'lBfrtip',

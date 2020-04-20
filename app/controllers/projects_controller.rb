@@ -339,6 +339,23 @@ end
     end
   end
 
+  def inventory_and_equipment_reports
+    @project_id = params[:id]
+    @p = Project.find(@project_id)
+    @users = @p.users
+    @user_array = @users.pluck(:id)
+    if params[:user] == "" || params[:user] == nil
+      @all_inventories_hash = @p.build_inventory_hash(@project_id,params[:inv_report_start_date],params[:inv_report_end_date],@user_array,params[:submitted_type],params["current_month"])
+    else
+      @all_inventories_hash = @p.build_inventory_hash(@project_id,params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]],params[:submitted_type],params["current_month"])
+    end
+    respond_to do |format|
+      format.html{}
+      format.xlsx
+      format.js
+    end
+  end
+
   def show_hours
     @user_id = params[:user_id]
     @project_id = params[:project_id]
