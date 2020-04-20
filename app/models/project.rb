@@ -7,10 +7,22 @@ class Project < ApplicationRecord
   has_many :tasks
   has_many :time_entries
   has_many :projects_users
-  has_many :users , :through => :projects_users
+  has_many :users, :through => :projects_users do
+    def active_users
+        where("projects_users.sepration_date IS NULL")
+    end
+
+    def inactive_users
+      where("projects_users.sepration_date IS NOT NULL")
+    end
+  end
+
   has_many :holiday_exceptions
   has_many :project_shifts
   accepts_nested_attributes_for :tasks, allow_destroy: true
+
+
+
   
   def self.task_value(task_attributes, previous_codes)
     logger.debug("Checking the tasks in projects model")

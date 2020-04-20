@@ -9,7 +9,7 @@ class Ability
       can [:user_account, :edit, :update, :show_user_reports, :user_profile, 
            :user_notification, :set_default_project, :user_notification_date, 
            :get_notification, :show_user_weekly_reports, :manage_profiles, 
-           :invite_sub_users, :login_user, :assign_project, :single_vacation_request, :get_user_projects], User
+           :invite_sub_users, :login_user, :assign_project, :single_vacation_request, :add_multiple_user_recommendation, :add_multiple_user_disciplinary,:add_multiple_user_inventory,:set_selected_users,:set_inventory_submitted_date], User
       can [:read, :available_tasks], Task
       can [:read, :edit, :create, :update, :new, :report, :copy_timesheet, :clear_timesheet, :previous_comments, :add_previous_comments, :expense_records, :delete_expense], Week
       can [:read, :permission_denied, :show_old_timesheets], Project
@@ -23,7 +23,6 @@ class Ability
        can :manage, Week
        can :manage, Customer
        can :manage, Project
-       can [:get_user_projects], :user
       end
       if user.cm
         can :manage, TimeEntry
@@ -48,7 +47,7 @@ class Ability
     else
       can :permission_denied, Project
     end
-
+    
     
     
     #
