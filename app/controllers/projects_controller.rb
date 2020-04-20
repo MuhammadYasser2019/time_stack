@@ -48,9 +48,9 @@ class ProjectsController < ApplicationController
       @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@adhoc_pm_project.id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
    end
 
-  respond_to do |format|  
-    format.html{}
-  end
+    respond_to do |format|  
+      format.html{}
+    end
 end
 
   # GET /projects/1
@@ -339,6 +339,23 @@ end
     end
   end
 
+  def inventory_and_equipment_reports
+    @project_id = params[:id]
+    @p = Project.find(@project_id)
+    @users = @p.users
+    @user_array = @users.pluck(:id)
+    if params[:user] == "" || params[:user] == nil
+      @all_inventories_hash = @p.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],@user_array, @project_id, params[:submitted_type],params["current_month"])
+    else
+      @all_inventories_hash = @p.build_inventory_hash(@project_id,params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]],@project_id, params[:submitted_type],params["current_month"])
+    end
+    respond_to do |format|
+      format.html{}
+      format.xlsx
+      format.js
+    end
+  end
+
   def show_hours
     @user_id = params[:user_id]
     @project_id = params[:project_id]
@@ -404,11 +421,18 @@ end
   def add_multiple_users_to_project
     logger.debug(" add_multiple_user_to_project - #{params.inspect}")
     @project = Project.find(params[:project_id])
-    @available_users = User.where("parent_user_id IS ? && (shared =? or customer_id IS ? OR customer_id = ?)",nil, true, nil , @project.customer.id)
-    (0..(@available_users- @project.users).count).each  do |i|
+    @available_users = User.where("parent_user_id IS ? && (shared =? or customer_id IS ? OR customer_id = ?)",nil, true, nil , @project.customer.id)     
+    
+    (0..(@available_users- @project.users.active_users).count).each  do |i|
+
       if params["add_user_id_#{i}"].present?
         user = User.find(params["add_user_id_#{i}"])
-        if !@project.users.include?(user)
+        if @project.users.inactive_users.include?(user)
+          project_user = ProjectsUser.where("project_id = ? && user_id = ?", @project.id , user.id).last
+           project_user.sepration_date = nil
+           project_user.save
+          
+        else
           @project.users.push(user)
         end
         @project.save
@@ -446,11 +470,14 @@ end
     logger.debug(" remove_multiple_user_from_project - #{params.inspect}")
     @project = Project.find(params[:project_id])
     @available_users = User.where("parent_user_id IS ? && (shared=? or customer_id IS ? OR customer_id = ?)", nil, true, nil , @project.customer.id)
-      (0..@project.users.count).each  do |i|
+      (0..@project.users.active_users.count).each  do |i|
       if params["remove_user_id_#{i}"].present?
         user = User.find(params["remove_user_id_#{i}"])
-        if @project.users.include?(user)
-          @project.users.delete(user)
+        if @project.users.active_users.include?(user)
+            project_user = ProjectsUser.where("project_id = ? && user_id = ?", @project.id , user.id).last
+            project_user.sepration_date = Time.now.to_date
+            project_user.save
+          #@project.users.delete(user)
         end
         @project.save
       end
@@ -461,6 +488,18 @@ end
     end
     
   end  
+
+  def set_selected_users
+    @sel_inv_users = User.find params[:invetory_users_ids]
+    @sel_inv_ids   = params[:invetory_users_ids].map(&:to_s)
+    @inv_sel_users = params[:inv_sel_users]
+    @project_id    = params[:project_id]
+    
+    respond_to do |format|
+      format.js
+    end
+  end
+  
 
   def add_user_to_project
     # User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id").select("users.email, projects_users.project_id, projects_users.active").collect {|u| "#{u.email}, #{u.project_id}, Status #{u.active}"}

@@ -316,6 +316,38 @@ class Customer < ApplicationRecord
                     end #End Hours Allowed
             return hours_allowed
         end #End If for vacation_type.length
-  end 
+  end
+
+  def build_inventory_hash(start_date,end_date,users,projects, submitted_type=nil,current_month=nil)
+    all_inventories_hash = {}
+    if current_month == "current_month"
+      start_date = Time.now.beginning_of_month.to_date.to_s
+    elsif current_month == "last_month"
+      start_date = (Time.now.beginning_of_month-1.month).to_date.to_s
+    else
+      start_date = start_date
+    end
+
+    if current_month == "current_month"
+      end_date = Time.now.end_of_month.to_date.to_s
+    elsif current_month == "last_month"
+      end_date = (Time.now - 1.month).end_of_month.to_date.to_s
+    else
+      end_date = end_date
+    end
+
+    if (projects.is_a? Integer) || (projects.is_a? String)
+      project_list = Project.where(id: projects)
+    else
+      project_list = projects
+    end
+
+    customer_row = {}
+
+    project_list.each do |p|
+      all_inventories_hash = p.build_inventory_hash(start_date,end_date,users, p.id ,submitted_type,current_month)  
+    end
+    all_inventories_hash
+  end
 
 end

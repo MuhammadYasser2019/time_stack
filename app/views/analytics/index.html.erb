@@ -128,6 +128,10 @@
 	<div class = "orange-button vacation-reports">
 		<%= link_to('Vacation Reports',"vacation_reports/customer/#{params[:customer_id]}", target: :_blank) %>
 	</div>
+	<br>
+	<div class = "orange-button inventory-reports" >
+		<%= link_to('Inventory Reports', "/inventory_reports/#{params[:customer_id]}", target: :_blank ) %>
+	</div>
 	<br> 
 	<% if flash[:alert] %>
       <div class="notification is-danger global-notification" style ="width: 50%; margin: 0 auto;" >

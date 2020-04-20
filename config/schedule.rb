@@ -27,3 +27,7 @@ every :monday, :at => "12:01 am" do
   Rails.logger.debug "SUNDAY SUNDAY SUNDAY"
   runner "Week.weekly_weeks"
 end
+
+every 15.minute do
+  runner "UserDevice.send_shift_notification"
+end
