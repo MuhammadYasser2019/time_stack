@@ -292,6 +292,7 @@
     user = User.find(params[:user_id])
     user.employment_type = params[:employment_type]
     user.is_active = params[:is_active].present? ? params[:is_active] : false 
+    user.inactive_at = Time.now.to_date if !params[:is_active].present?
     user.save
     respond_to do |format|
       format.html { redirect_to customers_path}
