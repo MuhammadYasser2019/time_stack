@@ -98,6 +98,7 @@ class TimeEntriesController < ApplicationController
   # PATCH/PUT /time_entries/1
   # PATCH/PUT /time_entries/1.json
   def update
+    binding.pry
     respond_to do |format|
       if @time_entry.update(time_entry_params)
         format.html { redirect_to @time_entry, notice: 'Time entry was successfully updated.' }
