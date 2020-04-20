@@ -100,6 +100,9 @@ Rails.application.routes.draw do
   post 'add_multiple_users_to_project' => "projects#add_multiple_users_to_project"
   post 'remove_multiple_users_from_project' => "projects#remove_multiple_users_from_project"
   post 'shift_modal' => "projects#shift_modal"
+  get 'show_shift_reports' => "shifts#show_shift_reports"
+  get 'shift_report/:id' => "shifts#shift_report"
+  post 'shift_report/:id' => "shifts#shift_report"
   post 'show_project_reports' => 'projects#show_project_reports'
   post 'projects/:id/deactivate_project' => 'projects#deactivate_project'
   post 'projects/:id/reactivate_project' => 'projects#reactivate_project'

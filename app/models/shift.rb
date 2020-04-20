@@ -1,6 +1,7 @@
 class Shift < ApplicationRecord
   has_many :project_shifts
-  has_one :customer
+  has_many :projects, :through => :project_shifts
+  belongs_to :customer
 
   validate :end_date_is_after_start_date
 

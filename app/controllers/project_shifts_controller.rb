@@ -22,7 +22,11 @@ class ProjectShiftsController < ApplicationController
       end
       user_array = []
       User.where(id: ProjectsUser.where(project_id: @project.id)).each do |user|
-        full_name = user.first_name + ' ' + user.last_name
+        full_name = if user.first_name && user.last_name
+                      user.first_name + ' ' + user.last_name
+                    else
+                      user.email
+                    end
         user_array << [full_name, user.id]
       end
       @potential_supervisors = user_array
@@ -48,7 +52,11 @@ class ProjectShiftsController < ApplicationController
       end
       user_array = []
       User.where(id: ProjectsUser.where(project_id: @project.id)).each do |user|
-        full_name = user.first_name + ' ' + user.last_name
+        full_name = if user.first_name && user.last_name
+                      user.first_name + ' ' + user.last_name
+                    else
+                      user.email
+                    end
         user_array << [full_name, user.id]
       end
       @potential_supervisors = user_array
