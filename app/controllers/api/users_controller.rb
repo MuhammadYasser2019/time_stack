@@ -3,6 +3,10 @@ module Api
 
 		skip_before_action :authenticate_user, only: :login_user
 
+		api :POST, '/login_user', "Verify user login and get access"
+		formats ['json']
+		param :email, String, :desc => "Email Address", :required => true
+		param :password, String, :desc => "Password", :required => true
 		def login_user	
 		  user = User.find_by(email: params[:email])
 		  logger.debug("the user email you sent is : #{params[:email]}")

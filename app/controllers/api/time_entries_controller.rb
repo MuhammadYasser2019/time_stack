@@ -1,5 +1,8 @@
 module Api
-    class TimeEntriesController<BaseController
+	class TimeEntriesController<BaseController
+
+		api :GET, '/get_weekly_time_entries', "Get weekly time entries for the current user"
+		formats ['json']
         def get_weekly_time_entries
             begin
 				@user_id = @user.id
@@ -17,6 +20,9 @@ module Api
 			end
 		end
 
+		api :GET, '/get_daily_time_entries', "Get daily time entries for the week"
+		formats ['json']
+		param :week_id, String, :desc => "Week id to fetch the time entries for the week", :required => true
 		def get_daily_time_entries
 			begin
 				@week_id = params[:week_id] 
@@ -35,6 +41,9 @@ module Api
 			end
 		end	
 
+		api :GET, '/get_time_entry_detail', "Get detail for the time entry"
+		formats ['json']
+		param :entry_id, String, :desc => "TimeEntry id to fetch the time entry detail information", :required => true
 		def get_time_entry_detail
 			begin
 				@entry_id = params[:entry_id] 
@@ -54,6 +63,17 @@ module Api
 			end
 		end	
 
+		api :POST, '/save_time_entry', "Save user time entry"
+		formats ['json']
+		param :entry_data, Hash, :desc => "Entry Detail", :required => true do
+			param :id, String, :desc => "Time Entry ID", :required => true
+			param :activity_log, String, :desc => "Task description", :required => true
+			param :task_id, String, :desc => "Task ID", :required => true
+			param :project_id, String, :desc => "Project ID", :required => true
+			param :partial_day, [true,false], :desc => "Boolean for Partial day", :required => false
+			param :hours, Integer, :desc => "Total hours", :required => false
+			param :date_of_activity, String, :desc => "Date of activity", :required => false
+		end
 		def save_time_entry
 			begin
 				@time_entry = params[:entry_data]
@@ -79,6 +99,9 @@ module Api
 			end
 		end	
 
+		api :GET, '/submit_weekly_time_entry', "Submit weekly entries"
+		formats ['json']
+		param :week_id, Integer, :desc => "Week ID", :required => true
 		def submit_weekly_time_entry
 			begin
 				@week_id = params[:week_id] #12071
@@ -101,6 +124,9 @@ module Api
 			end
 		end	
 
+		api :GET, '/delete_time_entry', "Delete the current TimeEntry"
+		formats ['json']
+		param :entry_id, Integer, :desc => "TimeEntry ID to delete", :required => true
 		def delete_time_entry
 			begin
 				@entry_id = params[:entry_id]
@@ -128,6 +154,8 @@ module Api
 			end
 		end	
 
+		api :GET, '/get_user_projects', "Get all projects for the current user"
+		formats ['json']
 		def get_user_projects
 			begin
                 @user_id = @user.id
@@ -147,6 +175,9 @@ module Api
 			end
 		end	
 
+		api :GET, '/get_project_tasks', "Get all tasks for project"
+		formats ['json']
+		param :project_id, Integer, :desc => "Project ID to fetch all tasks", :required => true
 		def get_project_tasks
 			begin
 				@project_id = params[:project_id]

@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  apipie
   resources :archived_time_entries, only: [:index, :show, :create]
   resources :archived_weeks, only: [:index, :show, :create]
   resources :holiday_exceptions
