@@ -345,9 +345,9 @@ end
     @users = @p.users
     @user_array = @users.pluck(:id)
     if params[:user] == "" || params[:user] == nil
-      @all_inventories_hash = @p.build_inventory_hash(@project_id,params[:inv_report_start_date],params[:inv_report_end_date],@user_array,params[:submitted_type],params["current_month"])
+      @all_inventories_hash = @p.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],@user_array, @project_id, params[:submitted_type],params["current_month"])
     else
-      @all_inventories_hash = @p.build_inventory_hash(@project_id,params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]],params[:submitted_type],params["current_month"])
+      @all_inventories_hash = @p.build_inventory_hash(@project_id,params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]],@project_id, params[:submitted_type],params["current_month"])
     end
     respond_to do |format|
       format.html{}

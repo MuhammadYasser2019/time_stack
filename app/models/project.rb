@@ -170,7 +170,7 @@ class Project < ApplicationRecord
 
 
 
-  def build_inventory_hash(project_id,start_date,end_date,users,submitted_type=nil,current_month=nil)
+  def build_inventory_hash(start_date,end_date,users,project_id, submitted_type=nil,current_month=nil)
       @results = []
 
       users_ids = users
@@ -194,7 +194,7 @@ class Project < ApplicationRecord
         c = User.find(u)
         if submitted_type == "submitted" 
           Rails.logger.info " first"
-           inventory_records = UserInventoryAndEquipment.where(user_id: u,created_at: start_date..end_date).where.not(submitted_date: nil)
+           inventory_records = UserInventoryAndEquipment.where(user_id: u, project_id: project_id, created_at: start_date..end_date).where.not(submitted_date: nil)
             inventory_records.each do|inv|
               row                        = Hash.new
               row["Consultant Name"]     = c.email
@@ -207,7 +207,7 @@ class Project < ApplicationRecord
             end
         elsif submitted_type == "not_submitted"
           Rails.logger.info " Second"
-           inventory_records = UserInventoryAndEquipment.where(user_id: u,submitted_date: nil,created_at: start_date..end_date)
+           inventory_records = UserInventoryAndEquipment.where(user_id: u, project_id: project_id, submitted_date: nil,created_at: start_date..end_date)
            inventory_records.each do|inv|
               row                        = Hash.new
               row["Consultant Name"]     = c.email
@@ -220,7 +220,7 @@ class Project < ApplicationRecord
             end
         elsif submitted_type == "" &&  start_date && end_date 
         Rails.logger.info "Third" 
-          inventory_records = UserInventoryAndEquipment.where(user_id: u,created_at: start_date..end_date)
+          inventory_records = UserInventoryAndEquipment.where(user_id: u, project_id: project_id, created_at: start_date..end_date)
           inventory_records.each do|inv|
               row                        = Hash.new
               row["Consultant Name"]     = c.email
@@ -232,7 +232,7 @@ class Project < ApplicationRecord
               @results << row
             end
         else
-           inventory_records = UserInventoryAndEquipment.where(user_id: u)
+           inventory_records = UserInventoryAndEquipment.where(user_id: u, project_id: project_id)
            Rails.logger.info "Fourth"
            inventory_records.each do|inv|
               row                        = Hash.new

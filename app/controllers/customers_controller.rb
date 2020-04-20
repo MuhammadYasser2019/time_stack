@@ -596,6 +596,41 @@
     end
   end
 
+  def inventory_reports
+    @customer_id = params[:id]
+    @customer = Customer.find(@customer_id)
+    @users = Array.new
+    
+    if params[:exclude_pending_users].present?
+      @customer.projects.each do |p|
+        @users << p.users.where.not(invitation_accepted_at: nil)
+      end
+    else
+      @customer.projects.each do |p|
+        @users << p.users
+      end
+    end
+    @users = @users.flatten.uniq
+    @users_array = @users.pluck(:id)
+    
+    logger.debug("THE USER IDS ARE: #{@users_array}")
+    @projects = @customer.projects
+
+    if params[:user] == "" || params[:user] == nil
+      if params[:project] == "" || params[:project] == nil
+        @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],@users_array, @projects, params[:submitted_type],params["current_month"])
+      else
+        @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],@users_array, params[:project], params[:submitted_type],params["current_month"])
+      end
+    else
+      if params[:project] == "" || params[:project] == nil
+        @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]], @projects, params[:submitted_type],params["current_month"])
+      else
+        @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]], params[:project], params[:submitted_type],params["current_month"])        
+        end
+    end   
+  end
+
   def add_adhoc_pm_by_cm
     @customer = Customer.find(params[:customer_id])
     @project = Project.find(params[:pm_project_id])

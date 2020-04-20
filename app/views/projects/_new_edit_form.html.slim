@@ -4,7 +4,6 @@ div[style="width: 90%; margin-left: 7%;"]
   - if !user_have_adhoc_permission(current_user)
     span class="badge"
       = link_to 'Report', "/show_project_reports?id=#{@project.id}", :method => :get,class: "center orange-button large-3 cell", style: "margin: 5px;"
-      = link_to 'Inventory Report', "/inventory_and_equipment_reports?id=#{@project.id}", :method => :get,class: "center orange-button large-3 cell", style: "margin: 5px;"
 
   - if user_have_adhoc_permission(current_user)
     span class="badge"
@@ -22,7 +21,9 @@ div[style="width: 90%; margin-left: 7%;"]
       = link_to "Manage Customers", "customers", class: "orange-button large-3 cell", style: "margin: 5px;" 
   span class="badge"
     = link_to "Vacation Request", "/vacation_request", class: "orange-button large-3 cell", 
-    style: "margin: 5px;" 
+    style: "margin: 5px;"
+  span class="badge"
+    = link_to 'Inventory Report', "/inventory_and_equipment_reports?id=#{@project.id}", :method => :get,class: "center orange-button large-3 cell", style: "margin: 5px;" 
   
   - if current_user.proxy
     span class="badge"

@@ -169,7 +169,9 @@ Rails.application.routes.draw do
   post 'holidays/create' => 'holidays#create'
 
   get 'customer_reports/:id' => 'customers#customer_reports'
+  get 'inventory_reports/:id' => 'customers#inventory_reports'
   get 'customers/:id/customer_reports' => 'customers#customer_reports'
+  get 'customers/:id/inventory_reports' => 'customers#inventory_reports'
   
   get 'permission_denied' => 'projects#permission_denied'
 
@@ -208,7 +210,8 @@ Rails.application.routes.draw do
   post "analytics/vacation_types_summary/:customer_id" => 'analytics#vacation_types_summary' 
   get 'user_summary' => "analytics#user_summary"
 
-  match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
+  match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post]
+  match "customers/:id/analytics" => 'analytics#inventory_reports', via: [:get, :post] 
   post "/bar_graph" => 'analytics#bar_graph'
   match "analytics/:customer_id" => "analytics#index", via: [:get, :post]
   match "users_notification_date" => "users#user_notification_date", via: [:get, :post]
