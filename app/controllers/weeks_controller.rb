@@ -352,7 +352,8 @@ class WeeksController < ApplicationController
         ##
         @user = current_user
         customer = Customer.find(@user.customer_id)
-        full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+        shift = customer.shifts.where(name: 'Regular', default: true).first
+        full_work_day = shift ? shift.regular_hours : 8
         hours_over_month = (full_work_day.to_f/12).to_f
         my_hash  = week_params["time_entries_attributes"]
         ##
@@ -688,7 +689,8 @@ class WeeksController < ApplicationController
   #need this logic for saving proper vacation request
   @user = current_user
   customer = Customer.find(@user.customer_id)
-  full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+  shift = customer.shifts.where(name: 'Regular', default: true).first
+  full_work_day = shift ? shift.regular_hours : 8
   #  
 
     week.time_entries.each do |wtime|
