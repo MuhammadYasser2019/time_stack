@@ -169,6 +169,88 @@ class Project < ApplicationRecord
     logger.debug "build_consultant_hash - hash_report_data is #{hash_report_data.inspect}"
     return hash_report_data
   end
+
+
+
+  def build_inventory_hash(start_date,end_date,users,project_id, submitted_type=nil,current_month=nil)
+      @results = []
+
+      users_ids = users
+      if current_month == "current_month"
+        start_date = Time.now.beginning_of_month.to_date.to_s
+      elsif current_month == "last_month"
+        start_date = (Time.now.beginning_of_month-1.month).to_date.to_s
+      else
+        start_date = start_date
+      end
+
+      if current_month == "current_month"
+        end_date = Time.now.end_of_month.to_date.to_s
+      elsif current_month == "last_month"
+        end_date = (Time.now - 1.month).end_of_month.to_date.to_s
+      else
+        end_date = end_date
+      end
+        
+      users_ids.each do|u|
+        c = User.find(u)
+        if submitted_type == "submitted" 
+          Rails.logger.info " first"
+           inventory_records = UserInventoryAndEquipment.where(user_id: u, project_id: project_id, created_at: start_date..end_date).where.not(submitted_date: nil)
+            inventory_records.each do|inv|
+              row                        = Hash.new
+              row["Consultant Name"]     = c.email
+              row["Equipment Name"]      = inv.equipment_name
+              row["Equipment Number"]    = inv.equipment_number
+              row["Issue Date"]          = inv.issued_date
+              row["Submitted Date"]      = inv.submitted_date
+
+              @results << row
+            end
+        elsif submitted_type == "not_submitted"
+          Rails.logger.info " Second"
+           inventory_records = UserInventoryAndEquipment.where(user_id: u, project_id: project_id, submitted_date: nil,created_at: start_date..end_date)
+           inventory_records.each do|inv|
+              row                        = Hash.new
+              row["Consultant Name"]     = c.email
+              row["Equipment Name"]      = inv.equipment_name
+              row["Equipment Number"]    = inv.equipment_number
+              row["Issue Date"]          = inv.issued_date
+              row["Submitted Date"]      = inv.submitted_date
+
+              @results << row
+            end
+        elsif submitted_type == "" &&  start_date && end_date 
+        Rails.logger.info "Third" 
+          inventory_records = UserInventoryAndEquipment.where(user_id: u, project_id: project_id, created_at: start_date..end_date)
+          inventory_records.each do|inv|
+              row                        = Hash.new
+              row["Consultant Name"]     = c.email
+              row["Equipment Name"]      = inv.equipment_name
+              row["Equipment Number"]    = inv.equipment_number
+              row["Issue Date"]          = inv.issued_date
+              row["Submitted Date"]      = inv.submitted_date
+
+              @results << row
+            end
+        else
+           inventory_records = UserInventoryAndEquipment.where(user_id: u, project_id: project_id)
+           Rails.logger.info "Fourth"
+           inventory_records.each do|inv|
+              row                        = Hash.new
+              row["Consultant Name"]     = c.email
+              row["Equipment Name"]      = inv.equipment_name
+              row["Equipment Number"]    = inv.equipment_number
+              row["Issue Date"]          = inv.issued_date
+              row["Submitted Date"]      = inv.submitted_date
+
+              @results << row
+            end
+        end    
+      end
+
+       @results
+  end
   
   def self.convert_date_format(date_str)
     logger.debug "DATE_STR #{date_str}"
