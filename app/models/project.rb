@@ -18,6 +18,8 @@ class Project < ApplicationRecord
   end
 
   has_many :holiday_exceptions
+  has_many :project_shifts
+  has_many :shifts, :through => :project_shifts
   accepts_nested_attributes_for :tasks, allow_destroy: true
 
 

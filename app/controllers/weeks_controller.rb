@@ -8,6 +8,7 @@ class WeeksController < ApplicationController
   # GET /weeks.json
   def index
     @user = current_user
+    @shift_supervisor_project_shift = @user.project_shifts.where(shift_supervisor_id: @user.id).last
     
     if current_user.cm?
       return redirect_to customers_path

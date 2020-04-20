@@ -20,6 +20,7 @@ class User < ApplicationRecord
   has_many :holiday_exceptions
   has_many :vacation_requests
   has_many :user_notifications
+  has_many :project_shifts, through: :projects_users
   has_many :user_recommendations
   has_many :user_disciplinary
   has_many :user_inventory_and_equipments

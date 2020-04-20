@@ -4,6 +4,7 @@ class TimeEntry < ApplicationRecord
   belongs_to :week
   belongs_to :user
   belongs_to :vacation_type
+  belongs_to :project_shift
   has_many :archived_time_entry
 
 

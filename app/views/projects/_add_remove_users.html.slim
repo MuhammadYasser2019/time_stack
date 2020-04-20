@@ -14,7 +14,7 @@ div class="add_remove_user"
 
 	    div class="add_user_center right-arrow"
 	    	    
-	  	  	= submit_tag "Add user"
+	  	  	= submit_tag("Add user", "data-toggle": "modal", "data-target": "#shift-modal")
 
 	= form_tag remove_multiple_users_from_project_path, remote: true do
 		= hidden_field_tag "project_id", @project.id
@@ -34,6 +34,9 @@ div class="add_remove_user"
 
 	    div class="remove_user_center left-arrow"
 	  	  	= submit_tag "Remove user"
+
+div class="modal" id="shift-modal" tabindex="-1" role="dialog" aria-labelledby="shift-modalLabel" aria-hidden="true"
+
 div style="clear:both;"
 
 

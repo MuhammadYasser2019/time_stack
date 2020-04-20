@@ -5,7 +5,7 @@ FactoryBot.define do
     address "MyString"
     city "MyString"
     state "MyString"
-    zipcode "MyString"
+    zipcode "22030"
   end
 end
 
