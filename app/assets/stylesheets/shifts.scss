@@ -71,3 +71,27 @@ select {
     border-color: #ffedda !important;
   }
 }
+
+.shift-modal-dialog{
+  max-width: none !important;
+}
+
+.project_shift_container{
+  margin: 10px auto;
+  float: left;
+  width: 100%;
+}
+
+.project_shift_label {
+  float: left;
+  margin-left: 10%;
+}
+
+.project_shift_select {
+  float: right;
+  margin-right: 30%;
+}
+
+.submit_tag_container{
+  width: 100%;
+  float:left;
