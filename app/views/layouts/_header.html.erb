@@ -90,11 +90,11 @@
 	        <% end %>
 	      </li>
 	    
-			<% if new_messages > 0 %>
-				<span class="notification"><%= new_messages %></span>
-			<% end %>
+				<% if new_messages > 0 %>
+					<span class="notification" style="color:red;position: relative;left: 42px;top: 8px;"><%= new_messages %></span>
+				<% end %>
 				<li class="nav-item active" style="line-height: 45px;">
-	        <a class="nav-link" href="<%= user_notification_path %>"><i class="fa fa-bell"></i></a>
+	        <a class="nav-link" href="<%= user_notification_path %>" ><i class="fa fa-bell"></i></a>
 	      </li>
 	      <% if current_user.admin? %>
 	      <li class="nav-item active" style="line-height: 45px;padding-top: 10px;">
