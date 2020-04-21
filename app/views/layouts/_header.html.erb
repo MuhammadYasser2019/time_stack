@@ -71,22 +71,37 @@
   <% else %>	
 		<div class="collapse navbar-collapse" id="navbarSupportedContent">
 	    <ul class="navbar-nav navbar-dark ml-auto justify-content-right">
-	      <li class="nav-item active">
+	      <li class="nav-item active" style="line-height: 45px;">
 	        <a class="nav-link" href="/user_profile"><%= current_user.email %></a>
+	      </li>
+	      <li class="nav-item active user-profile-image" style="line-height: 45px;">
+	      	<% if current_user.image.present? %>
+	        	<a class="nav-link" href="/user_profile"><%= image_tag current_user.image.url %></a> 
+	        <% else %>
+	        	<% if current_user.first_name.present? && current_user.last_name.present? %>
+		        	<div class="text-container">
+		        		<a class="nav-link" href="/user_profile"><%= image_tag "grey-image"%></a>
+		        	<div class="centered">
+
+		        		<%= current_user.first_name.to_s[0].upcase +  " " + current_user.last_name.to_s[0].upcase %>
+		        	</div>
+		        	</div>
+		        <% end %>
+	        <% end %>
 	      </li>
 	    
 			<% if new_messages > 0 %>
 				<span class="notification"><%= new_messages %></span>
 			<% end %>
-				<li class="nav-item active">
+				<li class="nav-item active" style="line-height: 45px;">
 	        <a class="nav-link" href="<%= user_notification_path %>"><i class="fa fa-bell"></i></a>
 	      </li>
 	      <% if current_user.admin? %>
-	      <li class="nav-item active">
+	      <li class="nav-item active" style="line-height: 45px;padding-top: 10px;">
 	        <a class="nav-link btn" href="/admin">Admin</a>
 	      </li>
 	      <% end %>
-	      <li class="nav-item active">
+	      <li class="nav-item active" style="line-height: 45px;">
 	      	<%= link_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;", class: 'nav-link' %>
 	      </li>
 	    </ul>
