@@ -83,7 +83,7 @@
 		        		<a class="nav-link" href="/user_profile"><%= image_tag "grey-image"%></a>
 		        	<div class="centered">
 
-		        		<%= current_user.first_name.to_s[0].upcase +  " " + current_user.last_name.to_s[0].upcase %>
+		        		<%= current_user.first_name.to_s[0].upcase  + current_user.last_name.to_s[0].upcase %>
 		        	</div>
 		        	</div>
 		        <% end %>
@@ -91,7 +91,7 @@
 	      </li>
 	    
 				<% if new_messages > 0 %>
-					<span class="notification" style="color:red;position: relative;left: 42px;top: 8px;"><%= new_messages %></span>
+					<span class="notification" style="color:red;position: relative;left: 45px;top: 8px;"><%= new_messages %></span>
 				<% end %>
 				<li class="nav-item active" style="line-height: 45px;">
 	        <a class="nav-link" href="<%= user_notification_path %>" ><i class="fa fa-bell"></i></a>
