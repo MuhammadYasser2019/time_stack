@@ -354,7 +354,8 @@
       ###
       @user = current_user
       customer = Customer.find(@user.customer_id)
-      full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+      shift = customer.shifts.where(name: 'Regular', default: true).first
+      full_work_day = shift ? shift.regular_hours : 8
       hours_over_month = (full_work_day.to_f/12).to_f
       ###
       @vacation_type = VacationType.find(params[:vacation_type_id])
@@ -410,7 +411,8 @@
     vacetion_end_date = params[:vacation_end_date]
     reason_for_vacation = params[:vacation_comment]
     customer = Customer.find(@user.customer_id)
-    full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+    shift = customer.shifts.where(name: 'Regular', default: true).first
+    full_work_day = shift ? shift.regular_hours : 8
 
     if !vacation_start_date.blank?
       days = (params[:vacation_end_date].to_date - params[:vacation_start_date].to_date).to_i
