@@ -8,7 +8,7 @@ class RegistrationsController < Devise::RegistrationsController
        resource_updated = update_resource(resource, account_update_params)
        yield resource if block_given?
        if resource_updated
-         set_flash_message_for_update(resource, prev_unconfirmed_email)
+         #set_flash_message_for_update(resource, prev_unconfirmed_email)
          bypass_sign_in resource, scope: resource_name if sign_in_after_change_password?
 
          redirect_to user_profile_path
@@ -39,6 +39,7 @@ class RegistrationsController < Devise::RegistrationsController
 
 def set_flash_message_for_update(resource, prev_unconfirmed_email)
   super
+
 end
 
  
