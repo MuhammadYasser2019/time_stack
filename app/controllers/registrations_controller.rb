@@ -42,6 +42,12 @@ def set_flash_message_for_update(resource, prev_unconfirmed_email)
 
 end
 
+def sign_in_after_change_password?
+    return true if account_update_params[:password].blank?
+
+    Devise.sign_in_after_change_password
+  end
+
  
 
 end
