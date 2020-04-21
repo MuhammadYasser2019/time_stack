@@ -1,5 +1,12 @@
 module Api
     class NotificationsController < BaseController
+        api :POST, '/save_device_info', "Save / Update current device information"
+        formats ['json']
+        param :userID, Integer, :desc => "User ID of the current user", :required => true
+        param :deviceID, String, :desc => "Unique device identifier", :required => true
+        param :userToken, String, :desc => "Notification token for the user device", :required => true
+        param :platform, String, :desc => "Device platform (IOS/Android)", :required => true
+	
         def save_device_info
             begin
                 @user_id = params[:userID]
@@ -32,6 +39,10 @@ module Api
             end
         end
 
+        api :GET, '/remove_device_info', "Remove the notification token for the user"
+		formats ['json']
+        param :userID, Integer, :desc => "User ID of the current user", :required => true
+        param :deviceID, String, :desc => "Unique device identifier", :required => true
         def remove_device_info
            begin
                 @user_id = params[:userID]

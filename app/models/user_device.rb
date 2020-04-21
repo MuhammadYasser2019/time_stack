@@ -11,6 +11,13 @@ class UserDevice < ApplicationRecord
         #Starting shifts
         @shift_ids = Shift.where("(TIME(start_time) BETWEEN TIME('#{@start_time}') AND TIME('#{@end_time}'))").pluck(:id)
 
+        #Ending shifts
+        @shift_end_ids = Shift.where("(TIME(end_time) BETWEEN TIME('#{@start_time}') AND TIME('#{@end_time}'))").pluck(:id)
+
+        @shift_end_ids.map do |i|
+            @shift_ids.push(i)
+        end
+
         @project_shift_ids = ProjectShift.where(:id=>@shift_ids).pluck(:id)
 
         @shift_projects = ProjectsUser.where(:project_shift_id=> @project_shift_ids).joins(:user, :project).select("users.id as user_id,projects.id as project_id, projects.name").as_json
