@@ -32,6 +32,32 @@ module Api
 					})
 	   		end
 		end 
+
+		api :GET, '/get_customer_detail', "Get current user's customer detail."
+		formats ['json']
+        def get_customer_detail
+            begin
+				@user_id = @user.id
+				@customer = User.where(:id=>@user_id).joins(:customer).select("customers.id, customers.address, customers.city, customers.state, customers.zipcode, customers.name as customer_name, customers.user_id as manager_id").first
+
+				@manager =User.where(:id=>@customer[:manager_id]).select("email").first
+
+				@customer = @customer.as_json
+
+				@customer["manager"] = @manager[:email]
+
+				render json: format_response_json({
+					status: true,
+					result: @customer
+				})
+
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to retrieve weekly time entries!',
+					status: false
+				})
+			end
+		end
 		  	
 		def update_date
     	

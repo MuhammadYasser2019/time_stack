@@ -55,6 +55,7 @@ Rails.application.routes.draw do
     get 'get_project_tasks', to: "time_entries#get_project_tasks"
     post 'save_device_info', to: "notifications#save_device_info"
     get 'remove_device_info', to: "notifications#remove_device_info"
+    get 'get_customer_detail', to: "users#get_customer_detail"
 
     post 'send_entry', to: "users#post_data"
     get 'send_entry', to: "users#post_data"
