@@ -6,7 +6,7 @@ class UserDevice < ApplicationRecord
 
         @start_time = Time.now
         # @start_time = "9:42 AM".to_time
-        @end_time = @start_time + 60 * 60 #15 min later
+        @end_time = @start_time + 15 * 60 #15 min later
 
         #Starting shifts
         @shift_ids = Shift.where("(TIME(start_time) BETWEEN TIME('#{@start_time}') AND TIME('#{@end_time}'))").pluck(:id)

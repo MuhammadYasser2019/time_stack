@@ -32,6 +32,50 @@ module Api
 					})
 	   		end
 		end 
+
+		api :GET, '/get_customer_detail', "Get current user's customer detail."
+		formats ['json']
+        def get_customer_detail
+            begin
+				@user_id = @user.id
+				@customer = User.where(:id=>@user_id).joins(:customer).select("customers.id, customers.address, customers.city, customers.state, customers.zipcode, customers.name as customer_name, customers.user_id as manager_id").first
+
+				@manager =User.where(:id=>@customer[:manager_id]).select("email").first
+
+				@customer = @customer.as_json
+
+				@customer["manager"] = @manager[:email]
+
+				render json: format_response_json({
+					status: true,
+					result: @customer
+				})
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to retrieve employer detail!',
+					status: false
+				})
+			end
+		end
+
+		api :GET, '/get_customer_holidays', "Get current user's holidays array."
+		formats ['json']
+        def get_customer_holidays
+            begin
+				@user_id = @user.id
+				@holidays = CustomersHoliday.where(:customer_id=>@user_id).joins(:holiday).select("date, name, holiday_id as id").order("date asc").as_json
+
+				render json: format_response_json({
+					status: true,
+					result: @holidays
+				})
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to retrieve holiday list!',
+					status: false
+				})
+			end
+		end
 		  	
 		def update_date
     	

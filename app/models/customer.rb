@@ -9,6 +9,7 @@ class Customer < ApplicationRecord
   has_many :external_configurations
   has_one :default_report
   has_many :shifts
+  has_many :user
 
 
   validates_numericality_of :zipcode
