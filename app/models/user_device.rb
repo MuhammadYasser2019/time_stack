@@ -8,14 +8,16 @@ class UserDevice < ApplicationRecord
         # @start_time = "9:42 AM".to_time
         @end_time = @start_time + 15 * 60 #15 min later
 
-        #Starting shifts
-        @shift_ids = Shift.where("(TIME(start_time) BETWEEN TIME('#{@start_time}') AND TIME('#{@end_time}'))").pluck(:id)
+        @shift_ids = []
 
-        #Ending shifts
-        @shift_end_ids = Shift.where("(TIME(end_time) BETWEEN TIME('#{@start_time}') AND TIME('#{@end_time}'))").pluck(:id)
+        @shifts = Shift.select(:start_time,:end_time,:id)
 
-        @shift_end_ids.map do |i|
-            @shift_ids.push(i)
+        @shifts.map do |s|
+            between_start = s.start_time>@start_time && s.start_time<@end_time
+            between_end = s.end_time>@start_time && s.end_time<@end_time
+            if(between_start || between_end)
+                @shift_ids.push(s.id)
+            end
         end
 
         @project_shift_ids = ProjectShift.where(:id=>@shift_ids).pluck(:id)
