@@ -9,6 +9,7 @@ class ShiftsController < ApplicationController
     @shift = Shift.new
     @customer_id = params[:customer_id]
     @customer_id = current_user.customer_id unless @customer_id
+    @customer = Customer.find(@customer_id)
     @start_time_hour = ""
     @start_time_minute = ""
     @start_time_period = ""
@@ -66,6 +67,7 @@ class ShiftsController < ApplicationController
       @end_time_period = end_time_split[1].split(" ")[1]
     end
     @customer_id = @shift.customer_id
+    @customer = Customer.find(@customer_id)
     if params[:project_id]
       @project = Project.find(params[:project_id])
       user_array = []
