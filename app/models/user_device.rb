@@ -1,6 +1,24 @@
 class UserDevice < ApplicationRecord
     has_one :user
 
+    def self.save_device_information(user_id, device_id, platform, device_name,token)
+        @user_device = UserDevice.where(:device_id => device_id, :user_id => user_id).first                
+
+        if @user_device.nil?
+            @user_device = UserDevice.new
+            @user_device.user_id = user_id
+            @user_device.device_id = device_id
+            @user_device.user_token = token
+            @user_device.platform = platform
+            @user_device.save
+        else
+            @user_device.user_token = token
+            @user_device.save
+        end
+      
+        UserDevice.where("user_id != ? AND device_id=?",user_id,device_id).update_all(user_token: nil)
+    end
+
     def self.send_shift_notification
         # GET ALL USER whose shift is starting or ending. If the user have not filled their time entry then fetch their token from the database and finally generate a message to send to the users. Make sure not to send the notification twice for the same entry.
 
