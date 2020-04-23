@@ -155,6 +155,16 @@ jQuery ($) ->
 
   )
 
+  $(document).on("click","#inventory_submit-tab", ->
+    proj_id = $('#project_id').val()
+
+    $.ajax
+      url: 'add_multiple_user_inventory'
+      type: 'GET'
+      data:  project_id: proj_id
+    
+  )
+
  
   $(document).on("click", ".date-inv", -> 
    
