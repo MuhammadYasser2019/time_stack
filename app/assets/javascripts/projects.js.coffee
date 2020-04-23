@@ -177,6 +177,10 @@ jQuery ($) ->
       data:  inventory_dates: date, inventory_id: inventory
   )
 
+  $(document).on("click", ".inv_close", -> 
+    $("#inventoryModel").modal('hide');
+  )
+
   build_project = (system_select_id, customer_id) ->
     
     my_url = '/show_projects/'+system_select_id
