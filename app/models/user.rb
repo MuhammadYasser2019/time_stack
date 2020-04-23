@@ -26,6 +26,8 @@ class User < ApplicationRecord
   has_many :user_inventory_and_equipments
   has_many :user_devices
 
+  validates :emergency_contact, format: { with: /\A\d+\z/, message: "Please enter 10 digit minimum contact number." }
+
   def childs
     self.parent_user_id.present? ? nil : User.where(id: self.parent_user_id)
 

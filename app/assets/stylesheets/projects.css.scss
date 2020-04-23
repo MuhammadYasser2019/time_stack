@@ -128,6 +128,7 @@
 	float: left;
 	border: 2px solid black !important;
 	width: 100%;
+	min-height: 294px;
 	tbody{
 	display:block;
 	height: 291px;      
@@ -211,6 +212,7 @@
 .add_remove_right_row table{
 	float: right;
 	border: 2px solid black !important;
+	min-height: 294px;
 	width: 100%;
 	align: center;
 	tbody {
@@ -230,6 +232,7 @@
 		float: left;
 		border: 2px solid black !important;
 		width: 100%;
+		min-height: 294px;
 		tbody{
 			display:block;
 			height: 291px;      
