@@ -30,8 +30,8 @@ class UserDevice < ApplicationRecord
         @shifts = Shift.select(:start_time,:end_time,:id)
 
         @shifts.map do |s|
-            start_time = s.start_time.to_time
-            end_time = s.end_time.to_time
+            start_time = s.start_time.to_time.in_time_zone('Eastern Time (US & Canada)')
+            end_time = s.end_time.to_time.in_time_zone('Eastern Time (US & Canada)')
 
             between_start = start_time>@start_time && start_time<@end_time
             between_end = end_time>@start_time && end_time<@end_time
