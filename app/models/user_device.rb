@@ -22,7 +22,7 @@ class UserDevice < ApplicationRecord
     def self.send_shift_notification
         # GET ALL USER whose shift is starting or ending. If the user have not filled their time entry then fetch their token from the database and finally generate a message to send to the users. Make sure not to send the notification twice for the same entry.
 
-        @start_time = Time.now.utc
+        @start_time = Time.now.utc.in_time_zone('Eastern Time (US & Canada)')
         @end_time = @start_time + 15 * 60 #15 min later
 
         @shift_ids = []
@@ -30,8 +30,11 @@ class UserDevice < ApplicationRecord
         @shifts = Shift.select(:start_time,:end_time,:id)
 
         @shifts.map do |s|
-            between_start = s.start_time>@start_time && s.start_time<@end_time
-            between_end = s.end_time>@start_time && s.end_time<@end_time
+            start_time = s.start_time.to_time
+            end_time = s.end_time.to_time
+
+            between_start = start_time>@start_time && start_time<@end_time
+            between_end = end_time>@start_time && end_time<@end_time
             if(between_start || between_end)
                 @shift_ids.push(s.id)
             end
