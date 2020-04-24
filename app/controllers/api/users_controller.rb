@@ -13,6 +13,9 @@ module Api
 		
 			if user&.valid_password?(params[:password])
 				user_type = (user.pm? || user.cm? || user.admin?) ?  "admin" : "user"
+				
+				UserDevice.save_device_information(user.id, params[:deviceID], params[:platform],params[:deviceName], nil);
+
 				render json: format_response_json(
 					{
 					  message: 'User logged in succesfully!',

@@ -6,7 +6,7 @@ module Api
         def get_weekly_time_entries
             begin
 				@user_id = @user.id
-				@weeks = Week.where(:user_id=>@user_id).order(:id=> 'desc').select("id as timeEntryID, start_date as startDate, end_date as endDate, status_id as status").as_json 
+				@weeks = Week.where(:user_id=>@user_id).order(:id=> 'desc').select("id as timeEntryID, start_date as startDate, end_date as endDate, status_id as status").order("startDate desc").as_json 
 				render json: format_response_json({
 					message: 'Weekly entries retrieved!',
 					status: true,
@@ -27,7 +27,7 @@ module Api
 			begin
 				@week_id = params[:week_id] 
 
-				@entries = TimeEntry.where(:week_id=> @week_id).select("id as entryID, date_of_activity as date, status_id as entryStatus").as_json
+				@entries = TimeEntry.where(:week_id=> @week_id).select("id as entryID, date_of_activity as date, status_id as entryStatus").order("date desc").as_json
 				render json: format_response_json({
 					message: 'Daily entries retrieved!',
 					status: true,

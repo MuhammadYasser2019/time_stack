@@ -1,6 +1,24 @@
 class UserDevice < ApplicationRecord
     has_one :user
 
+    def self.save_device_information(user_id, device_id, platform, device_name,token)
+        @user_device = UserDevice.where(:device_id => device_id, :user_id => user_id).first                
+
+        if @user_device.nil?
+            @user_device = UserDevice.new
+            @user_device.user_id = user_id
+            @user_device.device_id = device_id
+            @user_device.user_token = token
+            @user_device.platform = platform
+            @user_device.save
+        else
+            @user_device.user_token = token
+            @user_device.save
+        end
+      
+        UserDevice.where("user_id != ? AND device_id=?",user_id,device_id).update_all(user_token: nil)
+    end
+
     def self.send_shift_notification
         # GET ALL USER whose shift is starting or ending. If the user have not filled their time entry then fetch their token from the database and finally generate a message to send to the users. Make sure not to send the notification twice for the same entry.
 
@@ -8,14 +26,16 @@ class UserDevice < ApplicationRecord
         # @start_time = "9:42 AM".to_time
         @end_time = @start_time + 15 * 60 #15 min later
 
-        #Starting shifts
-        @shift_ids = Shift.where("(TIME(start_time) BETWEEN TIME('#{@start_time}') AND TIME('#{@end_time}'))").pluck(:id)
+        @shift_ids = []
 
-        #Ending shifts
-        @shift_end_ids = Shift.where("(TIME(end_time) BETWEEN TIME('#{@start_time}') AND TIME('#{@end_time}'))").pluck(:id)
+        @shifts = Shift.select(:start_time,:end_time,:id)
 
-        @shift_end_ids.map do |i|
-            @shift_ids.push(i)
+        @shifts.map do |s|
+            between_start = s.start_time>@start_time && s.start_time<@end_time
+            between_end = s.end_time>@start_time && s.end_time<@end_time
+            if(between_start || between_end)
+                @shift_ids.push(s.id)
+            end
         end
 
         @project_shift_ids = ProjectShift.where(:id=>@shift_ids).pluck(:id)
