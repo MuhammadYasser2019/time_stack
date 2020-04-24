@@ -22,8 +22,7 @@ class UserDevice < ApplicationRecord
     def self.send_shift_notification
         # GET ALL USER whose shift is starting or ending. If the user have not filled their time entry then fetch their token from the database and finally generate a message to send to the users. Make sure not to send the notification twice for the same entry.
 
-        @start_time = Time.now
-        # @start_time = "9:42 AM".to_time
+        @start_time = Time.now.utc
         @end_time = @start_time + 15 * 60 #15 min later
 
         @shift_ids = []
@@ -38,7 +37,7 @@ class UserDevice < ApplicationRecord
             end
         end
 
-        @project_shift_ids = ProjectShift.where(:id=>@shift_ids).pluck(:id)
+        @project_shift_ids = ProjectShift.where(:shift_id=>@shift_ids).pluck(:id)
 
         @shift_projects = ProjectsUser.where(:project_shift_id=> @project_shift_ids).joins(:user, :project).select("users.id as user_id,projects.id as project_id, projects.name").as_json
 
@@ -49,7 +48,9 @@ class UserDevice < ApplicationRecord
         end
         @user_ids.uniq
 
-        @token_info = TimeEntry.where(:user_id=> @user_ids).where("DATE(date_of_activity)='#{Date.today}'").joins(:user=> :user_devices).select("time_entries.id as entry_id, week_id, users.id as user_id, user_devices.user_token as user_token").as_json
+        @date_today = Time.now.utc.to_date
+        @token_information = TimeEntry.where(:user_id=> @user_ids).where("DATE(date_of_activity)='#{@date_today}'").joins(:user=> :user_devices).select("time_entries.id as entry_id, week_id, users.id as user_id, user_devices.user_token as user_token")
+        @token_info =  @token_information.select{|hash| !hash[:user_token].blank?}.as_json    
 
         @push_messages = []
 

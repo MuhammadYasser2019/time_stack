@@ -7,13 +7,16 @@ module Api
 		formats ['json']
 		param :email, String, :desc => "Email Address", :required => true
 		param :password, String, :desc => "Password", :required => true
+		param :deviceID, String, :desc => "Unique device identifier", :required => true
+		param :platform, String, :desc => "Runtime OS (Android/IOS)", :required => true
+		param :deviceName, String, :desc => "Unique device name", :required => true
 		def login_user	
 		  user = User.find_by(email: params[:email])
 		  logger.debug("the user email you sent is : #{params[:email]}")
 		
 			if user&.valid_password?(params[:password])
 				user_type = (user.pm? || user.cm? || user.admin?) ?  "admin" : "user"
-				
+
 				UserDevice.save_device_information(user.id, params[:deviceID], params[:platform],params[:deviceName], nil);
 
 				render json: format_response_json(
