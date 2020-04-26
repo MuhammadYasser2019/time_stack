@@ -12,6 +12,8 @@
 		<% else %>
 	  <a href="/", class="navbar-brand"><%= image_tag "chronstack.jpg", class: 'logo' %></a>
 	  <% end %>
+	<a href="https://www.facebook.com/Resource-Stack-Inc-269978683036453/" target="_blank" style="padding: 10px;"><%= image_tag("google.png", style: "width:150px;margin-top: 12px;") %></a>
+    <a href="https://www.facebook.com/Resource-Stack-Inc-269978683036453/" target="_blank" style="padding: 10px;"><%= image_tag("apple_store.png", style: "width:150px;") %></a>
   <% end %>
   <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -98,11 +100,11 @@
 	      </li>
 	      <% if current_user.admin? %>
 	      <li class="nav-item active" style="line-height: 45px;padding-top: 10px;">
-	        <a class="nav-link btn" href="/admin">Admin</a>
+	        <a class="nav-link btn orange-button" style="width:70px;" href="/admin">Admin</a>
 	      </li>
 	      <% end %>
-	      <li class="nav-item active" style="line-height: 45px;">
-	      	<%= link_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;", class: 'nav-link' %>
+	      <li class="nav-item active" style="line-height: 45px;padding-top: 10px;">
+	      	<%= link_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;", class: 'orange-button nav-link btn', style:"width:70px;" %>
 	      </li>
 	    </ul>
 	  </div>
