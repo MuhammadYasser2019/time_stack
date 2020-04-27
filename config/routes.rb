@@ -228,6 +228,8 @@ Rails.application.routes.draw do
   get 'set_selected_users' => 'projects#set_selected_users'
   get 'set_inventory_submitted_date' => 'users#set_inventory_submitted_date', via: [:get,:post]
   get 'inventory_and_equipment_reports' => 'projects#inventory_and_equipment_reports', via: [:get,:post]
+
+  get '/privacy' => 'static_pages#privacy'
   
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
