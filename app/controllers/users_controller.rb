@@ -310,6 +310,7 @@ class UsersController < ApplicationController
       @url = split_url[0] + "//" + split_url[2] + "/" + split_url[3] + "/" + period_url[0] + ".xlsx" + "?" + period_url[1]
     end
     @customer = Customer.where(id: current_user.customer_id).first
+    @shift = @customer.shifts.where(name: 'Regular', default: true).first
     logger.debug "URLLLLLLL: #{@url}"
 
     respond_to do |format|
@@ -408,7 +409,8 @@ class UsersController < ApplicationController
        
     @customer_types = @vacation_types.distinct{|x| x.id} 
     customer = Customer.find(@customer_id)
-    full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+    shift = customer.shifts.where(name: 'Regular', default: true).first
+    full_work_day = shift ? shift.regular_hours : 8
     logger.debug("full work day #{full_work_day}")
 
     @user_hash = {}
@@ -664,8 +666,9 @@ class UsersController < ApplicationController
 
   def add_multiple_user_inventory
 
-      @inventory_users = params[:inv_user_ids].split(/[" "]+/).map(&:to_i)
+      @inventory_users = params[:inv_user_ids].split(/[" "]+/).map(&:to_i) if params[:inv_user_ids].present?
       @project = Project.find_by_id params[:project_id]
+      if @inventory_users.present?
         @inventory_users.each do|user|
         u_env_and_equip                  = UserInventoryAndEquipment.new
         u_env_and_equip.equipment_number = params["equipment_number_#{user}"]
@@ -675,6 +678,7 @@ class UsersController < ApplicationController
         u_env_and_equip.issued_by        = current_user.id
         u_env_and_equip.issued_date      = params["issued_date_#{user}"]
         u_env_and_equip.save
+        end
       end
       
       respond_to do |format|

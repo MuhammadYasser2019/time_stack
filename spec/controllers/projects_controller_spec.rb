@@ -157,4 +157,24 @@ RSpec.describe ProjectsController, type: :controller do
     end
   end
 
+  describe "the shift_modal action" do
+    it "assigns the project_shift_id to the proper ProjectUser" do
+      user_0 = FactoryBot.create(:user)
+      customer = FactoryBot.create(:customer)
+      project = FactoryBot.create(:project, customer_id: customer.id)
+      @project = project
+      sign_in_project_user = ProjectsUser.create(project_id: project.id, user_id: user_0.id)
+      sign_in user_0
+
+      user = FactoryBot.create(:user)
+      user_2 = FactoryBot.create(:user)
+      project_user = ProjectsUser.create(project_id: project.id, user_id: user.id)
+      project_user_2 = ProjectsUser.create(project_id: project.id, user_id: user_2.id)
+      project_shift = FactoryBot.create(:project_shift)
+      params = { "user_count"=>"2", "project_id"=> project.id, "project_shift_id_0"=>project_shift.id, "user_id_0"=> user.id, "project_shift_id_1"=>project_shift.id, "user_id_1"=> user_2.id }
+      post "shift_modal", params: params, format: :js
+      expect(ProjectsUser.where(user_id: user.id).last.project_shift_id).to eq(project_shift.id)
+      expect(ProjectsUser.where(user_id: user_2.id).last.project_shift_id).to eq(project_shift.id)
+    end
+  end
 end

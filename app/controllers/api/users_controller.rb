@@ -1,25 +1,89 @@
 module Api
-  class UsersController < ActionController::Base
-		include UserHelper
-		before_action :authenticate_user_from_token, except: [:login_user]
-			
+  class UsersController < BaseController
+
+		skip_before_action :authenticate_user, only: :login_user
+
+		api :POST, '/login_user', "Verify user login and get access"
+		formats ['json']
+		param :email, String, :desc => "Email Address", :required => true
+		param :password, String, :desc => "Password", :required => true
+		param :deviceID, String, :desc => "Unique device identifier", :required => true
+		param :platform, String, :desc => "Runtime OS (Android/IOS)", :required => true
+		param :deviceName, String, :desc => "Unique device name", :required => true
 		def login_user	
 		  user = User.find_by(email: params[:email])
 		  logger.debug("the user email you sent is : #{params[:email]}")
 		
 			if user&.valid_password?(params[:password])
 				user_type = (user.pm? || user.cm? || user.admin?) ?  "admin" : "user"
-		    render :json => {  status: :ok,
-		    									email: user.email,
-		    									authentication_token: user.authentication_token,
-		    									user_type: user_type
-		    								}
-		  else
-		    render :json => {status: :unauthorized ,message: "The email or password was incorrect. Please try again"}
-	    end
-	  end 
 
-	  def update_date
+				UserDevice.save_device_information(user.id, params[:deviceID], params[:platform],params[:deviceName], nil);
+
+				render json: format_response_json(
+					{
+					  message: 'User logged in succesfully!',
+					  status: true,
+					  result: {
+						  accessToken: user.authentication_token,
+						  userRole: user_type,
+						  userID: user.id,
+						  tokenExpirationTime: Time.now + 45*60 #45 min duration
+					  }
+					})
+		 	else
+				render json: format_response_json(
+					{
+					message: "The email or password was incorrect. Please try again",
+					status: false				
+					})
+	   		end
+		end 
+
+		api :GET, '/get_customer_detail', "Get current user's customer detail."
+		formats ['json']
+        def get_customer_detail
+            begin
+				@user_id = @user.id
+				@customer = User.where(:id=>@user_id).joins(:customer).select("customers.id, customers.address, customers.city, customers.state, customers.zipcode, customers.name as customer_name, customers.user_id as manager_id").first
+
+				@manager =User.where(:id=>@customer[:manager_id]).select("email").first
+
+				@customer = @customer.as_json
+
+				@customer["manager"] = @manager[:email]
+
+				render json: format_response_json({
+					status: true,
+					result: @customer
+				})
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to retrieve employer detail!',
+					status: false
+				})
+			end
+		end
+
+		api :GET, '/get_customer_holidays', "Get current user's holidays array."
+		formats ['json']
+        def get_customer_holidays
+            begin
+				@user_id = @user.id
+				@holidays = CustomersHoliday.where(:customer_id=>@user_id).joins(:holiday).select("date, name, holiday_id as id").order("date asc").as_json
+
+				render json: format_response_json({
+					status: true,
+					result: @holidays
+				})
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to retrieve holiday list!',
+					status: false
+				})
+			end
+		end
+		  	
+		def update_date
     	
 			#Used to find week_id for today's time entry 
 			user = User.find_by(email: params[:email])

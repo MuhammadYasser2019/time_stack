@@ -4,10 +4,12 @@ class TimeEntry < ApplicationRecord
   belongs_to :week
   belongs_to :user
   belongs_to :vacation_type
+  belongs_to :project_shift
   has_many :archived_time_entry
 
 
   before_save :calculate_hours
+  before_save :add_project_shift_id
 
 
   def calculate_hours
@@ -19,7 +21,13 @@ class TimeEntry < ApplicationRecord
   	end
   end
 
-
-
+  def add_project_shift_id
+    if project_id && user_id
+      projects_user = ProjectsUser.where(user_id: user_id, project_id: project_id).last
+      if projects_user
+        self.project_shift_id = projects_user.project_shift_id
+      end
+    end
+  end
 
 end

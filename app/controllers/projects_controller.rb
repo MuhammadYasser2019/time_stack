@@ -339,6 +339,23 @@ end
     end
   end
 
+  def inventory_and_equipment_reports
+    @project_id = params[:id]
+    @p = Project.find(@project_id)
+    @users = @p.users
+    @user_array = @users.pluck(:id)
+    if params[:user] == "" || params[:user] == nil
+      @all_inventories_hash = @p.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],@user_array, @project_id, params[:submitted_type],params["current_month"])
+    else
+      @all_inventories_hash = @p.build_inventory_hash(@project_id,params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]],@project_id, params[:submitted_type],params["current_month"])
+    end
+    respond_to do |format|
+      format.html{}
+      format.xlsx
+      format.js
+    end
+  end
+
   def show_hours
     @user_id = params[:user_id]
     @project_id = params[:project_id]
@@ -423,10 +440,31 @@ end
     end
 
     respond_to do |format|
-      format.js
+      if @second_run
+       logger.debug "-----------SECOND RUN-----------"
+       format.js
+      else
+       format.js { render "shift_modal" }
+      end
     end
     
-  end  
+  end
+
+  def shift_modal
+    user_count = params[:user_count].to_i - 1
+    @project = Project.find(params["project_id"])
+    @available_users = User.where("parent_user_id IS ? && (shared =? or customer_id IS ? OR customer_id = ?)",nil, true, nil , @project.customer.id)
+    (0..user_count).each do |i|
+      projects_user = ProjectsUser.where(user_id: params["user_id_#{i}"], project_id: params["project_id"]).last
+      projects_user.project_shift_id = params["project_shift_id_#{i}"].to_i
+      projects_user.save!
+    end
+    @second_run = true
+
+    respond_to do |format|
+      format.js { render "add_multiple_users_to_project" }
+    end
+  end
 
   def remove_multiple_users_from_project
     logger.debug(" remove_multiple_user_from_project - #{params.inspect}")

@@ -55,9 +55,9 @@
             = t.hours
           td.vacation_hours
             - if @customer.present? && t.vacation_type.present? && t.partial_day == "true" && t.hours.present?
-              - v_hours = @customer.regular_hours - t.hours
+              - v_hours = @shift.regular_hours - t.hours
             - elsif @customer.present? && t.vacation_type.present?
-              -v_hours = "#{@customer.regular_hours}"
+              -v_hours = "#{@shift.regular_hours}"
             = v_hours.present? ? v_hours : 0.0
           td.active_log
             = t.activity_log

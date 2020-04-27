@@ -292,6 +292,7 @@
     user = User.find(params[:user_id])
     user.employment_type = params[:employment_type]
     user.is_active = params[:is_active].present? ? params[:is_active] : false 
+    user.inactive_at = Time.now.to_date if !params[:is_active].present?
     user.save
     respond_to do |format|
       format.html { redirect_to customers_path}
@@ -353,7 +354,8 @@
       ###
       @user = current_user
       customer = Customer.find(@user.customer_id)
-      full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+      shift = customer.shifts.where(name: 'Regular', default: true).first
+      full_work_day = shift ? shift.regular_hours : 8
       hours_over_month = (full_work_day.to_f/12).to_f
       ###
       @vacation_type = VacationType.find(params[:vacation_type_id])
@@ -409,7 +411,8 @@
     vacetion_end_date = params[:vacation_end_date]
     reason_for_vacation = params[:vacation_comment]
     customer = Customer.find(@user.customer_id)
-    full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+    shift = customer.shifts.where(name: 'Regular', default: true).first
+    full_work_day = shift ? shift.regular_hours : 8
 
     if !vacation_start_date.blank?
       days = (params[:vacation_end_date].to_date - params[:vacation_start_date].to_date).to_i
@@ -594,6 +597,41 @@
       end
 
     end
+  end
+
+  def inventory_reports
+    @customer_id = params[:id]
+    @customer = Customer.find(@customer_id)
+    @users = Array.new
+    
+    if params[:exclude_pending_users].present?
+      @customer.projects.each do |p|
+        @users << p.users.where.not(invitation_accepted_at: nil)
+      end
+    else
+      @customer.projects.each do |p|
+        @users << p.users
+      end
+    end
+    @users = @users.flatten.uniq
+    @users_array = @users.pluck(:id)
+    
+    logger.debug("THE USER IDS ARE: #{@users_array}")
+    @projects = @customer.projects
+
+    if params[:user] == "" || params[:user] == nil
+      if params[:project] == "" || params[:project] == nil
+        @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],@users_array, @projects, params[:submitted_type],params["current_month"])
+      else
+        @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],@users_array, params[:project], params[:submitted_type],params["current_month"])
+      end
+    else
+      if params[:project] == "" || params[:project] == nil
+        @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]], @projects, params[:submitted_type],params["current_month"])
+      else
+        @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]], params[:project], params[:submitted_type],params["current_month"])        
+        end
+    end   
   end
 
   def add_adhoc_pm_by_cm

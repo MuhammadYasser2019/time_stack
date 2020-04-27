@@ -280,7 +280,8 @@ class AnalyticsController < ApplicationController
         @vacation_types = VacationType.where("customer_id=? and paid=?", params[:customer_id], true)         
             @customer_types = @vacation_types.distinct{|x| x.id} 
              customer = Customer.find(params[:customer_id])
-             full_work_day = customer.regular_hours.present? ? customer.regular_hours : 8
+             shift = customer.shifts.where(name: 'Regular', default: true).first
+             full_work_day = shift ? shift.regular_hours : 8
              logger.debug("full work day #{full_work_day}")
             @users = User.where("customer_id=? and is_active=?", params[:customer_id], is_active)
             logger.debug("what is the USER length #{@users.length}")

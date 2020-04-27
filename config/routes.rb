@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  apipie
   resources :archived_time_entries, only: [:index, :show, :create]
   resources :archived_weeks, only: [:index, :show, :create]
   resources :holiday_exceptions
@@ -44,6 +45,18 @@ Rails.application.routes.draw do
   namespace :api do
     post 'login_user', to: "users#login_user"
     get 'login_user', to: "users#login_user"
+    get 'get_weekly_time_entries', to: "time_entries#get_weekly_time_entries"
+    get 'get_daily_time_entries', to: "time_entries#get_daily_time_entries"
+    get 'submit_weekly_time_entry', to: "time_entries#submit_weekly_time_entry"
+    get 'delete_time_entry', to: "time_entries#delete_time_entry"
+    get 'get_time_entry_detail', to: "time_entries#get_time_entry_detail"
+    post 'save_time_entry', to: "time_entries#save_time_entry"
+    get 'get_user_projects', to: "time_entries#get_user_projects"
+    get 'get_project_tasks', to: "time_entries#get_project_tasks"
+    post 'save_device_info', to: "notifications#save_device_info"
+    get 'remove_device_info', to: "notifications#remove_device_info"
+    get 'get_customer_detail', to: "users#get_customer_detail"
+    get 'get_customer_holidays', to: "users#get_customer_holidays"
 
     post 'send_entry', to: "users#post_data"
     get 'send_entry', to: "users#post_data"
@@ -89,6 +102,10 @@ Rails.application.routes.draw do
   get 'show_project_reports' => 'projects#show_project_reports'
   post 'add_multiple_users_to_project' => "projects#add_multiple_users_to_project"
   post 'remove_multiple_users_from_project' => "projects#remove_multiple_users_from_project"
+  post 'shift_modal' => "projects#shift_modal"
+  get 'show_shift_reports' => "shifts#show_shift_reports"
+  get 'shift_report/:id' => "shifts#shift_report"
+  post 'shift_report/:id' => "shifts#shift_report"
   post 'show_project_reports' => 'projects#show_project_reports'
   post 'projects/:id/deactivate_project' => 'projects#deactivate_project'
   post 'projects/:id/reactivate_project' => 'projects#reactivate_project'
@@ -159,7 +176,9 @@ Rails.application.routes.draw do
   post 'holidays/create' => 'holidays#create'
 
   get 'customer_reports/:id' => 'customers#customer_reports'
+  get 'inventory_reports/:id' => 'customers#inventory_reports'
   get 'customers/:id/customer_reports' => 'customers#customer_reports'
+  get 'customers/:id/inventory_reports' => 'customers#inventory_reports'
   
   get 'permission_denied' => 'projects#permission_denied'
 
@@ -198,7 +217,8 @@ Rails.application.routes.draw do
   post "analytics/vacation_types_summary/:customer_id" => 'analytics#vacation_types_summary' 
   get 'user_summary' => "analytics#user_summary"
 
-  match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post] 
+  match "customers/:id/analytics" => 'analytics#customer_reports', via: [:get, :post]
+  match "customers/:id/analytics" => 'analytics#inventory_reports', via: [:get, :post] 
   post "/bar_graph" => 'analytics#bar_graph'
   match "analytics/:customer_id" => "analytics#index", via: [:get, :post]
   match "users_notification_date" => "users#user_notification_date", via: [:get, :post]
@@ -206,8 +226,10 @@ Rails.application.routes.draw do
   match "add_multiple_user_disciplinary" => "users#add_multiple_user_disciplinary", via: [:get, :post]
   match "add_multiple_user_inventory" => "users#add_multiple_user_inventory", via: [:get,:post]
   get 'set_selected_users' => 'projects#set_selected_users'
-
   get 'set_inventory_submitted_date' => 'users#set_inventory_submitted_date', via: [:get,:post]
+  get 'inventory_and_equipment_reports' => 'projects#inventory_and_equipment_reports', via: [:get,:post]
+
+  get '/privacy' => 'static_pages#privacy'
   
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'

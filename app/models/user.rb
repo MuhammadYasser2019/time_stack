@@ -20,11 +20,14 @@ class User < ApplicationRecord
   has_many :holiday_exceptions
   has_many :vacation_requests
   has_many :user_notifications
+  has_many :project_shifts, through: :projects_users
   has_many :user_recommendations
   has_many :user_disciplinary
   has_many :user_inventory_and_equipments
+  has_many :user_devices
+  belongs_to :customer
 
-
+  validates :emergency_contact, format: { with: /\A\d+\z/, message: "Please enter 10 digit minimum contact number." }
 
   def childs
     self.parent_user_id.present? ? nil : User.where(id: self.parent_user_id)

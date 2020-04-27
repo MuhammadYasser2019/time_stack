@@ -4,7 +4,7 @@ class CreateUserDisciplinary < ActiveRecord::Migration[5.2]
       t.integer :project_id
       t.string :disciplinary
       t.integer :submitted_by
-      t.references :user, foreign_key: true
+      t.references :user
 
       t.timestamps
     end

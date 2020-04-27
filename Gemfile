@@ -7,8 +7,10 @@ gem 'rails', '5.2.2'
 gem 'react-rails'
 gem 'webpacker'
 gem 'jwt'
+gem 'apipie-rails'
 gem 'sprockets-rails' #, '2.3.3'
 gem 'sprockets-es6'
+gem 'exponent-server-sdk'
 # Use sqlite3 as the database for Active Record
 # Use SCSS for stylesheets
 gem 'sass-rails'

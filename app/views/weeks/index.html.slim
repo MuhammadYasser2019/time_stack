@@ -71,6 +71,13 @@
 	      td
 	      td
 	      td
+        - if @shift_supervisor_project_shift
+            tr
+              td = link_to 'Shift Report', "/show_shift_reports?id=#{@shift_supervisor_project_shift.id}&type=shift_supervisor"
+              td
+              td
+              td
+              td
 	    - if current_user.parent_user_id.blank?
 		    tr
 		      td = link_to "Vacation Request", "/vacation_request" 
