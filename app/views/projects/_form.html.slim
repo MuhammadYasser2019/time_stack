@@ -169,6 +169,10 @@
 		 	div(id="dynamic_user_update")
 				== render partial: 'add_remove_users'
 
+		div class="tab-pane fade" role="tabpanel" aria-labelleby="inventory_submit-tab" id="inventory_submit"
+			div(id="dynamic_inventory_update")
+				== render partial: "add_inventory_submit"
+
         div class="tab-pane fade" role="tabpanel" aria-labelledby="shift-tab" id="shift"
           h3.text-center Shifts
           div class="shift_list"
@@ -185,11 +189,7 @@
              tbody
               - ProjectShift.where(project_id: @project.id).each do |project_shift|
                == render partial: 'shift_projects', locals: { shift: Shift.find(project_shift.shift_id), project_shift: project_shift, project: @project }
-            = link_to "Create Project Shift", new_project_shift_path(project_id: @project.id), class: "orange-button", type: "button"
-
-        div class="tab-pane fade" role="tabpanel" aria-labelleby="inventory_submit-tab" id="inventory_submit"
-			div(id="dynamic_inventory_update")
-				== render partial: "add_inventory_submit" 
+            = link_to "Create Project Shift", new_project_shift_path(project_id: @project.id), class: "orange-button", type: "button" 
 
 	- if !current_user.default_project? && current_user.parent_user_id.blank?
 			== render partial: 'users/default_projects'
