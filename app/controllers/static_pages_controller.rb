@@ -9,5 +9,9 @@ class StaticPagesController < ApplicationController
 
   end
 
+  def terms_of_service
+
+  end
+
 end 
 
