@@ -43,18 +43,19 @@ module Api
 		formats ['json']
         def get_customer_detail
             begin
-				@user_id = @user.id
-				@customer = User.where(:id=>@user_id).joins(:customer).select("customers.id, customers.address, customers.city, customers.state, customers.zipcode, customers.name as customer_name, customers.user_id as manager_id").first
+				@customer = @user.customer;
 
-				@manager =User.where(:id=>@customer[:manager_id]).select("email").first
+				cur_customer = {:id=> @customer.id, :address=>@customer.address, :city=> @customer.city, :state=>@customer.state, :zipcode=>@customer.zipcode, :customer_name=>@customer.name, :manager_id=> @customer.user_id}
 
-				@customer = @customer.as_json
+				@manager =User.where(:id=>cur_customer[:manager_id]).select("email").first
 
-				@customer["manager"] = @manager[:email]
+				cur_customer = cur_customer.as_json
+
+				cur_customer["manager"] = @manager[:email]
 
 				render json: format_response_json({
 					status: true,
-					result: @customer
+					result: cur_customer
 				})
 			rescue
 			    render json: format_response_json({
@@ -68,8 +69,8 @@ module Api
 		formats ['json']
         def get_customer_holidays
             begin
-				@user_id = @user.id
-				@holidays = CustomersHoliday.where(:customer_id=>@user_id).joins(:holiday).select("date, name, holiday_id as id").order("date asc").as_json
+				customer_id = @user.customer_id
+				@holidays = CustomersHoliday.where(:customer_id=>customer_id).joins(:holiday).select("date, name, holiday_id as id").order("date asc").as_json
 
 				render json: format_response_json({
 					status: true,

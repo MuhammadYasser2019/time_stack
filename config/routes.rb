@@ -230,6 +230,7 @@ Rails.application.routes.draw do
   get 'inventory_and_equipment_reports' => 'projects#inventory_and_equipment_reports', via: [:get,:post]
 
   get '/privacy' => 'static_pages#privacy'
+  get '/terms_of_service' => 'static_pages#terms_of_service'
   
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
