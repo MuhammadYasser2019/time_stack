@@ -21,7 +21,7 @@ class UserDevice < ApplicationRecord
 
     def self.send_shift_notification
         time_zone = 'Eastern Time (US & Canada)'
-        check_start_time = Time.now.utc.in_time_zone(time_zone)
+        check_start_time = Time.now.in_time_zone(time_zone).time
         check_end_time = check_start_time +15 * 60 #15 min later
 
         shifts = Shift.select(:start_time, :end_time, :id)
@@ -30,8 +30,8 @@ class UserDevice < ApplicationRecord
         ending_shift_ids = []
 
         shifts.map do |s|
-            start_time = s.start_time.to_time.in_time_zone(time_zone)
-            end_time = s.end_time.to_time.in_time_zone(time_zone)
+            start_time = s.start_time.to_time
+            end_time = s.end_time.to_time
 
             between_start = start_time>=check_start_time && start_time<=check_end_time
             between_end = end_time>=check_start_time && end_time<=check_end_time
@@ -56,11 +56,11 @@ class UserDevice < ApplicationRecord
     def self.handle_shift_notification(shift_ids, starting_shift)
         project_shift_ids = ProjectShift.where(:shift_id=>shift_ids).pluck(:id)
 
-        @shift_projects = ProjectsUser.where(:project_shift_id=> project_shift_ids).joins(:user, :project).select("users.id as user_id,projects.id as project_id, projects.name").as_json
+        shift_projects = ProjectsUser.where(:project_shift_id=> project_shift_ids).joins(:user, :project).select("users.id as user_id,projects.id as project_id, projects.name").as_json
 
         user_ids = []
 
-        @shift_projects.map do |i|
+        shift_projects.map do |i|
              user_ids.push(i["user_id"]) 
         end
         user_ids = user_ids.uniq
@@ -79,7 +79,7 @@ class UserDevice < ApplicationRecord
 
             projects = []
                     
-            @shift_projects.select{|i| i["user_id"] == cur_user_id}.map do |p|
+            shift_projects.select{|i| i["user_id"] == cur_user_id}.map do |p|
                 projects.push({id: p["project_id"], name: p["name"]})
             end
             projects =  projects.uniq
