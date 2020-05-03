@@ -1,5 +1,4 @@
 
-
 <div class="edit_user" style="padding:50px;">
   <h3 style="text-align: center;">Edit <%= resource_name.to_s.humanize %></h3>
 
@@ -42,4 +41,11 @@
 <%= link_to "Back", :back %>
 </div>
 
-
+<script type="text/javascript">
+  $(document).ready(function($){
+    var $mobileNumber = $('#user_emergency_contact');
+    if ($mobileNumber.length != 10) {
+      $('#user_emergency_contact').mask('(000)-000-0000');
+    }
+  });
+</script>

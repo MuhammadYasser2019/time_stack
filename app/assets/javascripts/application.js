@@ -21,6 +21,7 @@
 //= require turbolinks
 //= require chart
 //= require bootstrap.min
+//= require jquery.mask.min
 //= require turbolinks-compatibility
 // session_timeout_prompter
 //= require highcharts
