@@ -3,6 +3,10 @@ class User < ApplicationRecord
   # :confirmable, :lockable, :timeoutable and :omniauthable
   # validates :password , presence: true, if: :not_google_account?
   # validates :password_confirmation , presence: true, if: :not_google_account?
+  validates :email, presence: true
+  validates :emergency_contact, presence: true
+  validates :first_name, presence: true
+  validates :last_name, presence: true
 
   mount_uploader :image, ImageUploader
   ## Token Authenticatable

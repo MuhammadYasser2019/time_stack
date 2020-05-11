@@ -63,4 +63,6 @@
 		== render partial: 'projects/timesheets_for_approval', locals: {projects: @pm_projects}
 	.(id="dynamic_customers")
 		== render 'new_edit_form'
+	- if !@terms_modal_show.present?
+		== render 'users/terms_and_condition'
 

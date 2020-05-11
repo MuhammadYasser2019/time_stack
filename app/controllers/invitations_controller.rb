@@ -7,6 +7,7 @@ class InvitationsController < Devise::InvitationsController
   end
   
   def create
+    #binding.pry
     logger.debug "HELLO NURSE #{params[:user][:project_id]}"
     if params[:user][:customer_id]
       logger.debug "HELLO CUSTOMER ID"
@@ -50,6 +51,7 @@ class InvitationsController < Devise::InvitationsController
     user.google_account = user_params[:google_account]
     user.first_name = user_params[:first_name]
     user.last_name = user_params[:last_name]
+    user.emergency_contact = user_params[:emergency_contact]
     user.user = 1
     user.save!
     inviter = user.invited_by_id
