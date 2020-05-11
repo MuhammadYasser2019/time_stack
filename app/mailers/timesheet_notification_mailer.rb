@@ -5,7 +5,7 @@ class TimesheetNotificationMailer < ActionMailer::Base
 
 	def mail_to_pm(pm, users)		
 		@pm = User.find pm
-		@users = users.join(", ")
+		@users = users.uniq.join(", ")
 
 		mail(to: @pm.email, subject:"Timesheet Reminder")
 	end 
