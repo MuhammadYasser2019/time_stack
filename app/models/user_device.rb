@@ -114,7 +114,7 @@ class UserDevice < ApplicationRecord
             client = Exponent::Push::Client.new
 
             # MAX 100 messages at a time
-            handler = client.publish(messages)
+            handler = client.send_messages(messages)
 
             # Array of all errors returned from the API
             # puts handler.errors

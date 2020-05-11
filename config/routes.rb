@@ -57,6 +57,7 @@ Rails.application.routes.draw do
     get 'remove_device_info', to: "notifications#remove_device_info"
     get 'get_customer_detail', to: "users#get_customer_detail"
     get 'get_customer_holidays', to: "users#get_customer_holidays"
+    get 'agree_to_terms_and_conditions', to: "users#agree_to_terms_and_conditions"
 
     post 'send_entry', to: "users#post_data"
     get 'send_entry', to: "users#post_data"
