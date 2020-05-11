@@ -4,9 +4,9 @@ class User < ApplicationRecord
   # validates :password , presence: true, if: :not_google_account?
   # validates :password_confirmation , presence: true, if: :not_google_account?
   validates :email, presence: true
-  validates :emergency_contact, presence: true
-  validates :first_name, presence: true
-  validates :last_name, presence: true
+  #validates :emergency_contact, presence: true
+  #validates :first_name, presence: true
+  #validates :last_name, presence: true
 
   mount_uploader :image, ImageUploader
   ## Token Authenticatable
@@ -82,25 +82,45 @@ class User < ApplicationRecord
   end
 
   def self.send_timesheet_notification
-    last_weeks = Week.where("start_date >=? ", Time.now.utc.beginning_of_day-7.days)
+    mail_hash = {}
+    User.all.each do |user|
+      last_week = Week.where("start_date >=? and user_id=?", Time.now.utc.beginning_of_day-21.days, user.id).first
+      
+      if last_week && (last_week.status_id != 2 || last_week.status_id != 3)
+        projects = ProjectsUser.where(user_id: user.id).pluck(:project_id)
+        projects.each do |p|
+          project = Project.find(p)
+          mail_hash[project.user_id] ||= []
+          mail_hash[project.user_id] << user.email
+        end
+      end
+    end
+    mail_hash.each do |pm, users|
+      TimesheetNotificationMailer.mail_to_pm(pm, users).deliver_now
+    end
+
+
+    last_weeks = Week.where("start_date >=? and user_id=?", Time.now.utc.beginning_of_day-7.days, user.id).first
+
+
     last_weeks.each do |w|
-        if w.status_id != 2 || w.status_id != 3
-            user = User.find w.user_id
-            
-            projects = ProjectsUser.where(user_id: user.id).pluck(:project_id)
-            flag_array =  Array.new
-            projects.each do |p|
-              project = Project.find(p)
-              flag_array.push(project.deactivate_notifications)
-            end
-  
-            if flag_array.include?(false) 
-              logger.debug("***************Sending the Notifications to : #{user.inspect}")
-              if UserNotification.where("week_id =?", w.id).blank?
-                TimesheetNotificationMailer.mail_to_user(w,user).deliver_now
-                User.push_notification(user, w.id)
-              end
-            end
+      if w.status_id != 2 || w.status_id != 3
+        user = User.find w.user_id
+        
+        projects = ProjectsUser.where(user_id: user.id).pluck(:project_id)
+        flag_array =  Array.new
+        projects.each do |p|
+          project = Project.find(p)
+          flag_array.push(project.deactivate_notifications)
+        end
+
+        if flag_array.include?(false) 
+          logger.debug("***************Sending the Notifications to : #{user.inspect}")
+          if UserNotification.where("week_id =?", w.id).blank?
+            #TimesheetNotificationMailer.mail_to_user(w,user).deliver_now
+            User.push_notification(user, w.id)
+          end
+        end
       end
     end
   end
