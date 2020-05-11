@@ -57,6 +57,17 @@ h7 {
   color:white;
 }
 
+.devise_error {
+  width: 100%;
+  margin: 5px auto;
+  text-align: center;
+  
+  opacity: .8;
+  border-radius: 25px;
+  font-weight: bold;
+  color:red;
+}
+
 
 .top-bar{
   width:100%;
@@ -455,4 +466,14 @@ h3{
 }
 .table td, .table th{
   vertical-align: center;
+}
+
+#termsAndConditions .modal-content{
+  width: 80%;
+  height: 500px;
+  }
+
+#termsAndConditions .modal-body{
+  height: 400px;
+    overflow-y: scroll;
 }

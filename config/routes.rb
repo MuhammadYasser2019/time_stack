@@ -124,6 +124,7 @@ Rails.application.routes.draw do
   post '/show_user_weekly_reports/:id' => 'users#show_user_weekly_reports'
 
   get '/set_default_project' => 'users#set_default_project'
+  match 'accept_terms_and_condition' => 'users#accept_terms_and_condition', via: [:get, :post]
   
   get 'add_user_to_project' => "projects#add_user_to_project"
   get '/projects/:id/user_time_report' => 'projects#user_time_report'

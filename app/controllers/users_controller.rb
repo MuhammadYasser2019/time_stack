@@ -697,9 +697,18 @@ class UsersController < ApplicationController
       end
   end
 
+  def accept_terms_and_condition
+    if params[:accept_terms_and_condition].present? && params[:user_id].present?
+        user = User.find params[:user_id]
+        user.terms_and_condition = params[:accept_terms_and_condition]
+        user.save
+      end
+      redirect_to root_path
+  end
+
   private
   
     def user_params
-      params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id,:user_ids,:project_id,:recommendation)
+      params.require(:user).permit(:id, :first_name, :last_name, :email, :password, :password_confirmation, :user, :cm, :pm, :admin, :proxy, :invited_by_id,:user_ids,:project_id,:recommendation,:accept_terms_and_condition)
     end
 end
