@@ -3,8 +3,7 @@
 <%= simple_form_for(resource, as: resource_name, url: session_path(resource_name)) do |f| %>
   <div class="form-inputs">
     <% if flash[:alert].present?  %>
-      <div class="alert alert-danger alert-dismissable" ,style="font-size: 20px;">
-        <button type="button" class="close" data-dismiss="alert" aria-hidden="true",style="margin-top: -6px!important">&times;</button>
+      <div class="devise_error" style="font-size: 14px;">
         <%= flash[:alert] %>
       </div>
     <% end %>

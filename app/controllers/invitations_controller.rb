@@ -7,7 +7,6 @@ class InvitationsController < Devise::InvitationsController
   end
   
   def create
-    #binding.pry
     logger.debug "HELLO NURSE #{params[:user][:project_id]}"
     if params[:user][:customer_id]
       logger.debug "HELLO CUSTOMER ID"
