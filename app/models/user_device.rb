@@ -56,7 +56,7 @@ class UserDevice < ApplicationRecord
     def self.handle_shift_notification(shift_ids, starting_shift)
         project_shift_ids = ProjectShift.where(:shift_id=>shift_ids).pluck(:id)
 
-        shift_projects = ProjectsUser.where(:project_shift_id=> project_shift_ids).joins(:user, :project).select("users.id as user_id,projects.id as project_id, projects.name").as_json
+        shift_projects = ProjectsUser.where(:project_shift_id=> project_shift_ids).joins(:user, :project).where(:projects=>{inactive:[0,nil]}).select("users.id as user_id,projects.id as project_id, projects.name").as_json
 
         user_ids = []
 
