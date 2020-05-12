@@ -257,7 +257,7 @@ jQuery ($) ->
    
   $("tbody").on("change", "#current_month", ->
     
-    if ($(this).val() =="current_month" || $(this).val() =="last_month" || $('#current_week').is(":checked"))
+    if ($(this).val() =="current_month" || $(this).val() =="last_month" || $(this).val() =="current_week" || $('#current_week').is(":checked"))
 
       date = new Date()
       
@@ -286,6 +286,15 @@ jQuery ($) ->
         
         firstDay = firstDay.getFullYear()+"-"+(firstofmonth)+"-"+f_day_m
         lastDay =  lastDay.getFullYear()+"-"+(lastofmonth)+"-"+l_day_m
+      else if $(this).val() =="current_week"
+        current = new Date()
+        f_day_w = ("0" + (current.getDate() - (current.getDay() - 1))).slice(-2)
+        l_day_w = ("0" + (current.getDate() - (current.getDay() - 7))).slice(-2)
+    
+        month = ("0" + (current.getMonth() + 1)).slice(-2)
+
+        firstDay = current.getFullYear()+"-"+(month)+"-"+(f_day_w)
+        lastDay = current.getFullYear()+"-"+(month)+"-"+(l_day_w)
   
       $('#proj_report_start_date').val(firstDay)
       $('#proj_report_end_date').val(lastDay)

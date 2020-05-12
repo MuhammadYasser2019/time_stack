@@ -563,6 +563,10 @@
       @customer.projects.each do |p|
         @users << p.users.where.not(invitation_accepted_at: nil)
       end
+    elsif params[:exclude_inactive_users].present? && params[:exclude_inactive_users] == "true"
+      @customer.projects.each do |p|
+        @users << p.users.where.not(is_active: false)
+      end
     else
       @customer.projects.each do |p|
         @users << p.users
