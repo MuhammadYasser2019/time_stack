@@ -292,7 +292,7 @@
     logger.debug("customer.controller - update_user_employment ")
     user = User.find(params[:user_id])
     user.employment_type = params[:employment_type]
-    user.email = params[:email]
+    #user.email = params[:email]
     user.is_active = params[:is_active].present? ? params[:is_active] : false 
     user.first_name = params[:first_name]
     user.last_name = params[:last_name]
