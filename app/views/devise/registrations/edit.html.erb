@@ -15,7 +15,7 @@
         <p>Currently waiting confirmation for: <%= resource.unconfirmed_email %></p>
       <% end %>
 
-      <%= f.input :emergency_contact, required: true ,input_html: {class: "form-control"} %>
+      <%= f.input :emergency_contact, required: true ,placeholder: "(XXX) XXX-XXXX", input_html: {class: "form-control"} %>
 
       <%= f.input :password, autocomplete: "off", hint: "leave it blank if you don't want to change it", required: false, input_html: {class: "form-control"}  %>
       <%= f.input :password_confirmation, required: false, input_html: {class: "form-control"}  %>
@@ -45,7 +45,7 @@
   $(document).ready(function($){
     var $mobileNumber = $('#user_emergency_contact');
     if ($mobileNumber.length != 10) {
-      $('#user_emergency_contact').mask('(000)-000-0000');
+      $('#user_emergency_contact').mask('(000) 000-0000');
     }
   });
 </script>
