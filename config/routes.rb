@@ -39,6 +39,9 @@ Rails.application.routes.draw do
 
   
   get "/get_user_projects" => "users#get_user_projects"
+  post '/application_versions/get_items' => "application_versions#get_items"
+  get '/application_versions/delete_item' => "application_versions#delete_item" 
+  post '/application_versions/edit_item' => "application_versions#edit_item"
 
   #root 'weeks#index'
   root 'static_pages#home'
