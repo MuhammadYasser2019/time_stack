@@ -63,7 +63,6 @@ $(document).ready(function () {
             $().showConfirmationDialog("Delete User", "Are you sure you want to delete this item?",
                 () => {
                     deleteItem(data.id);
-                    removeSelectionAction();
                 },
                 () => {
                     removeSelectionAction();
@@ -75,17 +74,12 @@ $(document).ready(function () {
 
         function deleteItem(id) {
             //DELETE FIRST
-            var selectedRow = $(".selected")[0];
-            $.ajax({
-                url: "./application_versions/delete_item?id=" + id,
-                method: 'GET',  // post
-                success: function (res) {
-                    var item = $(tableID).find(".selected");
-                    $(tableID).dataTable().api().row(item).remove().draw();
+            $().makeHttpRequest("./application_versions/delete_item?id=" + id, "GET", null, (res) => {
+                var item = $(tableID).find(".selected");
+                $(tableID).dataTable().api().row(item).remove().draw();
 
-                    if (item) {
-                        item.removeClass("selected");
-                    }
+                if (item) {
+                    item.removeClass("selected");
                 }
             });
         }
@@ -104,46 +98,46 @@ $(document).ready(function () {
 
             var forUpdate = model.id > 0;
             var formHtml = `<form id="versionForm">
-            <div class="form-group row" style="display: none;">
+            <div class="form-group" style="display: none;">
                 <label for="id" class="col-md-4 col-form-label text-md-right left-align">Version
                 ID</label>
-                <div class="col-md-6">
+                <div >
                     <input type="text" id="id" class="form-control" name="id"
                         value="${model.id}" />
                 </div>
             </div>
-            <div class="form-group row">
+            <div class="form-group">
                 <label for="version_name" class="col-md-4 col-form-label text-md-right left-align">Version
                     Name</label>
-                <div class="col-md-6">
+                <div >
                     <input type="text" id="version_name" class="form-control" name="version_name"
                           value="${model.version_name}" />
                 </div>
             </div>
           
-            <div class="form-group row">
+            <div class="form-group">
                 <label for="description"
                     class="col-md-4 col-form-label text-md-right left-align">Description
                 </label>
-                <div class="col-md-6">
+                <div >
                     <textarea id="description" class="form-control" name="description"
                         required="true" value="" >${model.description}</textarea>
                 </div>
             </div>
           
-            <div class="form-group row">
+            <div class="form-group">
                 <label for="start_date" class="col-md-4 col-form-label text-md-right left-align">Start
                     Date</label>
-                <div class="col-md-6">
+                <div >
                     <input type="date" id="start_date" class="form-control" name="start_date" value="${
                 model.start_date
                 }"  />
                 </div>
             </div>
           
-            <div class="form-group row">
+            <div class="form-group">
                 <label for="platform" class="col-md-4 col-form-label text-md-right left-align">Platform</label>
-                <div class="col-md-6">
+                <div >
                 <select class="form-control" id="platform">
     <option ${model.platform == "web" ? "selected" : ""}>web</option>
     <option ${model.platform == "android" ? "selected" : ""}>android</option>
@@ -161,7 +155,12 @@ $(document).ready(function () {
 
             $().showHtmlDialog(
                 forUpdate ? "Update Version" : "Create new Version",
-                formHtml
+                formHtml, () => {
+                    var item = $(tableID).find(".selected");
+                    if (item) {
+                        item.removeClass("selected");
+                    }
+                }
             );
 
             $("#versionForm #description").ckeditor();
@@ -193,6 +192,10 @@ $(document).ready(function () {
                     $().hideHtmlDialog();
                 }, (error) => {
                     $().showMessage("Error", error);
+                    var item = $(tableID).find(".selected");
+                    if (item) {
+                        item.removeClass("selected");
+                    }
                 });
             });
         }
@@ -206,6 +209,11 @@ $(document).ready(function () {
         if (firstLoad) {
             firstLoad = false;
             initializeDataTable("#versionTable");
+            setTimeout(() => {
+                if ($("#versionTable")[0].style.width == "0px") {
+                    $("#versionTable").dataTable().api().columns.adjust().draw();
+                }
+            }, 1000)
         }
     })
 });

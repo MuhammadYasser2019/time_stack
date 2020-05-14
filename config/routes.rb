@@ -42,6 +42,7 @@ Rails.application.routes.draw do
   post '/application_versions/get_items' => "application_versions#get_items"
   get '/application_versions/delete_item' => "application_versions#delete_item" 
   post '/application_versions/edit_item' => "application_versions#edit_item"
+  get '/application_versions/acknowledge_version' => "application_versions#acknowledge_version" 
 
   #root 'weeks#index'
   root 'static_pages#home'

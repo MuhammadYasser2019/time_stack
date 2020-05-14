@@ -29,7 +29,7 @@ $(function () {
 
             $(modalHtml)
                 .appendTo(document.body)
-                .modal("show")
+                .modal({ show: true, backdrop: 'static', keyboard: false })
                 .on("click", "#divClose", function () {
                     if (closeAction) closeAction();
                     removeConfirmAction();
@@ -39,7 +39,7 @@ $(function () {
                     removeConfirmAction();
                 })
                 .on("click", "#noButton", function () {
-                    if (noAction) noAction;
+                    if (noAction) noAction();
                     removeConfirmAction();
                 });
         },
@@ -79,7 +79,7 @@ $(function () {
 
             $(modalHtml)
                 .appendTo(document.body)
-                .modal("show")
+                .modal({ show: true, backdrop: 'static', keyboard: false })
                 .on("click", "#divClose", function () {
                     removeConfirmAction();
                     if (closeAction) closeAction();

@@ -34,7 +34,7 @@ class ApplicationVersionsController < ApplicationController
         rescue => exception
             render json: format_response_json(
             {
-                status: true,
+                status: false,
                 message: "Failed to delete version!"
             })
         end
@@ -43,7 +43,6 @@ class ApplicationVersionsController < ApplicationController
     def edit_item
         begin
             @version = params[:version]
-            success = false
             version_id = @version[:id].to_i
             version_exists = ApplicationVersion.where(:version_name=> @version[:version_name], :platform=> @version[:platform]).where.not(:id=> version_id).count>0
 
@@ -54,7 +53,7 @@ class ApplicationVersionsController < ApplicationController
                 })
             else
                 if version_id > 0
-                    success = ApplicationVersion.find(version_id).update_attributes(application_versions_params(@version))
+                    ApplicationVersion.find(version_id).update_attributes(application_versions_params(@version))
                 else
                     @version = ApplicationVersion.new(application_versions_params(params[:version]))
                     @version.save
@@ -71,6 +70,25 @@ class ApplicationVersionsController < ApplicationController
                 status: false
             })
         end
+    end
+
+    def acknowledge_version
+        @user_application_version = UsersApplicationVersion.where(:user_id=> current_user.id).joins(:application_version).where(:application_versions=>{platform:'web'}).first
+
+        if @user_application_version.nil?
+           @user_application_version =  UsersApplicationVersion.new
+           @user_application_version.user_id = current_user.id
+           @user_application_version.application_version_id = params[:id]
+           @user_application_version.save
+        else
+            @user_application_version.application_version_id = params[:id]
+            @user_application_version.save
+        end
+
+        render json: format_response_json(
+        {
+            status: true
+        })
     end
 
     private 

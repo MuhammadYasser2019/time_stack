@@ -33,6 +33,16 @@
     <%= javascript_include_tag "https://code.highcharts.com/modules/funnel.js" %>
     <%= javascript_include_tag "cocoon" %>
     <%= csrf_meta_tags %>
+    <style>
+      .current-application-version {
+        position: absolute;
+        top: 65px;
+        left: 20px;
+        padding: 5px;
+        font-size: smaller;
+        color: gray;
+      }
+    </style>
   </head>
   
   <body>
@@ -42,6 +52,20 @@
     <% else %>
       <%= render "layouts/header" %>
     <%end%>
+
+    <% if !current_user.nil? && !application_version.nil? %>
+    
+    <% if application_version[:user_application_version].nil? %>
+       <span id="curApplicationVersion" class="current-application-version" style="display: 'none';"></span>
+    <% else %>
+       <span id="curApplicationVersion" class="current-application-version" style="display: 'block';" data-id="<%= application_version[:user_application_version]["id"]%>" data-name="<%=  application_version[:user_application_version]["version_name"] %>" data-description="<%=  application_version[:user_application_version]["description"].html_safe %>">Current Application Version: <%=  application_version[:user_application_version]["version_name"] %></span>
+    <% end %>
+   
+ 
+      <% if !application_version[:latest_version].nil? %>
+       <%= render "users_application_version/acknowledge" %>
+      <% end %>
+    <% end %>
 
     <%= render "layouts/questionaire" %>
     <%= yield %> 
@@ -54,5 +78,8 @@
     if(access_url!=null ){
      localStorage.BaseURL = access_url.value;
     }
+    $("#curApplicationVersion").on("click",function(){
+      $().showHtmlDialog($(this).data("name"), $(this).data("description"));
+    })
   </script>
 </html>
