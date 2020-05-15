@@ -110,7 +110,7 @@ $(document).ready(function () {
                 <label for="version_name" class="col-md-4 col-form-label text-md-right left-align">Version
                     Name</label>
                 <div >
-                    <input type="text" id="version_name" class="form-control" name="version_name"
+                    <input type="text" id="version_name" class="form-control" name="version_name" required="true"
                           value="${model.version_name}" />
                 </div>
             </div>
