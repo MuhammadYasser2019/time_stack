@@ -28,6 +28,8 @@ module UserHelper
   end
 
   def application_version
+    if(!current_user.nil?)
      UsersApplicationVersion.validate_user_application_version(current_user.id)
+    end
   end
 end

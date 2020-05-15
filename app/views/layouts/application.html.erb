@@ -59,7 +59,7 @@
     <% if application_version[:user_application_version].nil? %>
        <span id="curApplicationVersion" class="current-application-version" style="display: 'none';"></span>
     <% else %>
-       <span id="curApplicationVersion" class="current-application-version" style="display: 'block';" data-id="<%= application_version[:user_application_version]["id"]%>" data-name="<%=  application_version[:user_application_version]["version_name"] %>" data-description="<%=  application_version[:user_application_version]["description"].html_safe %>">Current Application Version: <%=  application_version[:user_application_version]["version_name"] %></span>
+       <span id="curApplicationVersion" class="current-application-version" style="display: 'block';" data-id="<%= application_version[:user_application_version]["id"]%>" data-name="<%=  application_version[:user_application_version]["version_name"] %>" data-description="<%=  application_version[:user_application_version]["description"].html_safe %>">Current Version: <%=  application_version[:user_application_version]["version_name"] %></span>
     <% end %>
    
  

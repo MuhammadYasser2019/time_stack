@@ -20,11 +20,10 @@
     var description =$(this).data("description");
     $().makeHttpRequest("./application_versions/acknowledge_version?id="+id, "GET", null, (res) => {
         $('#applicationVersionModal').modal('hide').data('modal',null);
-        debugger;
         $("#curApplicationVersion").data("id",id);
         $("#curApplicationVersion").data("name",name);
         $("#curApplicationVersion").data("description",description);
-        $("#curApplicationVersion").html("Current Application Version: "+ name);
+        $("#curApplicationVersion").html("Current Version: "+ name);
         $("#curApplicationVersion").show();
     });
   }) ;
