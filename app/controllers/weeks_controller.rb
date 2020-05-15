@@ -32,7 +32,6 @@ class WeeksController < ApplicationController
 	      p.save
       end
     end
-  
   end 
 
   # GET /weeks/1

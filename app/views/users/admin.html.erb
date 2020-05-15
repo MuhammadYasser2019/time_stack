@@ -3,6 +3,7 @@
   <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#holidays">Holidays</a></li>
   <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" role="tab" data-toggle="tab" href="#panel3">Report Logo</a></li>
   <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#panel4">Manage Content</a></li>
+   <li class="nav-item"><a id="versionPanelMenu" class="nav-link" role="tab" data-toggle="tab" href="#versionPanel">Application Versions</a></li>
  </ul>
 <div class="tab-content">
 	<div class="tab-pane fade show active" id="user_permissions">
@@ -199,5 +200,20 @@
 				</tr>
 			</table>
 		<div class="actions"><%= submit_tag 'Update Content' %></div>
+	</div>
+
+	<div class="tab-pane white-background" id="versionPanel">
+		<h1>Manage Application Versions</h1>
+		<button id="addNewVersion" class="btn btn-primary orange-button">Add New </button>
+		<table id="versionTable" class="table table-bordered table-responsive table-hover stripe">
+		 <thead>
+        <tr>
+            <th>Id</th>
+            <th>Version Name</th>
+            <th>Start Date </th>
+            <th>Platform</th>
+            <th>Actions</th>
+        </tr>
+    </thead></table>
 	</div>
 </div>
