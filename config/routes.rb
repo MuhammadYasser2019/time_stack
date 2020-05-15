@@ -39,6 +39,10 @@ Rails.application.routes.draw do
 
   
   get "/get_user_projects" => "users#get_user_projects"
+  post '/application_versions/get_items' => "application_versions#get_items"
+  get '/application_versions/delete_item' => "application_versions#delete_item" 
+  post '/application_versions/edit_item' => "application_versions#edit_item"
+  get '/application_versions/acknowledge_version' => "application_versions#acknowledge_version" 
 
   #root 'weeks#index'
   root 'static_pages#home'
@@ -57,6 +61,7 @@ Rails.application.routes.draw do
     get 'remove_device_info', to: "notifications#remove_device_info"
     get 'get_customer_detail', to: "users#get_customer_detail"
     get 'get_customer_holidays', to: "users#get_customer_holidays"
+    get 'agree_to_terms_and_conditions', to: "users#agree_to_terms_and_conditions"
 
     post 'send_entry', to: "users#post_data"
     get 'send_entry', to: "users#post_data"
@@ -124,6 +129,7 @@ Rails.application.routes.draw do
   post '/show_user_weekly_reports/:id' => 'users#show_user_weekly_reports'
 
   get '/set_default_project' => 'users#set_default_project'
+  match 'accept_terms_and_condition' => 'users#accept_terms_and_condition', via: [:get, :post]
   
   get 'add_user_to_project' => "projects#add_user_to_project"
   get '/projects/:id/user_time_report' => 'projects#user_time_report'

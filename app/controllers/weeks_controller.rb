@@ -9,7 +9,7 @@ class WeeksController < ApplicationController
   def index
     @user = current_user
     @shift_supervisor_project_shift = @user.project_shifts.where(shift_supervisor_id: @user.id).last
-    
+    @terms_modal_show = current_user.terms_and_condition
     if current_user.cm?
       return redirect_to customers_path
     elsif current_user.pm?
@@ -22,6 +22,7 @@ class WeeksController < ApplicationController
     logger.debug("the project tasks are: #{@project_tasks.inspect}")
     @projects =  Project.all
     #@weeks = Week.includes("user_week_statuses").where("user_week_statuses.user_id =  ?", current_user.id)
+
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(10)
     @projects.each do |p|
       if p.adhoc_pm_id.present? && p.adhoc_end_date.to_s(:db) < Time.now.to_s(:db)
@@ -31,7 +32,6 @@ class WeeksController < ApplicationController
 	      p.save
       end
     end
-  
   end 
 
   # GET /weeks/1

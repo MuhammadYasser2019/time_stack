@@ -18,7 +18,6 @@ module Api
 				user_type = (user.pm? || user.cm? || user.admin?) ?  "admin" : "user"
 
 				UserDevice.save_device_information(user.id, params[:deviceID], params[:platform],params[:deviceName], nil);
-
 				render json: format_response_json(
 					{
 					  message: 'User logged in succesfully!',
@@ -27,6 +26,7 @@ module Api
 						  accessToken: user.authentication_token,
 						  userRole: user_type,
 						  userID: user.id,
+						  termsAcknowledged: user.terms_and_condition,
 						  tokenExpirationTime: Time.now + 45*60 #45 min duration
 					  }
 					})
@@ -38,6 +38,24 @@ module Api
 					})
 	   		end
 		end 
+
+		api :GET, '/agree_to_terms_and_conditions', "Agree terms and conditions"
+		formats ['json']
+        def agree_to_terms_and_conditions
+			begin
+				@user.terms_and_condition = true
+				@user.save
+
+				render json: format_response_json({
+					status: true,
+				})
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to agree to terms and conditions!',
+					status: false
+				})
+			end
+		end
 
 		api :GET, '/get_customer_detail', "Get current user's customer detail."
 		formats ['json']

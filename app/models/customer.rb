@@ -30,7 +30,7 @@ class Customer < ApplicationRecord
       start_day = Time.now.beginning_of_month.to_date.to_s
     elsif current_month == "last_month"
       start_day = (Time.now.beginning_of_month-1.month).to_date.to_s
-    elsif start_date.nil? || current_week == "true"
+    elsif start_date.nil? || current_month == "current_week"
       start_day = Time.now.beginning_of_week.to_date.to_s
     else
       start_day = start_date
@@ -41,7 +41,7 @@ class Customer < ApplicationRecord
       end_date = Time.now.end_of_month.to_date.to_s
     elsif current_month == "last_month"
       end_date = (Time.now - 1.month).end_of_month.to_date.to_s
-    elsif end_date.nil? || current_week == "true"
+    elsif end_date.nil? || current_month == "current_week"
       end_date = Time.now.end_of_week.to_date.to_s
     else
       end_date = end_date
@@ -124,7 +124,7 @@ class Customer < ApplicationRecord
       start_day = Time.now.beginning_of_month
     elsif current_month == "last_month"
       start_day = Time.now.beginning_of_month-1.month
-    elsif proj_report_start_date.nil? || current_week == "true"
+    elsif proj_report_start_date.nil? || current_month == "current_week"
       start_day = Time.now.beginning_of_week
     else
       start_day = Date.parse(proj_report_start_date)
@@ -134,7 +134,7 @@ class Customer < ApplicationRecord
       last_day = Time.now.end_of_month
     elsif current_month == "last_month"
       last_day = (Time.now - 1.month).end_of_month
-    elsif proj_report_end_date.nil? || current_week == "true"
+    elsif proj_report_end_date.nil? || current_month == "current_week"
       last_day = start_day.end_of_week
     else
       last_day = Date.parse(proj_report_end_date).end_of_day

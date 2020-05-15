@@ -97,3 +97,5 @@
 	
 	- if !current_user.default_project? && current_user.parent_user_id.blank?
 		== render partial: 'users/default_projects'
+	- if !@terms_modal_show.present?
+		== render partial: 'users/terms_and_condition'

@@ -35,7 +35,7 @@ class Week < ApplicationRecord
       next_week_start_date = Date.today.beginning_of_week + 7.days
       user_invite_start_date = user.invitation_start_date.beginning_of_week 
 
-      until user_invite_start_date == next_week_start_date
+      if user_invite_start_date <= next_week_start_date
         new_week = Week.where(user_id: user.id, start_date: user_invite_start_date).last
         if new_week.blank?
           new_week = Week.new

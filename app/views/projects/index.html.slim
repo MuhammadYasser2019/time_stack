@@ -73,4 +73,6 @@
 		== render partial: 'timesheets_for_approval', locals: {projects: @projects} if !(@adhoc && @adhoc_pm_projects.present?)
 		.(id="dynamic_projects")
 			== render partial: 'new_edit_form'
+	- if !@terms_modal_show.present?
+		== render partial: 'users/terms_and_condition'
 

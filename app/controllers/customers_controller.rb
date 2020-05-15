@@ -30,6 +30,7 @@
       logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
       logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
       @current_systems = ExternalConfiguration.where(customer_id: @customer.id)
+      @terms_modal_show = current_user.terms_and_condition
     end
   end 
 
@@ -291,7 +292,10 @@
     logger.debug("customer.controller - update_user_employment ")
     user = User.find(params[:user_id])
     user.employment_type = params[:employment_type]
+    #user.email = params[:email]
     user.is_active = params[:is_active].present? ? params[:is_active] : false 
+    user.first_name = params[:first_name]
+    user.last_name = params[:last_name]
     user.inactive_at = Time.now.to_date if !params[:is_active].present?
     user.save
     respond_to do |format|
@@ -558,6 +562,10 @@
     if params[:exclude_pending_users].present? && params[:exclude_pending_users] == true
       @customer.projects.each do |p|
         @users << p.users.where.not(invitation_accepted_at: nil)
+      end
+    elsif params[:exclude_inactive_users].present? && params[:exclude_inactive_users] == "true"
+      @customer.projects.each do |p|
+        @users << p.users.where.not(is_active: false)
       end
     else
       @customer.projects.each do |p|

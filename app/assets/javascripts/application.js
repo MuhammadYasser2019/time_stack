@@ -25,4 +25,5 @@
 //= require turbolinks-compatibility
 // session_timeout_prompter
 //= require highcharts
+//= require ckeditor/adapters/jquery
 //= require_tree .

@@ -27,4 +27,9 @@ module UserHelper
     UserNotification.where(:user_id => current_user.id, :seen => false).count 
   end
 
+  def application_version
+    if(!current_user.nil?)
+     UsersApplicationVersion.validate_user_application_version(current_user.id)
+    end
+  end
 end
