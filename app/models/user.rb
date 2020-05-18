@@ -100,7 +100,7 @@ class User < ApplicationRecord
     end
 
 
-    last_weeks = Week.where("start_date >=? and user_id=?", Time.now.utc.beginning_of_day-7.days, user.id).first
+    last_weeks = Week.where("start_date >=?", Time.now.utc.beginning_of_day-7.days)
 
 
     last_weeks.each do |w|
