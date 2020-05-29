@@ -158,14 +158,19 @@ module Api
 		formats ['json']
 		def get_user_projects
 			begin
-                @user_id = @user.id
-                @project_ids = ProjectsUser.where(:user_id=>@user_id).pluck(:project_id)
+				default_project_task = User.where(:id=>@user.id).select(:default_project, :default_task).first
+
+                @project_ids = ProjectsUser.where(:user_id=>@user.id).pluck(:project_id)
 				@projects=Project.where(:id=> @project_ids).select("id as projectID, name as projectName").as_json
 
 				render json: format_response_json({
 					message: 'User projects retrieved!',
 					status: true,
-					result: @projects
+					result: {
+						projects: @projects,
+						defaultProjectID: default_project_task[:default_project],
+						defaultTaskID: default_project_task[:default_task]
+					}
 				})        
 			rescue
 			    render json: format_response_json({
