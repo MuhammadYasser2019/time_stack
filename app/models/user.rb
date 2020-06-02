@@ -83,7 +83,7 @@ class User < ApplicationRecord
 
   def self.send_timesheet_notification
     mail_hash = {}
-    User.all.each do |user|
+    User.where("pm is not true or cm is not true or admin is not true").each do |user|
       last_week = Week.where("start_date >=? and user_id=?", Time.now.utc.beginning_of_day-21.days, user.id).first
       
       if last_week && (last_week.status_id != 2 || last_week.status_id != 3)
