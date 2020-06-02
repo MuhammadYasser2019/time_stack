@@ -35,7 +35,8 @@ class Week < ApplicationRecord
       next_week_start_date = Date.today.beginning_of_week + 7.days
       user_invite_start_date = user.invitation_start_date.beginning_of_week 
 
-      if user_invite_start_date <= next_week_start_date
+      until user_invite_start_date >= next_week_start_date
+
         new_week = Week.where(user_id: user.id, start_date: user_invite_start_date).last
         if new_week.blank?
           new_week = Week.new
@@ -44,13 +45,15 @@ class Week < ApplicationRecord
           new_week.user_id = user.id
           new_week.status_id = 1
           new_week.save
+
+          7.times { new_week.time_entries.build( user_id: user.id )}
+          new_week.time_entries.each_with_index do | te, i |
+            new_week.time_entries[i].date_of_activity = Date.new(new_week.start_date.year, new_week.start_date.month, new_week.start_date.day) + i
+            new_week.time_entries[i].user_id = user.id
+          end
         end
 
-        7.times { new_week.time_entries.build( user_id: user.id )}
-        new_week.time_entries.each_with_index do | te, i |
-          new_week.time_entries[i].date_of_activity = Date.new(new_week.start_date.year, new_week.start_date.month, new_week.start_date.day) + i
-          new_week.time_entries[i].user_id = user.id
-        end
+        
         new_week.save
         user_invite_start_date += 7.days
       end
