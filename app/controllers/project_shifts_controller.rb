@@ -21,7 +21,7 @@ class ProjectShiftsController < ApplicationController
         @shift_array << [name_and_shift_period, shift.id]
       end
       user_array = []
-      User.where(id: ProjectsUser.where(project_shift_id: @project_shift.id).pluck(:user_id)).each do |user|
+      User.where(id: @customer.projects.pluck(:user_id)).each do |user|
         full_name = if user.first_name && user.last_name
                       user.first_name + ' ' + user.last_name
                     else
@@ -51,7 +51,7 @@ class ProjectShiftsController < ApplicationController
         @shift_array << [name_and_shift_period, shift.id]
       end
       user_array = []
-      User.where(id: ProjectsUser.where(project_shift_id: @project_shift.id).pluck(:user_id)).each do |user|
+      User.where(id: @customer.projects.pluck(:user_id)).each do |user| 
         full_name = if user.first_name && user.last_name
                       user.first_name + ' ' + user.last_name
                     else
