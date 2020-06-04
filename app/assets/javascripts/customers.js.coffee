@@ -181,6 +181,15 @@ jQuery ($) ->
       user_id: user_id,
   )
 
+  $(document).on("click", ".assign_cm_proxy_role", ->
+    console.log("check is clicked" +$(this).val())
+
+    user_id = $(this).val()
+    $.get '/assign_cm_proxy_role',
+      user_id: user_id,
+  )
+
+
   $('#show_reports').DataTable({
     dom: 'lBfrtip',
     "retrieve": true,

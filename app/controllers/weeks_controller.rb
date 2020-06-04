@@ -10,7 +10,7 @@ class WeeksController < ApplicationController
     @user = current_user
     @shift_supervisor_project_shift = @user.project_shifts.where(shift_supervisor_id: @user.id).last
     @terms_modal_show = current_user.terms_and_condition
-    if current_user.cm?
+    if current_user.cm? || current_user.proxy_cm?
       return redirect_to customers_path
     elsif current_user.pm?
       return redirect_to projects_path
