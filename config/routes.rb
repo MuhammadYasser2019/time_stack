@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   #root 'weeks#index'
   root 'static_pages#home'
   namespace :api do
+    post 'social_login', to: "users#social_login"
     post 'login_user', to: "users#login_user"
     get 'login_user', to: "users#login_user"
     get 'get_weekly_time_entries', to: "time_entries#get_weekly_time_entries"
