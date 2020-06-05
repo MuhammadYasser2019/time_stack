@@ -1,7 +1,7 @@
 module Api
   class UsersController < BaseController
-
-		skip_before_action :authenticate_user, only: :login_user
+		include UserHelper
+		skip_before_action :authenticate_user, only: [:login_user, :social_login]
 
 		api :POST, '/login_user', "Verify user login and get access"
 		formats ['json']
@@ -33,7 +33,52 @@ module Api
 		 	else
 				render json: format_response_json(
 					{
-					message: "The email or password was incorrect. Please try again",
+						message: "The email or password was incorrect. Please try again",
+						status: false				
+					})
+	   		end
+		end 
+
+		api :POST, '/social_login', "Verify user login and get access"
+		formats ['json']
+		param :accessToken, String, :desc => "Google authentication token", :required => true
+		param :deviceID, String, :desc => "Unique device identifier", :required => true
+		param :platform, String, :desc => "Runtime OS (Android/IOS)", :required => true
+		param :deviceName, String, :desc => "Unique device name", :required => true
+		def social_login	
+			access_token= params[:accessToken]
+			user_info = get_information_from_google_token(access_token)
+			if user_info.nil?
+				render json: format_response_json(
+				{
+					message: "Invalid social login credential!",
+					status: false				
+				})
+			end
+			
+			email = user_info["email"]
+			user = User.find_by_email(email)
+		
+			if !user.nil?
+				user_type = (user.pm? || user.cm? || user.admin?) ?  "admin" : "user"
+
+				UserDevice.save_device_information(user.id, params[:deviceID], params[:platform],params[:deviceName], nil);
+				render json: format_response_json(
+					{
+					  message: 'User logged in succesfully!',
+					  status: true,
+					  result: {
+						  accessToken: user.authentication_token,
+						  userRole: user_type,
+						  userID: user.id,
+						  termsAcknowledged: user.terms_and_condition,
+						  tokenExpirationTime: Time.now + 45*60 #45 min duration
+					  }
+					})
+		 	else
+				render json: format_response_json(
+					{
+					message: "User not found!",
 					status: false				
 					})
 	   		end
