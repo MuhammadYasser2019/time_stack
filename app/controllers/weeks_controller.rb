@@ -376,7 +376,7 @@ class WeeksController < ApplicationController
               logger.debug("Invalid Request!")
               @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"
                flash[:alert] = @comment
-               redirect_to :back
+               redirect_back(fallback_location: root_path)
           else  ### SAVE THE CHANGES 
               logger.debug("Valid Request!")
               @week.status_id = 5
@@ -453,7 +453,7 @@ class WeeksController < ApplicationController
               logger.debug("Invalid Request!")
               @comment = "Sorry, you only have #{status[:hours_allowed]} hours avaliable, but requested #{status[:hours_requested]} hours"
                flash[:alert] = @comment
-               redirect_to :back #Will deprecate use redirect_back(fallback_location: fallback_location)
+               redirect_back(fallback_location: root_path) #Will deprecate use redirect_back(fallback_location: fallback_location)
           else  ### SAVE THE CHANGES   
             @week.status_id = 2
             @week.time_entries.where(status_id: [nil,1,4,5]).each do |t|

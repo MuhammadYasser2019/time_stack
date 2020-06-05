@@ -294,6 +294,12 @@ class User < ApplicationRecord
     nil
   end
 
+  def vacation_type
+    
+    emp_type = EmploymentTypesVacationType.where(employment_type_id: self.employment_type).first
+    vacation_type = VacationType.find emp_type.vacation_type_id
+    return vacation_type.vacation_title
+  end
   private
 
   def self.jwt_secret

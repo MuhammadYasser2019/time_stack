@@ -124,6 +124,7 @@ jQuery ($) ->
 	$('#show_vacation_reports').dataTable({
 	    dom: 'lBfrtip',
 	    "retrieve": true,
+	    "order": [[ 2, "desc" ]]
 	    buttons: [ 'excel', 'pdf']
 	  
 	})
