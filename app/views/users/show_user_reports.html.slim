@@ -80,31 +80,45 @@
         td
         td
         td
-        
-    = form_tag "/download_report_zip", id: "download_zip_form", method: :get
-      - @week.each do |w|
-        - w.upload_timesheets.each do |t|
-          - if t.time_sheet.present?
+    
+    = form_tag "/show_user_reports#{params[:id]}", id: "download_zip_form", method: :get
+    table
+      thead
+        tr
+          td Attached File
+          td Action
+        tbody
+          - @week.each do |w|
+            - w.upload_timesheets.each do |t|
+              - if t.time_sheet.present?
+                tr
+                  td= link_to "#{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+                  td=check_box_tag 'zip_ids[]', t.id, class: "zip_version_check"
+                  br
+          -if @print_report == "false"
             tr
-              td= link_to "Attached Files Are: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
-              td&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-              td=check_box_tag 'zip_ids[]', t.id, class: "zip_version_check"
+              td= button_tag "Print", class: "print-user-report secondary tiny", type: "button"
+              |&nbsp;&nbsp;&nbsp;
+            -if @available_csv  > 0
+              td= submit_tag 'Download Zip' , class: 'download-zip-version'
               br
-      -if @print_report == "false"
-        = button_tag "Print", class: "print-user-report secondary tiny", type: "button"
-        |&nbsp;&nbsp;&nbsp;
-        -if @available_csv  > 0
-          = submit_tag 'Download Zip' , class: 'download-zip-version'
-        br
-      -else
-        -if @available_csv > 0
-          br
-          = submit_tag 'Download Zip' , class: 'download-zip-version'
+          -else
+            -if @available_csv > 0
+              br
+              td= submit_tag 'Download Zip' , class: 'download-zip-version'
 
 - else
    h1 You are not allowed to access this page.
 
 coffee:
+  $(document).ready ->
+    checkboxes = $('input')
+    i = 0
+    while i < checkboxes.length
+      if checkboxes[i].type == 'checkbox'
+        checkboxes[i].checked = false
+      i++
+
   $(document).ready ->
     $ ->
     $('input[type=\'checkBox\']').change ->

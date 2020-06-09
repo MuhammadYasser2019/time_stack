@@ -361,28 +361,60 @@ end
 
 
   def show_user_weekly_reports
-    if params[:id].blank?
-      @user = current_user
+    
+    if params[:commit] == "Download Zip"
+      zip_ids = params[:zip_ids]
+      if zip_ids.present?
+        @uploaded_time_sheets = []
+        zip_ids.each do |zip_id|
+          @uploaded_file = UploadTimesheet.find zip_id
+          @uploaded_time_sheets << @uploaded_file
+        end
+       @filename = "Timesheet_#{Time.now.to_date.strftime('%Y%m%d')}.zip"
+        present_time =  Time.now.to_i
+        folder_path = "#{Rails.root}/public/downloads_#{present_time}/"
+        zipfile_name = "#{Rails.root}/public/archive_#{present_time}.zip"
+
+        FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
+        FileUtils.remove_entry(zipfile_name) if File.exist?(zipfile_name)
+        Dir.mkdir("#{Rails.root}/public/downloads_#{present_time}")
+        @uploaded_time_sheets.each do |attachment|
+          open(folder_path + "#{attachment.time_sheet_identifier}", 'wb') do |file|
+            file << open("#{Rails.root}/public/" +"#{attachment.time_sheet.url}").read
+          end
+        end
+        input_filenames = Dir.entries(folder_path).select {|f| !File.directory? f}
+        Zip::File.open(zipfile_name, Zip::File::CREATE) do |zipfile|
+          input_filenames.each do |attachment|
+            zipfile.add(attachment,File.join(folder_path,attachment))
+          end
+        end
+        FileUtils.remove_dir(folder_path) if Dir.exist?(folder_path)
+        send_file("#{Rails.root}/public/archive_#{present_time}.zip", :type => 'application/zip', :filename => @filename)
+        end
     else
-      @user = User.find(params[:id])
-    end
-    if params["proj_report_end_date"].present?
-      params[:month] = params["proj_report_end_date"].to_date.month
-    end
-    if params[:month].blank?
-      logger.debug("Are you in here or there$%^&$%^&$%&$%^&$%&$%^^&$%^&$%^&$&$%^&$%^&$%^&$%^&$%^&")
-      proj_report_start_date = Time.now.beginning_of_month
-      if Time.now.end_of_month ==0
-        proj_report_end_date = Time.now.end_of_month + 6.days
+      if params[:id].blank?
+        @user = current_user
       else
-        proj_report_end_date = Time.now.end_of_month
+        @user = User.find(params[:id])
       end
-    else
-      mon = Time.now.month-params[:month].to_i
-      proj_report_start_date = (Time.now.beginning_of_month - mon.month)
-      if (Time.now.end_of_month - mon.month).wday ==0
-        proj_report_end_date = (Time.now.end_of_month - mon.month) + 6.days
+      if params["proj_report_end_date"].present?
+        params[:month] = params["proj_report_end_date"].to_date.month
+      end
+      if params[:month].blank?
+        logger.debug("Are you in here or there$%^&$%^&$%&$%^&$%&$%^^&$%^&$%^&$&$%^&$%^&$%^&$%^&$%^&")
+        proj_report_start_date = Time.now.beginning_of_month
+        if Time.now.end_of_month ==0
+          proj_report_end_date = Time.now.end_of_month + 6.days
+        else
+          proj_report_end_date = Time.now.end_of_month
+        end
       else
+        mon = Time.now.month-params[:month].to_i
+        proj_report_start_date = (Time.now.beginning_of_month - mon.month)
+        if (Time.now.end_of_month - mon.month).wday ==0
+          proj_report_end_date = (Time.now.end_of_month - mon.month) + 6.days
+        else
         if Time.now.month == 2 
           proj_report_end_date = ((Time.now + 1.month).end_of_month - mon.month)
         else
@@ -390,7 +422,6 @@ end
         end
       end
     end 
-
     user_id = @user.id
     @users = User.all
     user_project = @user.projects
@@ -420,11 +451,20 @@ end
     end
     
     @week = @user.find_week_id(proj_report_start_date, proj_report_end_date, @user)
+    @available_csv = 0;
+    @week.each do|w|
+      w.upload_timesheets.each do |t|
+        if t.time_sheet.present?
+          @available_csv += 1
+        end
+      end
+    end
     
     respond_to do |format|
       format.xlsx
       format.html{}
 
+      end
     end
   end
 

@@ -80,7 +80,44 @@
 
 
         -i += 1
-  - @week.each do |w|
-      - w.upload_timesheets.each do |t|
-        - if t.time_sheet.present?
-          div = link_to "Attached Files Are: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+  = form_tag "/show_user_weekly_reports/#{params[:id]}",id: "download_zip", method: :get
+  table
+    thead
+        tr
+          td Attached File
+          td Action
+    tbody  
+    - @week.each do |w|
+        - w.upload_timesheets.each do |t|
+          - if t.time_sheet.present?
+            tr
+              td= link_to "#{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+              |&nbsp;&nbsp;&nbsp;
+              td=check_box_tag 'zip_ids[]', t.id, class: "week_zip_version_check"
+              br
+    -if @available_csv > 0
+      tr
+        td= submit_tag 'Download Zip' , class: 'week_download_zip_version'
+
+
+  coffee:
+    $(document).ready ->
+    checkboxes = $('input')
+    i = 0
+    while i < checkboxes.length
+      if checkboxes[i].type == 'checkbox'
+        checkboxes[i].checked = false
+      i++
+
+    $(document).ready ->
+    $ ->
+    $('input[type=\'checkBox\']').change ->
+      len = $('input[type=\'checkBox\']:checked').length
+      if len == 0
+        $('input[type=\'submit\']').prop 'disabled', true
+      else
+        $('input[type=\'submit\']').removeAttr 'disabled'
+      return
+    $('input[type=\'checkBox\']').trigger 'change'
+    return
+    
