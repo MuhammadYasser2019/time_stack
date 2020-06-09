@@ -60,3 +60,8 @@
 div(id="userPreviousComments" class="modal" aria-hidden="true" role="dialog")
 
 div(id="expenseRecordManagement" class="modal" aria-hidden="true" role="dialog")
+
+coffee:
+  $(document).ready ->
+    $('input[type=\'submit\']').removeAttr 'disabled'
+

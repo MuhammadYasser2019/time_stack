@@ -80,12 +80,40 @@
         td
         td
         td
-    - @week.each do |w|
-      - w.upload_timesheets.each do |t|
-        - if t.time_sheet.present?
-          div = link_to "Attached Files Are: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+        
+    = form_tag "/download_report_zip", id: "download_zip_form", method: :get
+      - @week.each do |w|
+        - w.upload_timesheets.each do |t|
+          - if t.time_sheet.present?
+            tr
+              td= link_to "Attached Files Are: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+              td&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+              td=check_box_tag 'zip_ids[]', t.id, class: "zip_version_check"
+              br
+      -if @print_report == "false"
+        = button_tag "Print", class: "print-user-report secondary tiny", type: "button"
+        |&nbsp;&nbsp;&nbsp;
+        -if @available_csv  > 0
+          = submit_tag 'Download Zip' , class: 'download-zip-version'
+        br
+      -else
+        -if @available_csv > 0
+          br
+          = submit_tag 'Download Zip' , class: 'download-zip-version'
 
-    -if @print_report == "false"
-      = button_tag "Print", class: "print-user-report secondary tiny", type: "button"
 - else
    h1 You are not allowed to access this page.
+
+coffee:
+  $(document).ready ->
+    $ ->
+    $('input[type=\'checkBox\']').change ->
+      len = $('input[type=\'checkBox\']:checked').length
+      if len == 0
+        $('input[type=\'submit\']').prop 'disabled', true
+      else
+        $('input[type=\'submit\']').removeAttr 'disabled'
+      return
+    $('input[type=\'checkBox\']').trigger 'change'
+    return
+
