@@ -207,6 +207,23 @@ jQuery ($) ->
     ]
   })
 
+  $('#shift_report').DataTable({
+    dom: 'lBfrtip',
+    "retrieve": true,
+    buttons: [
+      {
+        extend: 'excel',
+        title: "Shift Report",
+      },
+      {
+        extend: 'pdf',
+        title: "Shift Report",
+        orientation:'landscape',
+        pageSize: 'TABLOID'
+      }
+    ]
+  })
+
   $('#inventory_reports').DataTable({
     dom: 'lBfrtip',
     "retrieve": true,

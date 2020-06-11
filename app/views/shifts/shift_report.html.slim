@@ -25,7 +25,7 @@
           td = date_field_tag :end_date, params[:end_date], {required: "required", class: "form-control"}
           /= hidden_field_tag 'id', @user.id
           td = button_tag "Shift Report", class: "orange-button"
-  table border="1"
+  table class="table" id="shift_report" style="width:80%"
     thead
       tr
         td Employee Name
