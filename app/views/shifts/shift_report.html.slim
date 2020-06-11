@@ -1,62 +1,50 @@
 - if (current_user.cm? && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) || (@project_shift && @project_shift.shift_supervisor_id == current_user.id)
-  div.report
 
-    h1 Shift Report for #{shift_name_and_hours(@shift.name, @shift.start_time, @shift.end_time)}
-    = form_tag "/shift_report/#{params[:id]}",id: "user_report_form", method: :get
-    table
-      -if @print_report == "true"
-        p Date:
-          #{params[:date]}
-        p Project:
-          #{Project.find(params[:project]).name if !params[:project].blank? }
-      -else
-        thead
-          tr
-            th Project
-            th Date
-            th
-
-        tbody
-          tr
-            td = select_tag :project, options_from_collection_for_select(@shift.projects, "id", "name", params[:project].to_i), :include_blank => true
-            = hidden_field_tag 'hidden_print_report', false
-            = hidden_field_tag :type, params[:type]
-            = hidden_field_tag :customer_id, params[:customer_id]
-            td = date_field_tag :date, params[:date], {required: "required"}
-            /= hidden_field_tag 'id', @user.id
-            td = button_tag "Shift Report", class: "orange-button"
-    table border="1"
+  h1 Shift Report for #{shift_name_and_hours(@shift.name, @shift.start_time, @shift.end_time)}
+  = form_tag "/shift_report/#{params[:id]}", method: :get
+  table
+    -if @print_report == "true"
+      p Date:
+        #{params[:date]}
+      p Project:
+        #{Project.find(params[:project]).name if !params[:project].blank? }
+    -else
       thead
         tr
-          td Day
-          td Shift
-          td Employee Name
-          td Hours Scheduled
-          td Hours Worked
-          td Project
-          td Task
+          th Project
+          th Start Date
+          th End date
 
       tbody
-      - if params[:date] && params[:date].to_date <= DateTime.now.to_date
-       - @time_entries.each do |t|
         tr
-          td.date = t.date_of_activity.strftime("%A")
-          td.date = "#{shift_name_and_hours(@shift.name, @shift.start_time, @shift.end_time)}"
-          td.task = t.user.name
-          td.hour = t.project_shift.shift.regular_hours if t.project_shift
-          td.hour = t.hours
-          td.date = t.project.name if !t.project.nil?
-          td.task = t.task.description if !t.task.nil?
-      - else
-       - @projects_users.each do |projects_user|
-         tr
-           td.date = params[:date].to_datetime.strftime("%A")
-           td.date = "#{shift_name_and_hours(@shift.name, @shift.start_time, @shift.end_time)}"
-           td.task = (projects_user.user.first_name && projects_user.user.last_name) ? projects_user.user.name : projects_user.user.email
-           td.hour = projects_user.project_shift.shift.regular_hours if projects_user.project_shift
-           td.hour = "N/A"
-           td.date = projects_user.project.name if projects_user.project
-           td.task = "N/A"
+          td = select_tag :project, options_from_collection_for_select(@shift.projects, "id", "name", params[:project].to_i), :include_blank => true, class: "form-control"
+          = hidden_field_tag 'hidden_print_report', false
+          = hidden_field_tag :type, params[:type]
+          = hidden_field_tag :customer_id, params[:customer_id]
+          td = date_field_tag :start_date, params[:start_date], {required: "required", class: "form-control"}
+          td = date_field_tag :end_date, params[:end_date], {required: "required", class: "form-control"}
+          /= hidden_field_tag 'id', @user.id
+          td = button_tag "Shift Report", class: "orange-button"
+  table border="1"
+    thead
+      tr
+        td Employee Name
+        
+        td Total Hours
+        td Current Shift
+        td Other Shift
+        td Overtime
 
+    tbody
+
+      - @hash.each do |user, data|
+        -u = User.find_by_id user
+        tr
+          td.date = u.name
+          td.hour = data[0]
+          td.hour =data[1]
+          td.task = data[2]
+          td.task = data[3]
+            
 - else
   h1 You are not allowed to access this page.
