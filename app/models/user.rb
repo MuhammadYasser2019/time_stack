@@ -299,13 +299,13 @@ class User < ApplicationRecord
 
   def self.send_password_reminder_email
     User.where(is_active: true).each do |u|
-      if u.password_changed_at.nil? && Time.now > u.created_at + 2.minutes
+      if u.password_changed_at.nil? && Time.now > u.created_at + 86.days
           token, enc = Devise.token_generator.generate(User, :reset_password_token)
           PasswordExpiration.mail_for_expiration_to_user(u,token).deliver
           u.reset_password_token = enc
           u.reset_password_sent_at = Time.now.utc
           u.save!
-      elsif u.password_changed_at.present? && Time.now > u.password_changed_at + 2.minutes
+      elsif u.password_changed_at.present? && Time.now > u.password_changed_at + 86.days
         token, enc = Devise.token_generator.generate(User, :reset_password_token)
         PasswordExpiration.mail_for_expiration_to_user(u,token).deliver
         u.reset_password_token = enc
