@@ -5,7 +5,7 @@ h1= t('.password_expired')
 .row
   .col-md-12.col-md-offset-12
     = form_for(resource, :as => resource_name, :url => [resource_name, :password_expired], :html => { :method => :put }) do |f|
-      h5 style="text-align:center;"= t('.renew_your_password')
+      h5 style="text-align:center;"= "Reset your password"
 
       = devise_error_messages!
       .col-md-8
