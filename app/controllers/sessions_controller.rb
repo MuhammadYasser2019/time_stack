@@ -1,6 +1,4 @@
 class SessionsController < Devise::SessionsController
-  after_action :check_password_expiration
-  
     def create
         self.resource = warden.authenticate!(auth_options)
         set_flash_message(:notice, :signed_in) if is_flashing_format?
@@ -15,23 +13,5 @@ class SessionsController < Devise::SessionsController
     def destroy
       session[:token] = ""
       super
-    end
-
-    private
-    def check_password_expiration
-      if current_user.present?
-        send_email_date = current_user.password_changed_at + 1.minutes
-         date = Time.now.to_datetime 
-        if date.to_datetime >= send_email_date.to_datetime
-            @host = request.host
-            @url = request.url
-            @user = current_user
-            #@user.generate_reset_password_token!
-            raw, enc = Devise.token_generator.generate(User, :reset_password_token)
-            PasswordExpiration.mail_for_expiration_to_user(current_user,@host,@url,raw).deliver
-             current_user.reset_password_token = raw
-             current_user.save
-        end
-      end
     end
   end
