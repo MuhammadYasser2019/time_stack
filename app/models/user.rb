@@ -321,6 +321,14 @@ class User < ApplicationRecord
     vacation_type = VacationType.find emp_type.vacation_type_id
     return vacation_type.vacation_title
   end
+
+  def self.reset_token
+    User.all.each do |u|
+      u.authentication_token = nil
+      u.save!
+    end
+  end
+
   private
 
   def self.jwt_secret

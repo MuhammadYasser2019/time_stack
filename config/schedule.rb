@@ -32,6 +32,10 @@ every 15.minute do
   runner "UserDevice.send_shift_notification"
 end
 
+every 45.minute do
+  runner "User.reset_token"
+end
+
 every 1.day do
   runner "User.send_password_reminder_email"
 end

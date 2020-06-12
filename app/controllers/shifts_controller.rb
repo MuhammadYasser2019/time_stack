@@ -114,16 +114,11 @@ class ShiftsController < ApplicationController
   end
 
   def show_shift_reports
+  
     if params[:type] == 'customer' && current_user.cm
       @customer = Customer.find(params[:id])
       @shifts = @customer.shifts
-      @employee_count = 0
-      @shifts.each do |shift|
-        shift.project_shifts.each do |project_shift|
-          @employee_count += project_shift.users.count
-        end
-      end
-    elsif params[:type] == 'project' && current_user.pm
+    elsif params[:type] == 'project'# && current_user.pm
       @project = Project.find(params[:id])
       @project_shifts = @project.project_shifts
     elsif params[:type] == 'shift_supervisor'
@@ -136,44 +131,87 @@ class ShiftsController < ApplicationController
   def shift_report
     @user = current_user
 
-    if params[:type] == 'customer'
-      @shift = Shift.find(params[:id])
-      @project_shifts = @shift.project_shifts
-      @project_shift_id_selection = @project_shifts.pluck(:id)
-      user_ids = []
-      project_ids = []
-      @project_shifts.each do |project_shift|
-        user_ids << project_shift.users.pluck(:id)
-        project_ids << project_shift.project_id
-      end
-      user_ids = user_ids.uniq
-      project_ids = project_ids.uniq
-      @projects_users = ProjectsUser.where(user_id: user_ids, project_id: project_ids)
+    if params[:start_date].present?
+      start_date = params[:start_date]
     else
-      @project_shift = ProjectShift.find(params[:id])
-      @projects_users = @project_shift.projects_users
-      @shift = @project_shift.shift
-      @project_shift_id_selection = @project_shift.id
+      start_date = Time.now.beginning_of_month.strftime("%Y-%m-%d")
+    end
+    params[:start_date] = start_date
+
+    if params[:end_date].present?
+      end_date = params[:end_date]
+    else
+      end_date = Time.now.end_of_month.strftime("%Y-%m-%d")
+    end
+    params[:end_date] = end_date
+
+    @shift = Shift.find(params[:id])
+    
+
+    if current_user.cm?
+      @customer = Customer.where(user_id: current_user.id)
+      if params[:project].present?
+        @project_shifts = @shift.project_shifts.where(project_id: params[:project])
+      else
+        @project_shifts = @shift.project_shifts
+      end
+      @project_shift_id_selection = @project_shifts.pluck(:id)
+      @projects = current_user.projects
+    elsif current_user.pm?
+      @projects = Project.where(user_id: current_user.id).uniq
+      if params[:project].present?
+        @project_shifts = ProjectShift.where(project_id: params[:project])
+      else
+        @project_shifts = ProjectShift.where(project_id: @projects.pluck(:id))
+      end
+      @project_shift_id_selection = @project_shifts.pluck(:id)
     end
 
-    unless params[:date]
-      last_time_entry = TimeEntry.where(project_shift_id: @project_shift_id_selection).last
-      params[:date] = last_time_entry.date_of_activity.strftime("%Y-%m-%d")
+    time_period = start_date..end_date
+
+    if params[:project].present?
+      @time_entries = TimeEntry.where(date_of_activity: time_period,project: params[:project].to_i)
+    else  
+      @time_entries = TimeEntry.where(date_of_activity: time_period)
+    end
+    @other_shift = @time_entries.where("project_shift_id is null")
+    @current_shift = @time_entries.where(project_shift_id: @project_shift_id_selection)
+
+    @hash = {}
+    time_range = (end_date.to_date-start_date.to_date).to_i
+    @project_shifts.each do |project_shift|
+      project_shift.users.each do |u|
+        @hash[u.id] = []
+        total_hours = @shift.regular_hours*time_range.to_f
+        other_shift_hours = @other_shift.where(user_id: u.id).sum(:hours)
+        current_shift_hours = @current_shift.where(user_id: u.id).sum(:hours)
+        
+        extra_hours = current_shift_hours - @shift.regular_hours*time_range.to_f
+        overtime = (extra_hours > 0) ? extra_hours : 0.0
+        @hash[u.id] << total_hours
+        @hash[u.id] << current_shift_hours
+        @hash[u.id] << other_shift_hours
+        @hash[u.id] << overtime
+      end
     end
 
-    @after_shift = params[:date].to_date <= DateTime.now.to_date
-    if params[:date] && params[:project] && @after_shift
-      time_period = params[:date].to_datetime.beginning_of_day..params[:date].to_datetime.end_of_day
-      @time_entries = TimeEntry.where(project_shift_id: @project_shift_id_selection, date_of_activity: time_period,
-                                      project: params[:project].to_i)
-    elsif params[:date] && params[:project]
+    # # unless params[:date]
+    # #   last_time_entry = TimeEntry.where(project_shift_id: @project_shift_id_selection).last
+    # #   params[:date] = last_time_entry.date_of_activity.strftime("%Y-%m-%d")
+    # # end
 
-    elsif params[:project]
-      #time_period = params[:date].to_datetime.beginning_of_day..params[:date].to_datetime.end_of_day
-      #@time_entries = TimeEntry.where(project_shift_id: @project_shift_id_selection, date_of_activity: time_period)
-    elsif params[:date] && @after_shift
-      @time_entries = TimeEntry.where(project_shift_id: @project_shift_id_selection, project: params[:project].to_i)
-    end
+    # #@after_shift = params[:date].to_date <= DateTime.now.to_date
+    # if params[:date] && params[:project] && @after_shift
+    #   time_period = start_date..end_date
+      
+    # elsif params[:date] && params[:project]
+
+    # elsif params[:project]
+    #   #time_period = params[:date].to_datetime.beginning_of_day..params[:date].to_datetime.end_of_day
+    #   #@time_entries = TimeEntry.where(project_shift_id: @project_shift_id_selection, date_of_activity: time_period)
+    # elsif params[:date] && @after_shift
+    #   @time_entries = TimeEntry.where(project_shift_id: @project_shift_id_selection, project: params[:project].to_i)
+    # end
   end
 
   private

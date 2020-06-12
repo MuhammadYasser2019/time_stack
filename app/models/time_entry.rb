@@ -9,7 +9,7 @@ class TimeEntry < ApplicationRecord
 
 
   before_save :calculate_hours
-  before_save :add_project_shift_id
+  after_save :add_project_shift_id
 
 
   def calculate_hours
