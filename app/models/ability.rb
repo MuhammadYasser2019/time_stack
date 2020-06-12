@@ -24,7 +24,7 @@ class Ability
        can :manage, Customer
        can :manage, Project
       end
-      if user.cm
+      if user.cm || user.proxy_cm
         can :manage, TimeEntry
         can [:read,:edit,:update], Task
         can [:manage, :permission_denied, :show_project_reports,:approve], Project

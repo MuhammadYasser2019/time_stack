@@ -275,7 +275,21 @@
     respond_to do |format|
       format.js
     end
+  end
 
+  def assign_cm_proxy_role
+    user = User.find params[:user_id]
+    if user.present?
+      if user.proxy_cm?
+        user.proxy_cm = false
+      else
+        user.proxy_cm = true
+      end
+      user.save
+    end
+    respond_to do |format|
+      format.js
+    end
   end
 
   def edit_customer_user

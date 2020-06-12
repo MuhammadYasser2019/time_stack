@@ -1,3 +1,5 @@
+require 'rest-client'
+
 module UserHelper
   def authenticate_user_from_token
     user_email = params[:email].presence
@@ -20,6 +22,17 @@ module UserHelper
         status: false
       }, status: 401
       
+    end
+  end
+
+  def get_information_from_google_token(token)
+    begin
+      res = RestClient.get("https://www.googleapis.com/userinfo/v2/me", headers={
+        :Authorization => "Bearer " + token
+      })
+      JSON.parse(res.body)
+    rescue
+      return null
     end
   end
 

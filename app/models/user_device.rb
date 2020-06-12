@@ -22,6 +22,12 @@ class UserDevice < ApplicationRecord
     def self.send_shift_notification
         time_zone = 'Eastern Time (US & Canada)'
         check_start_time = Time.now.in_time_zone(time_zone).time
+
+        week_day = check_start_time.wday
+        if week_day == 0 || week_day == 6 #Sunday and Saturday
+            return nil
+        end            
+
         check_end_time = check_start_time +15 * 60 #15 min later
 
         shifts = Shift.select(:start_time, :end_time, :id)
@@ -56,7 +62,7 @@ class UserDevice < ApplicationRecord
     def self.handle_shift_notification(shift_ids, starting_shift)
         project_shift_ids = ProjectShift.where(:shift_id=>shift_ids).pluck(:id)
 
-        shift_projects = ProjectsUser.where(:project_shift_id=> project_shift_ids).joins(:user, :project).where(:projects=>{inactive:[0,nil]}).select("users.id as user_id,projects.id as project_id, projects.name").as_json
+        shift_projects = ProjectsUser.where(:project_shift_id=> project_shift_ids).joins(:user, :project).where(:projects=>{inactive:[0,nil], deactivate_notifications: [0, nil]}).select("users.id as user_id,projects.id as project_id, projects.name").as_json
 
         user_ids = []
 

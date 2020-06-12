@@ -47,6 +47,7 @@ Rails.application.routes.draw do
   #root 'weeks#index'
   root 'static_pages#home'
   namespace :api do
+    post 'social_login', to: "users#social_login"
     post 'login_user', to: "users#login_user"
     get 'login_user', to: "users#login_user"
     get 'get_weekly_time_entries', to: "time_entries#get_weekly_time_entries"
@@ -142,6 +143,7 @@ Rails.application.routes.draw do
   get 'shared_user' => "customers#shared_user"
   get 'add_pm_role' => "customers#add_pm_role"
   get 'assign_proxy_role' => "customers#assign_proxy_role"
+  get 'assign_cm_proxy_role' => "customers#assign_cm_proxy_role"
   get 'edit_customer_user/:user_id' => "customers#edit_customer_user"
   get '/update_user_employment' => "customers#update_user_employment"
   get 'vacation_request' => "customers#vacation_request"

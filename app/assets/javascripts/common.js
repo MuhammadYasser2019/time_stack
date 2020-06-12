@@ -134,6 +134,9 @@ $(function () {
                     }
                 },
             });
+        },
+        getRequestUrl: function (path) {
+            return window.location.origin + "/" + path;
         }
     });
 });

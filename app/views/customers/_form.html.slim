@@ -114,7 +114,8 @@ div.tab-content.white-background
                           th Action
                           th Shared
                           th PM
-                          th Proxy
+                          th Proxy PM
+                          th Proxy CM
 					tbody
 						-@users.each_with_index do |uop, i|
 							-if uop.customer_id == params[:customer_id].to_i
@@ -129,6 +130,7 @@ div.tab-content.white-background
 									td = check_box_tag "add_pm_role", uop.id, uop.pm?, class: "add_pm_role"
 									
 									td = check_box_tag "add_pm_role", uop.id, uop.proxy?, class: "assign_proxy_role"
+									td = check_box_tag "add_proxy_cm", uop.id, uop.proxy_cm?, class: "assign_cm_proxy_role"
 
 					div class = "modal" id="sharedUser" tabindex="-1" role="dialog" aria-hidden="true"
 
