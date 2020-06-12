@@ -1,12 +1,11 @@
-- content_for :breadcrumbs, t('.password_expired')
+h1= t('.password_expired')
 
-h1= t('.renew_your_passord')
-h2= t('.password_expired')
+
 
 .row
   .col-md-12.col-md-offset-12
     = form_for(resource, :as => resource_name, :url => [resource_name, :password_expired], :html => { :method => :put }) do |f|
-      h4= t('.renew_your_password')
+      h5 style="text-align:center;"= t('.renew_your_password')
 
       = devise_error_messages!
       .col-md-8
@@ -23,5 +22,5 @@ h2= t('.password_expired')
           = f.password_field :password_confirmation, class: 'form-control'
           br
 
-          = f.submit t('.change_my_password'), class: 'btn btn-default btn-lg'
+          = f.submit "Update Password", class: 'btn btn-default btn-lg'
 

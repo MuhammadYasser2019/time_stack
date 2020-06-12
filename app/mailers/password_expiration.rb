@@ -1,16 +1,18 @@
 class PasswordExpiration < ActionMailer::Base
 
-	default from: 'no-reply@chronstack.com'
+	default from: 'technicalsupport@resourcestack.com'
 
-	def mail_for_expiration_to_user(user,host,url,raw)
-		@host = host
-		@url = url
-
-		@url = "https://" + @host + "/account/password/edit?reset_password_token=" + raw
-		@raw = raw
+	def mail_for_expiration_to_user(user,token)
+		@token = token
 		@user = user
-		mail(to: "r.ranjantec@gmail.com", subject:"IMPORTANT: ChronStack Account Password Expiring")
+		
+		mail(to: user.email, subject:"IMPORTANT: ChronStack Account Password Expiring")
 		
 	end
+
+	 def password_changed(id)
+	    @user = User.find(id)
+	    mail to: @user.email, subject: "Reset Password Confirmation"
+	  end
 
 end
