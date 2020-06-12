@@ -17,6 +17,7 @@ class User < ApplicationRecord
          :recoverable, :rememberable, :trackable,
          :omniauthable, :omniauth_providers => [:google_oauth2]
   devise :timeoutable, :timeout_in => 30.minutes
+  devise :password_expirable
   has_many :projects_users
   has_many :projects , :through => :projects_users
   has_many :roles, :through => :user_roles
@@ -30,6 +31,8 @@ class User < ApplicationRecord
   has_many :user_inventory_and_equipments
   has_many :user_devices
   belongs_to :customer
+
+  after_update :send_password_change_email, if: :needs_password_change_email?
 
   #validates :emergency_contact, format: { with: /\A\d+\z/, message: "Please enter 10 digit minimum contact number." }
 
@@ -294,6 +297,24 @@ class User < ApplicationRecord
     nil
   end
 
+  def self.send_password_reminder_email
+    User.where(is_active: true).each do |u|
+      if u.password_changed_at.nil? && Time.now > u.created_at + 2.minutes
+          token, enc = Devise.token_generator.generate(User, :reset_password_token)
+          PasswordExpiration.mail_for_expiration_to_user(u,token).deliver
+          u.reset_password_token = enc
+          u.reset_password_sent_at = Time.now.utc
+          u.save!
+      elsif u.password_changed_at.present? && Time.now > u.password_changed_at + 2.minutes
+        token, enc = Devise.token_generator.generate(User, :reset_password_token)
+        PasswordExpiration.mail_for_expiration_to_user(u,token).deliver
+        u.reset_password_token = enc
+          u.reset_password_sent_at = Time.now.utc
+          u.save!
+      end
+    end
+  end
+
   def vacation_type
     
     emp_type = EmploymentTypesVacationType.where(employment_type_id: self.employment_type).first
@@ -312,5 +333,13 @@ class User < ApplicationRecord
 
   def self.jwt_secret
     YAML.load(File.read('config/jwt-secret.yml'))
+  end
+
+  def needs_password_change_email?
+    encrypted_password_changed? && persisted?
+  end
+   
+  def send_password_change_email
+    PasswordExpiration.password_expirable_changed(id).deliver
   end
 end
