@@ -103,6 +103,7 @@ gem 'airbrake', '~> 7.2'
 gem 'rack-cors', :require => 'rack/cors'
 gem 'simple_token_authentication', '~> 1.0'
 gem 'jira-ruby'
+gem 'devise-security'
 
 group :development do
   gem 'better_errors'
