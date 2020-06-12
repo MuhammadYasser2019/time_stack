@@ -23,7 +23,7 @@ $(document).ready(function () {
             "info": info,
             "searchDelay": searchDelay,
             "ajax": {
-                "url": "./application_versions/get_items",
+                "url": $().getRequestUrl("./application_versions/get_items"),
                 "type": "POST"
             },
             "language": {
@@ -74,7 +74,7 @@ $(document).ready(function () {
 
         function deleteItem(id) {
             //DELETE FIRST
-            $().makeHttpRequest("./application_versions/delete_item?id=" + id, "GET", null, (res) => {
+            $().makeHttpRequest($().getRequestUrl("./application_versions/delete_item?id=" + id), "GET", null, (res) => {
                 var item = $(tableID).find(".selected");
                 $(tableID).dataTable().api().row(item).remove().draw();
 
@@ -177,7 +177,7 @@ $(document).ready(function () {
                     description: ""
                 });
 
-                $().makeHttpRequest("./application_versions/edit_item", "POST", { version: dataToSave }, (data) => {
+                $().makeHttpRequest($().getRequestUrl("./application_versions/edit_item"), "POST", { version: dataToSave }, (data) => {
                     if (dataToSave.id > 0) {
                         var item = $(tableID).find(".selected");
                         $(tableID).dataTable().fnUpdate(data, item.index(), undefined, false);
