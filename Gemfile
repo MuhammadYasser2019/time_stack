@@ -121,6 +121,7 @@ group :development do
   gem 'rb-inotify', :require=>false
   gem 'spring-commands-rspec'
   gem 'byebug'
+  gem "letter_opener"
   # gem 'binding_of_caller'
 
 end
