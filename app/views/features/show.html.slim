@@ -1,13 +1,19 @@
 div.grid-x style="width:100%;"
-  span.feature_image style="margin-left:100px;"
-    = image_tag "background_image.jpg", style: "width:200px;"
+  div.about-div
+  div class="about-banner-text col-md-7" style="height: 150px;"
+    p class="inside-image-banner"
+     | Why
+     span.orange-text
+       |  Resource Stack, Inc.
+     | ?
+
+    div data-border-width="3" id="text-partial-underline" class="col-md-5"
+
   div.main_div
     p == @feature.feature_data.html_safe if @feature.feature_data.present?
 
-.front-row.full-width.footer style=("height:325px;margin-bottom: 0 !important;") 
-  div style=("background:black;color: white;height:100px;font-size: 30px;text-align: center;") 
-    p CONTACT CHRONSTACK
-  div style=("background:#5296ce;color: black;height:125px;font-size: 30px;text-align: center;padding:10px;") 
+.front-row.full-width.footer style=("height:325px;margin-bottom: 0 !important;")
+  div style=("background:#5296ce;color: black;height:125px;font-size: 30px;text-align: center;padding: 35px;")
     p info@resourcestack.com
     p style=("color:white;font-size: 30px;text-align: center;")  571-223-6741
   .footer_section style=("height:80px;background-color: white;") 
