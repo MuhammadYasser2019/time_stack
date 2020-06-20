@@ -13,5 +13,5 @@ class SessionsController < Devise::SessionsController
     def destroy
       session[:token] = ""
       super
-    end 
+    end
   end

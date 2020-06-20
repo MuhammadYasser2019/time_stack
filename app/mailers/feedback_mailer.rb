@@ -8,7 +8,7 @@ class FeedbackMailer < ActionMailer::Base
 		@email = email
 		@type = type
 		@notes = notes
-		mail(to: 'technicalsupport@resourcestack.com', subject:"You have Feedback") 
+		mail(from: @email, to: 'technicalsupport@resourcestack.com', subject:"You have Feedback") 
 	end
 
 	def contact_form_email(email, name, message)

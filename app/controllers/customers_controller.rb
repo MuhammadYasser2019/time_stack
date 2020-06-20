@@ -771,9 +771,9 @@
     #MyMailer.confirmation_instructions(record, token, current_user).deliver
   
     FeedbackMailer.question_email(email,type,notes).deliver
-      respond_to do |format|
-         format.html { redirect_to :back, notice: 'Vacation request sent successfully.' }
-     end   
+    
+    redirect_back(fallback_location: root_path)
+
   end 
 
   private

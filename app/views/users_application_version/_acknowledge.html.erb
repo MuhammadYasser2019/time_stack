@@ -16,7 +16,7 @@
     var id = $(this).data("versionid");
     var name =$(this).data("name");
     var description =$(this).data("description");
-    $().makeHttpRequest("./application_versions/acknowledge_version?id="+id, "GET", null, (res) => {
+    $().makeHttpRequest($().getRequestUrl("./application_versions/acknowledge_version?id="+id), "GET", null, (res) => {
         $('#applicationVersionModal').modal('hide').data('modal',null);
         $("#curApplicationVersion").data("id",id);
         $("#curApplicationVersion").data("name",name);
