@@ -1,8 +1,8 @@
 <div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="loginModalLabel" aria-hidden="true">
   <div class="modal-dialog" role="document">
-    <div class="modal-content" style="max-width: 380px;">
+    <div class="modal-content" style="max-width: 380px; padding:0px;">
       <div class="modal-header" style="background-color: DodgerBlue;">
-        <h5 style="background-color: DodgerBlue;" class="modal-title" id="loginModalLabel">LOGIN</h5>
+        <h5 style="background-color: DodgerBlue; color: white;" class="modal-title" id="loginModalLabel">LOGIN</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -20,7 +20,7 @@
           <div class="form-check form-check-inline">
             
             <%= f.input :remember_me, label: false, as: :boolean, class: "form-check-input" %>
-            <label class="" for="exampleCheck1">Remember Me</label>
+            <label class="" style="margin-left: 10px;" for="exampleCheck1">Remember Me</label>
           </div>
           <div class="form-group">
             <%= f.button :submit, "Log in", style:"background-color: DodgerBlue;"%>

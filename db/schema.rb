@@ -10,7 +10,16 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_04_23_185027) do
+ActiveRecord::Schema.define(version: 2020_06_03_121820) do
+
+  create_table "application_versions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "version_name"
+    t.date "start_date"
+    t.string "platform"
+    t.text "description"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "archived_time_entries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "date_of_activity"
@@ -132,7 +141,7 @@ ActiveRecord::Schema.define(version: 2020_04_23_185027) do
     t.datetime "updated_at"
   end
 
-  create_table "external_configurations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "external_configurations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "customer_id"
     t.string "system_type"
     t.string "url"
@@ -168,7 +177,7 @@ ActiveRecord::Schema.define(version: 2020_04_23_185027) do
     t.datetime "date"
   end
 
-  create_table "project_shifts", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "project_shifts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "shift_id"
     t.integer "capacity"
     t.string "location"
@@ -200,8 +209,8 @@ ActiveRecord::Schema.define(version: 2020_04_23_185027) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.boolean "active"
-    t.datetime "sepration_date"
     t.integer "project_shift_id"
+    t.datetime "sepration_date"
     t.index ["project_id"], name: "index_projects_users_on_project_id"
     t.index ["user_id"], name: "index_projects_users_on_user_id"
   end
@@ -233,7 +242,7 @@ ActiveRecord::Schema.define(version: 2020_04_23_185027) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "shifts", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "shifts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "start_time"
     t.string "end_time"
@@ -301,7 +310,7 @@ ActiveRecord::Schema.define(version: 2020_04_23_185027) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "user_devices", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "user_devices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.string "user_token"
     t.string "device_id"
@@ -310,7 +319,7 @@ ActiveRecord::Schema.define(version: 2020_04_23_185027) do
     t.index ["user_id"], name: "index_user_devices_on_user_id"
   end
 
-  create_table "user_disciplinaries", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "user_disciplinaries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "project_id"
     t.string "disciplinary"
     t.integer "submitted_by"
@@ -320,7 +329,7 @@ ActiveRecord::Schema.define(version: 2020_04_23_185027) do
     t.index ["user_id"], name: "index_user_disciplinaries_on_user_id"
   end
 
-  create_table "user_inventory_and_equipments", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "user_inventory_and_equipments", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "issued_by"
     t.string "equipment_name"
     t.string "equipment_number"
@@ -344,7 +353,7 @@ ActiveRecord::Schema.define(version: 2020_04_23_185027) do
     t.integer "week_id"
   end
 
-  create_table "user_recommendations", options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "user_recommendations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "project_id"
     t.string "recommendation"
     t.integer "submitted_by"
@@ -427,12 +436,19 @@ ActiveRecord::Schema.define(version: 2020_04_23_185027) do
     t.string "image"
     t.string "emergency_contact"
     t.datetime "inactive_at"
+    t.boolean "terms_and_condition", default: false
+    t.boolean "proxy_cm", default: false
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
+  end
+
+  create_table "users_application_versions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "user_id"
+    t.integer "application_version_id"
   end
 
   create_table "vacation_requests", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|

@@ -239,6 +239,7 @@ Rails.application.routes.draw do
 
   get '/privacy' => 'static_pages#privacy'
   get '/terms_of_service' => 'static_pages#terms_of_service'
+  post '/contact_form_mail' => 'static_pages#contact_form_mail'
   
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'
