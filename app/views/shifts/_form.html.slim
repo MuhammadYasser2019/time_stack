@@ -22,6 +22,37 @@
       = select_tag(:end_time_period, options_for_select(['AM', 'PM'], @end_time_period), class: "tiny_shift", required: true)
     = f.label :regular_hours, class: 'shift-label'
     = f.number_field :regular_hours, class: "form-control", required: true
+    br
+    .div.shift-label Days
+    |&nbsp;&nbsp;
+    = f.label :mon
+    |&nbsp;&nbsp;
+    = f.check_box :mon, class: "selected_days"
+    |&nbsp;&nbsp;&nbsp;
+    = f.label :tue
+    |&nbsp;&nbsp;
+    = f.check_box :tue, class: "selected_days"
+    |&nbsp;&nbsp;&nbsp;
+    = f.label :wed
+    |&nbsp;&nbsp;
+    = f.check_box :wed, class: "selected_days"
+    |&nbsp;&nbsp;&nbsp;
+    = f.label :thu
+    |&nbsp;&nbsp;
+    = f.check_box :thu, class: "selected_days"
+    |&nbsp;&nbsp;&nbsp;
+    = f.label :fri
+    |&nbsp;&nbsp;
+    = f.check_box :fri, class: "selected_days"
+    |&nbsp;&nbsp;&nbsp;
+    = f.label :sat
+    |&nbsp;&nbsp;
+    = f.check_box :sat, class: "selected_days"
+    |&nbsp;&nbsp;&nbsp;
+    = f.label :sun
+    |&nbsp;&nbsp;
+    = f.check_box :sun, class: "selected_days"
+    |&nbsp;&nbsp;&nbsp;
     = f.label :active, class: 'shift-label'
     = f.check_box :active, class: "form-control"
     = f.label :default, class: 'shift-label'
@@ -40,3 +71,4 @@
     = hidden_field_tag :type, params[:type]
   = f.submit "Submit Shift"
 = link_to 'Back', customers_path, class: "btn"
+
