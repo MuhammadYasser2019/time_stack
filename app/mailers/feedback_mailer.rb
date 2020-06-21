@@ -15,7 +15,7 @@ class FeedbackMailer < ActionMailer::Base
 		@email = email
 		@name = name
 		@message = message
-		mail(to: 'info@resourcestack.com', subject: "Contact Form -- #{@name}")
+		mail(from: @email, to: 'technicalsupport@resourcestack.com', subject: "Contact Form -- #{@name}")
 	end
 end
  
