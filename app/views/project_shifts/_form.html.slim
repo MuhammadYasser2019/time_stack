@@ -1,4 +1,7 @@
 =form_for @project_shift do |f|
+  - if flash[:notice].present?
+    .devise_error[style="font-size: 14px;"]
+      = flash[:notice]
   div.form-group
     = f.label "Shift Supervisor", class: "shift-supervisor-label"
     = f.select(:shift_supervisor_id, options_for_select(@potential_supervisors, @project_shift.shift_supervisor_id), {}, { class: "normal_shift", required: true })
