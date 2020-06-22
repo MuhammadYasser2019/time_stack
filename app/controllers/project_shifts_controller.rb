@@ -67,9 +67,15 @@ class ProjectShiftsController < ApplicationController
   end
 
   def update
-    if @project_shift.update(project_shift_params)
-      redirect_to projects_path
-    end
+    proj_shift = ProjectShift.where(:project_id =>  params[:project_shift][:project_id], :shift_id=> params[:project_shift][:shift_id])
+    if proj_shift.count >= 1
+      flash[:notice] = 'Please Select Valid Shift.'
+      redirect_back(fallback_location: projects_path)
+    else
+      if @project_shift.update(project_shift_params)
+        redirect_to projects_path
+      end
+    end 
   end
 
   def destroy
