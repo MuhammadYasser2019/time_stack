@@ -1,3 +1,19 @@
-Hi <%= @pm.email %>,
+Hi <%= @pm.name %>,
 
-<%= "These are the user(s) who does not fill the timesheet for last week: #{@users}" %>
+<%= "Below is the list of user(s) who did not fill their timesheet last week:" %>
+<table style="width:100%">
+	<tr>
+		<th>Project</th>
+    	<th>Week Ending</th> 
+ 	</tr>
+	<% @results.each do|key,array| %>
+	<tr>
+		<td><%= array.first["project_name"] %></td>
+		<td>
+		<% array.each do |arr| %>  
+	   		<%= arr["user_email"] %> 
+   		<% end %> 
+   		</td>
+   	</tr>
+	<% end %> 
+</table>

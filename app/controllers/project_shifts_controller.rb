@@ -17,8 +17,11 @@ class ProjectShiftsController < ApplicationController
       @shifts = Shift.where(customer_id: @customer.id)
       @shift_array = []
       @shifts.each do |shift|
-        name_and_shift_period = shift.name + ': ' + shift.start_time + ' - ' + shift.end_time
-        @shift_array << [name_and_shift_period, shift.id]
+        p_shift = ProjectShift.where(:shift_id => shift.id, :project_id => @project.id )
+        if p_shift.count == 0
+          name_and_shift_period = shift.name + ': ' + shift.start_time + ' - ' + shift.end_time
+          @shift_array << [name_and_shift_period, shift.id]
+        end
       end
       user_array = []
       User.where(id: @customer.projects.pluck(:user_id)).each do |user|

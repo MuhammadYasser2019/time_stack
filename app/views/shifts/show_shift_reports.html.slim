@@ -22,7 +22,6 @@ table class="table" style="width:80%;"
           - project_shift.users.each do |shift_users|
             tr
               td
-                - debugger
                 - if !shift_array.include?(shift.id)
                   = link_to project_shift.shift.name, "/shift_report/#{shift.id}"
               td = project_shift.project.name
@@ -36,11 +35,9 @@ table class="table" style="width:80%;"
         - else
           tr
             td 
-              - if !shift_array.include?(shift.id)
-                = link_to project_shift.shift.name, "/shift_report/#{shift.id}"
+              = link_to project_shift.shift.name, "/shift_report/#{shift.id}"
             td
-              - if !shift_array.include?(shift.id)
-                = project_shift.users.count
+              = project_shift.users.count
             td = "N/A"
 
      
