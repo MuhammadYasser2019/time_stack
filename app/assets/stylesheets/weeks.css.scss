@@ -103,6 +103,7 @@ h1.grid-x{
 
 .report{
   text-align:center;
+  margin-top: 20px;
 }
 
 .sig{
@@ -218,7 +219,7 @@ input[type="submit"]{
 }
 
 .orange-button{
-  
+  font-size:14px;
   padding: 9px;
   border-radius: 10px;
     /* margin: 15px; */
@@ -461,11 +462,19 @@ input[type="submit"]{
 }
 
 .navbar{
-  height: 130px;
+  //height: 130px;
+  border-bottom: 2px solid #feac554d;
+  padding: 3px 0px 5px 40px;
+  background-color: #ffffffc7;
+  backdrop-filter: blur(2px);
 }
 
 .navbar-nav > li{
   padding-left:15px;
+}
+
+.navbar-nav-inside{
+  padding-top: 15px;
 }
 
 .navbar-brand {
@@ -479,15 +488,24 @@ input[type="submit"]{
 .nav-link{
   color: #1A2B6D !important;
   font-weight: bold;
+  //padding-top:0px;
 }
 
 .navbar-collapse{
   margin-top: 40px;
 }
 
+.front-nav{
+  margin-top: 25px !important;
+}
+
+.inside-nav{
+  margin-top: 0px !important;
+}
+
 .nav-link:hover{
   background-color: transparent;
-  color: #D41317 !important;
+  color: #e78200 !important;
 }
 
 
@@ -495,8 +513,12 @@ input[type="submit"]{
   color: #D41317 !important;
 }
 
+.fa-bell{
+  font-size: 40px;
+}
+
 #login_modal{
-  background-color: orange;
+  background-color: #ffac56;
   color: white !important;
   border-radius: 5px;
 }
@@ -506,7 +528,7 @@ input[type="submit"]{
 }
 
 #navbarSupportedContent{
-  margin-right: 200px;
+  margin-right: 20px;
 }
 
 h3{

@@ -20,12 +20,20 @@
   src: url('/assets/OpenSans-Regular.ttf');
 }
 
+html {
+  scroll-behavior: smooth;
+}
+
 body {
   background-color: #fff;
   color: #333;
   font-family: verdana, arial, helvetica, sans-serif;
   font-size: 14px;
   line-height: 18px;
+}
+
+a:hover{
+  color: #e78200 !important;
 }
 
 p, ol, ul, td {
@@ -47,7 +55,7 @@ a {
   &:hover {
     background-color: transparent;
     color: white;
-    border-radius: 3px;
+    //border-radius: 3px;
     transition: color .15s ease-in-out,
     background-color .15s ease-in-out,
     border-color .15s ease-in-out,
@@ -148,7 +156,7 @@ div {
 }
 
 .logo{
-  max-width:300px;
+  //max-width:150px;
 }
 
 .logo-tagline{
@@ -257,11 +265,15 @@ div {
 
 .image-banner-text{
   height: 300px;
+  top:36%;
+  p{
+    line-height:2.8rem;
+  }
 }
 
 .about-banner-text{
   height: 150px;
-  top:62%;
+  top:56%;
 }
 
 .image-banner-text{
@@ -337,6 +349,7 @@ div {
 
 #gray-bar{
   background-color: #ffac56;
+  background-image: linear-gradient(#ffac56, rgba(165, 225, 217, 0.35));
   padding: 30px 0px;
   width:100%;
   margin: 0px;
@@ -405,8 +418,9 @@ div {
 }
 
 .info-square{
-  background-color: rgba(123, 231, 216, 0.35);
-  border: 3px solid #b45ad373;
+  //background-color: rgba(123, 231, 216, 0.35);
+  //background-image: linear-gradient(rgba(165, 225, 217, 0.35), rgba(123, 231, 216, 0.35));
+  border: 3px solid #f1a8a9;
   box-shadow: 6px 7px 17px 0px rgba(0, 0, 0, 0.3);
   height:200px;
   padding:10px;
@@ -414,10 +428,10 @@ div {
 }
 
 .icon{
-  width: 70px;
+  width: 50px;
   position: absolute;
   right: 10%;
-  top: 17%;
+  top: 20%;
 }
 
 .middle-square{
@@ -453,8 +467,10 @@ div {
 
 #contact-form{
   background-color: #00d7b3;
+  background-image: linear-gradient( rgb(0, 215, 179), #8fcbd1);
   height: 300px;
   padding:30px;
+  border-radius: 20px;
 }
 
 .contact-label{
@@ -495,25 +511,41 @@ div {
 }
 
 #contact-button{
-  background-color: #ffcf87 !important;
+  background-color: #ff9c37 !important;
   margin: 0 auto;
+  color: white;
 }
 
 .square-list{
   margin-top: 7%;
   font-family: 'opensans';
-  font-size: 15px;
+  font-size: 13px;
 }
 
 .footer{
   width:100%;
   margin-top: 50px;
   //border-top: 2px black solid;
-  background-color: white;
+  //background-color: white;
   //padding:40px;
   height:200px;
   //background-color: rgba(228, 106, 39, 0.2);
   width:100%;
+  background-image: linear-gradient(#8fb3d1,#3389d1);
+  height:325px;
+  margin-bottom: 0 !important;
+}
+
+.footer_section{
+  height: 80px;
+  background-color: white;
+}
+
+.icons{
+  height:80px;
+  float:left;
+  margin-left: 20px;
+  background-color: transparent;
 }
 
 .big-slide-text-right{
@@ -584,9 +616,14 @@ div {
   margin-bottom: 40px;
 }
 
+.front-row{
+  width: 100%;
+  margin: 0px;
+}
+
 .front_div {
   background-image: url('gradient_background.png');
-  width:95%;
+  width:100%;
   height: 300px;
   background-size: cover;
   img {
@@ -598,8 +635,9 @@ div {
 
 .about-div{
   background-image: url('city-backdrop.jpg');
-  width:95%;
+  width:100%;
   height: 400px;
+  margin: 0px;
   background-size: cover;
   background-position: bottom;
   img {
@@ -609,6 +647,39 @@ div {
   }
 }
 
+#features-div{
+  background-image: url('timesheet.jpg');
+  width:100%;
+  height: 400px;
+  margin: 0;
+  background-size: cover;
+  background-position: bottom;
+}
+
+#features-div-2{
+  background-image: url('giant-calendar-for-people.png');
+  width:100%;
+  height: 400px;
+  margin: 0;
+  background-size: contain;
+  background-position: bottom;
+  background-repeat: no-repeat;
+}
+
+#features-div-3{
+  background-image: url('lots-o-clocks.jpg');
+  width:100%;
+  height: 400px;
+  margin: 0;
+  background-size: cover;
+  background-position: bottom;
+}
+
+.text-row{
+  margin-top: 50px;
+  float: left;
+}
+
 .orange-text{
   color: orange;
 }
@@ -616,7 +687,7 @@ div {
     float:left;
     padding-top:33px;
     width:100%;
-    min-height: 150px;
+    min-height: 70px;
 }
 
 .main_div{
