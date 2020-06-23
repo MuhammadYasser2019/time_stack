@@ -541,6 +541,12 @@ div {
   background-color: white;
 }
 
+.top-of-footer{
+  width: 100%;
+  border-top: 6px solid #feac55;
+  margin: 0;
+}
+
 .icons{
   height:80px;
   float:left;
@@ -678,6 +684,7 @@ div {
 .text-row{
   margin-top: 50px;
   float: left;
+  width: 100%;
 }
 
 .orange-text{

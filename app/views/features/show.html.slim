@@ -12,24 +12,32 @@ div.grid-x style="width:100%;"
   div.main_div
     p == @feature.feature_data.html_safe if @feature.feature_data.present?
 
-.front-row.full-width.footer style=("height:325px;margin-bottom: 0 !important;")
-  div style=("background:#5296ce;color: black;height:125px;font-size: 30px;text-align: center;padding: 35px;")
-    p info@resourcestack.com
-    p style=("color:white;font-size: 30px;text-align: center;")  571-223-6741
-  .footer_section style=("height:80px;background-color: white;") 
-    .icons style=("height:80px;float:left;padding: 40px;margin-left: 20px;") 
-      a href="https://www.linkedin.com/company/1188919/" target="_blank" style=("padding: 20px;")
-        = image_tag "linkedin.png"
-      a href="https://www.facebook.com/Resource-Stack-Inc-269978683036453/" target="_blank" style=("padding: 20px;")
-        = image_tag "facebook.png"
-    .address style=("height:80px;float:right;margin-right:70px;margin-top: 10px;") 
-      p 
-        | Resource Stack, INC.
-        br
-        | 626 Grant Street Suite D
-        br
-        | Herndon, VA 2017
+.front-row.full-width.footer
+  .footer_section
+    .icons
+      a[href="https://www.linkedin.com/company/1188919/" target="_blank" style="padding: 10px;"]
+        = image_tag("linkedin.png")
+      a[href="https://www.facebook.com/Resource-Stack-Inc-269978683036453/" target="_blank" style="padding: 10px;"]
+        = image_tag("facebook.png")
+      a[href="https://play.google.com/store/apps/details?id=com.resourcestack.chronstack" target="_blank" style="padding: 10px;"]
+        = image_tag("google.png", style: "width:150px;margin-top: 12px;")
+      a[href="https://apps.apple.com/app/id1514665138" target="_blank" style="padding: 10px;"]
+        = image_tag("apple_store.png", style: "width:150px;")
+    .address
 
-  p style=("padding-left: 38%;background-color: white;q")  &copy; 2017 Resource Stack, Inc. All Rights Reserved
+  .row.top-of-footer
+    .col-md-6[style="color: white; font-weight: bold; height:125px; font-size: 14px; text-align: right; float:left; padding:10px 15px;"]
+      | Resource Stack, INC.
+      br
+      | 626 Grant Street Suite D
+      br
+      | Herndon, VA 20170
+    .col-md-6.address[style="color: white; height:80px; font-weight: bold;float:right;margin-top: 10px;"]
+      p[style="text-align:left;"]
+        | info@resourcestack.com
+      p[style="color:white;text-align: left;"]
+        | 571-223-6741
+  p[style="color: white; text-align:center;font-weight: bold;"]
+    | © 2017 Resource Stack, Inc. All Rights Reserved
 
 == render partial: 'static_pages/login_form'

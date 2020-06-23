@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_03_121820) do
+ActiveRecord::Schema.define(version: 2020_06_11_135441) do
 
   create_table "application_versions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "version_name"
@@ -438,11 +438,13 @@ ActiveRecord::Schema.define(version: 2020_06_03_121820) do
     t.datetime "inactive_at"
     t.boolean "terms_and_condition", default: false
     t.boolean "proxy_cm", default: false
+    t.datetime "password_changed_at"
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
+    t.index ["password_changed_at"], name: "index_users_on_password_changed_at"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
 
