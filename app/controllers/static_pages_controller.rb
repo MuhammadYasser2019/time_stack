@@ -4,6 +4,15 @@ class StaticPagesController < ApplicationController
 
   end
 
+  def about
+    @about = Feature.find(9)
+  end
+
+  def features
+    @feature_2 = Feature.find(2)
+    @feature_3 = Feature.find(3)
+    @feature_4 = Feature.find(4)
+  end
 
   def privacy
 
