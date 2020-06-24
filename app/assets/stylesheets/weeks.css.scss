@@ -467,6 +467,7 @@ input[type="submit"]{
   padding: 3px 0px 5px 40px;
   background-color: #ffffffc7;
   backdrop-filter: blur(2px);
+  z-index:998;
 }
 
 .navbar-nav > li{
