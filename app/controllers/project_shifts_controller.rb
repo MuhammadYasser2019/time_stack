@@ -17,8 +17,11 @@ class ProjectShiftsController < ApplicationController
       @shifts = Shift.where(customer_id: @customer.id)
       @shift_array = []
       @shifts.each do |shift|
-        name_and_shift_period = shift.name + ': ' + shift.start_time + ' - ' + shift.end_time
-        @shift_array << [name_and_shift_period, shift.id]
+        p_shift = ProjectShift.where(:shift_id => shift.id, :project_id => @project.id )
+        if p_shift.count == 0
+          name_and_shift_period = shift.name + ': ' + shift.start_time + ' - ' + shift.end_time
+          @shift_array << [name_and_shift_period, shift.id]
+        end
       end
       user_array = []
       User.where(id: @customer.projects.pluck(:user_id)).each do |user|
@@ -64,9 +67,15 @@ class ProjectShiftsController < ApplicationController
   end
 
   def update
-    if @project_shift.update(project_shift_params)
-      redirect_to projects_path
-    end
+    proj_shift = ProjectShift.where(:project_id =>  params[:project_shift][:project_id], :shift_id=> params[:project_shift][:shift_id])
+    if proj_shift.count >= 1
+      flash[:notice] = 'Please Select Valid Shift.'
+      redirect_back(fallback_location: projects_path)
+    else
+      if @project_shift.update(project_shift_params)
+        redirect_to projects_path
+      end
+    end 
   end
 
   def destroy

@@ -5,9 +5,14 @@
   # GET /customers.json
   def index
     @customers = Customer.where(user_id: current_user.id)
+    if !@customers.present? && current_user.proxy_cm
+      customer_id = current_user.customer_id.to_s
+      @customers = Customer.where(:id => customer_id)
+    end
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     if @customers.present?
       params[:customer_id] = @customers.first.id unless params[:customer_id].present?
+      #binding.pry
       @customer = @customers.first
       customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
       @projects = @customer.projects
@@ -278,6 +283,7 @@
   end
 
   def assign_cm_proxy_role
+
     user = User.find params[:user_id]
     if user.present?
       if user.proxy_cm?
@@ -771,9 +777,9 @@
     #MyMailer.confirmation_instructions(record, token, current_user).deliver
   
     FeedbackMailer.question_email(email,type,notes).deliver
-      respond_to do |format|
-         format.html { redirect_to :back, notice: 'Vacation request sent successfully.' }
-     end   
+    
+    redirect_back(fallback_location: root_path)
+
   end 
 
   private

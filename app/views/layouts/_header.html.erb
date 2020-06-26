@@ -1,16 +1,21 @@
-<nav class="navbar navbar-expand-lg navbar-light" style="box-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);">
+<nav class="navbar navbar-expand-lg navbar-light fixed-top sticky-top">
   <% if current_user.nil?%>
-    <a href="/", class ="navbar-brand" ><%= image_tag "chronstack.jpg", class: 'logo' %></a>
+    <div>
+      <a href="/", class ="navbar-brand" >
+        <%= image_tag "chronstack-thin-horizontal-opacity.png", class: 'logo' %>
+        <!-- <span class="logo-tagline">Simplified Employee Time Tracker</span> -->
+      </a>
+    </div>
 	<% else %>
     <% if !current_user.customer_id.nil? %>
 		  <% customer = Customer.find(current_user.customer_id)%>
 		  <% if !customer.logo.blank?%>
 		    <a href="/", class="navbar-brand"><%= image_tag "#{customer.logo}", class: 'logo' %></a>
 		  <% else %>
-		    <a href="/", class="navbar-brand"><%= image_tag "chronstack.jpg", class: 'logo' %></a>
+		    <a href="/", class="navbar-brand"><%= image_tag "chronstack-thin-horizontal-opacity.png", class: 'logo' %></a>
 		  <% end %>
 		<% else %>
-	  <a href="/", class="navbar-brand"><%= image_tag "chronstack.jpg", class: 'logo' %></a>
+	  <a href="/", class="navbar-brand"><%= image_tag "chronstack-thin-horizontal-opacity.png", class: 'logo' %></a>
 	  <% end %>
 	<a  href="https://play.google.com/store/apps/details?id=com.resourcestack.chronstack" target="_blank" style="padding: 10px;"><%= image_tag("google.png", style: "width:150px;margin-top: 12px;") %></a>
     <a href="https://apps.apple.com/app/id1514665138" target="_blank" style="padding: 10px;"><%= image_tag("apple_store.png", style: "width:150px;") %></a>
@@ -20,12 +25,12 @@
   </button> -->
 
   <% if current_user.nil? %>
-  	<div class="collapse navbar-collapse" id="navbarSupportedContent">
-    	<ul class="navbar-nav navbar-dark mr-auto ml-auto">
+  	<div class="collapse navbar-collapse front-nav" id="navbarSupportedContent">
+    	<ul class="navbar-nav navbar-dark">
 	      <li class="nav-item active">
 	        <a class="nav-link" href="<%= root_path %>">Home <span class="sr-only">(current)</span></a>
 	      </li>
-	      <li class="nav-item dropdown">
+	      <!-- <li class="nav-item dropdown">
 	        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 	          Features
 	        </a>
@@ -41,70 +46,66 @@
 	          <a class="dropdown-item" href="<%= feature_path(id:5) %>">Optional Payroll System Integration</a>
 	          
 	        </div>
-	      </li>
+	      </li> -->
 	      <li class="nav-item dropdown">
-	      	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	          Case Studies
-	        </a>
-	        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-	          <a class="dropdown-item" href="<%= feature_path(id:7) %>">A Small IT Consulting</a>
-	        </div>
+	          <a class="nav-link" href="/about">About</a>
 	      </li>
-	      <li class="nav-item dropdown">
-	      	<a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-	          About
-	        </a>
-	        <div class="dropdown-menu" aria-labelledby="navbarDropdown">
-	          <a class="dropdown-item" href="<%= feature_path(id:9) %>">Company Overview</a>
-	        </div>
-	      </li>
-	      <li class="nav-item">
-
-	        <a id= "login_modal" class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#loginModal">Sign In</a>
-	        
-
-	      </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link" href="/features">Features</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Case Studies
+          </a>
+          <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+            <a class="dropdown-item" href="<%= feature_path(id:7) %>">Deosi</a>
+          </div>
+        </li>
     	</ul>
-	    <form class="form-inline my-2 my-lg-0">
-	      <input class="form-control mr-sm-2 glyphicon glyphicon-search" type="search" placeholder="Search" aria-label="Search">
-	      <span class="glyphicon glyphicon-search"></span>
-	    </form>
+      <ul class="navbar-nav ml-md-auto">
+        <li class="nav-item" style="position: relative;">
+          <a id= "login_modal" class="nav-link" href="javascript:void(0)" data-toggle="modal" data-target="#loginModal">Sign In</a>
+        </li>
+      </ul>
 	  </div>
   <% else %>	
-		<div class="collapse navbar-collapse" id="navbarSupportedContent">
-	    <ul class="navbar-nav navbar-dark ml-auto justify-content-right">
+		<div class="collapse navbar-collapse inside-nav" id="navbarSupportedContent">
+	    <ul class="navbar-nav navbar-dark ml-md-auto justify-content-right navbar-nav-inside">
 	
-	      <li class="nav-item active" style="line-height: 45px;">
+	      <!--<li class="nav-item active" style="line-height: 45px;">
 	        <a class="nav-link" href="/user_profile"><%= current_user.email %></a>
-	      </li>
-	      <li class="nav-item active user-profile-image" style="line-height: 45px;">
+	      </li>-->
+	      <li class="nav-item active user-profile-image">
 	      	<% if current_user.image.present? %>
-	        	<a class="nav-link" href="/user_profile"><%= image_tag current_user.image.url %></a> 
+	        	<a class="nav-link" style="padding: 0px;" href="/user_profile"><%= image_tag current_user.image.url %></a>
 	        <% else %>
 	        	<% if current_user.first_name.present? && current_user.last_name.present? %>
 		        	<div class="text-container">
-		        		<a class="nav-link" href="/user_profile"><%= image_tag "grey-image"%></a>
-		        	<div class="centered">
-
-		        		<%= current_user.first_name.to_s[0].upcase  + current_user.last_name.to_s[0].upcase %>
-		        	</div>
+		        		<a class="nav-link" style="padding: 0px;" href="/user_profile">
+                  <div class="centered">
+                    <%= current_user.first_name.to_s[0].upcase  + current_user.last_name.to_s[0].upcase %>
+                  </div>
+                  <%= image_tag "grey-image"%></a>
 		        	</div>
 		        <% end %>
 	        <% end %>
 	      </li>
 	    
-				<% if new_messages > 0 %>
-					<span class="notification" style="color:red;position: relative;left: 45px;top: 8px;"><%= new_messages %></span>
-				<% end %>
-				<li class="nav-item active" style="line-height: 45px;">
-	        <a class="nav-link" href="<%= user_notification_path %>" ><i class="fa fa-bell"></i></a>
+
+				<li class="nav-item active" style="text-align: center;">
+
+	        <a class="nav-link" style="padding:0px;" href="<%= user_notification_path %>" >
+            <% if new_messages > 0 %>
+              <span class="notification"><%= new_messages %></span>
+            <% end %>
+            <i class="fa fa-bell"></i></a>
 	      </li>
 	      <% if current_user.admin? %>
-	      <li class="nav-item active" style="line-height: 45px;padding-top: 10px;">
+	      <li class="nav-item active" style="line-height: 45px;">
 	        <a class="nav-link btn orange-button" style="width:70px;" href="/admin">Admin</a>
 	      </li>
 	      <% end %>
-	      <li class="nav-item active" style="line-height: 45px;padding-top: 10px;">
+	      <li class="nav-item active" style="line-height: 45px;">
 	      	<%= link_to 'Logout', destroy_user_session_path, :method => :delete, style: "float:right;", class: 'orange-button nav-link btn', style:"width:70px;" %>
 	      </li>
 	    </ul>

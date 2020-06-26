@@ -15,7 +15,7 @@ Rails.application.routes.draw do
   resources :employment_types
   resources :customers_holidays
   resources :report_logos
-  resources :features
+  resources :features, except: [:index]
   resources :case_studies
   resources :vacation_types
   resources :shifts
@@ -36,7 +36,6 @@ Rails.application.routes.draw do
   authenticated :user do
     root to: 'weeks#index', as: :authenticated_root
   end
-
   
   get "/get_user_projects" => "users#get_user_projects"
   post '/application_versions/get_items' => "application_versions#get_items"
@@ -46,6 +45,8 @@ Rails.application.routes.draw do
 
   #root 'weeks#index'
   root 'static_pages#home'
+  get '/about' => 'static_pages#about'
+  get '/features' => 'static_pages#features'
   namespace :api do
     post 'social_login', to: "users#social_login"
     post 'login_user', to: "users#login_user"
@@ -239,6 +240,7 @@ Rails.application.routes.draw do
 
   get '/privacy' => 'static_pages#privacy'
   get '/terms_of_service' => 'static_pages#terms_of_service'
+  post '/contact_form_mail' => 'static_pages#contact_form_mail'
   
   match "approve_all" => "projects#approve_all", via: [:get, :post]
   mount Ckeditor::Engine => '/ckeditor'

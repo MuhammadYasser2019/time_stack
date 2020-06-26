@@ -1,8 +1,15 @@
 // Place all the styles related to the weeks controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+
+
 body{
   background-color: #fff;
+}
+
+.container-fluid{
+  padding: 0px;
 }
 
 h1,h2,h3,h4,h5{
@@ -96,6 +103,7 @@ h1.grid-x{
 
 .report{
   text-align:center;
+  margin-top: 20px;
 }
 
 .sig{
@@ -211,7 +219,7 @@ input[type="submit"]{
 }
 
 .orange-button{
-  
+  font-size:14px;
   padding: 9px;
   border-radius: 10px;
     /* margin: 15px; */
@@ -453,12 +461,75 @@ input[type="submit"]{
   max-width: auto;
 }
 
+.navbar{
+  //height: 130px;
+  border-bottom: 2px solid #feac554d;
+  padding: 3px 0px 5px 40px;
+  background-color: #ffffffc7;
+  backdrop-filter: blur(2px);
+  z-index:998;
+}
+
 .navbar-nav > li{
   padding-left:15px;
 }
 
+.navbar-nav-inside{
+  padding-top: 15px;
+}
+
 .navbar-brand {
-padding: 0px;
+  padding: 0px;
+}
+
+.navbar-brand:hover {
+  background-color:transparent;
+}
+
+.nav-link{
+  color: #1A2B6D !important;
+  font-weight: bold;
+  //padding-top:0px;
+}
+
+.navbar-collapse{
+  margin-top: 40px;
+}
+
+.front-nav{
+  margin-top: 25px !important;
+}
+
+.inside-nav{
+  margin-top: 0px !important;
+}
+
+.nav-link:hover{
+  background-color: transparent;
+  color: #e78200 !important;
+}
+
+
+.nav-item:hover{
+  color: #D41317 !important;
+}
+
+.fa-bell{
+  font-size: 40px;
+}
+
+#login_modal{
+  background-color: #ffac56;
+  color: white !important;
+  border-radius: 5px;
+}
+
+#login_modal:hover{
+  background-color:orangered;
+}
+
+#navbarSupportedContent{
+  margin-right: 20px;
 }
 
 h3{
