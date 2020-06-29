@@ -91,23 +91,25 @@ class User < ApplicationRecord
 
   def self.send_timesheet_notification
     mail_hash = {}
-    User.where("pm is not true or cm is not true or admin is not true").each do |user|
-      last_week = Week.where("start_date >=? and user_id=?", Time.now.utc.beginning_of_day-21.days, user.id).first
-      
-      if last_week && (last_week.status_id != 2 || last_week.status_id != 3)
-        projects = ProjectsUser.where(user_id: user.id).pluck(:project_id)
-        projects.each do |p|
-          project = Project.find(p)
-          mail_hash[project.user_id] ||= []
-          mail_hash[project.user_id] << user.email
+    Project.where("inactive is not true").all.each do |project|
+      pm = project.user_id
+      users = []
+      project.users.where(is_active: true).each do |u|
+        last_week = Week.where("start_date >=? and user_id=?", Time.now.utc.beginning_of_day-21.days, u.id).first
+        if last_week && (last_week.status_id != 2 || last_week.status_id != 3)
+          users << u.name
         end
+        
       end
-    end
-    mail_hash.each do |pm, users|
-      TimesheetNotificationMailer.mail_to_pm(pm, users).deliver_now
-    end
-
-
+      
+      mail_hash[pm] ||= {}
+      mail_hash[pm][project.id] ||= [] 
+      mail_hash[pm][project.id] << users
+    end  
+    
+    
+    TimesheetNotificationMailer.mail_to_pm(mail_hash).deliver_now
+    
     last_weeks = Week.where("start_date >=?", Time.now.utc.beginning_of_day-7.days)
 
 
