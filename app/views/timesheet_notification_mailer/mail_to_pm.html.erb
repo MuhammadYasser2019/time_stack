@@ -11,7 +11,7 @@ Hi <%= @pm.name %>,
 	<tr>
 		<td><%= project.name %></td>
 		<td>
-		<%= users.join(",")%> 
+		<%= users.flatten.join(",")%> 
    		</td>
    	</tr>
 	<% end %> 
