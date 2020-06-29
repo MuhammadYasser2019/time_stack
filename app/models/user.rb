@@ -97,7 +97,7 @@ class User < ApplicationRecord
       users = []
       project.users.where("is_active is true and pm is not true and cm is not true and admin is not true").each do |u|
         last_week = Week.where("start_date =? and user_id=?", (Date.today-1.week).beginning_of_week, u.id).first
-        if last_week && (last_week.status_id != 2 || last_week.status_id != 3)
+        if last_week && last_week.status_id != 2 && last_week.status_id != 3
           users << u.name
         end
         
