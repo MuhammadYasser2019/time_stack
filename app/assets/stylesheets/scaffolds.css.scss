@@ -425,6 +425,20 @@ div {
   height:200px;
   padding:10px;
   border-radius:10px;
+  color:#1A2B6D !important;
+  text-decoration: none !important;
+  transition: color .15s ease-in-out,
+  background-color .15s ease-in-out,
+  border-color .15s ease-in-out,
+  box-shadow .15s ease-in-out;
+}
+
+a.info-square:hover{
+  border-color: #00d7b3;
+  transition: color .15s ease-in-out,
+  background-color .15s ease-in-out,
+  border-color .15s ease-in-out,
+  box-shadow .15s ease-in-out;
 }
 
 .icon{
@@ -444,7 +458,6 @@ div {
 }
 
 .square-header{
-  color:#1A2B6D;
   font-family: 'spinnaker';
   font-size: 28px;
   line-height: 1.2em;
