@@ -95,14 +95,15 @@ class User < ApplicationRecord
       pm = project.user_id
       next unless pm.present?
       users = []
-      project.users.where(is_active: true).each do |u|
-        last_week = Week.where("start_date >=? and user_id=?", Time.now.utc.beginning_of_day-21.days, u.id).first
+      project.users.where("is_active is true and pm is not true and cm is not true and admin is not true").each do |u|
+        last_week = Week.where("start_date =? and user_id=?", (Date.today-1.week).beginning_of_week, u.id).first
         if last_week && (last_week.status_id != 2 || last_week.status_id != 3)
           users << u.name
         end
         
       end
-      
+      next unless users.present? 
+
       mail_hash[pm] ||= {}
       mail_hash[pm][project.id] ||= [] 
       mail_hash[pm][project.id] << users
