@@ -93,6 +93,7 @@ class User < ApplicationRecord
     mail_hash = {}
     Project.where("inactive is not true").all.each do |project|
       pm = project.user_id
+      next unless pm.present?
       users = []
       project.users.where(is_active: true).each do |u|
         last_week = Week.where("start_date >=? and user_id=?", Time.now.utc.beginning_of_day-21.days, u.id).first
@@ -107,9 +108,10 @@ class User < ApplicationRecord
       mail_hash[pm][project.id] << users
     end  
     
-    
-    TimesheetNotificationMailer.mail_to_pm(mail_hash).deliver_now
-    
+    mail_hash.each do |pm, projects|
+      pm = User.find pm
+      TimesheetNotificationMailer.mail_to_pm(pm, projects).deliver_now
+    end
     last_weeks = Week.where("start_date >=?", Time.now.utc.beginning_of_day-7.days)
 
 
