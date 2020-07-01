@@ -1,18 +1,17 @@
 Hi <%= @pm.name %>,
-
+<br/>
 <%= "Below is the list of user(s) who did not fill their timesheet last week:" %>
-<table style="width:100%">
+<table border='2'>
 	<tr>
 		<th>Project</th>
-    	<th>Week Ending</th> 
+    	<th>Team Member</th> 
  	</tr>
-	<% @results.each do|key,array| %>
+	<% @projects.each do|project_id,users| %>
+		<%project = Project.find project_id %>
 	<tr>
-		<td><%= array.first["project_name"] %></td>
+		<td><%= project.name %></td>
 		<td>
-		<% array.each do |arr| %>  
-	   		<%= arr["user_email"] %> 
-   		<% end %> 
+		<%= users.flatten.join(",")%> 
    		</td>
    	</tr>
 	<% end %> 

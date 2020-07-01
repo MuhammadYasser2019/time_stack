@@ -7,6 +7,7 @@ class WeeksController < ApplicationController
   # GET /weeks
   # GET /weeks.json
   def index
+    logger.debug" PARAMTER ARE #{params} and CURRENT USER IS #{current_user}"
     @user = current_user
     @shift_supervisor_project_shift = @user.project_shifts.where(shift_supervisor_id: @user.id).last
     @terms_modal_show = current_user.terms_and_condition
@@ -110,14 +111,27 @@ class WeeksController < ApplicationController
 
   # GET /weeks/new
   def new
+
     #@projects =  Project.joins(:projects_users).where("projects_users.user_id=? AND inactive=?", current_user.id, false )
-    @week = Week.new
-    @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
-    @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d') 
-    @week.user_id = params[:user_id].present? ? params[:user_id] : current_user.id
-    @week.status_id = Status.find_by_status("NEW").id
-    @week.proxy_user_id = current_user.id
-    @week.save!
+    if params[:start_date].present?
+      start_date  = params[:start_date].to_date.strftime('%Y-%m-%d')
+      end_date = params[:end_date].to_date.strftime('%Y-%m-%d')
+      @week = Week.new
+      @week.start_date = start_date
+      @week.end_date = end_date
+      @week.user_id = current_user.id
+      @week.status_id = Status.find_by_status("NEW").id
+      @week.proxy_user_id = current_user.id
+      @week.save!
+    else
+      @week = Week.new
+      @week.start_date = Date.today.beginning_of_week.strftime('%Y-%m-%d')
+      @week.end_date = Date.today.end_of_week.strftime('%Y-%m-%d') 
+      @week.user_id = params[:user_id].present? ? params[:user_id] : current_user.id
+      @week.status_id = Status.find_by_status("NEW").id
+      @week.proxy_user_id = current_user.id
+      @week.save!
+    end
 
     if current_user.id == @week.user_id
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", current_user.id )
@@ -145,7 +159,6 @@ class WeeksController < ApplicationController
     @vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", @week_user.customer_id, true)
     vacation(@week)
     @upload_timesheet = @week.upload_timesheets.build
-
   end
 
   def copy_timesheet
