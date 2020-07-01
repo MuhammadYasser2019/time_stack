@@ -36,7 +36,7 @@
 
   - else
     div.upload_text
-      - if @button_status == "true"
+      - if find_status(@week) == "APPROVED"
         = label_tag(:time_sheet, "Upload Timesheet", class: 'action', for: 'file-upload')
         = f.fields_for :upload_timesheets do |u|
         
@@ -51,11 +51,11 @@
           div = link_to "You have attached: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
   
     .actions
-     = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3) if @button_status != "true"
-     = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"} if @button_status != "true"
+     = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3) if find_status(@week) != "APPROVED"
+     = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"} if find_status(@week) != "APPROVED"
 
 .field
-    - if @button_status == "true"
+    - if find_status(@week) == "APPROVED"
       = button_tag "ADD EXPENSES", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon", data: {toggle: "modal", target: "#expenseRecordManagement"}, disabled: true
     - else
       = button_tag "ADD EXPENSES", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon", data: {toggle: "modal", target: "#expenseRecordManagement"}, disabled: (@week.status_id == 3)
