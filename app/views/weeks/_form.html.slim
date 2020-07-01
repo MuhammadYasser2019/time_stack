@@ -36,20 +36,29 @@
 
   - else
     div.upload_text
-      = label_tag(:time_sheet, "Upload Timesheet", class: 'action', for: 'file-upload')
-      = f.fields_for :upload_timesheets do |u|
+      - if find_status(@week) == "APPROVED"
+        = label_tag(:time_sheet, "Upload Timesheet", class: 'action', for: 'file-upload')
+        = f.fields_for :upload_timesheets do |u|
         
-        = u.file_field(:time_sheet, id: "file-upload")
+          = u.file_field(:time_sheet, id: "file-upload",disabled: true)
+      -else
+        = label_tag(:time_sheet, "Upload Timesheet", class: 'action', for: 'file-upload')
+        = f.fields_for :upload_timesheets do |u|
+        
+          = u.file_field(:time_sheet, id: "file-upload") 
       - @week.upload_timesheets.each do |t|
         - if t.time_sheet.present?
           div = link_to "You have attached: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
   
     .actions
-     = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3)
-     = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"}
+     = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3) if find_status(@week) != "APPROVED"
+     = f.submit "Submit Timesheet", {confirm: "Would you like to submit your timesheet?"} if find_status(@week) != "APPROVED"
 
 .field
-    = button_tag "ADD EXPENSES", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon", data: {toggle: "modal", target: "#expenseRecordManagement"}, disabled: (@week.status_id == 3)
+    - if find_status(@week) == "APPROVED"
+      = button_tag "ADD EXPENSES", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon", data: {toggle: "modal", target: "#expenseRecordManagement"}, disabled: true
+    - else
+      = button_tag "ADD EXPENSES", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon", data: {toggle: "modal", target: "#expenseRecordManagement"}, disabled: (@week.status_id == 3)
 - if @expenses.present?
   == render "etable"
 

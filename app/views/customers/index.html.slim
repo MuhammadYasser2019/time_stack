@@ -48,6 +48,7 @@
 						tr
 							td = week.start_date.strftime('%Y-%m-%d')
 							td = week.end_date.strftime('%Y-%m-%d')
+							
 							td = link_to find_status(week), find_status(week) == "NEW" || "REJECTED" ? edit_week_path(week): week_path(week)
 							td= link_to "Report", "/weeks/#{week.id}/report" if (find_status(week) == "SUBMITTED") || (find_status(week) == "APPROVED")
 							-if (find_status(week) == "NEW") && @weeks.last.id != week.id
