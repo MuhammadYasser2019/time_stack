@@ -224,6 +224,9 @@ class WeeksController < ApplicationController
     @week.upload_timesheets.build if @week.upload_timesheets.blank?
     vacation(@week)
     # vr.where("status = ? && vacation_start_date >= ?", "Approved", @week.start_date)
+ 
+    @button_status = params[:status]
+    #binding.pry
   end
 
   def vacation(week)
@@ -783,7 +786,7 @@ class WeeksController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def week_params
       params.require(:week).permit(:id, :start_date, :end_date, :user_id, :status_id, :comments, :time_sheet, :hidden_print_report, :dismiss,
-      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id, :partial_day],expense_records_attributes:[:id, :expense_type, :description, :date, :amount, :attachment, :project_id])
+      time_entries_attributes: [:id, :user_id, :project_id, :task_id, :hours, :date_of_activity, :activity_log, :sick, :personal_day, :updated_by, :_destroy, :time_in, :time_out, :vacation_type_id, :partial_day],expense_records_attributes:[:id, :expense_type, :description, :date, :amount, :attachment, :project_id,:status])
     end
 
     def redirect_to_root
