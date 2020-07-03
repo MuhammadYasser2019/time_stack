@@ -1,4 +1,4 @@
-class CreateEmploymentTypesVacationTypes < ActiveRecord::Migration[5.0]
+class CreateEmploymentTypesVacationTypes < ActiveRecord::Migration[5.2]
   def change
     create_table :employment_types_vacation_types do |t|
       t.integer    :employment_type_id

@@ -1,4 +1,4 @@
-class CreateExternalConfigurations < ActiveRecord::Migration[5.0]
+class CreateExternalConfigurations < ActiveRecord::Migration[5.2]
   def change
     create_table :external_configurations do |t|
       t.integer :customer_id
