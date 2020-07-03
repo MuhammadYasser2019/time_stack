@@ -101,6 +101,41 @@ h1.grid-x{
   text-align:center;
 }
 
+.date1{
+  text-align: center;
+  padding: 5px !important;
+}
+
+.date1 .timesheet-date{
+  height: 100% !important;
+  font-size: .8rem;
+}
+
+.partial{
+  margin-top: 5px;
+}
+.partial-text{
+  float:left;
+  width: 60%;
+  font-size: .8rem;
+}
+
+.partial_day{
+  width:30%;
+  float:right;
+  height: 15px;
+}
+
+.timesheet-date{
+  display: block;
+  font-weight: bold;
+  width: 100%;
+}
+
+.form-control{
+  font-size: .8rem;
+}
+
 .report{
   text-align:center;
   margin-top: 20px;
@@ -219,9 +254,9 @@ input[type="submit"]{
 }
 
 .orange-button{
-  font-size:14px;
+  font-size:.8rem;
   padding: 9px;
-  border-radius: 10px;
+  border-radius: 3px;
     /* margin: 15px; */
   color: black;
   font-weight: bold;
@@ -231,6 +266,11 @@ input[type="submit"]{
   width: 200px;
   text-align: center;
   margin: 0 auto;
+  text-decoration: none;
+}
+
+.orange-button:hover{
+  text-decoration: none;
 }
 
 .sign-in-button{
@@ -245,12 +285,45 @@ input[type="submit"]{
   background-color: #e46a27;
 }
 
+.add{
+  max-width:150px;
+}
+
+.task{
+  max-width: 230px;
+}
+
 .add_row{
   background-color: #e7e7e7;
   border-color: #b9b9b9;
   color: #333333;
   padding: 10px;
   display: block;
+  font-size: .8rem;
+  padding: 4px;
+  width: auto;
+  text-align: center;
+  margin-bottom: 5px;
+  float:left;
+}
+
+.add_row:hover{
+  color: black !important;
+  transition: all 15s ease-in-out;
+}
+
+.add-time{
+  font-size: .8rem;
+  padding: 4px;
+  width: auto;
+  margin-top: 10px;
+  text-align: left;
+  float: left;
+  text-align: center;
+}
+
+.add_row, .add-time{
+  width: 120px;
 }
 
 .comment-button{
@@ -388,13 +461,40 @@ input[type="submit"]{
   margin-right: 15%;
 }
 
+.upload_text{
+  width: 100%;
+}
+
+.upload-timesheet {
+  float: left;
+  margin-right: 10px;
+  border-radius: 5px;
+  width:auto;
+  padding: 8px;
+}
+
 .expense_record_icon{
-  margin-left: 35%;
-  padding: 9px;
+  margin: 0;
+  font-size: .8rem;
+  width: auto;
+  padding: 8px;
 }
 
 .delete_expense{
   padding: 7px;
+  font-size: .8rem;
+  width: 100px;
+}
+
+.timesheet-actions{
+  margin-top: -54px;
+}
+
+.back-btn{
+  margin-left: 3%;
+  width: 100px;
+  margin-top: -60px;
+  padding: 8px;
 }
 
 .project_users_graph {
@@ -402,7 +502,7 @@ input[type="submit"]{
 }
 
 .vacation_request_graph {
-  float: right; 
+  float: right;
 }
 
 .hours-input {
@@ -413,16 +513,26 @@ input[type="submit"]{
   float: left;
 }
 
-.enter_time select:nth-child(2), .enter_time select:nth-child(5) { 
-  width: 43%; 
+.enter_time select:nth-child(2), .enter_time select:nth-child(5) {
+  width: 43%;
 }
 
-.enter_time select:nth-child(3), .enter_time select:nth-child(6) { 
+.enter_time select:nth-child(3), .enter_time select:nth-child(6) {
   width: 26%;
 }
 
 .previous_commment_icon{
-  margin-left: 100%;
+  margin-left: 93%;
+}
+
+.previous_comment_image{
+  border: 1px solid #ffdeaa;
+  transition: border .15s ease-in;
+}
+
+.previous_comment_image:hover{
+  border: 1px solid #10a7ff;
+  transition: border .15s ease-in;
 }
 
 .header .top-bar-right .menu.medium-horizontal {
@@ -444,10 +554,10 @@ input[type="submit"]{
     background-size: 22px;
 }
 
-.header .top-bar-right .search-box input:focus { 
-  width:200px; 
+.header .top-bar-right .search-box input:focus {
+  width:200px;
   border-radius: 10px;
-  background-position: 169px 7px; 
+  background-position: 169px 7px;
 }
 
 .form-control:focus{
@@ -455,7 +565,7 @@ input[type="submit"]{
 }
 
 .modal-content{
-  width: 1050px !important; 
+  width: 1050px !important;
 }
 .modal-dialog{
   max-width: auto;
@@ -464,7 +574,7 @@ input[type="submit"]{
 .navbar{
   //height: 130px;
   border-bottom: 2px solid #feac554d;
-  padding: 3px 0px 5px 40px;
+  padding: 3px 0px 10px 40px;
   background-color: #ffffffc7;
   backdrop-filter: blur(2px);
   z-index:998;

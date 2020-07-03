@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_11_135441) do
+ActiveRecord::Schema.define(version: 2020_06_19_132622) do
 
   create_table "application_versions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "version_name"
@@ -256,6 +256,13 @@ ActiveRecord::Schema.define(version: 2020_06_11_135441) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "shift_supervisor_id"
+    t.boolean "mon", default: false
+    t.boolean "tue", default: false
+    t.boolean "wed", default: false
+    t.boolean "thu", default: false
+    t.boolean "fri", default: false
+    t.boolean "sat", default: false
+    t.boolean "sun", default: false
   end
 
   create_table "statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|

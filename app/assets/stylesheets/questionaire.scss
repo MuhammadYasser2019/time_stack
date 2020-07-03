@@ -3,11 +3,17 @@
 	padding: 10px;
 	z-index: 1;
 	right: 0;
-	bottom: 0; 
+	bottom: 0;
+  background-color: transparent;
+  border-color: transparent;
+  color: #0a55ff;
+  opacity: .7;
+  transition: opacity .15s ease-in-out;
 }
 
 .tech-btn:hover {
-  transform: rotate(30deg);
+  opacity: 1;
+  transition: opacity .15s ease-in-out;
 }
 
 .modal {
