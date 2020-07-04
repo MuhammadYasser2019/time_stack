@@ -131,7 +131,7 @@
 						    	= f.hidden_field :project_id, value: @project_id
 						    	= f.label :body, label: 'Select Start Date'
 						    	= f.hidden_field :invited_by_id, value:  @current_user_id
-						    	= date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required", class:"form-control"}
+						    	= text_field_tag 'invite_start_date', params[:invite_start_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class:"form-control datepicker"}
 								= f.label :body, label: 'Employment Type'
 					    		= select_tag :employment_type, options_from_collection_for_select(EmploymentType.where(customer_id: @customer.id),:id, :name ), include_blank: "Select Employment Type", class:"form-control", required: "required"
 					    	
@@ -193,3 +193,10 @@
 
 	- if !current_user.default_project? && current_user.parent_user_id.blank?
 			== render partial: 'users/default_projects'
+
+coffee:
+	$('.datepicker').datepicker({
+    	autoclose: true,
+    	format: "yyyy-mm-dd"
+
+    })

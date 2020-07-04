@@ -26,4 +26,5 @@
 // session_timeout_prompter
 //= require highcharts
 //= require ckeditor/adapters/jquery
+//= require bootstrap-datepicker
 //= require_tree .

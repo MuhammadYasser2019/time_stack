@@ -171,7 +171,7 @@ div.tab-content.white-background
                       = label_tag "Email",nil, :style=>"text-align: left;"
                       = text_field_tag :email, nil, placeholder: 'Email', label: false, class: "invitation_email form-control", required: true
                       = label_tag "Select Start Date",nil, :style=>"text-align: left;"
-                      = date_field_tag 'invite_start_date', params[:invite_start_date], {required: "required", class:"form-control"}
+                      = text_field_tag 'invite_start_date', params[:invite_start_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class:" datepicker form-control"}
                       = label_tag "Employment Type",nil, :style=>"text-align: left;"
                       = select_tag :employment_type, options_from_collection_for_select(@employment_type,:id, :name ), include_blank: "Select Employment Type", required: "required", class:"form-control"
                       = label_tag "Project",nil, :style=>"text-align: left;"
@@ -228,6 +228,15 @@ div.tab-content.white-background
 			 	
   - if !current_user.default_project? && current_user.parent_user_id.blank?
   	== render partial: 'users/default_projects'
+
+
+coffee:
+	$('.datepicker').datepicker({
+    	autoclose: true,
+    	format: "yyyy-mm-dd"
+    })
+
+
 
   
 				
