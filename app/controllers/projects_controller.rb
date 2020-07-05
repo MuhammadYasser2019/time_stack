@@ -418,6 +418,30 @@ end
     @user = User.find(params[:user_id])
 
   end
+
+  def send_project_users_email
+    @project = Project.find params[:project_id]
+    @available_users = @project.users
+    user = current_user
+    @projects_users = ProjectsUser.where("project_id = ?", @project.id)
+  end
+
+
+  def add_multiple_users_to_send_email
+    @project = Project.find params[:project_id]
+    all_users = params[:user_email]
+    subject = params[:email_subject]
+    body = params[:email_body]
+    emails = []
+    if all_users.present?
+      all_users.each do|u|
+        user = User.find u
+        emails << user.email
+      end
+      UserNotifyMailer.mail_with_subject(emails,subject,body).deliver_now
+      redirect_to send_project_users_email_path(project_id: @project.id)
+    end
+  end
     
   def add_multiple_users_to_project
     logger.debug(" add_multiple_user_to_project - #{params.inspect}")
