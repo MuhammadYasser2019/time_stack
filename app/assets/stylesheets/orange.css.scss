@@ -14,8 +14,18 @@ input[type="submit"]{
   background-color: #ffd079 !important;
 }
 
+input[type="submit"]:hover{
+  background-color: orange !important;
+  transition: all .15s ease-in-out;
+}
+
 .orange-button{
   background-color: #ffd079 !important;
+}
+
+.orange-button:hover{
+  background-color: orange !important;
+  transition: all .15s ease-in-out;
 }
 
 .red-button{
@@ -58,4 +68,12 @@ table tr:nth-of-type(even) {
 
 .dark_row{
   background-color:#ffd079 
+}
+
+.holiday-row:nth-of-type(even) {
+  background-color: white;
+}
+
+.holiday-row:nth-of-type(odd) {
+  background-color: #fff0db;
 }
