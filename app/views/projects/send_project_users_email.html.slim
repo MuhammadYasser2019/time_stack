@@ -1,37 +1,36 @@
-div class="add_remove_user"
+div class="communication_email"
 	= form_tag add_multiple_users_to_send_email_path, remote: true do 
 		= hidden_field_tag "project_id", @project.id
-		div class="add_remove_left_row"				
-			h1 Available Users
-			table
-				- (@available_users).each_with_index do |uop,i|
-				      tr
-				      	td
-				          = check_box_tag "user_email[]", uop.id, false, class: "add-row"
-				         
-				        td
-				          = uop.email
+		div class="user_lists"
+		
+			
+			div class="add_remove_left_row"				
+				h1 Select user(s)
+				table
+					- (@available_users).each_with_index do |uop,i|
+					      tr
+					      	td
+					          = check_box_tag "user_email[]", uop.id, false, class: "add-row"
+					         
+					        td
+					          = uop.email
 
-	    div class="send_email_center"
-	    	tr 
-	    		td 
-	    			<label style="width: 389px; margin-left: -68px;"><strong> Email Subject</strong></label>
-	    			= text_field_tag  "email_subject" , nil, :required => true, style: "width: 389px; margin-left: -68px; height: 39px;"
-	    		br
-	    		br
-	    		td
-	    			<label style="width: 389px; margin-left: -68px"><strong>Email Message</strong></label>
-	    			= text_area_tag "email_body", nil, :required => true,  style: "width: 396px; height: 120px; margin-left: -68px;"
-	    		br
-	    		br
+		div class="selected_users_list"
 
+				h1 Communication Email List
+				div id="show_element" style="padding-left: 50px;"
 
-	  	  	= submit_tag("Send email", id: "send_button")
+		    	div style="padding-left: 50px;"
+	    			<label style="width: 389px;"><strong> Email Subject</strong></label>
+	    			= text_field_tag  "email_subject" , nil, :required => true, style: "width: 389px;height: 39px;"
+	    		
+	    		
+	    			<label style="width: 389px;"><strong>Email Message</strong></label>
+	    			= text_area_tag "email_body", nil, :required => true,  style: "width: 396px; height: 120px; "
 
-div class="add_remove_right_row"
-	table
-		h1 Communication Email List
-		tbody id="show_element"
+			  		= submit_tag("Send email", id: "send_button")
+
+	
 
 
 

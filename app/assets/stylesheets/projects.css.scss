@@ -111,9 +111,31 @@
 	
 }
 
+.communication_email{
+	width: 80%;
+    margin: 50px;
+}
+
 .add_remove_left_row{
     float: left;
 	width: 35%;
+}
+
+.selected_users_list{
+    float: right;
+	width: 50%;
+}
+
+.selected_users_list table{
+	float: left;
+	width: 100%;
+	min-height: 294px;
+	tbody{
+	display:block;
+	height: 291px;      
+	overflow-y: auto;
+    overflow-x: hidden;
+    }
 }
 
 .add_remove_left_row table{
@@ -127,6 +149,12 @@
 	overflow-y: auto;
     overflow-x: hidden;
     }
+}
+
+.selected_users_list h1{
+	max-width: 100%;
+	margin-left: 42px;
+	width:77%;
 }
 
 .add_remove_left_row h1{
