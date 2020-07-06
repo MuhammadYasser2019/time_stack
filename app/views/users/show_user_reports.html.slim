@@ -24,9 +24,9 @@
           tr
             td = select_tag :project, options_from_collection_for_select(@user_projects, "id", "name", params[:project]), :include_blank => true
             = hidden_field_tag 'hidden_print_report', false
-            td = date_field_tag 'proj_report_start_date', params[:proj_report_start_date], {required: "required"}
+            td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date], {required: "required",class: "datepicker"}
             /= hidden_field_tag 'id', @user.id
-            td = date_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required"}
+            td = text_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required",class: "datepicker"}
             td = button_tag "Show User Report", class: "orange-button"
             td = link_to "Show weekly report", "/show_user_weekly_reports/#{params[:id]}?&proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", class: "orange-button"
     .grid-y
@@ -130,4 +130,9 @@ coffee:
       return
     $('input[type=\'checkBox\']').trigger 'change'
     return
+
+  $('.datepicker').datepicker({
+    autoclose: true,
+    format: "yyyy-mm-dd"
+    })
 

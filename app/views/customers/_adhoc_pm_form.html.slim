@@ -17,9 +17,9 @@
 						= select_tag :adhoc_pm_id,'', :include_blank => true, class:"form-control"
 					
 					td
-						= date_field_tag 'adhoc_start_date', params[:adhoc_start_date], {required: "required", :style=>"font-size: 12.5px;", class:"form-control"}
+						= text_field_tag 'adhoc_start_date', params[:adhoc_start_date],{required: "required",:placeholder => "yyyy/mm/dd", :style=>" width: 155px; font-size: 12.5px;", class:"datepicker form-control"}
 					td
-						= date_field_tag 'adhoc_end_date', params[:adhoc_end_date], {required: "required", :style=>"font-size: 12.5px;", class:"form-control"}
+						= text_field_tag 'adhoc_end_date', params[:adhoc_end_date], {required: "required", :placeholder =>  "yyyy/mm/dd", :style=>" width: 155px; font-size: 12.5px;", class:"datepicker form-control"}
 
 		.actions = submit_tag 'Assign PM'
 
@@ -41,3 +41,10 @@
 					td = p.adhoc_end_date.to_date	
 
 div style="clear:both;"
+
+coffee:
+	$('.datepicker').datepicker({
+    	autoclose: true,
+    	format: "yyyy-mm-dd"
+
+    })
