@@ -76,6 +76,17 @@ class Project < ApplicationRecord
     end
     return codes
   end
+
+
+  def deliver(users,subject,body)
+    if users.present?
+      users.each do|u|
+        user = User.find u
+        email = user.email
+        UserNotifyMailer.mail_with_subject(email,subject,body).deliver_now
+      end
+    end
+  end
   
   def find_dates_to_print(proj_report_start_date = nil, proj_report_end_date = nil, current_week = nil, current_month = nil)
     if current_month == "current_month"
