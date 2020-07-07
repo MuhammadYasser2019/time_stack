@@ -237,6 +237,8 @@ Rails.application.routes.draw do
   get 'set_selected_users' => 'projects#set_selected_users'
   get 'set_inventory_submitted_date' => 'users#set_inventory_submitted_date', via: [:get,:post]
   get 'inventory_and_equipment_reports' => 'projects#inventory_and_equipment_reports', via: [:get,:post]
+  get 'send_project_users_email' => "projects#send_project_users_email", via: [:get,:post]
+  post 'add_multiple_users_to_send_email' => "projects#add_multiple_users_to_send_email"
 
   get '/privacy' => 'static_pages#privacy'
   get '/terms_of_service' => 'static_pages#terms_of_service'

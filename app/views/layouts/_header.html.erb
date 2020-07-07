@@ -17,8 +17,14 @@
 		<% else %>
 	  <a href="/", class="navbar-brand"><%= image_tag "chronstack-thin-horizontal-opacity.png", class: 'logo' %></a>
 	  <% end %>
-	<a  href="https://play.google.com/store/apps/details?id=com.resourcestack.chronstack" target="_blank" style="padding: 10px;"><%= image_tag("google.png", style: "width:150px;margin-top: 12px;") %></a>
-    <a href="https://apps.apple.com/app/id1514665138" target="_blank" style="padding: 10px;"><%= image_tag("apple_store.png", style: "width:150px;") %></a>
+  <% end %>
+  <% if !current_user.nil? && !application_version.nil? %>
+
+    <% if application_version[:user_application_version].nil? %>
+      <span id="curApplicationVersion" class="current-application-version" style="display: none;">Current Version: 2.108</span>
+    <% else %>
+      <span id="curApplicationVersion" class="current-application-version" style="display: block;" data-id="<%= application_version[:user_application_version]["id"]%>" data-name="<%=  application_version[:user_application_version]["version_name"] %>" data-description="<%=  application_version[:user_application_version]["description"].html_safe %>">Current Version: <%=  application_version[:user_application_version]["version_name"] %></span>
+    <% end %>
   <% end %>
   <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>

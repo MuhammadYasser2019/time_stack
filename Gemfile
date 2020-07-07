@@ -77,8 +77,9 @@ gem 'cancancan', '~> 1.10'
 #gem "font-awesome-sass"
 gem "font-awesome-rails"
 gem 'jquery-datatables-rails', '~> 3.4.0'
-
+gem 'bootstrap-datepicker-rails'
 gem "recaptcha", '3.4.0', require: "recaptcha/rails"
+gem 'delayed_job_active_record'
 
 #Following two gems are needed for uploading files functionality.
 gem 'carrierwave'

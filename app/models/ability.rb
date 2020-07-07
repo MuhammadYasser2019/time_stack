@@ -27,16 +27,16 @@ class Ability
       if user.cm || user.proxy_cm
         can :manage, TimeEntry
         can [:read,:edit,:update], Task
-        can [:manage, :permission_denied, :show_project_reports,:approve], Project
+        can [:manage, :permission_denied, :show_project_reports,:approve,:send_project_users_email], Project
         can [:manage, :read,:edit,:update, :add_user_to_customer, :set_theme], Customer
-	can [:time_reject, :dismiss, :show_all_timesheets, :change_status], Week
-	can [:reset,:approved_week, :default_week], User
+	      can [:time_reject, :dismiss, :show_all_timesheets, :change_status], Week
+	      can [:reset,:approved_week, :default_week], User
         can [:check_holidays], Holiday
       end
       if user.pm
        can :manage, TimeEntry
        can :manage, Task
-       can [:manage, :read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve, :add_adhoc_pm, :dynamic_project_update], Project
+       can [:manage, :read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve, :add_adhoc_pm, :dynamic_project_update,:send_project_users_email], Project
        can [:new, :create, :edit, :update, :time_reject], Week
        can [:accept_terms_and_condition], User
       end

@@ -256,6 +256,7 @@ div {
   padding: 50px 10px;
   border-bottom-right-radius: 30px;
   border-top-left-radius: 30px;
+  backdrop-filter: blur(2px);
   p{
     line-height:2.4rem;
     text-align: left;
@@ -276,7 +277,8 @@ div {
   top:56%;
 }
 
-.image-banner-text{
+
+#front-page-banner-text{
 
   -webkit-animation: fadein 2s; /* Safari, Chrome and Opera > 12.1 */
   -moz-animation: fadein 2s; /* Firefox < 16 */
@@ -420,6 +422,7 @@ div {
 .info-square{
   //background-color: rgba(123, 231, 216, 0.35);
   //background-image: linear-gradient(rgba(165, 225, 217, 0.35), rgba(123, 231, 216, 0.35));
+  display:block;
   border: 3px solid #f1a8a9;
   box-shadow: 6px 7px 17px 0px rgba(0, 0, 0, 0.3);
   height:200px;
@@ -454,7 +457,7 @@ a.info-square:hover{
   box-shadow: 5.73px -4.02px 17px 0px rgba(197, 232, 227, 0);
   border-color: transparent !important;
   border-radius: 40px;
-  margin: 0 55px;
+  //margin: 0 55px;
 }
 
 .square-header{
@@ -551,12 +554,12 @@ a.info-square:hover{
 
 .footer_section{
   height: 80px;
-  background-color: white;
+  background-color: transparent;
+  border-top: 6px solid #feac55;
 }
 
 .top-of-footer{
   width: 100%;
-  border-top: 6px solid #feac55;
   margin: 0;
 }
 
@@ -666,8 +669,22 @@ a.info-square:hover{
   }
 }
 
+#case-study-div{
+  background-image: url('case_study.jpg');
+  width:100%;
+  height: 400px;
+  margin: 0px;
+  background-size: cover;
+  background-position: bottom;
+  img {
+    width: 90%;
+    height: 400px;
+    float: left;
+  }
+}
+
 #features-div{
-  background-image: url('timesheet.jpg');
+  background-image: url('timesheet_screen.png');
   width:100%;
   height: 400px;
   margin: 0;
@@ -716,4 +733,12 @@ a.info-square:hover{
   width:80%;
   margin-left:100px;
   min-height:100px;
+}
+
+.form-actions{
+  margin-top: 20px;
+}
+
+.holiday-row{
+  padding:10px;
 }
