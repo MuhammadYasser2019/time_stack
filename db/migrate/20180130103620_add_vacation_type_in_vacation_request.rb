@@ -1,4 +1,4 @@
-class AddVacationTypeInVacationRequest < ActiveRecord::Migration[5.0]
+class AddVacationTypeInVacationRequest < ActiveRecord::Migration[5.2]
   def change
     add_column :vacation_requests, :vacation_type_id, :integer
 

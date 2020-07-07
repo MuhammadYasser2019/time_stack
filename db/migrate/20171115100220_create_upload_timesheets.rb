@@ -1,4 +1,4 @@
-class CreateUploadTimesheets < ActiveRecord::Migration
+class CreateUploadTimesheets < ActiveRecord::Migration[5.2]
   def change
   	create_table :upload_timesheets do |t|
       t.integer :week_id

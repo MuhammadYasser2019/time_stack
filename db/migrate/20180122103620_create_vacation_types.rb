@@ -1,4 +1,4 @@
-class CreateVacationTypes < ActiveRecord::Migration[5.0]
+class CreateVacationTypes < ActiveRecord::Migration[5.2]
   def change
     create_table :vacation_types do |t|
       t.integer 	:customer_id

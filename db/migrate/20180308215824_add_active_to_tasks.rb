@@ -1,4 +1,4 @@
-class AddActiveToTasks < ActiveRecord::Migration[5.0]
+class AddActiveToTasks < ActiveRecord::Migration[5.2]
   def change
     add_column :tasks, :active, :boolean
   end

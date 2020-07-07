@@ -1,4 +1,4 @@
-class CreateHolidayExceptions < ActiveRecord::Migration[5.0]
+class CreateHolidayExceptions < ActiveRecord::Migration[5.2]
   def change
     create_table :holiday_exceptions do |t|
       t.integer :user_id

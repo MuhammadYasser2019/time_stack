@@ -165,7 +165,7 @@
     project = Project.find(params[:project_id])
     project_id = params[:project_id]
     @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, pm: params[:project_manager], default_project: project_id, shared: params[:shared_user])
-    @user.update(invited_by_id: params[:invited_by_id], customer_id: project.customer_id)
+    @user.update(invited_by_id: params[:invited_by_id], customer_id: project.customer_id, pm: params[:project_manager])
     pu = ProjectsUser.new
     # @users_on_project = @project.users
     # @users_on_project = params[:user_id]

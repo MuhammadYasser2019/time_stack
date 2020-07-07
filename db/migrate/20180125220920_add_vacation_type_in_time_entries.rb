@@ -1,4 +1,4 @@
-class AddVacationTypeInTimeEntries < ActiveRecord::Migration[5.0]
+class AddVacationTypeInTimeEntries < ActiveRecord::Migration[5.2]
   def change
     add_column :time_entries, :vacation_type_id, :integer
 
