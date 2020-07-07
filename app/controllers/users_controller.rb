@@ -226,7 +226,7 @@ class UsersController < ApplicationController
   
   def invite_customer
     @user = User.invite!(email: params[:email], invitation_start_date: params[:invite_start_date], invited_by_id: params[:invited_by_id])
-    @user.update(invited_by_id: params[:invited_by_id], cm: true)
+    @user.update(invited_by_id: params[:invited_by_id], cm: true, customer_id: params[:customer_id] )
     Customer.find(params[:customer_id]).update(user_id: @user.id)
     redirect_to admin_path
   end
