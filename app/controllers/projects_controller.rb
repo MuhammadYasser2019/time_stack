@@ -69,6 +69,14 @@ end
     @users_on_project = User.where("parent_user_id IS null").all
     @customer = Customer.find current_user.customer_id
     @configuration = @customer.external_configurations.where(system_type: 'jira').first
+    @shifts = Shift.where(customer_id: @customer.id)
+    @project_shift = ProjectShift.new
+    @shift_array = []
+    # shift
+    @shifts.each do |shift|
+      name_and_shift_period = shift.name + ': ' + shift.start_time + ' - ' + shift.end_time
+      @shift_array << [name_and_shift_period, shift.id]
+    end
 
   end
 
@@ -163,9 +171,12 @@ end
       end
     end
     @project = Project.new(project_params)
-
+    @project.save
+    @project_shift = ProjectShift.new
+    @project_shift.shift_id = params[:project][:project_shift][:shift_id]
+    @project_shift.project_id = @project.id
     respond_to do |format|
-      if @project.save
+      if @project_shift.save
         format.html { redirect_to projects_path, notice: 'Project was successfully created.' }
         format.json { render :show, status: :created, location: @project }
       else
@@ -654,7 +665,7 @@ end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
-      params.require(:project).permit(:name, :customer_id, :user_id, :proxy, :deactivate_notifications,
+      params.require(:project).permit(:name, :customer_id, :user_id, :proxy, :deactivate_notifications, :project_shift,
       tasks_attributes: [:id, :code, :description, :project_id, :default_comment, :active , :billable, :delete])
     end
 end

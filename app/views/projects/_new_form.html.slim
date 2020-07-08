@@ -7,10 +7,13 @@
           li = message
 
   .field
-
     = f.label :name
     = f.text_field :name, required: true
-  
+    br
+    = f.fields_for @project_shift do |s|
+      = s.label "Shift"
+      |&nbsp;&nbsp;&nbsp;
+      = s.select(:shift_id, options_for_select(@shift_array, @project_shift.shift_id), {}, { required: true })
     = f.hidden_field :customer_id, value: current_user.customer_id.present? ? current_user.customer_id : Customer.find_by_name("Resource Stack, Inc.").id
     = f.hidden_field :user_id, value: current_user.id
   table border="1" id="tasklist"
