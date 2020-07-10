@@ -9,6 +9,21 @@
 			- @notifications.each do |notif|
 				tr
 					= hidden_field_tag 'user_notification_id', notif.id
-					td = link_to notif.notification_type, "javascript:void(0);", id: "notification_#{notif.id}", class: "notification_dialog",type: "link", data: {toggle: "user_notification", target: "#user_notification"}
-					td = link_to notif.created_at.to_date, users_notification_date_path(:week_id => notif.week_id, :notification_id => notif.id), id: "notif_date#{notif.created_at.to_date}"
+					- if notif.visited.present?
+						td= "#{notif.notification_type}"
+
+						td
+							<a href= "/users_notification_date?notification_id=#{notif.id}&week_id=#{notif.week_id}" id="notif_date#{notif.created_at.to_date}">#{notif.created_at.to_date}</a>
+
+						td
+							<a id= "notification_#{notif.id}" class= "notification_dialog orange-button btn" style="width:70px; type="link" data-toggle="user_notification" data-target="#user_notification" href="javascript:void(0);">View</a>
+					-else
+						td
+							<strong>#{notif.notification_type}</strong>
+						td
+							<a href= "/users_notification_date?notification_id=#{notif.id}&week_id=#{notif.week_id}" id="notif_date#{notif.created_at.to_date}"><strong>#{notif.created_at.to_date}</strong></a>
+
+						td
+							<a id= "notification_#{notif.id}" class= "notification_dialog orange-button btn" style="width:70px; type="link" data-toggle="user_notification" data-target="#user_notification" href="javascript:void(0);">View</a>
+
 			div(id="user_notification" class="reveal" aria-hidden="true" role="dialog" data-reveal)
