@@ -11,14 +11,16 @@
             th
         tbody
           tr
-            td = select_tag :project_id, options_from_collection_for_select( @projects, "id", "name"), include_blank: true, class: "project_id form-control"
+            td = select_tag :shift_project_id, options_from_collection_for_select( @users_project, "id", "name"), include_blank: true, class: "form-control", required: true
 
-            td = select_tag :project_shift_type_id, '', :include_blank => true, class: "form-control"
+            td = select_tag :project_shift_type_id, '', :include_blank => true, class: "form-control", required: true
 
-            td = text_field_tag 'shift_start_date', params[:shift_start_date], {required: "required",:placeholder =>  "yyyy/mm/dd", class: " datepicker vc_start"}
+            td = text_field_tag 'shift_start_date', params[:shift_start_date], {required: "required",:placeholder =>  "yyyy/mm/dd", class: " datepicker vc_start form-control"}
 
             /= hidden_field_tag 'id', @user.id
-            td = text_field_tag 'shift_end_date', params[:shift_end_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class: "datepicker vc_end"}
+            td = text_field_tag 'shift_end_date', params[:shift_end_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class: "datepicker vc_end form-control"}
+            td = text_area_tag "comment", nil, {required: "required"}
+
 
             td = button_tag "Request Shift Change", class: "button primary orange-button shift_change_request_submit"
 
@@ -29,58 +31,34 @@
   table
     thead
       tr
+        th Project
+        th Shift Type
         th Shift Start Date
         th Shift End Date
         th Description
         th Status
-        th Shift Type
-        th Cancel Shift 
 
     tbody
       - if @user_shift_requests.count > 0
         -@user_shift_requests.each_with_index do |usv,i| 
-          tr id = "vacation_table_#{usv.id}"
-            td = text_field_tag 'shift_start', usv.shift_start_date.strftime("%Y-%m-%d"), {:placeholder =>  "yyyy/mm/dd", id: "shift_start_#{i}",class: "shift_start_#{i} datepicker"}
-            td = text_field_tag 'shift_end', usv.shift_end_date.strftime("%Y-%m-%d"), {:placeholder =>  "yyyy/mm/dd", id: "shift_end_#{i}",class: "shift_end_#{i} datepicker"}
-            td = text_area_tag "comment", usv.comment, id: "shift_comment_#{i}"
-            td = usv.status
-            -if usv.shift_type_id.present?
-              - p_shift= ProjectShift.find usv.shift_type_id
+          tr id = "shift_table_#{usv.id}"
+            td = usv.project.name if usv.project.present?
+            -if usv.shift_id.present?
+              - p_shift= ProjectShift.find usv.shift_id
               - s_t = p_shift.shift.start_time + "-" + p_shift.shift.end_time
               td = s_t.to_s
             -else
               td = ""
+            td = text_field_tag 'shift_start', usv.shift_start_date.strftime("%Y-%m-%d"), {:placeholder =>  "yyyy/mm/dd", id: "shift_start_#{i}",class: "shift_start_#{i} datepicker form-control"}
+            td = text_field_tag 'shift_end', usv.shift_end_date.strftime("%Y-%m-%d"), {:placeholder =>  "yyyy/mm/dd", id: "shift_end_#{i}",class: "shift_end_#{i} datepicker form-control"}
+            td = usv.comment
+            td = usv.status
+            
           
 
  
   coffee:
     jQuery ($) ->
-      $(document).on("change", ".project_id", ->
-        console.log "Inside project change" + $(this).attr('id') +  " the value selected is " + $(this).val()    
-        shift_type = "project_shift_type_id"
-        tr = $(this).parent().parent("tr")
-        console.log("tr: " + tr)
-        build_shifts(shift_type, $(this).val())
-      )
-
-      build_shifts = (shift_type, project_id) ->
-        $('#'+shift_type).find('option').remove()
-        console.log "Inside  build_tasks  "  +  "  " + project_id
-        my_url = '/shift_request/'
-        $.ajax my_url,
-          data: {project_id: project_id},
-          type: 'GET',
-          async: false,
-          dataType: 'json'
-          success: (data, textStatus, jqXHR) ->
-            console.log "Inside  build_tasks2  "  +  data
-            $my_data = data
-            console.log "data is  " + data.length + " my_data is  " + $my_data.length
-            i = 0
-            while i < $my_data.length
-              $('#'+shift_type).append($("<option></option>").attr("value",$my_data[i][1]).text($my_data[i][0])) 
-              i++
-
     $('.datepicker').datepicker({
       autoclose: true,
       format: "yyyy-mm-dd"

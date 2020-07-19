@@ -447,7 +447,7 @@ end
       if params["add_user_id_#{i}"].present?
         user = User.find(params["add_user_id_#{i}"])
         if @project.users.inactive_users.include?(user)
-          project_user = ProjectsUser.where("project_id = ? && user_id = ?", @project.id , user.id).last
+           project_user = ProjectsUser.where("project_id = ? && user_id = ? and current_shift=?", @project.id , user.id, true).last
            project_user.sepration_date = nil
            project_user.save
           
@@ -474,7 +474,7 @@ end
     @project = Project.find(params["project_id"])
     @available_users = User.where("parent_user_id IS ? && (shared =? or customer_id IS ? OR customer_id = ?)",nil, true, nil , @project.customer.id)
     (0..user_count).each do |i|
-      projects_user = ProjectsUser.where(user_id: params["user_id_#{i}"], project_id: params["project_id"]).last
+      projects_user = ProjectsUser.where(user_id: params["user_id_#{i}"], project_id: params["project_id"], current_shift: true).last
       projects_user.project_shift_id = params["project_shift_id_#{i}"].to_i
       projects_user.save!
     end
@@ -493,8 +493,9 @@ end
       if params["remove_user_id_#{i}"].present?
         user = User.find(params["remove_user_id_#{i}"])
         if @project.users.active_users.include?(user)
-            project_user = ProjectsUser.where("project_id = ? && user_id = ?", @project.id , user.id).last
+            project_user = ProjectsUser.where("project_id = ? && user_id = ? && current_shift=?", @project.id , user.id, true).last
             project_user.sepration_date = Time.now.to_date
+            project_user.current_shift = false
             project_user.save
           #@project.users.delete(user)
         end
@@ -590,29 +591,46 @@ end
   end
 
     def approve_shift_change
-    binding.pry
-      #@user = current_user
-      #@project_user = ProjectsUser.where(:user_id => @user.id , :project_id => params[:project_id]).last
-      #@project_user.update_attributes(:current_shift => false)
-      #@proj_user = ProjectsUser.new
-      #@proj_user.project_id = params[:project_id]
-      #@proj_user.project_shift_id =  params[:shift_type_id]
-      #@proj_user.user_id = @user.id
-      #@proj_user.save
+      @user = current_user
+      
+      @sr = params[:sr_id]
+      @row_id = params[:row_id]
+      customer_manager = current_user
+      shift_request = ShiftChangeRequest.find(@sr)
+      shift_request.status = "Approved"
+      if shift_request.save!
+        current_user_shift = ProjectsUser.where(:user_id => @user.id , :project_id => params[:project_id], :project_shift_id => shift_request.id, :current_shift => true).last
+        if current_user_shift.present?
+          current_user_shift.current_shift = false
+          current_user_shift.save
+        end
+        new_user_shift = ProjectsUser.create!(:user_id => @user.id , :project_id => params[:project_id], :project_shift_id => shift_request.id, :current_shift => true)
+        ShiftMailer.mail_to_shift_requestor(@sr, customer_manager ).deliver
+      end
 
-    #@sr = params[:vr_id]
-    #logger.debug("888888888888888888 : #{@sr.inspect}")
-    #@row_id = params[:row_id]
-    #customer_manager = current_user
-    #shift_request = ShiftChangeRequest.find(@sr)
-    #shift_request.status = "Approved"
-    #shift_request.save
-    #VacationMailer.mail_to_vacation_requestor(@sr, customer_manager ).deliver
+      respond_to do |format|
+      format.html {flash[:notice] = "Approved"}
+      format.js
+    end
   end
 
 
   def reject_shift_change
-    binding.pry
+    @sr = params[:sr_id]
+    logger.debug("888888888888888888 : #{@sr.inspect}")
+    @row_id = params[:row_id]
+    customer_manager = current_user
+    vacation_request = ShiftChangeRequest.find(@sr)
+    vacation_request.status = "Rejected"
+    vacation_request.save
+    ShiftMailer.rejection_mail_to_shift_requestor(@sr, customer_manager ).deliver
+    # @user.vacation_start_date = "NULL"
+    # @user.vacation_end_date = "NULL"
+    # @user.save
+    respond_to do |format|
+      format.html {flash[:notice] = "Rejected"}
+      format.js
+    end
   end
 
   def show_all_projects

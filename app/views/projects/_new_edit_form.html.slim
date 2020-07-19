@@ -24,6 +24,9 @@ div[style="width: 90%; margin-left: 7%;"]
     = link_to "Vacation Request", "/vacation_request", class: "orange-button large-3 cell", 
     style: "margin: 5px;"
   span class="badge"
+    = link_to "Shift Change Request", "/shift_change_request", class: "orange-button large-3 cell", 
+    style: "margin: 5px;"
+  span class="badge"
     = link_to 'Inventory Report', "/inventory_and_equipment_reports?id=#{@project.id}", :method => :get,class: "center orange-button large-3 cell", style: "margin: 5px;" 
   span class="badge"
     = link_to 'Send Email', send_project_users_email_path(project_id: @project.id), :method => :get, class: "center orange-button large-3 cell",style: "margin: 5px;" 

@@ -215,8 +215,8 @@
 					- if sr.status == "CancelRequest"
 					  td = link_to "Approve","/projects/approve_shift_change/#{sr.id}/#{i}", class: "orange-button approve-vacation", type: "button", remote: true, :style=>"display:none;"
 					- else
-					  td = link_to "Approve","/projects/approve_shift_change/#{sr.id}/#{i}", class: "orange-button approve-vacation", type: "button", remote: true, :style=>"width:100%;"
-					td = link_to "Reject","/projects/reject_shift_change/#{sr.id}/#{i}", class: "orange-button reject-vacation", type: "button", remote: true, :style=>"width:100%;"
+					  td = link_to "Approve","/projects/approve_shift_change/#{sr.id}/#{i}/#{@project.id}", class: "orange-button approve-vacation", type: "button", remote: true, :style=>"width:100%;"
+					td = link_to "Reject","/projects/reject_shift_change/#{sr.id}/#{i}/#{@project.id}", class: "orange-button reject-vacation", type: "button", remote: true, :style=>"width:100%;"
 					- if sr.status == "CancelRequest"
 					  td = link_to "Approve Cancel","/projects/approve_cancel_request/#{sr.id}/#{i}", class: "orange-button", type: "button", remote: true, :style=>"width:100%;"
 

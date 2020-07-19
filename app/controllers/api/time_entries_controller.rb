@@ -160,7 +160,7 @@ module Api
 			begin
 				default_project_task = User.where(:id=>@user.id).select(:default_project, :default_task).first
 
-                @project_ids = ProjectsUser.where(:user_id=>@user.id).pluck(:project_id)
+                @project_ids = ProjectsUser.where(:user_id=>@user.id, :current_shift=> true).pluck(:project_id)
 				@projects=Project.where(:id=> @project_ids).select("id as projectID, name as projectName").as_json
 
 				render json: format_response_json({

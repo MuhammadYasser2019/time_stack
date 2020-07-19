@@ -159,8 +159,8 @@ Rails.application.routes.draw do
 
   get 'shift_change_request' => "customers#shift_change_request"
   get 'shift_request' => 'customers#shift_request'
-  get 'projects/approve_shift_change/:vr_id/:row_id' => 'projects#approve_shift_change'
-  get 'projects/reject_shift_change/:vr_id/:row_id' => 'projects#reject_shift_change'
+  get 'projects/approve_shift_change/:sr_id/:row_id/:project_id' => 'projects#approve_shift_change'
+  get 'projects/reject_shift_change/:sr_id/:row_id/:project_id' => 'projects#reject_shift_change'
 
   # Form to reset status_id and duplicate exist
   get '/reset_timesheet/:customer_id' => 'users#reset'

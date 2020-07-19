@@ -491,18 +491,20 @@
   end
 
   def shift_change_request
-    #binding.pry
     @user = current_user
-    @projects = Project.where(:user_id => 1)
+    users_project_id = ProjectsUser.where(user_id: @user.id).pluck(:project_id)
+    @users_project = Project.find users_project_id
+    #@projects = Project.where(:user_id => 1)
     @user_shift_requests = ShiftChangeRequest.where("user_id = ?",@user.id)
     if params[:shift_start_date].present? && params[:project_shift_type_id].present?
       @shift_chnge_req = ShiftChangeRequest.new
       @shift_chnge_req.shift_start_date = params[:shift_start_date]
       @shift_chnge_req.shift_end_date = params[:shift_end_date]
       @shift_chnge_req.status = "Requested"
+      @shift_chnge_req.comment = params[:comment]
       # project shift id from project shift table
-      @shift_chnge_req.shift_type_id = params[:project_shift_type_id]
-      @shift_chnge_req.project_id = params[:project_id]
+      @shift_chnge_req.shift_id = params[:project_shift_type_id]
+      @shift_chnge_req.project_id = params[:shift_project_id]
       @shift_chnge_req.user_id = @user.id
       @shift_chnge_req.save!
     end

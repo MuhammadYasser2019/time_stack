@@ -121,7 +121,7 @@ class User < ApplicationRecord
       if w.status_id != 2 || w.status_id != 3
         user = User.find w.user_id
         
-        projects = ProjectsUser.where(user_id: user.id).pluck(:project_id)
+        projects = ProjectsUser.where(user_id: user.id, current_shift: true).pluck(:project_id)
         flag_array =  Array.new
         projects.each do |p|
           project = Project.find(p)

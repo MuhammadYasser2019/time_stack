@@ -38,8 +38,8 @@ div.report
     tbody
       -@users_vacations.each_with_index do |usv,i| 
         tr id = "vacation_table_#{usv.id}"
-          td = text_field_tag 'vacation_start', usv.vacation_start_date.strftime("%Y-%m-%d"), {:placeholder =>  "yyyy/mm/dd", id: "vacation_start_#{i}",class: "vacation_start_#{i} datepicker"}
-          td = text_field_tag 'vacation_end', usv.vacation_end_date.strftime("%Y-%m-%d"), {:placeholder =>  "yyyy/mm/dd", id: "vacation_end_#{i}",class: "vacation_end_#{i} datepicker"}
+          td = text_field_tag 'vacation_start', usv.vacation_start_date.strftime("%Y-%m-%d"), {:placeholder =>  "yyyy/mm/dd", id: "vacation_start_#{i}",class: "form-control vacation_start_#{i} datepicker"}
+          td = text_field_tag 'vacation_end', usv.vacation_end_date.strftime("%Y-%m-%d"), {:placeholder =>  "yyyy/mm/dd", id: "vacation_end_#{i}",class: " form-control vacation_end_#{i} datepicker"}
           td = text_area_tag "comment", usv.comment, id: "vacation_comment_#{i}"
           td = usv.status
           -if usv.vacation_type_id.present?
