@@ -474,6 +474,42 @@
     #end
   end
 
+  def shift_request
+    if params[:project_id].present?
+      @project = Project.find(params[:project_id])
+      @shifts = ProjectShift.where(project_id: @project.id)
+      @shift_array = []
+      @shifts.each do |proj_shift|
+        name_and_shift_period = proj_shift.shift.name + ': ' + proj_shift.shift.start_time + ' - ' + proj_shift.shift.end_time
+        @shift_array << [name_and_shift_period, proj_shift.id]
+      end
+      @shift_array.uniq!
+      respond_to do|format|
+        format.json {render json: @shift_array.as_json()}
+      end
+    end
+  end
+
+  def shift_change_request
+    #binding.pry
+    @user = current_user
+    @projects = Project.where(:user_id => 1)
+    @user_shift_requests = ShiftChangeRequest.where("user_id = ?",@user.id)
+    if params[:shift_start_date].present? && params[:project_shift_type_id].present?
+      @shift_chnge_req = ShiftChangeRequest.new
+      @shift_chnge_req.shift_start_date = params[:shift_start_date]
+      @shift_chnge_req.shift_end_date = params[:shift_end_date]
+      @shift_chnge_req.status = "Requested"
+      # project shift id from project shift table
+      @shift_chnge_req.shift_type_id = params[:project_shift_type_id]
+      @shift_chnge_req.project_id = params[:project_id]
+      @shift_chnge_req.user_id = @user.id
+      @shift_chnge_req.save!
+    end
+  end
+
+
+
   def resend_vacation_request
     logger.debug("RESEND VACATION REQUEST PARAMS: #{params.inspect}")
     user = current_user

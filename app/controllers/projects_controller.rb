@@ -14,6 +14,9 @@ class ProjectsController < ApplicationController
     @default_project = current_user.default_project
     @project_tasks = Task.where(project_id: @default_project)
     @terms_modal_show = current_user.terms_and_condition
+
+    @shift_change_requests = ShiftChangeRequest.where("status = ?", "Requested")
+
     if @projects.present?
       params[:project_id] = @project_id = @projects.first.id
       logger.debug("project-index- @project_id #{@project_id}")
@@ -584,6 +587,32 @@ end
     respond_to do |format|
       format.js
     end
+  end
+
+    def approve_shift_change
+    binding.pry
+      #@user = current_user
+      #@project_user = ProjectsUser.where(:user_id => @user.id , :project_id => params[:project_id]).last
+      #@project_user.update_attributes(:current_shift => false)
+      #@proj_user = ProjectsUser.new
+      #@proj_user.project_id = params[:project_id]
+      #@proj_user.project_shift_id =  params[:shift_type_id]
+      #@proj_user.user_id = @user.id
+      #@proj_user.save
+
+    #@sr = params[:vr_id]
+    #logger.debug("888888888888888888 : #{@sr.inspect}")
+    #@row_id = params[:row_id]
+    #customer_manager = current_user
+    #shift_request = ShiftChangeRequest.find(@sr)
+    #shift_request.status = "Approved"
+    #shift_request.save
+    #VacationMailer.mail_to_vacation_requestor(@sr, customer_manager ).deliver
+  end
+
+
+  def reject_shift_change
+    binding.pry
   end
 
   def show_all_projects

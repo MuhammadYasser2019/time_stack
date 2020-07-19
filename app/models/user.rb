@@ -30,6 +30,7 @@ class User < ApplicationRecord
   has_many :user_disciplinary
   has_many :user_inventory_and_equipments
   has_many :user_devices
+  has_many :shift_change_requests
   belongs_to :customer
 
   after_update :send_password_change_email, if: :needs_password_change_email?
