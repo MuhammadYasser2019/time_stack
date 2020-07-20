@@ -9,11 +9,11 @@ class Project < ApplicationRecord
   has_many :projects_users
   has_many :users, :through => :projects_users do
     def active_users
-        where("projects_users.sepration_date IS NULL")
+        where("projects_users.sepration_date IS NULL AND current_shift is true")
     end
 
     def inactive_users
-      where("projects_users.sepration_date IS NOT NULL")
+      where("projects_users.sepration_date IS NOT NULL AND current_shift is true")
     end
   end
 

@@ -452,7 +452,8 @@ end
            project_user.save
           
         else
-          @project.users.push(user)
+          ProjectsUser.create!(project_id: @project.id, user_id: user.id, current_shift: true,active: true)
+          #@project.users.push(user)
         end
         @project.save
       end
@@ -535,7 +536,7 @@ end
     if project.users.include?(user)
       project.users.delete(user)
     else
-      project.users.push(user)
+      ProjectsUser.create!(project_id: project.id, user_id: user.id, current_shift: true,active: true)
     end
     project.save
 
@@ -666,7 +667,7 @@ end
     @customers = Customer.all
     @project = Project.includes(:tasks).find(@project_id)
     #@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
-    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND current_shift is true AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     #@available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id)
     available_users = User.where("parent_user_id IS ? && (customer_id IS ? OR customer_id = ?)", nil, nil , @project.customer.id) 
     shared_users = SharedEmployee.where(customer_id: @project.customer.id).collect{|u| u.user_id}
@@ -675,6 +676,7 @@ end
       u = User.find(su)
       shared_user_array.push(u)
     end
+    @shift_change_requests = ShiftChangeRequest.where("status = ?", "Requested")
     logger.debug("AVAIALABLE SHARED USERS #{shared_users.inspect}, The USER IS #{shared_user_array.inspect}")
     @available_users = available_users + shared_user_array
     @users = User.where("parent_user_id IS null").all
