@@ -470,7 +470,8 @@ jQuery ($) ->
         console.log "Inside  build_tasks2  "  +  data
         $my_data = data
         console.log "data is  " + data.length + " my_data is  " + $my_data.length
-        i = 0
+        $('#current_project_shift_type_id').html($("<option></option>").attr("value",$my_data[0][1]).text($my_data[0][0])) 
+        i = 1
         while i < $my_data.length
           $('#'+shift_type).append($("<option></option>").attr("value",$my_data[i][1]).text($my_data[i][0])) 
           i++

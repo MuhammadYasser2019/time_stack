@@ -1,24 +1,27 @@
   div
     h3.text-center Shift Change Request
+    p#error
     = form_tag "/shift_change_request", method: :get, id: 'shift_change_request_form'
       table
         thead
           tr
             th Project
-            th Shift Type
+            th Current Shift
+            th New Shift Request
             th Shift Start Date
             th Shift End Date
             th
         tbody
           tr
             td = select_tag :shift_project_id, options_from_collection_for_select( @users_project, "id", "name"), include_blank: true, class: "form-control", required: true
+            td = select_tag :current_project_shift_type_id, '', class: "form-control", readonly: true 
 
             td = select_tag :project_shift_type_id, '', :include_blank => true, class: "form-control", required: true
 
-            td = text_field_tag 'shift_start_date', params[:shift_start_date], {required: "required",:placeholder =>  "yyyy/mm/dd", class: " datepicker vc_start form-control"}
+            td = text_field_tag 'shift_start_date', params[:shift_start_date], {required: "required",:placeholder =>  "yyyy/mm/dd", class: " datepicker form-control"}
 
             /= hidden_field_tag 'id', @user.id
-            td = text_field_tag 'shift_end_date', params[:shift_end_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class: "datepicker vc_end form-control"}
+            td = text_field_tag 'shift_end_date', params[:shift_end_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class: "datepicker form-control"}
             td = text_area_tag "comment", nil, {required: "required"}
 
 
@@ -32,7 +35,8 @@
     thead
       tr
         th Project
-        th Shift Type
+        th Current Shift
+        th New Shift Requested
         th Shift Start Date
         th Shift End Date
         th Description
@@ -43,10 +47,11 @@
         -@user_shift_requests.each_with_index do |usv,i| 
           tr id = "shift_table_#{usv.id}"
             td = usv.project.name if usv.project.present?
+            td = usv.current_shift_name
             -if usv.shift_id.present?
               - p_shift= ProjectShift.find usv.shift_id
               - s_t = p_shift.shift.start_time + "-" + p_shift.shift.end_time
-              td = s_t.to_s
+              td = p_shift.shift_name
             -else
               td = ""
             td = text_field_tag 'shift_start', usv.shift_start_date.strftime("%Y-%m-%d"), {:placeholder =>  "yyyy/mm/dd", id: "shift_start_#{i}",class: "shift_start_#{i} datepicker form-control"}

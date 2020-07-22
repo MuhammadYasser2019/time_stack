@@ -326,6 +326,26 @@ class User < ApplicationRecord
     end
   end
 
+  def self.update_shift_request
+    Customer.all.each do |customer|
+      default_shift = customer.shifts.where(name: "Regular").first
+      customer.projects.each do |project|
+        project_shift = ProjectShift.where(project_id: project.id, shift_id: default_shift.id).first
+        ShiftChangeRequest.where(status: 'Approved', project_id: project.id).each do |scr|
+          
+          if scr.shift_end_date > Date.today 
+            scr.status = "Expired"
+            scr.save
+            project_user = ProjectsUser.where(user_id: scr.user_id, project_id: project.id, current_shift: true)
+            project_user.project_shift_id = project_shift.id
+            project_user.save
+          end
+        end
+      end
+        
+    end
+  end
+
   def vacation_type
     
     emp_type = EmploymentTypesVacationType.where(employment_type_id: self.employment_type).first

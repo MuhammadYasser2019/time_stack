@@ -38,4 +38,5 @@ end
 
 every 1.day do
   runner "User.send_password_reminder_email"
+  runner "User.update_shift_request"
 end

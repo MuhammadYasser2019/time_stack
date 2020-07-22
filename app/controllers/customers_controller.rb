@@ -478,12 +478,17 @@
     if params[:project_id].present?
       @project = Project.find(params[:project_id])
       @shifts = ProjectShift.where(project_id: @project.id)
+      current_project_user = ProjectsUser.where(user_id: current_user.id, project_id: @project.id, current_shift: true).pluck(:project_shift_id)
+      @current_shift = ProjectShift.where(id: current_project_user).first
       @shift_array = []
-      @shifts.each do |proj_shift|
-        name_and_shift_period = proj_shift.shift.name + ': ' + proj_shift.shift.start_time + ' - ' + proj_shift.shift.end_time
-        @shift_array << [name_and_shift_period, proj_shift.id]
+      @shift_array << [@current_shift.shift_name, @current_shift.id] if @current_shift.present?
+      if @shifts.count > 1
+        @shifts.each do |proj_shift|
+          name_and_shift_period = proj_shift.shift_name
+          @shift_array << [name_and_shift_period, proj_shift.id]
+        end
       end
-      @shift_array.uniq!
+      @shift_array
       respond_to do|format|
         format.json {render json: @shift_array.as_json()}
       end
@@ -492,21 +497,31 @@
 
   def shift_change_request
     @user = current_user
-    users_project_id = ProjectsUser.where(user_id: @user.id).pluck(:project_id)
+    users_project_id = ProjectsUser.where(user_id: @user.id, current_shift: true).pluck(:project_id)
     @users_project = Project.find users_project_id
-    #@projects = Project.where(:user_id => 1)
+    # current_project_user = ProjectsUser.where(user_id: current_user.id, project_id: @project.id, current_shift: true).pluck(:project_shift_id)
+    # @current_shift = ProjectShift.where(id: current_project_user).first
+    # #@projects = Project.where(:user_id => 1)
     @user_shift_requests = ShiftChangeRequest.where("user_id = ?",@user.id)
-    if params[:shift_start_date].present? && params[:project_shift_type_id].present?
-      @shift_chnge_req = ShiftChangeRequest.new
-      @shift_chnge_req.shift_start_date = params[:shift_start_date]
-      @shift_chnge_req.shift_end_date = params[:shift_end_date]
-      @shift_chnge_req.status = "Requested"
-      @shift_chnge_req.comment = params[:comment]
-      # project shift id from project shift table
-      @shift_chnge_req.shift_id = params[:project_shift_type_id]
-      @shift_chnge_req.project_id = params[:shift_project_id]
-      @shift_chnge_req.user_id = @user.id
-      @shift_chnge_req.save!
+    @selected_project = Project.find_by_id params[:shift_project_id]
+    if @selected_project && @selected_project.project_shifts.count ==1
+      flash[:error]= "You are currently working on the requested shift"
+      redirect_to shift_change_request_path
+    else
+      if params[:shift_start_date].present? && params[:project_shift_type_id].present?
+        @shift_chnge_req = ShiftChangeRequest.new
+        @shift_chnge_req.shift_start_date = params[:shift_start_date]
+        @shift_chnge_req.shift_end_date = params[:shift_end_date]
+        @shift_chnge_req.status = "Requested"
+        @shift_chnge_req.comment = params[:comment]
+        current_shift = ProjectShift.find params[:current_project_shift_type_id]
+        @shift_chnge_req.current_shift_name = current_shift.shift_name if current_shift
+        # project shift id from project shift table
+        @shift_chnge_req.shift_id = params[:project_shift_type_id]
+        @shift_chnge_req.project_id = params[:shift_project_id]
+        @shift_chnge_req.user_id = @user.id
+        @shift_chnge_req.save!
+      end
     end
   end
 

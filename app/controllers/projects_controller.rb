@@ -599,6 +599,7 @@ end
       customer_manager = current_user
       shift_request = ShiftChangeRequest.find(@sr)
       shift_request.status = "Approved"
+      shift_request.approved_by = @user.id
       if shift_request.save!
         current_user_shift = ProjectsUser.where(:user_id => @user.id , :project_id => params[:project_id], :project_shift_id => shift_request.id, :current_shift => true).last
         if current_user_shift.present?
@@ -623,6 +624,7 @@ end
     customer_manager = current_user
     vacation_request = ShiftChangeRequest.find(@sr)
     vacation_request.status = "Rejected"
+    shift_request.rejected_by = @user.id
     vacation_request.save
     ShiftMailer.rejection_mail_to_shift_requestor(@sr, customer_manager ).deliver
     # @user.vacation_start_date = "NULL"

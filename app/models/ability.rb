@@ -37,7 +37,7 @@ class Ability
        can :manage, TimeEntry
        can :manage, Task
        can [:manage, :read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve, :add_adhoc_pm, :dynamic_project_update,:send_project_users_email], Project
-       can [:new, :create, :edit, :update, :time_reject], Week
+       can [:new, :create, :edit, :update, :time_reject, :show_all_timesheets], Week
        can [:accept_terms_and_condition], User
       end
       if user.proxy
