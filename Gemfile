@@ -105,6 +105,7 @@ gem 'rack-cors', :require => 'rack/cors'
 gem 'simple_token_authentication', '~> 1.0'
 gem 'jira-ruby'
 gem 'devise-security'
+gem "simple_calendar", "~> 2.0"
 
 group :development do
   gem 'better_errors'
