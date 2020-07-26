@@ -13,7 +13,6 @@ table class="table" style="width:80%;"
 
   - if params[:type] == 'customer' && (current_user.cm || current_user.proxy_cm)
     - @shifts.each do |shift|
-      - debugger
       - no_of_employees = 0
       - shift_array = []
       - shift.project_shifts.map{ |shift| no_of_employees += shift.users.count}
