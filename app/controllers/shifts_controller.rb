@@ -117,18 +117,21 @@ class ShiftsController < ApplicationController
     
     @project = Project.find params[:id]
     @project_shifts = ProjectShift.where(project_id: @project.id)
-  
-    # if params[:type] == 'customer' && current_user.cm
-    #   @customer = Customer.find(params[:id])
-    #   @shifts = @customer.shifts
-    # elsif params[:type] == 'project'# && current_user.pm
-    #   @project = Project.find(params[:id])
-    #   @project_shifts = @project.project_shifts
-    # elsif params[:type] == 'shift_supervisor'
-    #   @project_shift = ProjectShift.find(params[:id])
-    #   @shift = @project_shift.shift
-    #   @employee_count = @project_shift.users.count
-    # end
+  end
+
+  def cm_shift_report
+    if params[:type] == 'customer' && (current_user.cm || current_user.proxy_cm)
+      @customer = Customer.find(params[:id])
+      @shifts = @customer.shifts
+    elsif params[:type] == 'project'# && current_user.pm
+      @project = Project.find(params[:id])
+      @project_shifts = @project.project_shifts
+    elsif params[:type] == 'shift_supervisor'
+      @project_shift = ProjectShift.find(params[:id])
+      @shift = @project_shift.shift
+      @employee_count = @project_shift.users.count
+    end
+
   end
 
   def shift_report
