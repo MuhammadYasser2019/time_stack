@@ -23,7 +23,7 @@ class TimeEntry < ApplicationRecord
 
   def add_project_shift_id
     if project_id && user_id
-      projects_user = ProjectsUser.where(user_id: user_id, project_id: project_id).last
+      projects_user = ProjectsUser.where(user_id: user_id, project_id: project_id, current_shift: true).last
       if projects_user
         self.project_shift_id = projects_user.project_shift_id
       end

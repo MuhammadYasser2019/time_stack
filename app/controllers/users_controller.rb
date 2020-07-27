@@ -680,6 +680,7 @@ end
 
   def get_notification
     @notification = UserNotification.where(id: params[:notification_id]).first
+    @notification.update_attributes(visited: true, seen: true) 
   end
 
   def set_default_project

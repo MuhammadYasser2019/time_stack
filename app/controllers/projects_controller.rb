@@ -14,6 +14,9 @@ class ProjectsController < ApplicationController
     @default_project = current_user.default_project
     @project_tasks = Task.where(project_id: @default_project)
     @terms_modal_show = current_user.terms_and_condition
+
+    @shift_change_requests = ShiftChangeRequest.where("status = ?", "Requested")
+
     if @projects.present?
       params[:project_id] = @project_id = @projects.first.id
       logger.debug("project-index- @project_id #{@project_id}")
@@ -444,12 +447,13 @@ end
       if params["add_user_id_#{i}"].present?
         user = User.find(params["add_user_id_#{i}"])
         if @project.users.inactive_users.include?(user)
-          project_user = ProjectsUser.where("project_id = ? && user_id = ?", @project.id , user.id).last
+           project_user = ProjectsUser.where("project_id = ? && user_id = ? and current_shift=?", @project.id , user.id, true).last
            project_user.sepration_date = nil
            project_user.save
           
         else
-          @project.users.push(user)
+          ProjectsUser.create!(project_id: @project.id, user_id: user.id, current_shift: true,active: true)
+          #@project.users.push(user)
         end
         @project.save
       end
@@ -471,7 +475,7 @@ end
     @project = Project.find(params["project_id"])
     @available_users = User.where("parent_user_id IS ? && (shared =? or customer_id IS ? OR customer_id = ?)",nil, true, nil , @project.customer.id)
     (0..user_count).each do |i|
-      projects_user = ProjectsUser.where(user_id: params["user_id_#{i}"], project_id: params["project_id"]).last
+      projects_user = ProjectsUser.where(user_id: params["user_id_#{i}"], project_id: params["project_id"], current_shift: true).last
       projects_user.project_shift_id = params["project_shift_id_#{i}"].to_i
       projects_user.save!
     end
@@ -490,8 +494,9 @@ end
       if params["remove_user_id_#{i}"].present?
         user = User.find(params["remove_user_id_#{i}"])
         if @project.users.active_users.include?(user)
-            project_user = ProjectsUser.where("project_id = ? && user_id = ?", @project.id , user.id).last
+            project_user = ProjectsUser.where("project_id = ? && user_id = ? && current_shift=?", @project.id , user.id, true).last
             project_user.sepration_date = Time.now.to_date
+            project_user.current_shift = false
             project_user.save
           #@project.users.delete(user)
         end
@@ -531,7 +536,7 @@ end
     if project.users.include?(user)
       project.users.delete(user)
     else
-      project.users.push(user)
+      ProjectsUser.create!(project_id: project.id, user_id: user.id, current_shift: true,active: true)
     end
     project.save
 
@@ -586,6 +591,51 @@ end
     end
   end
 
+    def approve_shift_change
+      @user = current_user
+      
+      @sr = params[:sr_id]
+      @row_id = params[:row_id]
+      customer_manager = current_user
+      shift_request = ShiftChangeRequest.find(@sr)
+      shift_request.status = "Approved"
+      shift_request.approved_by = @user.id
+      if shift_request.save!
+        current_user_shift = ProjectsUser.where(:user_id => @user.id , :project_id => params[:project_id], :project_shift_id => shift_request.id, :current_shift => true).last
+        if current_user_shift.present?
+          current_user_shift.current_shift = false
+          current_user_shift.save
+        end
+        new_user_shift = ProjectsUser.create!(:user_id => @user.id , :project_id => params[:project_id], :project_shift_id => shift_request.id, :current_shift => true)
+        ShiftMailer.mail_to_shift_requestor(@sr, customer_manager ).deliver
+      end
+
+      respond_to do |format|
+      format.html {flash[:notice] = "Approved"}
+      format.js
+    end
+  end
+
+
+  def reject_shift_change
+    @sr = params[:sr_id]
+    logger.debug("888888888888888888 : #{@sr.inspect}")
+    @row_id = params[:row_id]
+    customer_manager = current_user
+    vacation_request = ShiftChangeRequest.find(@sr)
+    vacation_request.status = "Rejected"
+    shift_request.rejected_by = @user.id
+    vacation_request.save
+    ShiftMailer.rejection_mail_to_shift_requestor(@sr, customer_manager ).deliver
+    # @user.vacation_start_date = "NULL"
+    # @user.vacation_end_date = "NULL"
+    # @user.save
+    respond_to do |format|
+      format.html {flash[:notice] = "Rejected"}
+      format.js
+    end
+  end
+
   def show_all_projects
     logger.debug("PROJECT CONTROLLER -> SHOW ALL REPORTS #{params.inspect}" )
     if params[:checked] == "true"
@@ -619,7 +669,7 @@ end
     @customers = Customer.all
     @project = Project.includes(:tasks).find(@project_id)
     #@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
-    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND current_shift is true AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     #@available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id)
     available_users = User.where("parent_user_id IS ? && (customer_id IS ? OR customer_id = ?)", nil, nil , @project.customer.id) 
     shared_users = SharedEmployee.where(customer_id: @project.customer.id).collect{|u| u.user_id}
@@ -628,6 +678,7 @@ end
       u = User.find(su)
       shared_user_array.push(u)
     end
+    @shift_change_requests = ShiftChangeRequest.where("status = ?", "Requested")
     logger.debug("AVAIALABLE SHARED USERS #{shared_users.inspect}, The USER IS #{shared_user_array.inspect}")
     @available_users = available_users + shared_user_array
     @users = User.where("parent_user_id IS null").all

@@ -1,0 +1,17 @@
+<%= month_calendar events: @project_shifts do |date, shifts| %>
+  <b><%= date %></b>
+  
+  <% shifts.each do |shift| %>
+
+    <div>
+      <b>SHIFT:</b> <%= shift.shift.name %>
+    </div>
+    <% if shift.users.present? %>
+      <div><b>USERS:</b>
+    <% users = shift.users.collect(&:name) %>
+      <%= users.join(",") %>
+    </div>
+    
+    <% end %>
+  <% end %>
+<% end %>

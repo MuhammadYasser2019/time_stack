@@ -20,6 +20,9 @@
                   a class="nav-link" role="tab" id="shift-tab" data-toggle="tab" href="#shift" Shifts
 
                 li class="nav-item"
+  				  a class="nav-link" id="shift-request-tab" aria-selected="true" role="tab" data-toggle="tab" href="#shift_request" Shift Request
+
+                li class="nav-item"
 			  	  a class="nav-link" role="tab" id="inventory_submit-tab" data-toggle="tab" href="#inventory_submit" Inventory
 			  	  
 - if @adhoc && user_have_adhoc_permission(current_user)
@@ -190,6 +193,32 @@
               - ProjectShift.where(project_id: @project.id).each do |project_shift|
                == render partial: 'shift_projects', locals: { shift: Shift.find(project_shift.shift_id), project_shift: project_shift, project: @project }
             = link_to "Create Project Shift", new_project_shift_path(project_id: @project.id), class: "orange-button", type: "button" 
+
+        div class="tab-pane fade" role="tabpanel" aria-labelledby="shift-request-tab" id="shift_request"
+		  h3.text-center Shift Change Request
+		  div class="shift_list"
+		    table class="table"
+			  thead
+			    tr
+				  th Employee
+                  th Shift Start Date
+                  th Shift End Date
+                  th Approve
+                  th Reject
+                  th Approve Cancellation
+			  tbody
+			    - @shift_change_requests.each_with_index do |sr, i|
+				  tr id = "shift_#{i}"
+				    td = User.find(ShiftChangeRequest.find(sr.id).user_id).email.truncate(20)
+					td = sr.shift_start_date.strftime('%Y-%m-%d')
+					td = sr.shift_end_date.strftime('%Y-%m-%d')
+					- if sr.status == "CancelRequest"
+					  td = link_to "Approve","/projects/approve_shift_change/#{sr.id}/#{i}", class: "orange-button approve-vacation", type: "button", remote: true, :style=>"display:none;"
+					- else
+					  td = link_to "Approve","/projects/approve_shift_change/#{sr.id}/#{i}/#{@project.id}", class: "orange-button approve-vacation", type: "button", remote: true, :style=>"width:100%;"
+					td = link_to "Reject","/projects/reject_shift_change/#{sr.id}/#{i}/#{@project.id}", class: "orange-button reject-vacation", type: "button", remote: true, :style=>"width:100%;"
+					- if sr.status == "CancelRequest"
+					  td = link_to "Approve Cancel","/projects/approve_cancel_request/#{sr.id}/#{i}", class: "orange-button", type: "button", remote: true, :style=>"width:100%;"
 
 	- if !current_user.default_project? && current_user.parent_user_id.blank?
 			== render partial: 'users/default_projects'

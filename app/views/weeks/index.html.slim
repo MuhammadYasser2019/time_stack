@@ -87,7 +87,14 @@
 		      td
 		      td
 		      td
-		      
+
+		- if current_user.parent_user_id.blank?
+			tr
+		    	td= link_to "Shift Change Request", "/shift_change_request"
+		    	td
+		    	td
+		    	td
+		    	td  
 		- if current_user.admin      
 		    tr
 		      td = link_to "Admin", "/admin" 

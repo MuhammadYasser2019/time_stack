@@ -448,4 +448,32 @@ jQuery ($) ->
     $('#show_hide').css("display", "none")
     $('#hide_button').css("display", "block")
   )
+
+  $(document).on("change", "#shift_project_id", ->
+    console.log "Inside project change" + $(this).attr('id') +  " the value selected is " + $(this).val()    
+    shift_type = "project_shift_type_id"
+    tr = $(this).parent().parent("tr")
+    console.log("tr: " + tr)
+    build_shifts(shift_type, $(this).val())
+  )
+
+  build_shifts = (shift_type, project_id) ->
+    $('#'+shift_type).find('option').remove()
+    console.log "Inside  build_shift  "  +  "  " + project_id
+    my_url = '/shift_request/'
+    $.ajax my_url,
+      data: {project_id: project_id},
+      type: 'GET',
+      async: false,
+      dataType: 'json'
+      success: (data, textStatus, jqXHR) ->
+        console.log "Inside  build_tasks2  "  +  data
+        $my_data = data
+        console.log "data is  " + data.length + " my_data is  " + $my_data.length
+        $('#current_project_shift_type_id').html($("<option></option>").attr("value",$my_data[0][1]).text($my_data[0][0])) 
+        i = 1
+        while i < $my_data.length
+          $('#'+shift_type).append($("<option></option>").attr("value",$my_data[i][1]).text($my_data[i][0])) 
+          i++
+
  

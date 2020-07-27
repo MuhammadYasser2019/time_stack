@@ -30,6 +30,7 @@ class User < ApplicationRecord
   has_many :user_disciplinary
   has_many :user_inventory_and_equipments
   has_many :user_devices
+  has_many :shift_change_requests
   belongs_to :customer
 
   after_update :send_password_change_email, if: :needs_password_change_email?
@@ -120,7 +121,7 @@ class User < ApplicationRecord
       if w.status_id != 2 || w.status_id != 3
         user = User.find w.user_id
         
-        projects = ProjectsUser.where(user_id: user.id).pluck(:project_id)
+        projects = ProjectsUser.where(user_id: user.id, current_shift: true).pluck(:project_id)
         flag_array =  Array.new
         projects.each do |p|
           project = Project.find(p)
@@ -322,6 +323,26 @@ class User < ApplicationRecord
           u.reset_password_sent_at = Time.now.utc
           u.save!
       end
+    end
+  end
+
+  def self.update_shift_request
+    Customer.all.each do |customer|
+      default_shift = customer.shifts.where(name: "Regular").first
+      customer.projects.each do |project|
+        project_shift = ProjectShift.where(project_id: project.id, shift_id: default_shift.id).first
+        ShiftChangeRequest.where(status: 'Approved', project_id: project.id).each do |scr|
+          
+          if scr.shift_end_date > Date.today 
+            scr.status = "Expired"
+            scr.save
+            project_user = ProjectsUser.where(user_id: scr.user_id, project_id: project.id, current_shift: true)
+            project_user.project_shift_id = project_shift.id
+            project_user.save
+          end
+        end
+      end
+        
     end
   end
 

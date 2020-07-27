@@ -3,7 +3,7 @@ table class="table" style="width:80%;"
   thead
     tr
       th Shift Name
-      - if params[:type] == 'customer' && current_user.cm
+      - if params[:type] == 'customer' && (current_user.cm || current_user.proxy_cm)
         th Projects
       th #Employees
       th Employee Name
@@ -11,7 +11,7 @@ table class="table" style="width:80%;"
       
   tbody
 
-  - if params[:type] == 'customer' && current_user.cm
+  - if params[:type] == 'customer' && (current_user.cm || current_user.proxy_cm)
     - @shifts.each do |shift|
       - no_of_employees = 0
       - shift_array = []
