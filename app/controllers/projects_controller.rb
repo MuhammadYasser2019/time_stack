@@ -218,6 +218,7 @@ end
     @customer = Customer.find(@project.customer_id)
     @notifications = project_params[:deactivate_notifications]
     logger.debug("Notifications are:  #{@notifications}")
+    @shift_change_requests = ShiftChangeRequest.where("status = ?", "Requested")
 		#@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",params[:id],"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct    
 		@users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @users = User.where("parent_user_id IS null").all
