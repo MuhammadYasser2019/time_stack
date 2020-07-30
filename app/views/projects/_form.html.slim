@@ -100,9 +100,10 @@
 					tbody
 					  = f.fields_for :tasks do |tf|
 					    == render 'task_fields', f: tf
-					tr 
-				     td = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary"	
 
+					tr
+      					td colspan="5"
+        					= link_to_add_association "Add Task", f, :tasks, class: " btn btn-primary btn-xs", 'data-association-insertion-method' => "append"
 				
 				table class="center-row table"
 					thead

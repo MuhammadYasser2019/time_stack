@@ -9,11 +9,11 @@
   .field
 
     = f.label :name
-    = f.text_field :name, required: true
+    = f.text_field :name, required: true, class: 'form-control'
   
     = f.hidden_field :customer_id, value: current_user.customer_id.present? ? current_user.customer_id : Customer.find_by_name("Resource Stack, Inc.").id
     = f.hidden_field :user_id, value: current_user.id
-  table border="1" id="tasklist"
+  table.table border="1" id="tasklist"
     thead
       tr 
         td Code
@@ -21,13 +21,13 @@
         td Comment
         td Active
         td Billable
-        td Include from Jira
-        td
+      
+
     tbody
       = f.fields_for :tasks do |tf|
         == render 'task_fields', f: tf
-	  tr 
-      td colspan="6"
-        = link_to_add_association "Add Task", f, :tasks, class: "add_fields btn btn-primary btn-xs"
+    tr
+      td colspan="5"
+        = link_to_add_association "Add Task", f, :tasks, class: " btn btn-primary btn-xs", 'data-association-insertion-method' => "append"
           
   .actions#new-project-actions = f.submit
