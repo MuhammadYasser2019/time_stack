@@ -585,7 +585,7 @@ end
 
   def user_notification
     @user = current_user
-    @notifications = @user.user_notifications  
+    @notifications = @user.user_notifications.order(created_at: :desc)  
     logger.debug "The NOTIFICATIONS ARE: #{@notifications}"
     @notification_ids = @user.user_notifications.pluck(:id)
     logger.debug "THE NOTIF IDS ARE: #{@notification_ids}"

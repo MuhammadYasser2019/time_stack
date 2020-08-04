@@ -117,6 +117,25 @@ class ShiftsController < ApplicationController
     
     @project = Project.find params[:id]
     @project_shifts = ProjectShift.where(project_id: @project.id)
+    @project_users = ProjectsUser.where(project_id: @project.id, current_shift: true)
+  end
+
+  def assign_shift
+    @project = Project.find params[:project_id]
+
+    old_shift = ProjectsUser.where(project_id: @project.id, current_shift: true, user_id: params[:user_id]).last
+    if old_shift.project_shift_id == params[:project_shift_id].to_i
+    
+    else
+      old_shift.current_shift = false
+      old_shift.save
+      @project_users = ProjectsUser.create!(project_id: @project.id, current_shift: true, user_id: params[:user_id], project_shift_id: params[:project_shift_id])
+      
+
+    end
+
+    @project_shifts = ProjectShift.where(project_id: @project.id)
+    @project_users = ProjectsUser.where(project_id: @project.id, current_shift: true)
   end
 
   def cm_shift_report

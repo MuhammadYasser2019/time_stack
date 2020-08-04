@@ -1,5 +1,7 @@
 <%= month_calendar events: @project_shifts do |date, shifts| %>
+ <a href="#" data-toggle="modal" data-target="#shiftchangeModal">
   <b><%= date %></b>
+  
   
   <% shifts.each do |shift| %>
 
@@ -14,4 +16,8 @@
     
     <% end %>
   <% end %>
+</a>
 <% end %>
+<div id="change_shift">
+<%= render partial: 'shifts/shift_change_modal' %>
+</div>
