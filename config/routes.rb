@@ -124,6 +124,7 @@ Rails.application.routes.draw do
   post '/previous_comments' => 'weeks#previous_comments'
   post '/shared_user' => 'customers#shared_user'
   get '/add_shared_users' => 'customers#add_shared_users'
+  post '/assign_shift' => 'shifts#assign_shift'
 
   get '/show_user_reports/:id' => 'users#show_user_reports'
   post '/show_user_reports/:id' => 'users#show_user_reports'
