@@ -5,7 +5,7 @@ class ProjectsController < ApplicationController
   # GET /projects.json
   def index
     logger.debug("project-index- PROJECT ID IS #{params.inspect}")
-    @projectsss = Project.where(user_id: current_user.id, inactive: [false, nil])
+    @projectsss = Project.where(user_id: current_user.id, inactive: [false, nil]).order(created_at: :asc)
     @projects = Project.where(user_id: current_user.id)
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     @adhoc_pm_projects = Project.where(adhoc_pm_id: current_user.id)
@@ -524,22 +524,19 @@ end
   
 
   def add_user_to_project
-    # User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id").select("users.email, projects_users.project_id, projects_users.active").collect {|u| "#{u.email}, #{u.project_id}, Status #{u.active}"}
-    logger.debug(" add_user_to_project - #{params.inspect}")
-
+   
     pu = ProjectsUser.new
-    # @users_on_project = @project.users
-    # @users_on_project = params[:user_id]
-    # @project = Project.find(1)
-
+   
     user = User.find(params[:user_id])
     project = Project.find(params[:project_id])
     if project.users.include?(user)
-      project.users.delete(user)
+      ps = ProjectsUser.where(project_id: project.id, user_id: user.id)
+      ps.project_shift_id = params[:project_shift_id]
+      ps.current_shift = true
+      ps.save
     else
-      ProjectsUser.create!(project_id: project.id, user_id: user.id, current_shift: true,active: true)
+      ProjectsUser.create!(project_id: project.id, user_id: user.id, current_shift: true, active: true, project_shift_id: params[:project_shift_id])
     end
-    project.save
 
     respond_to do |format|
      format.js
@@ -639,12 +636,13 @@ end
 
   def show_all_projects
     logger.debug("PROJECT CONTROLLER -> SHOW ALL REPORTS #{params.inspect}" )
+    
     if params[:checked] == "true"
-      @projectsss = Project.where(user_id: current_user.id)
+      @projectsss = Project.where(user_id: current_user.id).order(created_at: :asc)
       @checked = "true"
       logger.debug("IF BLOCK #{@projects.inspect}---- count: #{@projects.count}")
     else
-      @projectsss = Project.where(user_id: current_user.id, inactive: [false, nil])
+      @projectsss = Project.where(user_id: current_user.id, inactive: [false, nil]).order(created_at: :asc)
       @checked = "false"
       logger.debug("ELSE BLOCK #{@projects.inspect}     9999      count: #{@projects.count}")
     end
