@@ -17,8 +17,8 @@ class ProjectsController < ApplicationController
 
     @shift_change_requests = ShiftChangeRequest.where("status = ?", "Requested")
 
-    if @projects.present?
-      params[:project_id] = @project_id = @projects.first.id
+    if @@projectsss.present?
+      params[:project_id] = @project_id = @@projectsss.first.id
       logger.debug("project-index- @project_id #{@project_id}")
  
       @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
