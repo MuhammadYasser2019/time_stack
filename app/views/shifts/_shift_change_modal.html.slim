@@ -20,19 +20,9 @@ div class="modal fade" id="shiftchangeModal" tabindex="-1" role="dialog" aria-hi
 							td= pu.user.name
 
 
-		div class="shift_change_users"
-			= form_tag assign_shift_path, remote: true do 
-				= hidden_field_tag "project_id", @project.id
-				table class="table"
-					thead
-						tr
-		                  th Shift
-		                  th Users
-		                  th Action
-		          	tbody
+		div id="shift_change_users"
+			= render partial: 'shifts/change_shift'
+			
 						
-						td = select_tag :project_shift_id, options_from_collection_for_select(@project_shifts, "id", "shift_name"), required: 'required', class: "form-control", prompt: "Select Shift"
-
-
-						td = select_tag('user_id', options_for_select(@project_users.collect{ |p| [p.user.name, p.user_id]}, params[:user_id]), prompt: "Select user")
-						td= submit_tag "Assign Shift"
+						
+		

@@ -125,6 +125,7 @@ Rails.application.routes.draw do
   post '/shared_user' => 'customers#shared_user'
   get '/add_shared_users' => 'customers#add_shared_users'
   post '/assign_shift' => 'shifts#assign_shift'
+  get '/toggle_shift' => 'shifts#toggle_shift'
 
   get '/show_user_reports/:id' => 'users#show_user_reports'
   post '/show_user_reports/:id' => 'users#show_user_reports'
@@ -156,6 +157,7 @@ Rails.application.routes.draw do
   get 'resend_vacation_request' => 'customers#resend_vacation_request'
   get 'cancel_vacation_request' => 'customers#cancel_vacation_request' 
   get 'customers/:id/theme' => 'customers#set_theme'
+  get 'customers/:id/clear_filter' => 'customers#clear_filter', as: :clear_filter
   get 'pre_vacation_request' => "customers#pre_vacation_request"
   get 'single_vacation_request' => "weeks#single_vacation_request"
 

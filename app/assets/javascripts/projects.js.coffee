@@ -197,7 +197,22 @@ jQuery ($) ->
           console.log "data is "+item.name + "  "  + item.id
           $('#system_project').append($("<option></option>").attr("value",item.id).text(item.name))
 
-
+  $(document).on("click", ".add_new_user", ->
+    proj_id = $('#project_id').val();
+    $.ajax
+      url: 'toggle_shift'
+      type: 'GET'
+      data:  {project_id: proj_id, partial: 'add_user'}
+    
+  )
+  $(document).on("click", ".change_shift", ->
+    proj_id = $('#project_id').val();
+    $.ajax
+      url: '/toggle_shift'
+      dataType: 'GET'
+      data:  {project_id: proj_id, partial: 'add_shift'}
+      
+  )
 
   #$('.invite_user_button').click ->
 #

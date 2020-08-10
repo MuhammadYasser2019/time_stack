@@ -118,24 +118,47 @@ class ShiftsController < ApplicationController
     @project = Project.find params[:id]
     @project_shifts = ProjectShift.where(project_id: @project.id)
     @project_users = ProjectsUser.where(project_id: @project.id, current_shift: true)
+    all_users = User.where("parent_user_id IS ? && (shared =? or customer_id IS ? OR customer_id = ?)",nil, true, nil , @project.customer.id)     
+    @available_users = all_users- @project.users.active_users
+  end
+
+  def toggle_shift
+    @project = Project.find params[:project_id]
+    @partial = params[:partial]
+    @project_shifts = ProjectShift.where(project_id: @project.id)
+    @project_users = ProjectsUser.where(project_id: @project.id, current_shift: true)
+    all_users = User.where("parent_user_id IS ? && (shared =? or customer_id IS ? OR customer_id = ?)",nil, true, nil , @project.customer.id)     
+    @available_users = all_users- @project.users.active_users
+    respond_to do |format|
+      if params[:partial] == "add_user"
+        format.js { render :file => "/shifts/add_users_to_shift.js.erb"}
+      else
+         format.js { render :file => "/shifts/change_shift.js.erb"}
+      end
+    end
+   
   end
 
   def assign_shift
-    @project = Project.find params[:project_id]
+    if params[:project_id].present? && params[:user_id].present? && params[:project_shift_id].present?
+      @project = Project.find params[:project_id]
 
-    old_shift = ProjectsUser.where(project_id: @project.id, current_shift: true, user_id: params[:user_id]).last
-    if old_shift.project_shift_id == params[:project_shift_id].to_i
-    
-    else
-      old_shift.current_shift = false
-      old_shift.save
-      @project_users = ProjectsUser.create!(project_id: @project.id, current_shift: true, user_id: params[:user_id], project_shift_id: params[:project_shift_id])
-      
-
+      old_shift = ProjectsUser.where(project_id: @project.id, current_shift: true, user_id: params[:user_id]).last
+      if old_shift && old_shift.project_shift_id != params[:project_shift_id].to_i
+        old_shift.current_shift = false
+        old_shift.save
+        @project_users = ProjectsUser.create!(project_id: @project.id, current_shift: true, user_id: params[:user_id], project_shift_id: params[:project_shift_id])
+      elsif old_shift && old_shift.project_shift_id == params[:project_shift_id].to_i
+      else
+        @project_users = ProjectsUser.create!(project_id: @project.id, current_shift: true, user_id: params[:user_id], project_shift_id: params[:project_shift_id])
+        
+      end
     end
 
     @project_shifts = ProjectShift.where(project_id: @project.id)
     @project_users = ProjectsUser.where(project_id: @project.id, current_shift: true)
+    all_users = User.where("parent_user_id IS ? && (shared =? or customer_id IS ? OR customer_id = ?)",nil, true, nil , @project.customer.id)     
+    @available_users = all_users- @project.users.active_users
   end
 
   def cm_shift_report

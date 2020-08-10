@@ -13,7 +13,7 @@ class ProjectShift < ApplicationRecord
   end
 
   def start_time
-  	Date.today.beginning_of_month
+  	Date.today.beginning_of_year
   end
 
   def end_time
