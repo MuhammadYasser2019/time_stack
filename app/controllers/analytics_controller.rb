@@ -2,6 +2,7 @@ class AnalyticsController < ApplicationController
 	def index
 
     @customer_name = Customer.find(params[:customer_id]).name
+    @customer = Customer.find(params[:customer_id])
     cus_users = User.where(customer_id: params[:customer_id])
     @cus_emp_types = EmploymentType.where(customer_id: params[:customer_id]).pluck(:id)
     @cus_emp_names = EmploymentType.where(customer_id: params[:customer_id]).pluck(:name)

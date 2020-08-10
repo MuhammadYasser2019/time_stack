@@ -118,19 +118,19 @@
 
 	<br>
 	<div class = "orange-button customer-reports" >
-		<%= link_to('User Activities', "user_activities/#{params[:customer_id]}", target: :_blank ) %>
+		<%= link_to('User Activities', "user_activities/#{@customer.id}", target: :_blank ) %>
 	</div>
 	<br>
 	<div class = "orange-button customer-reports" >
-		<%= link_to('Reports', "/customer_reports/#{params[:customer_id]}", target: :_blank ) %>
+		<%= link_to('Reports', "/customer_reports/#{@customer.id}", target: :_blank ) %>
 	</div>
 	<br> 
 	<div class = "orange-button vacation-reports">
-		<%= link_to('Vacation Reports',"vacation_reports/customer/#{params[:customer_id]}", target: :_blank) %>
+		<%= link_to('Vacation Reports',"vacation_reports/customer/#{@customer.id}", target: :_blank) %>
 	</div>
 	<br>
 	<div class = "orange-button inventory-reports" >
-		<%= link_to('Inventory Reports', "/inventory_reports/#{params[:customer_id]}", target: :_blank ) %>
+		<%= link_to('Inventory Reports', "/inventory_reports/#{@customer.id}", target: :_blank ) %>
 	</div>
 	<br> 
 	<% if flash[:alert] %>
@@ -139,7 +139,7 @@
       </div>
      <% else %>
      <div class = "orange-button vacation-reports">
-		<%= link_to('Paid Vacation Balances',"vacation_types_summary/#{params[:customer_id]}", target: :_blank) %>
+		<%= link_to('Paid Vacation Balances',"vacation_types_summary/#{@customer.id}", target: :_blank) %>
 	</div>
     <% end %>
 	
