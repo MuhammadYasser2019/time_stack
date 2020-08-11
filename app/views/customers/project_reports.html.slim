@@ -41,7 +41,7 @@
       		- users = project.users.count
       		- pm = User.find_by_id project.user_id
       		tr
-      			td = project.name( users,pm.name)
+      			td = project.name
       			- shift_hash.each do |s, task_hash|
       				td= shift.name
       				- task_hash.each do |task, time|
