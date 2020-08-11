@@ -119,6 +119,47 @@ class Customer < ApplicationRecord
     return hash_report_data
   end
 
+  def build_project_report(projects, shifts, start_date, end_date, current_month)
+
+    if current_month == "current_month"
+      start_day = Time.now.beginning_of_month.to_date.to_s
+    elsif current_month == "last_month"
+      start_day = (Time.now.beginning_of_month-1.month).to_date.to_s
+    elsif start_date.nil? || current_month == "current_week"
+      start_day = Time.now.beginning_of_week.to_date.to_s
+    else
+      start_day = start_date
+    end
+
+    if current_month == "current_month"
+      end_date = Time.now.end_of_month.to_date.to_s
+    elsif current_month == "last_month"
+      end_date = (Time.now - 1.month).end_of_month.to_date.to_s
+    elsif end_date.nil? || current_month == "current_week"
+      end_date = Time.now.end_of_week.to_date.to_s
+    else
+      end_date = end_date
+    end
+    project_hash = {}
+
+    projects.each do |p|
+      project_hash[p.id] ||= {}
+      shifts.each do |ps|
+        project_hash[p.id][ps.id] ||= {}
+        p.tasks.each do |t|
+            project_hash[p.id][ps.id][t.id] ||= []
+            submitted_time = TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 2).order(:date_of_activity).sum(:hours)
+            approved_time = TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 3).order(:date_of_activity).sum(:hours)
+            project_hash[p.id][ps.id][t.id] << approved_time
+            project_hash[p.id][ps.id][t.id] << submitted_time
+        end
+      end
+    end
+
+    return project_hash
+
+  end
+  
   def find_dates_to_print(proj_report_start_date = nil, proj_report_end_date = nil, current_week = nil, current_month = nil) 
     if current_month == "current_month"
       start_day = Time.now.beginning_of_month

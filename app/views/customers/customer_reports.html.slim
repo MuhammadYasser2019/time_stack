@@ -2,7 +2,7 @@
   = hidden_field_tag :customer_id, "#{Customer.find(@customer_id).name}"
   h1#customer_id{class = "#{Customer.find(@customer_id).name}"} Reports for Customer 
   = form_tag "/customers/#{params[:id]}/customer_reports", method: :get
-  table 
+  table
     thead
       tr
         th Project
@@ -13,6 +13,7 @@
         th Exclude Pending Users
         th Exclude Inactive Users
         th Tasks
+        th
         th
         th
 
@@ -30,8 +31,9 @@
         td = check_box_tag "exclude_pending_users", true, params["exclude_pending_users"]
         td = check_box_tag "exclude_inactive_users", true, params["exclude_inactive_users"]
         td = select_tag "Tasks", options_for_select([["Billable Tasks", "true"], ["Unbillable Tasks", "false"]], params[:Tasks])
-        td = button_tag "Show Report", class:"orange-button"
-        td = button_tag "Set as default", name: 'default', class:"orange-button"
+        td = button_tag "Show Report", class:"orange-button", style: "width: 84px"
+        td = button_tag "Set as default", name: 'default', class:"orange-button", style: "width: 84px"
+        td = link_to "Clear Filter", clear_filter_path(@customer.id), class:"orange-button small-2 cell", style: "width: 84px"
   table id="show_reports" class="display" width="100%" cellspacing="0"
     thead
       tr

@@ -194,9 +194,10 @@ Rails.application.routes.draw do
   get 'check_holidays/:id' => "holidays#check_holidays"
   post 'holidays/create' => 'holidays#create'
 
-  get 'customer_reports/:id' => 'customers#customer_reports'
+  #get 'customer_reports/:id' => 'customers#customer_reports'
   get 'inventory_reports/:id' => 'customers#inventory_reports'
   get 'customers/:id/customer_reports' => 'customers#customer_reports'
+  get 'customers/:id/project_reports' => 'customers#project_reports'
   get 'customers/:id/inventory_reports' => 'customers#inventory_reports'
   
   get 'permission_denied' => 'projects#permission_denied'

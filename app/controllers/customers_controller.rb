@@ -4,7 +4,7 @@
   # GET /customers
   # GET /customers.json
   def index
-    @customers = Customer.where(user_id: current_user.id)
+    @customers = Customer.where(id: current_user.id)
     if !@customers.present? && current_user.proxy_cm
       customer_id = current_user.customer_id.to_s
       @customers = Customer.where(:id => customer_id)
@@ -12,7 +12,7 @@
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(5)
     if @customers.present?
       params[:customer_id] = @customers.first.id unless params[:customer_id].present?
-      #binding.pry
+      
       @customer = @customers.first
       customer_holiday_ids = CustomersHoliday.where(customer_id: @customer.id).pluck(:holiday_id)
       @projects = @customer.projects
@@ -615,9 +615,35 @@
 
   end
 
+  def project_reports
+    @customer = Customer.find params[:id]
+    @projects = @customer.projects
+    @shifts = @customer.shifts
+
+    if params[:project].present?
+      projects = Project.find params[:project]
+    else
+      projects = @customer.projects
+    end
+
+    if params[:shift].present?
+      shifts = Shift.find params[:shift]
+    else
+      shifts = @customer.shifts
+    end
+
+
+
+
+    @project_report = @customer.build_project_report(projects, shifts, params[:proj_report_start_date], params[:proj_report_end_date], params["current_month"])
+
+    
+
+  end
+
   def customer_reports
     set_default_reports if params.keys.include?('default')
-
+    
     @customer_id = params[:id]
     @customer = Customer.find(@customer_id)
     default_report = @customer.default_report
@@ -834,6 +860,12 @@
     redirect_back(fallback_location: root_path)
 
   end 
+
+  def clear_filter
+    @default_report = DefaultReport.where(customer_id: current_user.customer_id)
+    @default_report.delete_all if @default_report.present?
+    redirect_to '/customers/#{current_user.customer_id}/customer_reports'
+  end
 
   private
     # Use callbacks to share common setup or constraints between actions.

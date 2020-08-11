@@ -117,31 +117,32 @@
 	</div>
 
 	<br>
-	<div class = "orange-button customer-reports" >
-		<%= link_to('User Activities', "user_activities/#{@customer.id}", target: :_blank ) %>
-	</div>
-	<br>
-	<div class = "orange-button customer-reports" >
-		<%= link_to('Reports', "/customer_reports/#{@customer.id}", target: :_blank ) %>
-	</div>
-	<br> 
-	<div class = "orange-button vacation-reports">
-		<%= link_to('Vacation Reports',"vacation_reports/customer/#{@customer.id}", target: :_blank) %>
-	</div>
-	<br>
-	<div class = "orange-button inventory-reports" >
-		<%= link_to('Inventory Reports', "/inventory_reports/#{@customer.id}", target: :_blank ) %>
-	</div>
-	<br> 
-	<% if flash[:alert] %>
-      <div class="notification is-danger global-notification" style ="width: 50%; margin: 0 auto;" >
-        <p class="alert"><%= alert %></p>
-      </div>
-     <% else %>
-     <div class = "orange-button vacation-reports">
-		<%= link_to('Paid Vacation Balances',"vacation_types_summary/#{@customer.id}", target: :_blank) %>
-	</div>
-    <% end %>
+	<div class="report_button">
+		<div class = "orange-button customer-reports" style="float:left;margin: 10px" >
+			<%= link_to('User Activities', "user_activities/#{@customer.id}", target: :_blank ) %>
+		</div>
+		<div class = "orange-button customer-reports" style="float:left;margin: 10px">
+			<%= link_to('Reports', "/customers/#{@customer.id}/customer_reports", target: :_blank ) %>
+		</div>
+		<div class = "orange-button vacation-reports" style="float:left;margin: 10px">
+			<%= link_to('Vacation Reports',"vacation_reports/customer/#{@customer.id}", target: :_blank) %>
+		</div>
+		<div class = "orange-button inventory-reports" style="float:left;margin: 10px">
+			<%= link_to('Inventory Reports', "/inventory_reports/#{@customer.id}", target: :_blank ) %>
+		</div>
+		<div class = "orange-button inventory-reports" style="float:left;margin: 10px">
+			<%= link_to('Project Reports', "/customers/#{@customer.id}/project_reports", target: :_blank ) %>
+		</div>
+		<% if flash[:alert] %>
+	      <div class="notification is-danger global-notification" style ="width: 50%; margin: 0 auto;" >
+	        <p class="alert"><%= alert %></p>
+	      </div>
+	     <% else %>
+	     <div class = "orange-button vacation-reports" style="float:left;margin: 10px">
+			<%= link_to('Paid Vacation Balances',"vacation_types_summary/#{@customer.id}", target: :_blank) %>
+		</div>
+	    <% end %>
 	
 
+	</div>
 </div>
