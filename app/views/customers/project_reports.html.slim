@@ -36,17 +36,18 @@
         th Hours Approved
         th Hours Submitted
       tbody
-      	- @project_report.each do |project, shift_hash|
+      	- @project_report.each do |project, task_hash|
       		- project = Project.find_by_id project
       		- users = project.users.count
       		- pm = User.find_by_id project.user_id
       		tr
       			td = project.name
-      			- shift_hash.each do |s, task_hash|
-      				- shift = Shift.find s
-      				td= shift.name
-      				- task_hash.each do |task, time|
-      					td= task
+      			- task_hash.each do |t, shift_hash|
+      				- task = Task.find t
+      				td= task.code
+      				- shift_hash.each do |shift, time|
+      					- shift_name = Shift.find shift
+      					td= shift_name.name
       					td = time[0]
       					td= time[1]
 

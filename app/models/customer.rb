@@ -144,14 +144,14 @@ class Customer < ApplicationRecord
 
     projects.each do |p|
       project_hash[p.id] ||= {}
-      shifts.each do |ps|
-        project_hash[p.id][ps.id] ||= {}
-        p.tasks.each do |t|
-            project_hash[p.id][ps.id][t.id] ||= []
+      p.tasks.each do |t|
+        project_hash[p.id][t.id] ||= {}
+        shifts.each do |ps|
+            project_hash[p.id][t.id][ps.id] ||= []
             submitted_time = TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 2).order(:date_of_activity).sum(:hours)
             approved_time = TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 3).order(:date_of_activity).sum(:hours)
-            project_hash[p.id][ps.id][t.id] << approved_time
-            project_hash[p.id][ps.id][t.id] << submitted_time
+            project_hash[p.id][t.id][ps.id] << approved_time
+            project_hash[p.id][t.id][ps.id] << submitted_time
         end
       end
     end
@@ -159,7 +159,7 @@ class Customer < ApplicationRecord
     return project_hash
 
   end
-  
+
   def find_dates_to_print(proj_report_start_date = nil, proj_report_end_date = nil, current_week = nil, current_month = nil) 
     if current_month == "current_month"
       start_day = Time.now.beginning_of_month
