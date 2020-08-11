@@ -4,7 +4,7 @@
   # GET /customers
   # GET /customers.json
   def index
-    @customers = Customer.where(id: current_user.id)
+    @customers = Customer.where(user_id: current_user.id)
     if !@customers.present? && current_user.proxy_cm
       customer_id = current_user.customer_id.to_s
       @customers = Customer.where(:id => customer_id)
