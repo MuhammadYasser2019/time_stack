@@ -43,6 +43,7 @@
       		tr
       			td = project.name
       			- shift_hash.each do |s, task_hash|
+      				shift = Shift.find s
       				td= shift.name
       				- task_hash.each do |task, time|
       					td= task
