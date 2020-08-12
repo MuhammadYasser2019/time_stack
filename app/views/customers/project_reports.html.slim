@@ -43,10 +43,8 @@
       		- proj_arr = []
   			- task_hash.each do |t, shift_hash|
   				- task = Task.find t
-  				td= task.description
   				- shift_hash.each do |shift, time|
   					- shift_name = Shift.find shift
-  					
   					tr
   						- if proj_arr.include?(project)
   							td
