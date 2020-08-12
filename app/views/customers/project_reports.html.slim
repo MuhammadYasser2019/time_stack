@@ -1,6 +1,6 @@
 - if current_user.cm? && current_user.customer_id == @customer.id
   h1#customer_id Project Reports for Customer 
-  = form_tag "/customers/#{params[:id]}/customer_reports", method: :get
+  = form_tag "/customers/#{params[:id]}/project_reports", method: :get
   table
     thead
       tr
