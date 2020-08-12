@@ -623,7 +623,7 @@
     if params[:project].present?
       projects = Project.where(id: params[:project])
     elsif  params[:exclude_inactive_projects].present? && params[:exclude_inactive_projects] == "true"
-      projects = @customer.projects.where("inactive=? or inactive is null", false).count
+      projects = @customer.projects.where("inactive=? or inactive is null", false)
     else
       projects = @customer.projects
     end
