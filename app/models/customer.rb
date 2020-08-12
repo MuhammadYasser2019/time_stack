@@ -148,7 +148,6 @@ class Customer < ApplicationRecord
         project_hash[p.id][t.id] ||= {}
         shifts.each do |ps|
             project_hash[p.id][t.id][ps.id] ||= []
-            debugger
             submitted_time = TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 2).order(:date_of_activity).sum(:hours)
             approved_time = TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 3).order(:date_of_activity).sum(:hours)
             project_hash[p.id][t.id][ps.id] << approved_time

@@ -622,6 +622,8 @@
 
     if params[:project].present?
       projects = Project.where(id: params[:project])
+    elsif  params[:exclude_inactive_projects].present? && params[:exclude_inactive_projects] == "true"
+      projects = @customer.projects.where.not(inactive: true)
     else
       projects = @customer.projects
     end
@@ -631,9 +633,6 @@
     else
       shifts = @customer.shifts
     end
-
-
-
 
     @project_report = @customer.build_project_report(projects, shifts, params[:proj_report_start_date], params[:proj_report_end_date], params["current_month"])
 
