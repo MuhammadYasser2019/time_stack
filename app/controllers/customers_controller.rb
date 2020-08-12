@@ -4,7 +4,7 @@
   # GET /customers
   # GET /customers.json
   def index
-    @customers = Customer.where(user_id: current_user.id)
+    @customers = Customer.where(id: current_user.customer_id)
     if !@customers.present? && current_user.proxy_cm
       customer_id = current_user.customer_id.to_s
       @customers = Customer.where(:id => customer_id)
@@ -621,13 +621,13 @@
     @shifts = @customer.shifts
 
     if params[:project].present?
-      projects = Project.find params[:project]
+      projects = Project.where(id: params[:project])
     else
       projects = @customer.projects
     end
 
     if params[:shift].present?
-      shifts = Shift.find params[:shift]
+      shifts = Shift.where(id: params[:shift])
     else
       shifts = @customer.shifts
     end
