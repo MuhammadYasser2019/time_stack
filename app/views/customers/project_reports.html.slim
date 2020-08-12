@@ -38,7 +38,7 @@
       tbody
       	- @project_report.each do |project, task_hash|
       		- project = Project.find_by_id project
-      		- users = project.users.count
+      		- users = project.active_users.count
       		- pm = User.find_by_id project.user_id
       		- proj_arr = []
   			- task_hash.each do |t, shift_hash|
@@ -49,8 +49,8 @@
   						td
   							- if !proj_arr.include?(project)
   								= "#{project.name}, #{users},#{pm.name}"
-  						td= task.description
       					td= shift_name.name
+      					td= task.description
       					td = time[0]
       					td= time[1]
       				- proj_arr << project

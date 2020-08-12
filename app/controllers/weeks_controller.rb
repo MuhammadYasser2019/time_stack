@@ -209,9 +209,9 @@ class WeeksController < ApplicationController
       @time_entries = @week.time_entries.where(status_id: @week.status_id)
     end
     if current_user == @week.user_id
-      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", current_user.id )
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=? && current_shift=?", current_user.id , true)
     else
-      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id )
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=? && current_shift=?", @week.user_id, true )
     end
     @week.start_date = Week.find(params[:id]).start_date.strftime('%Y-%m-%d')
     @week.end_date = Week.find(params[:id]).end_date.strftime('%Y-%m-%d')
