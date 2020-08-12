@@ -40,17 +40,23 @@
       		- project = Project.find_by_id project
       		- users = project.users.count
       		- pm = User.find_by_id project.user_id
-      		tr
-      			td = project.name
-      			- task_hash.each do |t, shift_hash|
-      				- task = Task.find t
-      				td= task.code
-      				- shift_hash.each do |shift, time|
-      					- shift_name = Shift.find shift
+      		- proj_arr = []
+  			- task_hash.each do |t, shift_hash|
+  				- task = Task.find t
+  				td= task.description
+  				- shift_hash.each do |shift, time|
+  					- shift_name = Shift.find shift
+  					
+  					tr
+  						- if proj_arr.include?(project)
+  							td
+  						else
+  							td = "#{project.name}, #{users},#{pm.name}"
+  						td= task.description
       					td= shift_name.name
       					td = time[0]
       					td= time[1]
-
+      				- proj_arr << project
         
     br
  
