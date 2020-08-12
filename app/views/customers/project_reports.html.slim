@@ -46,10 +46,9 @@
   				- shift_hash.each do |shift, time|
   					- shift_name = Shift.find shift
   					tr
-  						- if proj_arr.include?(project)
-  							td
-  						else
-  							td = "#{project.name}, #{users},#{pm.name}"
+  						td
+  						- if !proj_arr.include?(project)
+  							= "#{project.name}, #{users},#{pm.name}"
   						td= task.description
       					td= shift_name.name
       					td = time[0]
