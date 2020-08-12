@@ -149,13 +149,13 @@ class Customer < ApplicationRecord
         shifts.each do |s|
           submitted_time = 0.0
           approved_time = 0.0
-          s.project_shifts.each do 
-            project_hash[p.id][t.id][ps.id] ||= []
+          s.project_shifts.each do |ps|
+            project_hash[p.id][t.id][s.id] ||= []
             submitted_time += TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 2).order(:date_of_activity).sum(:hours)
             approved_time += TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 3).order(:date_of_activity).sum(:hours)
           end
-          project_hash[p.id][t.id][ps.id] << approved_time
-          project_hash[p.id][t.id][ps.id] << submitted_time
+          project_hash[p.id][t.id][s.id] << approved_time
+          project_hash[p.id][t.id][s.id] << submitted_time
         end
       end
     end
