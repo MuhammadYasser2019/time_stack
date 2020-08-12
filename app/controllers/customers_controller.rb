@@ -623,7 +623,7 @@
     if params[:project].present?
       projects = Project.where(id: params[:project])
     elsif  params[:exclude_inactive_projects].present? && params[:exclude_inactive_projects] == "true"
-      projects = @customer.projects.where.not(inactive: true)
+      projects = @customer.projects.where("inactive=? or inactive is null", false).count
     else
       projects = @customer.projects
     end
@@ -863,7 +863,7 @@
   def clear_filter
     @default_report = DefaultReport.where(customer_id: current_user.customer_id)
     @default_report.delete_all if @default_report.present?
-    redirect_to '/customers/#{current_user.customer_id}/customer_reports'
+    redirect_to "/customers/"+"#{current_user.customer_id}"+"/customer_reports"
   end
 
   private
