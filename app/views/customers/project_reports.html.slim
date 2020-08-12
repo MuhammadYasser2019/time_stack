@@ -47,8 +47,8 @@
   					- shift_name = Shift.find shift
   					tr
   						td
-  						- if !proj_arr.include?(project)
-  							= "#{project.name}, #{users},#{pm.name}"
+  							- if !proj_arr.include?(project)
+  								= "#{project.name}, #{users},#{pm.name}"
   						td= task.description
       					td= shift_name.name
       					td = time[0]
