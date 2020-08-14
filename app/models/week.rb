@@ -326,14 +326,26 @@ end
               end
 
               vb  = @vacation_type.vacation_bank * full_work_day #converts days to hours
+              ##########bug fix
+              s_year = Date.today.strftime('%Y').to_i
+              start_date = s_year.to_s + "-01-01"
+
+              @sss = start_date
+              end_date = Date.today
+              @eee = end_date
+              d_range = (start_date.to_date .. end_date.to_date)
+              ######## bug fix
               ###Calculate Total Hours
                 total_used = []
                 uvt.each do |x|
-                  if x.hours_used != nil
-                    total_used.push(x.hours_used.to_f)
-                  else 
-                      total_used.push(0)
-                  end 
+                  in_range = d_range.cover?(x.vacation_start_date)
+                  if in_range == true
+                    if x.hours_used != nil
+                      total_used.push(x.hours_used.to_f)
+                    else 
+                        total_used.push(0)
+                    end
+                  end
                 end
                 total_hours_used = total_used.inject :+
                 logger.debug(" Total Hours Used for #{@vacation_type.vacation_title} #{total_hours_used}")
