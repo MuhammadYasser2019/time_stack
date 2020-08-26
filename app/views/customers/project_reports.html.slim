@@ -1,65 +1,60 @@
-- if current_user.cm? && current_user.customer_id == @customer.id
-  h1#customer_id Project Reports for Customer 
-  = form_tag "/customers/#{params[:id]}/project_reports", method: :get
-  table
-    thead
-      tr
-        th Project
-        th Shift
-        th Period Start Date
-        th Period End Date
-        th Report Period
-        th Exclude Inactive projects
-        th
-        th
+h1#customer_id Project Reports for Customer 
+= form_tag "/customers/#{params[:id]}/project_reports", method: :get
+table
+  thead
+    tr
+      th Project
+      th Shift
+      th Period Start Date
+      th Period End Date
+      th Report Period
+      th Exclude Inactive projects
+      th
+      th
 
+  tbody
+    tr
+      td = select_tag('project', options_for_select(@projects.collect{ |p| [p.name, p.id]}, params[:project]), include_blank: true)
+      td = select_tag('shift', options_for_select(@shifts.collect{ |p| [p.name, p.id]}, params[:shift]), include_blank: true)
+      td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date].present? ? params[:proj_report_start_date] : Date.today.beginning_of_week, {required: "required", style: 'margin: 0;', class: "datepicker"}
+      
+      = hidden_field_tag 'id', @customer.id
+      td = text_field_tag 'proj_report_end_date', params[:proj_report_end_date].present? ? params[:proj_report_end_date] : Date.today.end_of_week, {required: "required", style: 'margin: 0;', class: "datepicker"}
+
+      td = select_tag "current_month", options_for_select([[ "Current Month", "current_month"],["Previous Month", "last_month"], ["Current Week", "current_week"]], params["current_month"]), prompt: "Select month"
+      
+      td = check_box_tag "exclude_inactive_projects", true, params["exclude_inactive_projects"]
+      td = button_tag "Show Report", class:"orange-button", style: "width: 84px"
+      
+table class="display" width="100%" cellspacing="0"
+  thead
+    tr
+      th Project Details
+      th Shifts
+      th Task Name
+      th Hours Approved
+      th Hours Submitted
     tbody
-      tr
-        td = select_tag('project', options_for_select(@projects.collect{ |p| [p.name, p.id]}, params[:project]), include_blank: true)
-        td = select_tag('shift', options_for_select(@shifts.collect{ |p| [p.name, p.id]}, params[:shift]), include_blank: true)
-        td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date].present? ? params[:proj_report_start_date] : Date.today.beginning_of_week, {required: "required", style: 'margin: 0;', class: "datepicker"}
-        
-        = hidden_field_tag 'id', @customer.id
-        td = text_field_tag 'proj_report_end_date', params[:proj_report_end_date].present? ? params[:proj_report_end_date] : Date.today.end_of_week, {required: "required", style: 'margin: 0;', class: "datepicker"}
-
-        td = select_tag "current_month", options_for_select([[ "Current Month", "current_month"],["Previous Month", "last_month"], ["Current Week", "current_week"]], params["current_month"]), prompt: "Select month"
-        
-        td = check_box_tag "exclude_inactive_projects", true, params["exclude_inactive_projects"]
-        td = button_tag "Show Report", class:"orange-button", style: "width: 84px"
-        
-  table class="display" width="100%" cellspacing="0"
-    thead
-      tr
-        th Project Details
-        th Shifts
-        th Task Name
-        th Hours Approved
-        th Hours Submitted
-      tbody
-      	- @project_report.each do |project, task_hash|
-      		- project = Project.find_by_id project
-      		- users = project.users.active_users.count
-      		- pm = User.find_by_id project.user_id
-      		- proj_arr = []
-  			- task_hash.each do |t, shift_hash|
-  				- task = Task.find t
-  				- shift_hash.each do |shift, time|
-  					- shift_name = Shift.find shift
-  					tr
-  						td
-  							- if !proj_arr.include?(project)
-  								= "#{project.name}, #{users},#{pm.name}"
-      					td= shift_name.name
-      					td= task.description
-      					td = time[0]
-      					td= time[1]
-      				- proj_arr << project
-        
-    br
- 
-- else
-   h1 You are not allowed to access this page.
-
+    	- @project_report.each do |project, task_hash|
+    		- project = Project.find_by_id project
+    		- users = project.users.active_users.count
+    		- pm = User.find_by_id project.user_id
+    		- proj_arr = []
+			- task_hash.each do |t, shift_hash|
+				- task = Task.find t
+				- shift_hash.each do |shift, time|
+					- shift_name = Shift.find shift
+					tr
+						td
+							- if !proj_arr.include?(project)
+								= "#{project.name}, #{users},#{pm.name}"
+    					td= shift_name.name
+    					td= task.description
+    					td = time[0]
+    					td= time[1]
+    				- proj_arr << project
+      
+  br
 
 coffee:
   $('.datepicker').datepicker({
