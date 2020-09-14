@@ -347,7 +347,7 @@ end
                     end
                   end
                 end
-                total_hours_used = total_used.present? ? total_used.inject :+ : 0.0
+                total_hours_used = total_used.present? ? (total_used.inject :+) : 0.0
                 logger.debug(" Total Hours Used for #{@vacation_type.vacation_title} #{total_hours_used}")
 
 
