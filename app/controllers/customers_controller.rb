@@ -1,4 +1,4 @@
- class CustomersController < ApplicationController
+class CustomersController < ApplicationController
   before_action :set_customer, only: [:show, :edit, :update, :destroy]
   load_and_authorize_resource
   # GET /customers
@@ -525,7 +525,29 @@
     end
   end
 
+  def hours_approved
+    
+    @shift_id = params[:shift_id]
+    @project_id = params[:project_id]
+    @user = ProjectsUser.where(project_id: @project_id, current_shift: true)
+    @task_id = params[:task_id]
+    # @project_shift = ProjectShifts.where(project_id: @project.id, status_id: 3)
+    respond_to do |format|
+      format.js {render :file => "customers/hours_approved.js.erb" }
+    end    
+  end  
 
+  def hours_submitted
+    
+    @shift_id = params[:shift_id]
+    @project_id = params[:project_id]
+    @user = ProjectsUser.where(project_id: @project_id, current_shift: true)
+    @task_id = params[:task_id]
+    # @project_shift = ProjectShifts.where(project_id: @project.id, status_id: 3)
+    respond_to do |format|
+      format.js {render :file => "customers/hours_approved.js.erb" }
+    end    
+  end  
 
   def resend_vacation_request
     logger.debug("RESEND VACATION REQUEST PARAMS: #{params.inspect}")
@@ -736,7 +758,7 @@
         @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]], @projects, params[:submitted_type],params["current_month"])
       else
         @all_inventories_hash = @customer.build_inventory_hash(params[:inv_report_start_date],params[:inv_report_end_date],[params[:user]], params[:project], params[:submitted_type],params["current_month"])        
-        end
+      end
     end   
   end
 
@@ -842,6 +864,8 @@
     logger.debug("************User requesting VACATION: #{@vacation_requests.inspect} ")
     logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
 	  @current_systems = ExternalConfiguration.where(customer_id: @customer.id)
+    @default_project = current_user.default_project
+    @project_tasks = Task.where(project_id: @default_project)
     respond_to do |format|  
       format.js
     end
