@@ -14,7 +14,7 @@ class Ability
       can [:read, :edit, :create, :update, :new, :report, :copy_timesheet, :clear_timesheet, :previous_comments, :add_previous_comments, :expense_records, :delete_expense], Week
       can [:read, :permission_denied, :show_old_timesheets], Project
       can [:vacation_request, :pre_vacation_request, :cancel_vacation_request, :shift_change_request, :shift_request], Customer
-      can [:single_vacation_request], Week
+      can [:single_vacation_request,:open_previous_week_modal], Week
 
       if user.admin
        can :crud, :all
@@ -29,7 +29,7 @@ class Ability
         can [:read,:edit,:update], Task
         can [:manage, :permission_denied, :show_project_reports,:approve,:send_project_users_email], Project
         can [:manage, :read,:edit,:update, :add_user_to_customer, :set_theme], Customer
-	      can [:time_reject, :dismiss, :show_all_timesheets, :change_status], Week
+	      can [:time_reject, :dismiss, :show_all_timesheets, :change_status, :open_previous_week_modal], Week
 	      can [:reset,:approved_week, :default_week], User
         can [:check_holidays], Holiday
       end
@@ -37,7 +37,7 @@ class Ability
        can :manage, TimeEntry
        can :manage, Task
        can [:manage, :read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve, :add_adhoc_pm, :dynamic_project_update,:send_project_users_email], Project
-       can [:new, :create, :edit, :update, :time_reject, :show_all_timesheets], Week
+       can [:new, :create, :edit, :update, :time_reject, :show_all_timesheets, :open_previous_week_modal], Week
        can [:accept_terms_and_condition], User
       end
       if user.proxy
