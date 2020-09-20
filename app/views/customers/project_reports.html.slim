@@ -37,14 +37,13 @@ table id="show_project_reports" class="display" width="100%" cellspacing="0"
     tbody
     	- @project_report.each do |project, task_hash|
     		- project = Project.find_by_id project
-            - shift = Project.find_by_id project
-    		- users = project.users.active_users.count
+            - users = project.users.active_users.count
     		- pm = User.find_by_id project.user_id
     		- proj_arr = []
 			- task_hash.each do |t, shift_hash|
 				- task = Task.find t
 				- shift_hash.each do |shift, time|
-					- shift_name = Shift.find shift
+					- shift_name = ProjectShift.find shift
                     = hidden_field_tag "project_id", project.id
                     = hidden_field_tag "shift_id", shift_name.id
                     = hidden_field_tag "task_id", task.id
@@ -53,7 +52,7 @@ table id="show_project_reports" class="display" width="100%" cellspacing="0"
 						td
 							- if !proj_arr.include?(project)
 								= "#{project.name}, #{users},#{pm.name}"
-    				    td = shift_name.name
+    				    td = shift_name.shift.name
     				    td = task.description
                         - if time[0].present?
                             td = link_to time[0], 'javascript:void(0)',class: "hours-approved",id: "approved_project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"
