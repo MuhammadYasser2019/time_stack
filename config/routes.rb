@@ -126,6 +126,10 @@ Rails.application.routes.draw do
   get '/add_shared_users' => 'customers#add_shared_users'
   post '/assign_shift' => 'shifts#assign_shift'
   get '/toggle_shift' => 'shifts#toggle_shift'
+  post '/add_previous_week' => 'weeks#add_previous_week', as: :add_previous_week
+  post '/open_previous_week_modal' => 'weeks#open_previous_week_modal'
+  post '/hours_approved' => 'customers#hours_approved', as: :hours_approved
+  post '/hours_submitted' => 'customers#hours_submitted', as: :hours_submitted
 
   get '/show_user_reports/:id' => 'users#show_user_reports'
   post '/show_user_reports/:id' => 'users#show_user_reports'

@@ -154,8 +154,10 @@ class Customer < ApplicationRecord
             submitted_time += TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 2).order(:date_of_activity).sum(:hours)
             approved_time += TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 3).order(:date_of_activity).sum(:hours)
           end
-          project_hash[p.id][t.id][s.id] << approved_time
-          project_hash[p.id][t.id][s.id] << submitted_time
+          if project_hash[p.id][t.id][s.id].present?
+            project_hash[p.id][t.id][s.id] << approved_time
+            project_hash[p.id][t.id][s.id] << submitted_time
+          end
         end
       end
     end

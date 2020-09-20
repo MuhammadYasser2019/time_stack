@@ -116,6 +116,7 @@ div.tab-content.white-background
                           th PM
                           th Proxy PM
                           th Proxy CM
+                          th
 					tbody
 						-@users.each_with_index do |uop, i|
 							-if uop.customer_id == params[:customer_id].to_i
@@ -131,6 +132,11 @@ div.tab-content.white-background
 									
 									td = check_box_tag "add_pm_role", uop.id, uop.proxy?, class: "assign_proxy_role"
 									td = check_box_tag "add_proxy_cm", uop.id, uop.proxy_cm?, class: "assign_cm_proxy_role"
+
+									td = link_to "Add Previous Week", 'javascript:void(0)',class: "open_previous_week orange-button",id: "user_#{uop.id}"
+									
+									/td = link_to "Add Previous Week",{controller: "weeks", action: "open_previous_week_modal"},  data: {customer_id: params[:customer_id], user_id: uop.id}, class: "add_previous_week orange-button", type: "link",remote: true
+									
 
 					div class = "modal" id="sharedUser" tabindex="-1" role="dialog" aria-hidden="true"
 
@@ -229,6 +235,8 @@ div.tab-content.white-background
   - if !current_user.default_project? && current_user.parent_user_id.blank?
   	== render partial: 'users/default_projects'
 
+div id = "add_previous_week"
+	== render partial: 'weeks/add_previous_week_modal'
 
 coffee:
 	$('.datepicker').datepicker({
