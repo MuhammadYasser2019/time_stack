@@ -14,12 +14,12 @@ table
 
   tbody
     tr
-      td = select_tag('project', options_for_select(@projects.collect{ |p| [p.name, p.id]}, params[:project]), include_blank: true)
-      td = select_tag('shift', options_for_select(@shifts.collect{ |p| [p.name, p.id]}, params[:shift]), include_blank: true)
-      td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date].present? ? params[:proj_report_start_date] : Date.today.beginning_of_week, {required: "required", style: 'margin: 0;', class: "datepicker"}
+      td = select_tag('project_id', options_for_select(@projects.collect{ |p| [p.name, p.id]}, params[:project]), include_blank: true, class: "form-control")
+      td = select_tag('shift', options_for_select(@shifts.collect{ |p| [p.name, p.id]}, params[:shift]), include_blank: true, class: "form-control")
+      td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date].present? ? params[:proj_report_start_date] : Date.today.beginning_of_week, {required: "required", style: 'margin: 0;', class: "datepicker form-control"}
       
       = hidden_field_tag 'id', @customer.id
-      td = text_field_tag 'proj_report_end_date', params[:proj_report_end_date].present? ? params[:proj_report_end_date] : Date.today.end_of_week, {required: "required", style: 'margin: 0;', class: "datepicker"}
+      td = text_field_tag 'proj_report_end_date', params[:proj_report_end_date].present? ? params[:proj_report_end_date] : Date.today.end_of_week, {required: "required", style: 'margin: 0;', class: "datepicker form-control"}
 
       td = select_tag "current_month", options_for_select([[ "Current Month", "current_month"],["Previous Month", "last_month"], ["Current Week", "current_week"]], params["current_month"]), prompt: "Select month"
       
@@ -55,12 +55,17 @@ table id="show_project_reports" class="display" width="100%" cellspacing="0"
 								= "#{project.name}, #{users},#{pm.name}"
     				    td = shift_name.name
     				    td = task.description
-                        td = link_to "100", 'javascript:void(0)',class: "hours-approved",id: "project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"
+                        - if time[0].present?
+                            td = link_to time[0], 'javascript:void(0)',class: "hours-approved",id: "approved_project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"
+                        - else
+                            td= link_to "0.0", 'javascript:void(0)',class: "hours-approved",id: "approved_project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"
 
-                        /td = "101"
-    				    td = link_to "101", 'javascript:void(0)',class: "hours-approved",id: "project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"
+                        - if time[1].present?
+                            td = link_to "#{time[1]}", 'javascript:void(0)',class: "hours-approved",id: "submitted_project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"
+                        - else
+                            td = link_to "0.0", 'javascript:void(0)',class: "hours-approved",id: "submitted_project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"
                         
-    				    - proj_arr << project
+    				- proj_arr << project
   br
 
 div id = "hours_approved"

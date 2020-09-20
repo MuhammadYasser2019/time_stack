@@ -5,6 +5,7 @@ class Week < ApplicationRecord
   has_many :upload_timesheets
   has_many :expense_records
   has_many :archived_weeks
+  belongs_to :user
   accepts_nested_attributes_for :upload_timesheets
   #mount_uploader :time_sheet, TimeSheetUploader
   EXPENSE_TYPE = ["Travel", "Stay","Food", "Gas", "Misc"]

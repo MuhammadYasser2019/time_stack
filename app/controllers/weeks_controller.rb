@@ -774,17 +774,19 @@ class WeeksController < ApplicationController
   end
 
   def open_previous_week_modal
-    if params[:start_date].present?
-        start_date  = params[:start_date].to_date.strftime('%Y-%m-%d')
-        end_date = params[:end_date].to_date.strftime('%Y-%m-%d')
-        @week = Week.new
-        @week.start_date = start_date
-        @week.end_date = end_date
-        @week.user_id = params[:user_id]
-        @week.created_by = current_user.id
-        @week.status_id = Status.find_by_status("NEW").id
-        @week.save!
-    end
+    @user = User.find params[:user_id]
+    @past_weeks = Week.where(user_id: params[:user_id], created_by: current_user.id)
+    # if params[:start_date].present?
+    #     start_date  = params[:start_date].to_date.strftime('%Y-%m-%d')
+    #     end_date = params[:end_date].to_date.strftime('%Y-%m-%d')
+    #     @week = Week.new
+    #     @week.start_date = start_date
+    #     @week.end_date = end_date
+    #     @week.user_id = params[:user_id]
+    #     @week.created_by = current_user.id
+    #     @week.status_id = Status.find_by_status("NEW").id
+    #     @week.save!
+    # end
     # @week_data = Week.where(user_id: current_user.id) 
     respond_to do |format|
       format.js
@@ -793,71 +795,36 @@ class WeeksController < ApplicationController
 
   def add_previous_week
     if params[:start_date].present?
-        start_date  = params[:start_date].to_date.strftime('%Y-%m-%d')
-        end_date = start_date + 6.days
-        @week = Week.new
-        @week.start_date = start_date
-        @week.end_date = end_date
-        @week.user_id = params[:user_id]
-        @week.created_by = current_user.id
-        @week.status_id = Status.find_by_status("NEW").id
+        start_date  = params["start_date"].to_date.beginning_of_week
+        end_date = start_date.end_of_week
+        unless Week.where(start_date: start_date, user_id: params[:user_id]).last.present?
+          @week = Week.new
+          @week.start_date = start_date
+          @week.end_date = end_date
+          @week.user_id = params[:user_id]
+          @week.created_by = current_user.id
+          @week.status_id = Status.find_by_status("NEW").id
+          @week.save!
+          
+          7.times {  @week.time_entries.build( user_id: @week.user_id, status_id: 1 )}
+          @week.time_entries.each_with_index do |te, i|
+              logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
+              logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
+              @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
+              @week.time_entries[i].user_id = @week.user_id
+          end
         @week.save!
-        
-        7.times {  @week.time_entries.build( user_id: @week.user_id, status_id: 1 )}
-        @week.time_entries.each_with_index do |te, i|
-            ogger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
-            logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
-            @week.time_entries[i].date_of_activity = Date.new(@week.start_date.year, @week.start_date.month, @week.start_date.day) + i
-            @week.time_entries[i].user_id = @week.user_id
-        end
-        @week.save!
+      end
     end
     @past_weeks = Week.where(user_id: params[:user_id], created_by: current_user.id)
+    @user = User.find params[:user_id]
 
     respond_to do |format|
       format.js { render :file => "weeks/open_previous_week_modal.js.erb"}
     end
 
   end
-
-  # def update_week
-  #   u = User.find_by_email(email_address)
-  #   if u.blank?
-  #     logger.debug "Could not find user email_address #{email_address}\n"
-  #     logger.debug "Exitting...\n"
-  #     exit
-  #   end
-  #   #check if start date is for monday and end date is of sunday.
-  #   start_of_week = start_date.to_date.beginning_of_week
-  #   if start_of_week != start_date.to_date
-  #     logger.debug "You need to specify the start date as monday of the week you want, and the end_date should be the sunday after the monday specified date format must be YYYY-MM-DD \n"
-  #     logger.debug "Exitting...\n"
-  #     exit
-  #   end
-  #   new_week = Week.where(user_id: u.id, start_date: start_date).last
-  #   logger.debug "New Week already exists #{new_week.inspect} \n" if !new_week.blank?
-  #   if new_week.blank?
-  #     new_week = Week.new
-  #     new_week.start_date = start_date
-  #     new_week.end_date = start_date.to_date.end_of_week.strftime('%Y-%m-%d')
-  #     new_week.user_id = u.id
-  #     new_week.status_id = 1
-  #     new_week.created_by = current_user.id
-  #     new_week.save!
-  #     logger.debug "New Week s nw created #{new_week.inspect} \n" if !new_week.blank?
-  #   end
-
-  #   7.times {  new_week.time_entries.build( user_id: u.id)}
-  #   new_week.time_entries.each_with_index do |te, i|
-  #     logger.debug "weeks_controller - edit now for each time_entry we need to set the date  and user_id and also set the hours  to 0"
-  #     logger.debug "year: #{@week.start_date.year}, month: #{@week.start_date.month}, day: #{@week.start_date.day}"
-  #     new_week.time_entries[i].date_of_activity = Date.new(new_week.start_date.year, new_week.start_date.month, new_week.start_date.day) + i
-  #     new_week.time_entries[i].user_id = u.id
-  #   end
-  #   new_week.save!
-  #   logger.debug "Done creating the week and time entries for the user #{email_address}, and start date of #{start_date} \n"
-  # end 
-    
+  
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_week

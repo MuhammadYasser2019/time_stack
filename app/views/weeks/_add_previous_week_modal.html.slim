@@ -9,14 +9,29 @@ div class="modal fade" id="previousweek" tabindex="-1" role="dialog" aria-hidden
     
      div class="modal-body"
      	= form_tag add_previous_week_path,id: "previous_week", method: :post, remote: true  
-	        = hidden_field_tag "user_id", @user_id
-	        table
-	          tr
-	            th Start date
-	            th End date
-	            th 
+        = hidden_field_tag "user_id", @user.id
+        table
+          tr
+            th Start date
+            th End date
+            th
+          tr
+            td = date_field_tag 'start_date', '', {required: "required"}
+            td = date_field_tag 'start_date'
+            td = submit_tag 'Create Week'
 
-	          
+        table
+          tr
+            th User
+            th Start Date
+            th End Date
+            
+          - @past_weeks.each do |week|
+            tr
+              td= week.user.name
+              td= week.start_date.to_date.strftime('%Y-%m-%d')
+              td= week.end_date.to_date.strftime('%Y-%m-%d')
+    	          
   
 coffee:
   $('#startdate').datepicker({

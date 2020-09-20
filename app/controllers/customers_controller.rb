@@ -4,6 +4,7 @@ class CustomersController < ApplicationController
   # GET /customers
   # GET /customers.json
   def index
+    
     @customers = Customer.where(user_id: current_user.id)
     if !@customers.present? && current_user.proxy_cm
       customer_id = current_user.customer_id.to_s
@@ -526,24 +527,11 @@ class CustomersController < ApplicationController
   end
 
   def hours_approved
-    
     @shift_id = params[:shift_id]
     @project_id = params[:project_id]
-    @user = ProjectsUser.where(project_id: @project_id, current_shift: true)
+    @users = ProjectsUser.where(project_id: @project_id, current_shift: true, project_shift_id: params[:shift_id])
     @task_id = params[:task_id]
-    # @project_shift = ProjectShifts.where(project_id: @project.id, status_id: 3)
-    respond_to do |format|
-      format.js {render :file => "customers/hours_approved.js.erb" }
-    end    
-  end  
-
-  def hours_submitted
-    
-    @shift_id = params[:shift_id]
-    @project_id = params[:project_id]
-    @user = ProjectsUser.where(project_id: @project_id, current_shift: true)
-    @task_id = params[:task_id]
-    # @project_shift = ProjectShifts.where(project_id: @project.id, status_id: 3)
+    @type = params[:type]
     respond_to do |format|
       format.js {render :file => "customers/hours_approved.js.erb" }
     end    
@@ -642,8 +630,8 @@ class CustomersController < ApplicationController
     @projects = @customer.projects
     @shifts = @customer.shifts
 
-    if params[:project].present?
-      projects = Project.where(id: params[:project])
+    if params[:project_id].present?
+      projects = Project.where(id: params[:project_id])
     elsif  params[:exclude_inactive_projects].present? && params[:exclude_inactive_projects] == "true"
       projects = @customer.projects.where("inactive=? or inactive is null", false)
     else

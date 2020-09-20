@@ -190,33 +190,19 @@ jQuery ($) ->
   )
 
   $(document).on("click", ".hours-approved", ->
-    alert();
-    $(this).attr("id").split("_")
-    project_id = $(this).attr("id").split("_")[1];
-    task_id = $(this).attr("id").split("_")[5];
-    shift_id=  $(this).attr("id").split("_")[3];
+    
+    type = $(this).attr("id").split("_")[0]
+    project_id = $(this).attr("id").split("_")[2];
+    task_id = $(this).attr("id").split("_")[6];
+    shift_id=  $(this).attr("id").split("_")[4];
     console.log("THE PROJEC ID IS: " + project_id)
     $.ajax
       url: '/hours_approved',
       type: 'POST'
-      data:  {project_id: project_id, task_id: task_id, shift_id: shift_id}
+      data:  {project_id: project_id, task_id: task_id, shift_id: shift_id, type: type}
   )
   
-  $(document).on("click", ".hours-submitted", ->
-    alert();
-    $(this).attr("id").split("_")
-    project_id = $(this).attr("id").split("_")[1];
-    task_id = $(this).attr("id").split("_")[5];
-    shift_id=  $(this).attr("id").split("_")[3];
-    console.log("THE PROJEC ID IS: " + project_id)
-    $.ajax
-      url: '/hours_submitted',
-      type: 'POST'
-      data:  {project_id: project_id, task_id: task_id, shift_id: shift_id}
-  )
-
   $(document).on("click", ".open_previous_week", ->
-    alert();
     $(this).attr("id").split("_")
     user_id = $(this).attr("id").split("_")[1];
     console.log("THE USER ID IS: " + user_id)
