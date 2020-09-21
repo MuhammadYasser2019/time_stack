@@ -253,7 +253,7 @@ jQuery ($) ->
   $('#show_project_reports').DataTable({
     dom: 'lBfrtip',
     "retrieve": true,
-    "order": [[ 0, "desc" ]]
+    "ordering": false,
     buttons: [
       {
         extend: 'excel',
