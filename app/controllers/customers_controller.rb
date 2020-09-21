@@ -531,6 +531,8 @@ class CustomersController < ApplicationController
     @project_id = params[:project_id]
     @users = ProjectsUser.where(project_id: @project_id, current_shift: true, project_shift_id: params[:shift_id])
     @task_id = params[:task_id]
+    @start_date = params[:start_date].to_date
+    @end_date = params[:end_date].to_date
     @type = params[:type]
     respond_to do |format|
       format.js {render :file => "customers/hours_approved.js.erb" }

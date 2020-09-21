@@ -190,16 +190,19 @@ jQuery ($) ->
   )
 
   $(document).on("click", ".hours-approved", ->
-    
+    console.log($('#proj_report_end_date').val());
+    start_date = $('#proj_report_start_date').val();
+    end_date = $('#proj_report_end_date').val();
     type = $(this).attr("id").split("_")[0]
     project_id = $(this).attr("id").split("_")[2];
     task_id = $(this).attr("id").split("_")[6];
     shift_id=  $(this).attr("id").split("_")[4];
+
     console.log("THE PROJEC ID IS: " + project_id)
     $.ajax
       url: '/hours_approved',
       type: 'POST'
-      data:  {project_id: project_id, task_id: task_id, shift_id: shift_id, type: type}
+      data:  {project_id: project_id, task_id: task_id, shift_id: shift_id, type: type, start_date: start_date, end_date: end_date}
   )
   
   $(document).on("click", ".open_previous_week", ->

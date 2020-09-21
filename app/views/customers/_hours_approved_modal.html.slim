@@ -19,6 +19,8 @@ div class="modal fade" id="hoursapproved" tabindex="-1" role="dialog" aria-hidde
 					    - @users.each do |u|
 					    	tr
 					    		td= u.user.name
-					    		td= TimeEntry.where("project_id = ? and user_id  = ? and task_id = ? and status_id=? and project_shift_id=?", @project_id, u.user_id, @task_id, 3,@shift_id).sum(:hours)
+					    		td=TimeEntry.where(project_id: @project_id, user_id: u.user_id, task_id: @task_id, status_id: 3, project_shift_id: @shift_id, date_of_activity: @start_date..@end_date).sum(:hours)
+
+
 		    				
 		    			
