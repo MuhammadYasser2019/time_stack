@@ -47,7 +47,6 @@ table id="show_project_reports" class="display" width="100%" cellspacing="0"
                     = hidden_field_tag "project_id", project.id
                     = hidden_field_tag "shift_id", shift_name.id
                     = hidden_field_tag "task_id", task.id
-                
 					tr
 						td
 							- if !proj_arr.include?(project)
@@ -62,9 +61,8 @@ table id="show_project_reports" class="display" width="100%" cellspacing="0"
                         - if time[1].present?
                             td = link_to "#{time[1]}", 'javascript:void(0)',class: "hours-approved",id: "submitted_project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"
                         - else
-                            td = link_to "0.0", 'javascript:void(0)',class: "hours-approved",id: "submitted_project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"
-                        
-    				- proj_arr << project
+                            td = link_to "0.0", 'javascript:void(0)',class: "hours-approved",id: "submitted_project_#{project.id}_shift_#{shift_name.id}_task_#{task.id}"               
+            	    - proj_arr << project
   br
 
 div id = "hours_approved"

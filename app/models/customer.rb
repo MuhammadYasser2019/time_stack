@@ -151,8 +151,8 @@ class Customer < ApplicationRecord
           approved_time = 0.0
           s.project_shifts.where(project_id: p.id).each do |ps|
             project_hash[p.id][t.id][ps.id] ||= []
-            submitted_time += TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, status_id: 2).order(:date_of_activity).sum(:hours)
-            approved_time += TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, status_id: 3).order(:date_of_activity).sum(:hours)
+            submitted_time += TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 2).order(:date_of_activity).sum(:hours)
+            approved_time += TimeEntry.where(project_shift_id: ps.id, task_id: t.id, project_id: p.id, date_of_activity: start_day..end_date, status_id: 3).order(:date_of_activity).sum(:hours)
             project_hash[p.id][t.id][ps.id] << approved_time
             project_hash[p.id][t.id][ps.id] << submitted_time
           end
