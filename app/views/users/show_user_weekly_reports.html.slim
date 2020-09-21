@@ -41,43 +41,43 @@
                 -sat = fri.next_day
                 -sun = (week.start_date.beginning_of_week-1.day).strftime("%d")
                   
-            tr class="week_row"
-                td week-#{i}
-                td
-                td =sun
-                td =mon.strftime("%d")
-                td =tue.strftime("%d")
-                td =wed.strftime("%d")
-                td =thu.strftime("%d")
-                td =fri.strftime("%d")
-                td =sat.strftime("%d")
-                td
+                tr class="week_row"
+                    td week-#{i}
+                    td
+                    td =sun
+                    td =mon.strftime("%d")
+                    td =tue.strftime("%d")
+                    td =wed.strftime("%d")
+                    td =thu.strftime("%d")
+                    td =fri.strftime("%d")
+                    td =sat.strftime("%d")
+                    td
 
-            - project_hash.each do |project_id, task_hash|
-                - project_name = Project.where(id: project_id).first
-                -task_hash.each do |task_id, time|
-                  - task_name = Task.where(id: task_id).first
-                    tr
-                        td.project width="50px;"
-                            = project_name.name if project_name.present?
-                        td.task width="50px;"
-                            = task_name.description if task_name.present?
-                        - time.each do |t|
-                        td.hour = t
-                        td = time.sum
+                - project_hash.each do |project_id, task_hash|
+                    - project_name = Project.where(id: project_id).first
+                    -task_hash.each do |task_id, time|
+                      - task_name = Task.where(id: task_id).first
+                        tr
+                            td.project width="50px;"
+                                = project_name.name if project_name.present?
+                            td.task width="50px;"
+                                = task_name.description if task_name.present?
+                            - time.each do |t|
+                            td.hour = t
+                            td = time.sum
 
-          
-            tr
-                td
-                td
-                td
-                td
-                td
-                td
-                td
-                td
-                td
-                td
+              
+                tr
+                    td
+                    td
+                    td
+                    td
+                    td
+                    td
+                    td
+                    td
+                    td
+                    td
 
 
         -i += 1
