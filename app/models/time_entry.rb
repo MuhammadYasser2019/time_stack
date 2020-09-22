@@ -16,7 +16,11 @@ class TimeEntry < ApplicationRecord
   	
   	if hours.nil? && !time_out.nil? && !time_in.nil?
   		Rails.logger.debug("TimeEntry model- calculate_hours- *****TIME IN- #{time_in}")
-  		self.hours = ((time_out.to_i - time_in.to_i)/3600.0).round(1)
+      logged_hours = ((time_out.to_i - time_in.to_i)/3600.0).round(1)
+      if logged_hours < 0
+        logged_hours = (((time_out+1.day).to_i - time_in.to_i)/3600.0).round(1)
+      end
+  		self.hours = logged_hours
   		Rails.logger.debug ("TimeEntry model- calculate_hours #{hours}***** time_in: #{time_in.strftime('%M')}")
   	end
   end
