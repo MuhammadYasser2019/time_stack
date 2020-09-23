@@ -38,16 +38,16 @@
       tbody
       	- @project_report.each do |project, task_hash|
       		- project = Project.find_by_id project
-              - users = project.users.active_users.count
+            - users = project.users.active_users.count
       		- pm = User.find_by_id project.user_id
       		- proj_arr = []
   			- task_hash.each do |t, shift_hash|
   				- task = Task.find t
   				- shift_hash.each do |shift, time|
-  					- shift_name = ProjectShift.find shift
-                      = hidden_field_tag "project_id", project.id
-                      = hidden_field_tag "shift_id", shift_name.id
-                      = hidden_field_tag "task_id", task.id
+  			        - shift_name = ProjectShift.find shift
+                    = hidden_field_tag "project_id", project.id
+                    = hidden_field_tag "shift_id", shift_name.id
+                    = hidden_field_tag "task_id", task.id
   					tr
   						td
   							- if !proj_arr.include?(project)
