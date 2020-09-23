@@ -241,11 +241,13 @@ class AnalyticsController < ApplicationController
   def vacation_report
 
     @customer_id = params[:customer_id]
+    @customer = Customer.find(params[:customer_id])
     @vac_reqs = VacationRequest.where('customer_id = ? AND  vacation_start_date >= ?', @customer_id,"2018-01-01")
 
   end
 
   def user_activities
+     @customer = Customer.find(params[:customer_id])
     @customer_id = params[:customer_id]
     @cus_projects = Project.where(customer_id: @customer_id)
     @project_ids = @cus_projects.pluck(:id)
