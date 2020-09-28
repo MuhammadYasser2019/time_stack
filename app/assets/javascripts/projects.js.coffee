@@ -214,6 +214,31 @@ jQuery ($) ->
       
   )
 
+  $(document).on("keyup", '#myInput', ->
+    input = undefined
+    filter = undefined
+    table = undefined
+    tr = undefined
+    td = undefined
+    i = undefined
+    txtValue = undefined
+    input = document.getElementById('myInput')
+    filter = input.value.toUpperCase()
+    table = document.getElementById('myTable')
+    tr = table.getElementsByTagName('tr')
+    i = 0
+    while i < tr.length
+      td = tr[i].getElementsByTagName('td')[1]
+      if td
+        txtValue = td.textContent or td.innerText
+        if txtValue.toUpperCase().indexOf(filter) > -1
+          tr[i].style.display = ''
+        else
+          tr[i].style.display = 'none'
+      i++
+    return
+  )
+
   #$('.invite_user_button').click ->
 #
  #   add_user_id = $(this).val()

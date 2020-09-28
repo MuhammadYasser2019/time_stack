@@ -661,6 +661,7 @@ class CustomersController < ApplicationController
     @users = Array.new
     if default_report && !params.keys.include?('button')
       params[:exclude_pending_users] = default_report.exclude_pending_user
+      params[:exclude_inactive_users] = default_report.exclude_inactive_users
       params[:Tasks] = default_report.billable
       params[:proj_report_start_date] = default_report.start_date.to_s
       params[:proj_report_end_date] = default_report.end_date.to_s
@@ -902,6 +903,7 @@ class CustomersController < ApplicationController
       @default_report.month = params[:current_month]
       @default_report.current_week = params[:current_week]
       @default_report.exclude_pending_user = params[:exclude_pending_users]
+      @default_report.exclude_inactive_users = params[:exclude_inactive_users]
       @default_report.billable = params[:Tasks]
       @default_report.save
       logger.debug("SETTING DEFAULT REPORT: set")
