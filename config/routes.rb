@@ -128,6 +128,9 @@ Rails.application.routes.draw do
   get '/toggle_shift' => 'shifts#toggle_shift'
   post '/add_previous_week' => 'weeks#add_previous_week', as: :add_previous_week
   post '/open_previous_week_modal' => 'weeks#open_previous_week_modal'
+
+  post '/open_edit_customer_modal' => 'customers#open_edit_customer_modal'
+
   post '/hours_approved' => 'customers#hours_approved', as: :hours_approved
   post '/hours_submitted' => 'customers#hours_submitted', as: :hours_submitted
 

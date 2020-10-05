@@ -881,6 +881,22 @@ class CustomersController < ApplicationController
     redirect_to "/customers/"+"#{current_user.customer_id}"+"/customer_reports"
   end
 
+  def open_edit_customer_modal
+    logger.debug("customer.controller - open_edit_customer_modal ")
+    #debugger
+    @user = User.find(params[:user_id])
+    # user.employment_type = params[:employment_type]
+    # #user.email = params[:email]
+    # user.is_active = params[:is_active].present? ? params[:is_active] : false 
+    # user.first_name = params[:first_name]
+    # user.last_name = params[:last_name]
+    # user.inactive_at = Time.now.to_date if !params[:is_active].present?
+    # user.save
+     respond_to do |format|
+      format.js
+    end
+  end
+
   private
     # Use callbacks to share common setup or constraints between actions.
     def set_customer
@@ -910,3 +926,4 @@ class CustomersController < ApplicationController
     end
 
 end
+

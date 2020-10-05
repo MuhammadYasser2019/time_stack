@@ -215,6 +215,20 @@ jQuery ($) ->
       data: { user_id: user_id }
   )
 
+  $(document).on("click", ".open_edit_customer", ->
+    $(this).attr("id").split("_")
+    user_id = $(this).attr("id").split("_")[1];
+    console.log("THE USER ID IS: " + user_id)
+    $.ajax
+      url: '/open_edit_customer_modal',
+      type: 'POST'
+      data: { user_id: user_id }
+  )
+
+
+
+  
+
 
   $('#show_reports').DataTable({
     dom: 'lBfrtip',

@@ -28,7 +28,7 @@ class Ability
         can :manage, TimeEntry
         can [:read,:edit,:update], Task
         can [:manage, :permission_denied, :show_project_reports,:approve,:send_project_users_email], Project
-        can [:manage, :read,:edit,:update, :add_user_to_customer, :set_theme], Customer
+        can [:manage, :read,:edit,:update, :add_user_to_customer, :set_theme, :open_edit_customer_modal], Customer
 	      can [:time_reject, :dismiss, :show_all_timesheets, :change_status, :open_previous_week_modal, :add_previous_week ], Week
 	      can [:reset,:approved_week, :default_week], User
         can [:check_holidays], Holiday
