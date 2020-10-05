@@ -204,6 +204,16 @@ jQuery ($) ->
       type: 'POST'
       data:  {project_id: project_id, task_id: task_id, shift_id: shift_id, type: type, start_date: start_date, end_date: end_date}
   )
+
+  $(document).on("click", ".users-on-project", ->
+    project_id = $(this).attr("id").split("_")[1];
+    
+    console.log("THE PROJEC ID IS: " + project_id)
+    $.ajax
+      url: '/users_on_project',
+      type: 'GET'
+      data:  {project_id: project_id}
+  )
   
   $(document).on("click", ".open_previous_week", ->
     $(this).attr("id").split("_")
@@ -520,4 +530,17 @@ jQuery ($) ->
           $('#'+shift_type).append($("<option></option>").attr("value",$my_data[i][1]).text($my_data[i][0])) 
           i++
 
+  $('#project-select').selectpicker()
+
+  all = $('option[value=all]')
+  $('.selectpicker').change ->
+    all = $('option[value=all]')
+    thisVal = all.html()
+    if all.is(':selected')
+      $('#project-select').selectpicker 'deselectAll'
+      $('ul.dropdown-menu > li[rel=0]').addClass 'selected'
+      $('span.filter-option').html thisVal
+    else
+      $('ul.dropdown-menu > li[rel=0]').removeClass 'selected'
+    return
  

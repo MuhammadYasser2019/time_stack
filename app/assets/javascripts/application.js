@@ -13,6 +13,7 @@
 //= require jquery
 //= require jquery.turbolinks
 //= require jquery_ujs
+//= require popper
 //= require dataTables/jquery.dataTables
 // require foundation.min
 //= require what-input
@@ -27,4 +28,5 @@
 //= require highcharts
 //= require ckeditor/adapters/jquery
 //= require bootstrap-datepicker
+//= require bootstrap-select.min
 //= require_tree .

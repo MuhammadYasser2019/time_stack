@@ -130,6 +130,7 @@ Rails.application.routes.draw do
   post '/open_previous_week_modal' => 'weeks#open_previous_week_modal'
   post '/hours_approved' => 'customers#hours_approved', as: :hours_approved
   post '/hours_submitted' => 'customers#hours_submitted', as: :hours_submitted
+  get '/users_on_project' => 'customers#users_on_project', as: :users_on_project
 
   get '/show_user_reports/:id' => 'users#show_user_reports'
   post '/show_user_reports/:id' => 'users#show_user_reports'
