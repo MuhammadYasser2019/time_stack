@@ -537,6 +537,11 @@ class CustomersController < ApplicationController
     respond_to do |format|
       format.js {render :file => "customers/hours_approved.js.erb" }
     end    
+  end
+
+  def users_on_project
+
+    @project = Project.find params[:project_id]
   end  
 
   def resend_vacation_request
@@ -633,7 +638,7 @@ class CustomersController < ApplicationController
     @shifts = @customer.shifts
 
     if params[:project_id].present?
-      projects = Project.where(id: params[:project_id])
+      projects = Project.find params[:project_id]
     elsif  params[:exclude_inactive_projects].present? && params[:exclude_inactive_projects] == "true"
       projects = @customer.projects.where("inactive=? or inactive is null", false)
     else
@@ -669,7 +674,8 @@ class CustomersController < ApplicationController
       params["current_month"] = default_report.month
       params[:user] = default_report.user_id
       params[:project] = default_report.project_id
-    end  
+    end
+
     if params[:exclude_pending_users].present? && params[:exclude_pending_users] == true
       @customer.projects.each do |p|
         @users << p.users.where.not(invitation_accepted_at: nil)
