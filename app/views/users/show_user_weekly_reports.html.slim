@@ -1,4 +1,4 @@
-- if ((current_user.cm? || current_user.proxy_cm?) && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) || (current_user.pm? && @project.present? && @project.user_id == current_user.id) || current_user.id == @user.id
+- if (current_user.cm? && current_user.customer_id == @user.customer_id) || (current_user.proxy_cm? && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) || (current_user.pm? && @project.present? && @project.user_id == current_user.id) || current_user.id == @user.id
     h1 Reports for #{consultant_name(@user.first_name, @user.last_name, @user.email)}
     = form_tag "/show_user_weekly_reports/#{params[:id]} ",id: "user_report_form", method: :get
     	table

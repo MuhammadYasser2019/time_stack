@@ -1,7 +1,7 @@
 script src="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/js/bootstrap-select.min.js"
 link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.14/dist/css/bootstrap-select.min.css"
 
-- if (current_user.cm? || current_user.proxy_cm?) && @customer.user_id == current_user.id
+- if (current_user.cm? && @customer.user_id == current_user.id) || (current_user.proxy_cm? && @customer.id == current_user.customer_id)
     h1#customer_id Project Reports for Customer 
     = form_tag "/customers/#{params[:id]}/project_reports", method: :get
       table.table
