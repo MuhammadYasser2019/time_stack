@@ -1,4 +1,4 @@
-<% if current_user.cm? && @customer.user_id == current_user.id %>
+<% if (current_user.cm? || current_user.proxy_cm? )&& @customer.user_id == current_user.id %>
 	<%#= REPORTS FOR CUSTOMER "@customer_name" %>
 	<div class = "white-background" >
 		<div class = "project_vacation_graph" >
