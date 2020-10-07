@@ -1,7 +1,7 @@
 
 == render 'form'
 div[style="width: 90%; margin-left: 7%;"]
-  - if !user_have_adhoc_permission(current_user)
+  - if @project.user_id == current_user.id || !user_have_adhoc_permission(current_user)
     span class="badge"
       = link_to 'Report', "/show_project_reports?id=#{@project.id}", :method => :get,class: "center orange-button large-3 cell", style: "margin: 5px;"
     span class="badge"

@@ -1,4 +1,4 @@
-- if (current_user.cm? && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) ||current_user.id == @user.id
+- if ((current_user.cm? || current_user.proxy_cm?) && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) || (current_user.pm? && @project.present? && @project.user_id == current_user.id) || current_user.id == @user.id
   div.report
 
     h1 Reports for User #{consultant_name(@user.first_name, @user.last_name, @user.email)}
@@ -22,13 +22,19 @@
 
         tbody
           tr
+            - if @project.present?
+              = hidden_field_tag 'selected_project_id', @project.id
             td = select_tag :project, options_from_collection_for_select(@user_projects, "id", "name", params[:project]), :include_blank => true
             = hidden_field_tag 'hidden_print_report', false
             td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date], {required: "required",class: "datepicker"}
             /= hidden_field_tag 'id', @user.id
             td = text_field_tag 'proj_report_end_date', params[:proj_report_end_date], {required: "required",class: "datepicker"}
             td = button_tag "Show User Report", class: "orange-button"
-            td = link_to "Show weekly report", "/show_user_weekly_reports/#{params[:id]}?&proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", class: "orange-button"
+            -if  @project.present?
+              td = link_to "Show weekly report", "/show_user_weekly_reports/#{params[:id]}?selected_project_id=#{@project.id}&proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", class: "orange-button"
+            -else
+              td = link_to "Show weekly report", "/show_user_weekly_reports/#{params[:id]}?proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", class: "orange-button"
+
     .grid-y
       a(href="#{@url}") Convert to Excel Document 
     table border="1"

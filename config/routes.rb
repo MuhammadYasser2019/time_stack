@@ -155,6 +155,7 @@ Rails.application.routes.draw do
   get 'edit_customer_user/:user_id' => "customers#edit_customer_user"
   get '/update_user_employment' => "customers#update_user_employment"
   get 'vacation_request' => "customers#vacation_request"
+  post 'vacation_request' => "customers#vacation_request"
   get 'customers/approve_vacation/:vr_id/:row_id' => 'customers#approve_vacation'
   get 'customers/reject_vacation/:vr_id/:row_id' => 'customers#reject_vacation'
   get 'customers/approve_cancel_request/:vr_id/:row_id' => 'customers#approve_cancel_request'
