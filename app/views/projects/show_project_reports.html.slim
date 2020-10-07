@@ -1,4 +1,4 @@
-- if ((current_user.cm? || current_user.proxy_cm? )&& current_user.customer_id == @p.customer_id)|| (current_user.pm? && @p.user_id == current_user.id)
+- if (current_user.cm? && current_user.customer_id == @p.customer_id) || (current_user.proxy_cm? && current_user.customer_id == @p.customer_id) || (current_user.pm? && @p.user_id == current_user.id)
   = hidden_field_tag :customer_id, "#{Project.find(@project_id).customer.name}"
   = hidden_field_tag :project_name, "#{Project.find(@project_id).name}"
   h1 Reports for Project #{Project.find(@project_id).name}
