@@ -1,4 +1,4 @@
-- if current_user.cm? && @customer.user_id == current_user.id
+- if (current_user.cm? || current_user.proxy_cm? ) && @customer.user_id == current_user.id
   = hidden_field_tag :customer_id, "#{Customer.find(@customer_id).name}"
   h1#customer_id{class = "#{Customer.find(@customer_id).name}"} Reports for Customer 
   = form_tag "/analytics/#{@customer_id}", method: :post
