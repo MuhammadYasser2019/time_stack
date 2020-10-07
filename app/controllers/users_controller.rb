@@ -286,6 +286,7 @@ class UsersController < ApplicationController
     @users = User.all
     @user_projects = @user.projects
     @current_user_id = current_user.id
+    @project = Project.find_by_id params[:selected_project_id]
     time_period = params[:proj_report_start_date]..params[:proj_report_end_date]
     if !params[:project].blank?
       logger.debug "getting here?"
@@ -398,6 +399,7 @@ end
       else
         @user = User.find(params[:id])
       end
+
       if params["proj_report_end_date"].present?
         params[:month] = params["proj_report_end_date"].to_date.month
       end
@@ -424,6 +426,7 @@ end
     end 
     user_id = @user.id
     @users = User.all
+    @project = Project.find_by_id params[:selected_project_id]
     user_project = @user.projects
     @user_projects = user_project
 

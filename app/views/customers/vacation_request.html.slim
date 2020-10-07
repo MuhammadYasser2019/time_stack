@@ -3,7 +3,7 @@ div.report
     h3
   div.vacation_request
     h1 Reports for Users #{consultant_name(@user.first_name, @user.last_name, @user.email)}
-    = form_tag "/vacation_request", method: :get, id: 'vacation_request_form'
+    = form_tag "/vacation_request", method: :post, id: 'vacation_request_form'
     table
       thead
         tr
@@ -18,9 +18,9 @@ div.report
         tr
           = hidden_field_tag 'hidden_print_report', false
           td = select_tag "vacation_type_id", options_from_collection_for_select(@vacation_types, "id", "vacation_title"), include_blank: true, required: 'required'
-          td = text_field_tag 'vacation_start_date', params[:vacation_start_date], {required: "required",:placeholder =>  "yyyy/mm/dd", class: " datepicker vc_start"}
+          td = text_field_tag 'vacation_start_date', params[:vacation_start_date], {required: "required",:placeholder =>  "yyyy/mm/dd", class: " datepicker vc_start", autocomplete: 'off'}
           /= hidden_field_tag 'id', @user.id
-          td = text_field_tag 'vacation_end_date', params[:vacation_end_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class: "datepicker vc_end"}
+          td = text_field_tag 'vacation_end_date', params[:vacation_end_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class: "datepicker vc_end", autocomplete: 'off'}
           td = text_area_tag "vacation_comment",nil, {required: "required"}
           td = button_tag "Request Vacation", class: "button primary orange-button vacation_request_submit"
   div class = "vacation_resend_msg"
