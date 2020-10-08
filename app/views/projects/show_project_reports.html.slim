@@ -1,4 +1,4 @@
-- if (current_user.cm? && current_user.customer_id == @p.customer_id)|| (current_user.pm? && current_user.projects.collect(&:id).include?(@p.id))
+- if (current_user.cm? && current_user.customer_id == @p.customer_id) || (current_user.proxy_cm? && current_user.customer_id == @p.customer_id) || (current_user.pm? && @p.user_id == current_user.id)
   = hidden_field_tag :customer_id, "#{Project.find(@project_id).customer.name}"
   = hidden_field_tag :project_name, "#{Project.find(@project_id).name}"
   h1 Reports for Project #{Project.find(@project_id).name}
@@ -34,7 +34,7 @@
     tbody
       - @consultant_hash.keys.each do |c|
         tr
-          td = link_to "#{consultant_name(User.find(c).first_name, User.find(c).last_name, User.find(c).email)}","/show_user_weekly_reports/#{c}?&proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", type: "button", target: :_blank
+          td = link_to "#{consultant_name(User.find(c).first_name, User.find(c).last_name, User.find(c).email)}","/show_user_weekly_reports/#{c}?selected_project_id=#{@project_id}&proj_report_start_date=#{params[:proj_report_start_date]}&proj_report_end_date=#{params[:proj_report_end_date]}", type: "button", target: :_blank
           - @dates_array.each do |d|
             - if !@consultant_hash[c][:daily_hash][d].nil?
               td = @consultant_hash[c][:daily_hash][d][:hours]

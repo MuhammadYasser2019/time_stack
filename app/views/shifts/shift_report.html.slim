@@ -1,4 +1,4 @@
-- if (current_user.cm? && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) || (@project_shift && @project_shift.shift_supervisor_id == current_user.id)
+- if (current_user.cm? && current_user.customer_id == @user.customer_id) || (current_user.proxy_cm? && current_user.customer_id == @user.customer_id)|| (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) || (@project_shift && @project_shift.shift_supervisor_id == current_user.id)
 
   h1 Shift Report for #{shift_name_and_hours(@shift.name, @shift.start_time, @shift.end_time)}
   = form_tag "/shift_report/#{params[:id]}", method: :get
