@@ -230,10 +230,10 @@ div.tab-content.white-background
   div class="tab-pane fade" role="tabpanel" aria-labelledby="configuration-tab" id="configuration"
 			 div(id="dynamic_add_configuration")
 			 	== render partial: 'add_configuration'
-			 	
+ 			 	
   - if !current_user.default_project? && current_user.parent_user_id.blank?
   	== render partial: 'users/default_projects'
-
+==render partial: 'announcements/new_announcement'
 div id = "add_previous_week"
 
 div id= "edit_customer_form"

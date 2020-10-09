@@ -59,6 +59,7 @@ class UsersController < ApplicationController
     @all_report_logos = ReportLogo.all
     @users_with_logo= User.where("parent_user_id IS ? && report_logo IS NOT ? ", nil, nil)
     @features = Feature.all  
+    @announcements = Announcement.all
 
   end
 
@@ -698,6 +699,10 @@ end
         format.html { redirect_to "/", notice: 'Defaul project set' }
     end
   end
+
+  def get_announcement
+        @announcements_data = Announcement.all
+    end
 
   def assign_report_logo_to_user
     logger.debug("the PARAMETERS for assigning RL: #{params.inspect}")

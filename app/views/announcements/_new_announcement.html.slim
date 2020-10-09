@@ -1,0 +1,26 @@
+div(id="newAnnouncement" class="modal" aria-hidden="true" role="dialog" data-reveal data-close-on-click="false" data-close-on-esc="false")
+	div class="modal-dialog" role="document"
+	  div.modal-content style="width: 500px !important;"
+	    div.modal-header
+	      h5 class="modal-title" Latest Announcement
+	      button.close type="button" aria-label="Close" data-dismiss="modal"  
+	          span aria-hidden="true"  &times;
+	    div.modal-body
+				table
+					thead
+						tr 
+							th Announcement
+							th Start Date
+							th End Date
+					tbody
+					- @announcements.each do |announcement|
+						tr
+							td = announcement.announcement_text.html_safe
+							td = announcement.start_date
+							td = announcement.end_date
+					end
+
+coffee:
+	$(document).ready ->
+		$('#newAnnouncement').modal('show');
+	
