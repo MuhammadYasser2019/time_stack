@@ -18,7 +18,7 @@ link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.1
 
           tbody
             tr
-              td = select_tag('project_id', options_for_select(@projects.collect{ |p| [p.name, p.id]}, params[:project_id]), include_blank: true , multiple: true, id: 'project-select', class: 'form-control selectpicker show-menu-arrow', 'data-live-search': 'true')
+              td = select_tag('project_id', options_for_select(@projects.collect{ |p| [p.name, p.id]}, params[:project_id]) , multiple: true, id: 'project-select', class: 'form-control selectpicker show-menu-arrow', 'data-live-search': 'true')
               td = select_tag('shift', options_for_select(@shifts.collect{ |p| [p.name, p.id]}, params[:shift]), include_blank: true, class: "form-control")
               td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date].present? ? params[:proj_report_start_date] : Date.today.beginning_of_week, {required: "required", style: 'margin: 0;', class: "datepicker form-control"}
               
@@ -58,7 +58,7 @@ link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.1
                                 = ", "
                                 = link_to "#{users}", 'javascript:void(0)', class: "users-on-project", id: "project_#{project.id}"
                                 = ", "
-                                = pm.name
+                                = link_to "#{pm.name}", 'javascript:void(0)', class: "project_for_pm", id: "pm_#{pm.id}"
     				    td = shift_name.shift.name
     				    td = task.description
                         - if time[0].present?
@@ -78,6 +78,8 @@ link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-select@1.13.1
     div id = "hours_submitted"
 
     div id = "users_on_project"
+    
+    div id = "show_pm_projects"
 -else
     h1 You are not allowed to access this page.
 

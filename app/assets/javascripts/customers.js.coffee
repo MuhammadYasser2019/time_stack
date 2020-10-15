@@ -214,6 +214,16 @@ jQuery ($) ->
       type: 'GET'
       data:  {project_id: project_id}
   )
+
+  $(document).on("click", ".project_for_pm", ->
+    user_id = $(this).attr("id").split("_")[1];
+    
+    console.log("THE USER ID IS: " + user_id)
+    $.ajax
+      url: '/show_pm_projects',
+      type: 'GET'
+      data:  {user_id: user_id}
+  )
   
   $(document).on("click", ".open_previous_week", ->
     $(this).attr("id").split("_")
