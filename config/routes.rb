@@ -191,6 +191,7 @@ Rails.application.routes.draw do
   get "login_user/:id" => "users#login_user"
 
   get 'user_profile' => "users#user_profile"
+  get 'employee_profile' => "customers#employee_profile", as: :employee_profile
   get 'user_notification' => "users#user_notification", as: :user_notification
   get 'get_notification' => "users#get_notification"
   # Example of named route that can be invoked with purchase_url(id: product.id)
