@@ -28,3 +28,4 @@ div class="modal fade" id="editcustomer" tabindex="-1" role="dialog" aria-hidden
 						td = select_tag :employment_type, options_from_collection_for_select(@employment_types, :id, :name, @user.employment_type),class: "form-control"
 						td = check_box_tag :is_active, true, @user.is_active?
 						td = submit_tag "Submit"
+						td = link_to "View Profile", employee_profile_path(user_id: @user.id), class: "orange-button small-2 cell"

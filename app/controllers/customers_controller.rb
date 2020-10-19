@@ -324,6 +324,119 @@ class CustomersController < ApplicationController
     end
   end
 
+  def employee_profile
+    
+    @user = User.find(params[:user_id])
+    @default_project = @user.default_project
+    @default_task = @user.default_task
+    @project_tasks = Task.where(project_id: @default_project)
+    logger.debug("the project tasks are: #{@project_tasks.inspect}")
+    @customer_id = @user.customer_id
+    @vacation_types = VacationType.where("customer_id=? and paid=?", @customer_id, true)         
+    
+    s_year = Date.today.strftime('%Y').to_i
+    start_date = s_year.to_s + "-01-01"
+
+    @sss = start_date
+    end_date = Date.today
+    @eee = end_date
+       
+    @customer_types = @vacation_types.distinct{|x| x.id} 
+    customer = Customer.find(@customer_id)
+    shift = customer.shifts.where(name: 'Regular', default: true).first
+    full_work_day = shift ? shift.regular_hours : 8
+    logger.debug("full work day #{full_work_day}")
+
+    @user_hash = {}           
+    vt_hash = {}
+    @hours_array = []
+    @customer_types.each do |ct|
+      ###Shared Logic
+      request_year = (end_date.to_date.strftime('%Y').to_f) - (start_date.to_date.strftime('%Y').to_f)
+      request_months = (end_date.to_date.year * 12 + end_date.to_date.month) - (start_date.to_date.year * 12 + start_date.to_date.month)
+      months_to_date = end_date.to_date.strftime('%m').to_f
+          ###
+      days_to_hours = ct.vacation_bank.to_f * full_work_day.to_f
+      hours_per_month = (days_to_hours/12).to_f
+
+      logger.debug("request_months#{request_months} x hours_per_month#{hours_per_month} ")
+      logger.debug(" What is ct #{ct.inspect}")
+
+      ###Calc the hours Avaliable in that time frame
+      logger.debug("Checking the vacation bank #{ct.vacation_bank}")
+      if ct.vacation_bank?
+        if ct.accrual == false  && ct.rollover == false 
+          logger.debug(" Non Accural and No Rollover")
+          hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
+          logger.debug("hours_avaliable is #{hours_avaliable}")
+
+        elsif ct.accrual == false && ct.rollover == true
+          logger.debug(" Non Accural and Rollover")
+          year_hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
+          request_year = request_year + 1
+          hours_avaliable = year_hours_avaliable.to_f * request_year
+          logger.debug("hours_avaliable is #{hours_avaliable}")
+
+        elsif ct.accrual == true && ct.rollover == false 
+          logger.debug("Accural and No Rollover")
+          hours_avaliable = (hours_per_month.to_f * months_to_date.to_f).to_f
+          logger.debug("hours_avaliable is #{hours_avaliable}")
+
+        elsif ct.accrual == true && ct.rollover == true
+          logger.debug("Accural and Rollover")
+          hours_avaliable = (hours_per_month * request_months).to_f
+          if hours_avaliable == 0
+            hours_avaliable = hours_per_month.to_f
+          end 
+          logger.debug("hours_avaliable is #{hours_avaliable}")
+        else 
+          logger.debug("Accural and or rolloer is nil ")
+          hours_avaliable = 0
+        end
+        @hours_array.push(hours_avaliable.round(2))
+      else
+        @hours_array.push("NA")
+      end 
+
+      @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", @user, ct)
+      d_range = (start_date.to_date .. end_date.to_date)
+      @uvr=[]
+      logger.debug("what is uvr #{@uvr}")
+      @uvrF.each do |ww|
+        in_range = d_range.cover?(ww.vacation_start_date)
+        if in_range == true
+            @uvr.push(ww)
+        end 
+      end 
+      #######
+      currentuser = @user.email 
+      if @uvr.length < 1 
+          vt_hash[ct.id] = hours_avaliable
+      else 
+        total_hours_used = @uvr.pluck(:hours_used) 
+
+        sum_of_hours = []
+        total_hours_used.each do |x|
+          x = x.to_f
+          sum_of_hours.push(x)
+        end
+        sum_of_hours = sum_of_hours.sum 
+      end
+
+      #######
+      if sum_of_hours == nil
+        sum_of_hours = hours_avaliable.to_f
+      else 
+        sum_of_hours = hours_avaliable.to_f - sum_of_hours.to_f
+      end
+      vt_hash[ct.id] = sum_of_hours.round(2)
+      sum_of_hours =[]
+      logger.debug("What is the VT_HASH #{vt_hash}")
+      @user_hash[currentuser] = vt_hash
+     ##logger.debug("hash... #{@user_hash}")
+    end 
+  end
+
   def cancel_vacation_request
     #change the value for this vacation_id
     vr = VacationRequest.find(params[:vacation_id])
