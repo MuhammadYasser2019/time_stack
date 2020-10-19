@@ -307,7 +307,7 @@ class AnalyticsController < ApplicationController
 
                         ###Calc the hours Avaliable in that time frame
                         logger.debug("Checking the vacation bank #{ct.vacation_bank}")
-                        if ct.vacation_bank? && user.vacation_type == ct.vacation_title
+                        if ct.vacation_bank? && user.vacation_type.present? && user.vacation_type == ct.vacation_title
                             if ct.accrual == false  && ct.rollover == false 
                                 logger.debug(" Non Accural and No Rollover")
                                 hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f

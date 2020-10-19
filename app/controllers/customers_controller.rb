@@ -657,6 +657,11 @@ class CustomersController < ApplicationController
     @project = Project.find params[:project_id]
   end  
 
+  def show_pm_projects
+    @user = User.find params[:user_id]
+    @projects = Project.where(user_id: @user.id)
+  end  
+
   def resend_vacation_request
     logger.debug("RESEND VACATION REQUEST PARAMS: #{params.inspect}")
     user = current_user
