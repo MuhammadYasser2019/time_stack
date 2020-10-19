@@ -36,7 +36,7 @@ div.report
 
 	h5 style="font-size:16px" Project Details
 	table class ="table" style="width:70%; padding:0px 0px 0px 30px;"
-		- @user.projects.each_with_index do |project,index|
+		- @user.projects.uniq.each_with_index do |project,index|
 				
 			tr
         			- if index%2==0
