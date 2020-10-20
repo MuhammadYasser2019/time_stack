@@ -220,21 +220,24 @@
         </tr>
     </thead></table>
 	</div>
-	<div class="tab-pane white-background" id="announcementPanel">
+	<div class="tab-pane white-background" id="announcementPanel" align="center">
 		<h1>Announcements</h1>
 		<button type="button" class="btn btn-primary orange-button" data-toggle="modal" data-target="#announcemntModal">Add New Announcement</button>
-		<table id="display_data" class="table table-bordered table-responsive table-hover stripe">
+		<table id="display_data" class="table table-bordered table-responsive table-hover stripe" style ="width:50%;" align="center">
 		 <thead>
 	        <tr>
-	            <th>Announcement</th>
-	            <th>Start Date</th>
+	            <th>Announcement Titel</th>
+	            <th>Active</th>
+	            <th>Action</th>
 	        </tr>
     	</thead>
     	<tbody>
     		<% @announcements.each do |announcement| %>
         	<tr> 
 	    		<td><%= announcement.announcement_type %></td>
-	    		<td><%= announcement.start_date %></td>
+	    		<td><%= announcement.active ? "YES":"NO" %></td>
+	    		<td><%= link_to "Edit" , "javascript:void()",:id=>"#{announcement.id}" ,class: "announce_edit" %>
+	    		<%= link_to "Destroy" ,:id=>"#{announcement.id}",class: "announce_destroy" %></td>
         	</tr>
          <% end %>
    		</tbody>

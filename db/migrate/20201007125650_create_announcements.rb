@@ -6,6 +6,7 @@ class CreateAnnouncements < ActiveRecord::Migration[5.2]
       t.date    :start_date
       t.date    :end_date
       t.boolean :active
+      t.boolean :seen
       t.timestamps null: false
     end
   end

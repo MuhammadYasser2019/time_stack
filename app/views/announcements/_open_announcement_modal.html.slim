@@ -13,15 +13,18 @@ div class="modal fade" id="announcemntModal" tabindex="-1" role="dialog" aria-hi
 			table			
 				tr
 					td	Title
-					td = text_field_tag :announcement_type, nil, placeholder: "Announcement Type", required: "required", style:'width:850px', class:'form-control' 
+					td = text_field_tag :announcement_type, nil, placeholder: "Announcement Type", required: "required", style:'width:850px', class:'form-control'				
 				tr
-					td Start Date
-					td = text_field_tag 'start_date', params[:start_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class:"form-control datepicker"}
-				tr
-					td End Date
-					td = text_field_tag 'end_date', params[:end_date], {required: "required", :placeholder =>  "yyyy/mm/dd", class:"form-control datepicker"}
+					td Active
+					td style="align:left"
+						.field
+							=radio_button_tag :active_yes ,"active", :checked
+	  						=label_tag :active_yes_lab, "Yes"
+	  					   	=radio_button_tag :active_yes ,"No"
+	                       	=label_tag :active_no_lab, "No"
 				tr
 					td	Content
+					
 					td = cktext_area :text_content, :content, cols: 38
 				tr
 					td = submit_tag "Submit"

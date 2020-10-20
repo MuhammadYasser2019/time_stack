@@ -1,25 +1,26 @@
-div(id="newAnnouncement" class="modal" aria-hidden="true" role="dialog" data-reveal data-close-on-click="false" data-close-on-esc="false")
+
+
+div(id="newAnnouncement" class="modal" aria-hidden="true" role="dialog" data-reveal data-close-on-esc="false")
 	div class="modal-dialog" role="document"
-	  div.modal-content style="width: 500px !important;"
+	  div.modal-content style="width: 800px !important;"
 	    div.modal-header
-	      h5 class="modal-title" Latest Announcement
-	      button.close type="button" aria-label="Close" data-dismiss="modal"  
+	      h5 class="modal-title" Latest Announcement	      
+	      button.close type="button" aria8-label="Close" data-dismiss="modal"  id= "#{@announcement.id}" class="announce_popup"
 	          span aria-hidden="true"  &times;
 	    div.modal-body
 				table
-					thead
-						tr 
-							th Announcement
-							th Start Date
-							th End Date
 					tbody
-					- @announcements.each do |announcement|
+						tr 
+							td
+								h5 class="modal-title" = @announcement.announcement_type
 						tr
-							td = announcement.announcement_text.html_safe
-							td = announcement.start_date
-							td = announcement.end_date
-					end
+							td 
+								div (style= "width:720px;height: 300px;overflow:scroll;") = @announcement.announcement_text.html_safe 
+						tr
+							td = submit_tag "Ok" ,id: "#{@announcement.id}" ,class: "announce_popup"
+					
 
+							
 coffee:
 	$(document).ready ->
 		$('#newAnnouncement').modal('show');

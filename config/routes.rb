@@ -143,6 +143,8 @@ Rails.application.routes.draw do
 
   get '/set_default_project' => 'users#set_default_project'
   get '/get_announcement' => 'users#get_announcement'
+  get '/edit_announcement' => 'announcements#edit_announcement'
+  post '/update_announcement' => 'announcements#update_announcement'
   match 'accept_terms_and_condition' => 'users#accept_terms_and_condition', via: [:get, :post]
   
   get 'add_user_to_project' => "projects#add_user_to_project"
