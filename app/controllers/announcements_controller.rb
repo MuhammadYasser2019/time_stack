@@ -16,20 +16,25 @@ class AnnouncementsController < ApplicationController
         end
 
   end
-  debugger
+  
   def edit_announcement        
         @announcement = Announcement.find_by_id(params[:announcement_id])
   end
+  
+   def destroy    
+        @announcement = Announcement.find_by_id(params[:id])
+        if @announcement.present?
+            @announcement.destroy
+        end
+      redirect_to admin_path
+
+    end
 
   def create_announcement    
     @announcement = Announcement.new
     @announcement.announcement_type = params[:announcement_type]
-    @announcement.announcement_text = params[:text_content][:content]
-    if(params[:active_yes]=="active")
-      @announcement.active =true
-    else
-      @announcement.active = false
-    end
+    @announcement.announcement_text = params[:text_content][:content]    
+    @announcement.active =params[:is_active]    
     #@announcement.end_date = params[:end_date]
     #@announcement.active = true  
     @announcement.seen = false

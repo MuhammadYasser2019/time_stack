@@ -237,14 +237,17 @@
 	    		<td><%= announcement.announcement_type %></td>
 	    		<td><%= announcement.active ? "YES":"NO" %></td>
 	    		<td><%= link_to "Edit" , "javascript:void()",:id=>"#{announcement.id}" ,class: "announce_edit" %>
-	    		<%= link_to "Destroy" ,:id=>"#{announcement.id}",class: "announce_destroy" %></td>
+	    		<%= link_to "Destroy" ,announcement, method: :delete, data: { confirm: 'Are you sure?' } %>  			
+	    		</td>
         	</tr>
          <% end %>
    		</tbody>
 		</table> 
 	</div>
 </div>
+<div id="announcements_reload">
 <%= render 'announcements/open_announcement_modal'%>
+</div>
 <script type="text/javascript">
  $('#announcemntModal').on('hidden.bs.modal', function () { 
     document.location.reload();

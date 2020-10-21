@@ -20,6 +20,7 @@ Rails.application.routes.draw do
   resources :vacation_types
   resources :shifts
   resources :project_shifts
+  resources :announcements
   #resources :analytics
   devise_for :users, :path => "account", :controllers => { passwords: 'passwords', registrations: 'registrations', invitations: 'invitations', :omniauth_callbacks => "users/omniauth_callbacks", :sessions => 'sessions' }
   # devise_for :users, :controllers => { :omniauth_callbacks => "users/omniauth_callbacks" }
@@ -145,6 +146,7 @@ Rails.application.routes.draw do
   get '/get_announcement' => 'users#get_announcement'
   get '/edit_announcement' => 'announcements#edit_announcement'
   post '/update_announcement' => 'announcements#update_announcement'
+
   match 'accept_terms_and_condition' => 'users#accept_terms_and_condition', via: [:get, :post]
   
   get 'add_user_to_project' => "projects#add_user_to_project"
