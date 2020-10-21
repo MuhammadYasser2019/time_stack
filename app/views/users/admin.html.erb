@@ -4,6 +4,7 @@
   <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" role="tab" data-toggle="tab" href="#panel3">Report Logo</a></li>
   <li class="nav-item"><a class="nav-link" role="tab" data-toggle="tab" href="#panel4">Manage Content</a></li>
    <li class="nav-item"><a id="versionPanelMenu" class="nav-link" role="tab" data-toggle="tab" href="#versionPanel">Application Versions</a></li>
+   <li class="nav-item"><a id="announcementPanelMenu" class="nav-link" role="tab" data-toggle="tab" href="#announcementPanel">Announcement</a></li>
  </ul>
 <div class="tab-content">
 	<div class="tab-pane fade show active" id="user_permissions">
@@ -190,7 +191,7 @@
 	<div class="tab-pane white-background" id="panel4">
 		<h1>Manage Login Page Content</h1>
 		<span class="success_message" style="color: green;"></span>
-		<%= form_tag update_front_page_content_path, id: "front_page_content", method: :post, remote: true %>
+		<%= form_tag update_front_page_content_path, id: "front_page_content", method: :post, remote: true do %>
 			<table>			
 				<tr>
 					<th>Feature Type</th>
@@ -202,6 +203,7 @@
 				</tr>
 			</table>
 		<div class="actions"><%= submit_tag 'Update Content' %></div>
+		<% end %>
 	</div>
 
 	<div class="tab-pane white-background" id="versionPanel">
@@ -218,4 +220,47 @@
         </tr>
     </thead></table>
 	</div>
+	<div class="tab-pane white-background" id="announcementPanel" align="center">
+		<h1>Announcements</h1>
+		<button type="button" class="btn btn-primary orange-button" data-toggle="modal" data-target="#announcemntModal">Add New Announcement</button>
+		<table id="display_data" class="table table-bordered table-responsive table-hover stripe" style ="width:50%;" align="center">
+		 <thead>
+	        <tr>
+	            <th>Announcement Titel</th>
+	            <th>Active</th>
+	            <th>Action</th>
+	        </tr>
+    	</thead>
+    	<tbody>
+    		<% @announcements.each do |announcement| %>
+        	<tr> 
+	    		<td><%= announcement.announcement_type %></td>
+	    		<td><%= announcement.active ? "YES":"NO" %></td>
+	    		<td><%= link_to "Edit" , "javascript:void()",:id=>"#{announcement.id}" ,class: "announce_edit" %>
+	    		<%= link_to "Destroy" ,announcement, method: :delete, data: { confirm: 'Are you sure?' } %>  			
+	    		</td>
+        	</tr>
+         <% end %>
+   		</tbody>
+		</table> 
+	</div>
 </div>
+<div id="announcements_reload">
+<%= render 'announcements/open_announcement_modal'%>
+</div>
+<script type="text/javascript">
+ $('#announcemntModal').on('hidden.bs.modal', function () { 
+    document.location.reload();
+});
+ $('#admin-tab a').click(function(e) {
+  e.preventDefault();
+  $(this).tab('show');
+});
+
+$("ul.nav-tabs > li > a").on("shown.bs.tab", function(e) {
+  var id = $(e.target).attr("href").substr(1);
+  window.location.hash = id;
+});
+var hash = window.location.hash;
+$('#admin-tab a[href="' + hash + '"]').tab('show');
+</script>

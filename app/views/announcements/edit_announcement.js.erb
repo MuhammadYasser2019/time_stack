@@ -1,0 +1,4 @@
+$('#announcements_reload').html("<%= j render partial: 'announcements/open_announcement_modal' %>");
+$('#announcemntModal').modal("show");
+CKEDITOR.instances.text_content_content.setData('<%=@announcement.announcement_text %>');
+        
