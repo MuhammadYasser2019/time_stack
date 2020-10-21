@@ -223,10 +223,10 @@
 	<div class="tab-pane white-background" id="announcementPanel" align="center">
 		<h1>Announcements</h1>
 		<button type="button" class="btn btn-primary orange-button" data-toggle="modal" data-target="#announcemntModal">Add New Announcement</button>
-		<table id="display_data" class="table table-bordered table-responsive table-hover stripe" style ="width:50%;" align="center">
+		<table id="display_data" class="table table-bordered table-hover stripe" style ="width:50%;">
 		 <thead>
 	        <tr>
-	            <th>Announcement Titel</th>
+	            <th>Announcement Title</th>
 	            <th>Active</th>
 	            <th>Action</th>
 	        </tr>
@@ -236,7 +236,7 @@
         	<tr> 
 	    		<td><%= announcement.announcement_type %></td>
 	    		<td><%= announcement.active ? "YES":"NO" %></td>
-	    		<td><%= link_to "Edit" , "javascript:void()",:id=>"#{announcement.id}" ,class: "announce_edit" %>
+	    		<td><%= link_to "Edit", "javascript:void(0);", id: "#{announcement.id}", class: "announce_edit" %>|
 	    		<%= link_to "Destroy" ,announcement, method: :delete, data: { confirm: 'Are you sure?' } %>  			
 	    		</td>
         	</tr>

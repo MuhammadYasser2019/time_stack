@@ -97,15 +97,14 @@ jQuery ($) ->
     announcement_id = $(this).attr('id')
     console.log("THE USER ID IS: " + announcement_id)
     $.post '/update_announcement',
-      announcement_id: announcement_id
+      id: announcement_id
     return
   )
 
-  $(document).on("click", ".announce_edit", ->    
+  $(document).on("click", ".announce_edit", ->
     announcement_id = $(this).attr('id')
     console.log("THE USER ID IS: " + announcement_id)
-    $.get '/edit_announcement',
-      announcement_id: announcement_id
+    $.get '/announcements/'+announcement_id+'/edit'
     return
   )
 

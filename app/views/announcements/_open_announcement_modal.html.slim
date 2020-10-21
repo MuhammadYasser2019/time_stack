@@ -9,25 +9,21 @@ div class="modal fade" id="announcemntModal" tabindex="-1" role="dialog" aria-hi
     
      div class="modal-body"
 		span class="announcement_message" style="color: green;"
-		= form_tag create_announcement_path, id: "announcement_page_content", method: :post, remote: true
+		= form_tag announcements_path, id: "announcement_page_content", method: :post, remote: true
+			-if @announcement.present?
+				= hidden_field_tag 'announcement_id', @announcement.id
 			table			
 				tr
 					td	Title
 					td = text_field_tag :announcement_type, (@announcement.present? && @announcement.announcement_type.present?) ? @announcement.announcement_type : "", placeholder: "Announcement Type", required: "required", style:'width:850px', class:'form-control'				
 				tr
 					td Active					
-					td = check_box_tag :is_active, true, (@announcement.present?)? @announcement.active? : true
+					td = check_box_tag :active, true, (@announcement.present?)? @announcement.active? : true
 				tr
-					td	content					
+					td	Content					
 					td = cktext_area :text_content, :content, cols: 38
 				tr
 					td = submit_tag "Submit"
-coffee:
-	$('.datepicker').datepicker({	
-    	autoclose: true,
-    	format: "yyyy-mm-dd"
 
-    })
-
-
+	
 					

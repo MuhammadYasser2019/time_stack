@@ -144,8 +144,6 @@ Rails.application.routes.draw do
   post '/show_user_weekly_reports/:id' => 'users#show_user_weekly_reports'
 
   get '/set_default_project' => 'users#set_default_project'
-  get '/get_announcement' => 'users#get_announcement'
-  get '/edit_announcement' => 'announcements#edit_announcement'
   post '/update_announcement' => 'announcements#update_announcement'
 
   match 'accept_terms_and_condition' => 'users#accept_terms_and_condition', via: [:get, :post]
@@ -155,7 +153,6 @@ Rails.application.routes.draw do
   match 'user_account', :to => "users#user_account",  via: [:get, :post]
   match 'admin', :to => "users#admin", via: [:get, :post]
   post 'update_front_page_content' => "features#update_front_page_content"
-  post 'create_announcement'  => "announcements#create_announcement"
   get 'display_data' => "users#display_data"
   # Example of regular route:
   #   get 'products/:id' => 'catalog#view'

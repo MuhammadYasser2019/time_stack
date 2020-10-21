@@ -234,7 +234,7 @@ div.tab-content.white-background
   - if !current_user.default_project? && current_user.parent_user_id.blank?
   	== render partial: 'users/default_projects'
 
-  - if @announcement.present?
+  - if @announcement.present? && !current_user.user_announcements.where(announcement_id: @announcement.id).present?
 	==render partial: 'announcements/new_announcement'
 div id = "add_previous_week"
 

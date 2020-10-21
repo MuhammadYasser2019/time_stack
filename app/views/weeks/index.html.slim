@@ -112,3 +112,5 @@
 		== render partial: 'users/default_projects'
 	- if !@terms_modal_show.present?
 		== render partial: 'users/terms_and_condition'
+	- if @announcement.present? && !current_user.user_announcements.where(announcement_id: @announcement.id).present?
+		==render partial: 'announcements/new_announcement'

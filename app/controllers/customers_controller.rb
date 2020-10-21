@@ -37,8 +37,7 @@ class CustomersController < ApplicationController
       logger.debug("TRYING TO FIND CUSTOMER LOGGGGGOOOOOOOOOO: #{@customer.logo}")
       @current_systems = ExternalConfiguration.where(customer_id: @customer.id)
       @terms_modal_show = current_user.terms_and_condition
-      #@announcements = Announcement.all      
-      @announcement = Announcement.where("active = true and seen = false").last
+      @announcement = Announcement.where("active = true").last
       
     end
   end 
