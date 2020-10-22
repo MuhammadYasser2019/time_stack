@@ -23,7 +23,8 @@
     <% if application_version[:user_application_version].nil? %>
       <span id="curApplicationVersion" class="current-application-version" style="display: none;">Current Version: 2.108</span>
     <% else %>
-      <span id="curApplicationVersion" class="current-application-version" style="display: block;" data-id="<%= application_version[:user_application_version]["id"]%>" data-name="<%=  application_version[:user_application_version]["version_name"] %>" data-description="<%=  application_version[:user_application_version]["description"].html_safe %>">Current Version: <%=  application_version[:user_application_version]["version_name"] %></span>
+      <span id="curApplicationVersion" class="current-application-version" style="display: block;" data-id="<%= application_version[:user_application_version]["id"]%>" data-name="<%=  application_version[:user_application_version]["version_name"] %>" data-description="">Current Version: <%=  application_version[:user_application_version]["version_name"] %></span>
+      <span id="curApplicationVersion_pop" class="current-application-version" style="display: none;"data-description="<%=  application_version[:user_application_version]["description"].html_safe %>"></span>
     <% end %>
   <% end %>
   <!-- <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
