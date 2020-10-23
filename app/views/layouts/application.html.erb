@@ -78,7 +78,7 @@
      localStorage.BaseURL = access_url.value;
     }
     $("#curApplicationVersion").on("click",function(){
-      $().showHtmlDialog($("#curApplicationVersion_pop").data("name"), $("#curApplicationVersion_pop").data("description"));
+      $().showHtmlDialog($(this).data("name"), $(this).data("description"));
     })
   </script>
 </html>
