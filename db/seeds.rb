@@ -85,3 +85,15 @@ end
 #Feature.find_or_initialize_by(id: 9, feature_type: "Company Overview") do |f|
 #  f.save!
 #end
+
+Feature.find_or_initialize_by(id: 10, feature_type: "FAQ for Project Manager") do |f|
+  f.save!
+end
+
+Feature.find_or_initialize_by(id: 11, feature_type: "FAQ for Customer Manager") do |f|
+  f.save!
+end
+
+Feature.find_or_initialize_by(id: 12, feature_type: "FAQ for User") do |f|
+  f.save!
+end

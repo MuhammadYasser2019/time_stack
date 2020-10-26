@@ -22,9 +22,10 @@ class AnnouncementsController < ApplicationController
     @announcement.active =params[:active]    
     @announcement.seen = false
     @announcement.save
-    respond_to do |format|
-      format.js
-    end
+    redirect_to  "/admin#announcementPanel"
+    # respond_to do |format|
+    #   format.js
+    # end
   end
 
    def destroy    

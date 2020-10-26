@@ -1,19 +1,7 @@
 class FeaturesController < ApplicationController
 
-  skip_before_action :authenticate_user! ,except: :faq
+  skip_before_action :authenticate_user!
    
-   def faq
-    if  user_signed_in? && current_user.pm?
-          feature_type = "FAQ for ProjectManager"
-      elsif user_signed_in? && current_user.cm? 
-          feature_type = "FAQ for CustomerManager"
-         else 
-         feature_type = "FAQ for User"
-   end 
-    @faq = Feature.where(feature_type)
-  end
-  
-
   def show
   	@feature = Feature.find params[:id]
   end
