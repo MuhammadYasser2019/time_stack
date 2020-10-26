@@ -47,6 +47,17 @@
       .current-application-version:hover{
         text-decoration:underline;
       }
+       #faqBtn{
+        right: 0px;
+        bottom: 60px;
+      }
+      #cls-btn{
+        top: 0px;
+        right: 10px;
+      }
+      #modal-css {
+        left: -266px;
+      }
     </style>
   </head>
   
@@ -65,7 +76,7 @@
        <%= render "users_application_version/acknowledge" %>
       <% end %>
     <% end %>
-
+    <%= render "users/shared/faq" %>
     <%= render "layouts/questionaire" %>
     <%= yield %> 
     <input type="hidden" id="access_url" value = "<%=@base_url%>"/>

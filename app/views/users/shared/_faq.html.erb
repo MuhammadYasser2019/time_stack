@@ -1,0 +1,41 @@
+<% if user_signed_in? %>
+
+
+  <button class ="tech-btn" id="faqBtn" data-toggle="modal" data-target="#faqModal" ><i class="fa fa-cogs fa-3x"></i></button>
+<%end%>
+<!-- Modal -->
+<div id="faqModal" class="modal fade" role="dialog">
+  <div class="modal-dialog">
+
+    <!-- Modal content-->
+    <div class="modal-content" id="modal-css">
+      <div class="modal-header">
+        <h4 class="modal-title">Frequently Asked Questions</h4>
+      </div>
+      <div class="modal-body">
+        <%= @faq.feature_data.html_safe %>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+
+  </div>
+</div>
+<style type="text/css">
+  .data_toggle{
+    color: black;
+    align: left;
+    font-family: sans-serif;
+
+  }
+</style>
+
+<script type="text/javascript">
+  $('h5').addClass('data_toggle')
+  $('.data_toggle').click(function (argument) {
+    $(this).next('p').toggle();
+    
+  })
+</script>>
+

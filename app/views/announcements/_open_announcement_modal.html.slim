@@ -21,7 +21,7 @@ div class="modal fade" id="announcemntModal" tabindex="-1" role="dialog" aria-hi
 					td = check_box_tag :active, true, (@announcement.present?)? @announcement.active? : true
 				tr
 					td	Content					
-					td = cktext_area :text_content, :content, cols: 38
+					td = cktext_area_tag :text_content, (@announcement.present? && @announcement.announcement_text.present?) ? @announcement.announcement_text.html_safe : "" ,cols:38 
 				tr
 					td = submit_tag "Submit"
 
