@@ -47,17 +47,30 @@
       .current-application-version:hover{
         text-decoration:underline;
       }
+
+      #faqBtn{
+        right: 0px;
+        bottom: 60px;
+      }
+      #cls-btn{
+        top: 0px;
+        right: 10px;
+      }
+      #modal-css {
+        left: -266px;
+      }
     </style>
   </head>
   
   <body>
+
   	<%#= javascript_pack_tag 'application'  %>
     <% if @print_report == "true" %>
       <%= render "layouts/report_header" %>
     <% else %>
       <%= render "layouts/header" %>
     <%end%>
-
+     
     <% if !current_user.nil? && !application_version.nil? %>
    
  
@@ -66,6 +79,8 @@
       <% end %>
     <% end %>
 
+    <%= render "layouts/faq" %>
+    
     <%= render "layouts/questionaire" %>
     <%= yield %> 
     <input type="hidden" id="access_url" value = "<%=@base_url%>"/>

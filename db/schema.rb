@@ -10,7 +10,18 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 2020_06_19_132622) do
+ActiveRecord::Schema.define(version: 2020_10_21_233220) do
+
+  create_table "announcements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.string "announcement_type"
+    t.text "announcement_text"
+    t.date "start_date"
+    t.date "end_date"
+    t.boolean "active"
+    t.boolean "seen"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
 
   create_table "application_versions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "version_name"
@@ -21,7 +32,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "archived_time_entries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "archived_time_entries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "date_of_activity"
     t.float "hours"
     t.string "activity_log"
@@ -42,7 +53,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.integer "vacation_type_id"
   end
 
-  create_table "archived_weeks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "archived_weeks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "created_at", null: false
@@ -61,14 +72,14 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.datetime "reset_date"
   end
 
-  create_table "case_studies", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "case_studies", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "case_study_name"
     t.text "case_study_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "ckeditor_assets", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "ckeditor_assets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "data_file_name", null: false
     t.string "data_content_type"
     t.integer "data_file_size"
@@ -80,7 +91,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.index ["type"], name: "index_ckeditor_assets_on_type"
   end
 
-  create_table "customers", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "customers", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "address"
     t.string "city"
@@ -94,7 +105,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.decimal "regular_hours", precision: 10, default: "8"
   end
 
-  create_table "customers_holidays", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "customers_holidays", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "customer_id"
     t.integer "holiday_id"
     t.index ["customer_id", "holiday_id"], name: "index_customers_holidays_on_customer_id_and_holiday_id"
@@ -113,35 +124,52 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.boolean "billable"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+    t.boolean "exclude_inactive_users"
   end
 
-  create_table "employment_types", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "delayed_jobs", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "priority", default: 0, null: false
+    t.integer "attempts", default: 0, null: false
+    t.text "handler", null: false
+    t.text "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string "locked_by"
+    t.string "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+    t.index ["priority", "run_at"], name: "delayed_jobs_priority"
+  end
+
+  create_table "employment_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "customer_id"
   end
 
-  create_table "employment_types_vacation_types", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "employment_types_vacation_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "employment_type_id"
     t.integer "vacation_type_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "expense_records", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "expense_records", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "expense_type"
     t.text "description"
     t.date "date"
     t.integer "amount"
     t.string "attachment"
     t.integer "project_id"
-    t.integer "week_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+    t.bigint "week_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.index ["week_id"], name: "index_expense_records_on_week_id"
   end
 
-  create_table "external_configurations", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "external_configurations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "customer_id"
     t.string "system_type"
     t.string "url"
@@ -153,14 +181,14 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "features", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=latin1", force: :cascade do |t|
+  create_table "features", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "feature_type"
     t.text "feature_data"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "holiday_exceptions", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "holiday_exceptions", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.integer "project_id"
     t.integer "customer_id"
@@ -169,7 +197,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "holidays", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "holidays", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.boolean "global"
     t.datetime "created_at", null: false
@@ -187,9 +215,9 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.integer "project_id"
   end
 
-  create_table "projects", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "projects", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
-    t.integer "customer_id"
+    t.bigint "customer_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "user_id"
@@ -203,43 +231,53 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.index ["customer_id"], name: "index_projects_on_customer_id"
   end
 
-  create_table "projects_users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "project_id"
-    t.integer "user_id"
-    t.datetime "created_at"
-    t.datetime "updated_at"
+  create_table "projects_users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "project_id"
+    t.bigint "user_id"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.boolean "active"
-    t.integer "project_shift_id"
     t.datetime "sepration_date"
+    t.integer "project_shift_id"
+    t.boolean "current_shift", default: true
     t.index ["project_id"], name: "index_projects_users_on_project_id"
     t.index ["user_id"], name: "index_projects_users_on_user_id"
   end
 
-  create_table "report_logos", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "report_logos", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.string "report_logo"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "roles", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "roles", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "name"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "roles_users", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "role_id", null: false
-    t.index ["user_id", "role_id"], name: "index_roles_users_on_user_id_and_role_id"
-  end
-
-  create_table "shared_employees", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "shared_employees", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.integer "customer_id"
     t.boolean "permanent", default: false
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
+  end
+
+  create_table "shift_change_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "user_id"
+    t.datetime "shift_start_date"
+    t.datetime "shift_end_date"
+    t.integer "shift_id"
+    t.text "comment"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+    t.string "approved_by"
+    t.string "rejected_by"
+    t.string "status"
+    t.integer "project_id"
+    t.string "current_shift_name"
   end
 
   create_table "shifts", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -265,16 +303,16 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.boolean "sun", default: false
   end
 
-  create_table "statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "statuses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "status"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "tasks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "tasks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "code"
     t.string "description"
-    t.integer "project_id"
+    t.bigint "project_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.text "default_comment"
@@ -284,13 +322,13 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.index ["project_id"], name: "index_tasks_on_project_id"
   end
 
-  create_table "time_entries", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "time_entries", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "date_of_activity"
     t.float "hours"
     t.string "activity_log", limit: 500
-    t.integer "task_id"
-    t.integer "week_id"
-    t.integer "user_id"
+    t.bigint "task_id"
+    t.bigint "week_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "project_id"
@@ -310,15 +348,20 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.index ["week_id"], name: "index_time_entries_on_week_id"
   end
 
-  create_table "upload_timesheets", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "upload_timesheets", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "week_id"
     t.string "time_sheet"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
   end
 
-  create_table "user_devices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "user_announcements", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.integer "announcement_id"
     t.integer "user_id"
+  end
+
+  create_table "user_devices", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id"
     t.string "user_token"
     t.string "device_id"
     t.string "platform"
@@ -349,7 +392,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.index ["user_id"], name: "index_user_inventory_and_equipments_on_user_id"
   end
 
-  create_table "user_notifications", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "user_notifications", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.string "notification_type"
     t.text "body"
@@ -358,6 +401,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.integer "week_id"
+    t.boolean "visited", default: false
   end
 
   create_table "user_recommendations", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
@@ -370,13 +414,13 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.index ["user_id"], name: "index_user_recommendations_on_user_id"
   end
 
-  create_table "user_roles", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "user_id", null: false
-    t.integer "role_id", null: false
+  create_table "user_roles", id: false, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "user_id", null: false
+    t.bigint "role_id", null: false
     t.index ["user_id", "role_id"], name: "index_user_roles_on_user_id_and_role_id"
   end
 
-  create_table "user_vacation_tables", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "user_vacation_tables", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "user_id"
     t.integer "vacation_id"
     t.decimal "days_used", precision: 5, scale: 2
@@ -384,7 +428,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.datetime "updated_at", null: false
   end
 
-  create_table "user_week_statuses", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "user_week_statuses", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "status_id"
     t.integer "week_id"
     t.integer "user_id"
@@ -394,7 +438,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.index ["week_id"], name: "index_user_week_statuses_on_week_id"
   end
 
-  create_table "users", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "users", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.string "email", default: "", null: false
     t.string "encrypted_password", default: "", null: false
     t.string "reset_password_token"
@@ -423,8 +467,8 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.datetime "invitation_sent_at"
     t.datetime "invitation_accepted_at"
     t.integer "invitation_limit"
-    t.integer "invited_by_id"
     t.string "invited_by_type"
+    t.bigint "invited_by_id"
     t.integer "invitations_count", default: 0
     t.boolean "google_account"
     t.boolean "proxy"
@@ -446,11 +490,13 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.boolean "terms_and_condition", default: false
     t.boolean "proxy_cm", default: false
     t.datetime "password_changed_at"
+    t.boolean "password_reminder_email_sent"
     t.index ["authentication_token"], name: "index_users_on_authentication_token", unique: true
     t.index ["email"], name: "index_users_on_email", unique: true
     t.index ["invitation_token"], name: "index_users_on_invitation_token", unique: true
     t.index ["invitations_count"], name: "index_users_on_invitations_count"
     t.index ["invited_by_id"], name: "index_users_on_invited_by_id"
+    t.index ["invited_by_type", "invited_by_id"], name: "index_users_on_invited_by_type_and_invited_by_id"
     t.index ["password_changed_at"], name: "index_users_on_password_changed_at"
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true
   end
@@ -460,9 +506,9 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.integer "application_version_id"
   end
 
-  create_table "vacation_requests", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
-    t.integer "customer_id"
-    t.integer "user_id"
+  create_table "vacation_requests", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+    t.bigint "customer_id"
+    t.bigint "user_id"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.datetime "vacation_start_date"
@@ -478,7 +524,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.index ["user_id"], name: "index_vacation_requests_on_user_id"
   end
 
-  create_table "vacation_types", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
+  create_table "vacation_types", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.integer "customer_id"
     t.string "employment_type"
     t.string "vacation_title"
@@ -492,7 +538,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.boolean "accrual"
   end
 
-  create_table "weeks", id: :integer, options: "ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci", force: :cascade do |t|
+  create_table "weeks", options: "ENGINE=InnoDB DEFAULT CHARSET=utf8", force: :cascade do |t|
     t.datetime "start_date"
     t.datetime "end_date"
     t.datetime "created_at", null: false
@@ -506,6 +552,7 @@ ActiveRecord::Schema.define(version: 2020_06_19_132622) do
     t.integer "proxy_user_id"
     t.datetime "proxy_updated_date"
     t.boolean "dismiss", default: false
+    t.integer "created_by"
   end
 
   add_foreign_key "projects", "customers"

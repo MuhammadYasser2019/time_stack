@@ -18,13 +18,14 @@ class AnnouncementsController < ApplicationController
       @announcement = Announcement.new
     end
     @announcement.announcement_type = params[:announcement_type]
-    @announcement.announcement_text = params[:text_content][:content]    
+    @announcement.announcement_text = params[:text_content]    
     @announcement.active =params[:active]    
     @announcement.seen = false
     @announcement.save
     respond_to do |format|
       format.js
     end
+    redirect_to  "/admin#announcementPanel"
   end
 
    def destroy    
@@ -34,6 +35,7 @@ class AnnouncementsController < ApplicationController
 
   def update_announcement
     @user_announcement = UserAnnouncement.where(user_id: current_user.id, announcement_id: @announcement.id).last
+    
     unless @user_announcement.present?
       UserAnnouncement.create!(user_id: current_user.id, announcement_id: @announcement.id)
     end

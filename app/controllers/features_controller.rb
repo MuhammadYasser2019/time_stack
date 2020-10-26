@@ -2,7 +2,6 @@ class FeaturesController < ApplicationController
   skip_before_action :authenticate_user!
 
 
-
   def show
   	@feature = Feature.find params[:id]
   end
@@ -15,7 +14,7 @@ class FeaturesController < ApplicationController
       format.js
     end
   end
-
+  
   def available_data
     logger.debug "available_data - starting to process, params passed  are #{params[:id]}"
     feature_id  = params[:id]

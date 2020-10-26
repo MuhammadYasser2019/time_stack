@@ -83,8 +83,8 @@ gem 'delayed_job_active_record'
 
 #Following two gems are needed for uploading files functionality.
 gem 'carrierwave'
-gem "mini_magick"
-gem 'rmagick', '2.16.0'
+#gem "mini_magick"
+#gem 'rmagick', '~>2.16.0'
 gem 'whenever', :require => false
 
 gem 'capistrano'

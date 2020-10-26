@@ -8,12 +8,24 @@ class ApplicationController < ActionController::Base
 
   include CanCan::ControllerAdditions
   
-  before_action :authenticate_user!, :set_mailer_host, :set_access_token, :set_base_url
+  before_action :authenticate_user!, :set_mailer_host, :set_access_token, :set_base_url,:faq
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from CanCan::AccessDenied do |exception|
     redirect_to "/permission_denied", :alert => exception.message
   end
+
+  def faq
+    if  user_signed_in? && current_user.pm?
+          id = 12
+      elsif user_signed_in? && current_user.cm? 
+          id = 11
+         else 
+          id =10
+   end 
+    @faq = Feature.find(id)
+  end
+
 
   protected
 
@@ -75,6 +87,7 @@ class ApplicationController < ActionController::Base
 
      @current_ability ||= Ability.new(cur_user)
   end
+
 
   private 
 

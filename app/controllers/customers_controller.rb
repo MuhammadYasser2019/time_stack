@@ -38,7 +38,6 @@ class CustomersController < ApplicationController
       @current_systems = ExternalConfiguration.where(customer_id: @customer.id)
       @terms_modal_show = current_user.terms_and_condition
       @announcement = Announcement.where("active = true").last
-      
     end
   end 
 
@@ -326,119 +325,6 @@ class CustomersController < ApplicationController
     end
   end
 
-  def employee_profile
-    
-    @user = User.find(params[:user_id])
-    @default_project = @user.default_project
-    @default_task = @user.default_task
-    @project_tasks = Task.where(project_id: @default_project)
-    logger.debug("the project tasks are: #{@project_tasks.inspect}")
-    @customer_id = @user.customer_id
-    @vacation_types = VacationType.where("customer_id=? and paid=?", @customer_id, true)         
-    
-    s_year = Date.today.strftime('%Y').to_i
-    start_date = s_year.to_s + "-01-01"
-
-    @sss = start_date
-    end_date = Date.today
-    @eee = end_date
-       
-    @customer_types = @vacation_types.distinct{|x| x.id} 
-    customer = Customer.find(@customer_id)
-    shift = customer.shifts.where(name: 'Regular', default: true).first
-    full_work_day = shift ? shift.regular_hours : 8
-    logger.debug("full work day #{full_work_day}")
-
-    @user_hash = {}           
-    vt_hash = {}
-    @hours_array = []
-    @customer_types.each do |ct|
-      ###Shared Logic
-      request_year = (end_date.to_date.strftime('%Y').to_f) - (start_date.to_date.strftime('%Y').to_f)
-      request_months = (end_date.to_date.year * 12 + end_date.to_date.month) - (start_date.to_date.year * 12 + start_date.to_date.month)
-      months_to_date = end_date.to_date.strftime('%m').to_f
-          ###
-      days_to_hours = ct.vacation_bank.to_f * full_work_day.to_f
-      hours_per_month = (days_to_hours/12).to_f
-
-      logger.debug("request_months#{request_months} x hours_per_month#{hours_per_month} ")
-      logger.debug(" What is ct #{ct.inspect}")
-
-      ###Calc the hours Avaliable in that time frame
-      logger.debug("Checking the vacation bank #{ct.vacation_bank}")
-      if ct.vacation_bank?
-        if ct.accrual == false  && ct.rollover == false 
-          logger.debug(" Non Accural and No Rollover")
-          hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
-          logger.debug("hours_avaliable is #{hours_avaliable}")
-
-        elsif ct.accrual == false && ct.rollover == true
-          logger.debug(" Non Accural and Rollover")
-          year_hours_avaliable = ct.vacation_bank.to_f * full_work_day.to_f
-          request_year = request_year + 1
-          hours_avaliable = year_hours_avaliable.to_f * request_year
-          logger.debug("hours_avaliable is #{hours_avaliable}")
-
-        elsif ct.accrual == true && ct.rollover == false 
-          logger.debug("Accural and No Rollover")
-          hours_avaliable = (hours_per_month.to_f * months_to_date.to_f).to_f
-          logger.debug("hours_avaliable is #{hours_avaliable}")
-
-        elsif ct.accrual == true && ct.rollover == true
-          logger.debug("Accural and Rollover")
-          hours_avaliable = (hours_per_month * request_months).to_f
-          if hours_avaliable == 0
-            hours_avaliable = hours_per_month.to_f
-          end 
-          logger.debug("hours_avaliable is #{hours_avaliable}")
-        else 
-          logger.debug("Accural and or rolloer is nil ")
-          hours_avaliable = 0
-        end
-        @hours_array.push(hours_avaliable.round(2))
-      else
-        @hours_array.push("NA")
-      end 
-
-      @uvrF = VacationRequest.where("user_id = ? and vacation_type_id = ?", @user, ct)
-      d_range = (start_date.to_date .. end_date.to_date)
-      @uvr=[]
-      logger.debug("what is uvr #{@uvr}")
-      @uvrF.each do |ww|
-        in_range = d_range.cover?(ww.vacation_start_date)
-        if in_range == true
-            @uvr.push(ww)
-        end 
-      end 
-      #######
-      currentuser = @user.email 
-      if @uvr.length < 1 
-          vt_hash[ct.id] = hours_avaliable
-      else 
-        total_hours_used = @uvr.pluck(:hours_used) 
-
-        sum_of_hours = []
-        total_hours_used.each do |x|
-          x = x.to_f
-          sum_of_hours.push(x)
-        end
-        sum_of_hours = sum_of_hours.sum 
-      end
-
-      #######
-      if sum_of_hours == nil
-        sum_of_hours = hours_avaliable.to_f
-      else 
-        sum_of_hours = hours_avaliable.to_f - sum_of_hours.to_f
-      end
-      vt_hash[ct.id] = sum_of_hours.round(2)
-      sum_of_hours =[]
-      logger.debug("What is the VT_HASH #{vt_hash}")
-      @user_hash[currentuser] = vt_hash
-     ##logger.debug("hash... #{@user_hash}")
-    end 
-  end
-
   def cancel_vacation_request
     #change the value for this vacation_id
     vr = VacationRequest.find(params[:vacation_id])
@@ -652,16 +538,6 @@ class CustomersController < ApplicationController
     respond_to do |format|
       format.js {render :file => "customers/hours_approved.js.erb" }
     end    
-  end
-
-  def users_on_project
-
-    @project = Project.find params[:project_id]
-  end  
-
-  def show_pm_projects
-    @user = User.find params[:user_id]
-    @projects = Project.where(user_id: @user.id)
   end  
 
   def resend_vacation_request
@@ -758,7 +634,7 @@ class CustomersController < ApplicationController
     @shifts = @customer.shifts
 
     if params[:project_id].present?
-      projects = Project.find params[:project_id]
+      projects = Project.where(id: params[:project_id])
     elsif  params[:exclude_inactive_projects].present? && params[:exclude_inactive_projects] == "true"
       projects = @customer.projects.where("inactive=? or inactive is null", false)
     else
@@ -786,7 +662,6 @@ class CustomersController < ApplicationController
     @users = Array.new
     if default_report && !params.keys.include?('button')
       params[:exclude_pending_users] = default_report.exclude_pending_user
-      params[:exclude_inactive_users] = default_report.exclude_inactive_users
       params[:Tasks] = default_report.billable
       params[:proj_report_start_date] = default_report.start_date.to_s
       params[:proj_report_end_date] = default_report.end_date.to_s
@@ -794,8 +669,7 @@ class CustomersController < ApplicationController
       params["current_month"] = default_report.month
       params[:user] = default_report.user_id
       params[:project] = default_report.project_id
-    end
-
+    end  
     if params[:exclude_pending_users].present? && params[:exclude_pending_users] == true
       @customer.projects.each do |p|
         @users << p.users.where.not(invitation_accepted_at: nil)
@@ -987,6 +861,7 @@ class CustomersController < ApplicationController
       format.js
     end
   end
+  
 
   def questionaire
 
@@ -1005,16 +880,6 @@ class CustomersController < ApplicationController
     @default_report = DefaultReport.where(customer_id: current_user.customer_id)
     @default_report.delete_all if @default_report.present?
     redirect_to "/customers/"+"#{current_user.customer_id}"+"/customer_reports"
-  end
-
-  def open_edit_customer_modal
-    logger.debug("customer.controller - open_edit_customer_modal ")
-    @user = User.find(params[:user_id])
-    user_customer_id = @user.customer_id
-    @employment_types = EmploymentType.where(customer_id: user_customer_id )
-     respond_to do |format|
-      format.js
-    end
   end
 
   private
@@ -1039,11 +904,9 @@ class CustomersController < ApplicationController
       @default_report.month = params[:current_month]
       @default_report.current_week = params[:current_week]
       @default_report.exclude_pending_user = params[:exclude_pending_users]
-      @default_report.exclude_inactive_users = params[:exclude_inactive_users]
       @default_report.billable = params[:Tasks]
       @default_report.save
       logger.debug("SETTING DEFAULT REPORT: set")
     end
 
 end
-
