@@ -35,7 +35,7 @@ class ApplicationController < ActionController::Base
   def find_faq
     if current_user.present? && current_user.pm?
       @faq = Feature.where(feature_type: "FAQ for Project Manager").last
-    elsif current_user.present? &&  current_user.pm?
+    elsif current_user.present? &&  current_user.cm?
       @faq = Feature.where(feature_type: "FAQ for Customer Manager").last
     elsif current_user.present?
       @faq = Feature.where(feature_type: "FAQ for User").last
