@@ -18,7 +18,7 @@ class AnnouncementsController < ApplicationController
       @announcement = Announcement.new
     end
     @announcement.announcement_type = params[:announcement_type]
-    @announcement.announcement_text = params[:text_content][:content]    
+    @announcement.announcement_text = params[:text_content]   
     @announcement.active =params[:active]    
     @announcement.seen = false
     @announcement.save
