@@ -36,7 +36,7 @@ td(class="hour")
    - if f.object.week.status_id == 2 || f.object.week.status_id == 3
     = f.object.hours
    - else
-    = f.number_field :hours, :class =>'form-control input-sm hours-input', max: "8.0" 
+    = f.number_field :hours, :class =>'form-control input-sm hours-input'
   div(class="toggle enter_time")
     Strong(class="thisisit") In:
     = f.time_select(:time_in, ampm: true,ignore_date: true, include_blank: true,:default => {:hour => '', :minute => ''}, class: "time-in-move form-control" )
