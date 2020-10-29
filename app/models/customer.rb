@@ -48,13 +48,13 @@ class Customer < ApplicationRecord
     end
 
     logger.debug "consultant_ids: #{consultant_ids}"
-    if (projects.is_a? Integer) || (projects.is_a? String)
-      project_list = Project.where(id: projects)
+    if (projects.is_a? Integer) || (projects.is_a? String) || (projects.is_a? Array)
+      project_list = Project.find projects
     else
       project_list = projects
     end
 
-    consultant_ids.each do |c|
+    consultant_ids.flatten.each do |c|
      total_hours = 0
      project_list.each do |p|
       time_entries = TimeEntry.where(user_id: c, project_id: p.id, date_of_activity: start_day..end_date).order(:date_of_activity)
@@ -383,8 +383,8 @@ class Customer < ApplicationRecord
       end_date = end_date
     end
 
-    if (projects.is_a? Integer) || (projects.is_a? String)
-      project_list = Project.where(id: projects)
+    if (projects.is_a? Integer) || (projects.is_a? String) || (projects.is_a? Array)
+      project_list = Project.find projects
     else
       project_list = projects
     end

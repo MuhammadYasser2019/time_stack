@@ -47,6 +47,17 @@
       .current-application-version:hover{
         text-decoration:underline;
       }
+       #faqBtn{
+        right: 0px;
+        bottom: 60px;
+      }
+      #cls-btn{
+        top: 0px;
+        right: 10px;
+      }
+      #modal-css {
+        left: -266px;
+      }
     </style>
   </head>
   
@@ -65,8 +76,13 @@
        <%= render "users_application_version/acknowledge" %>
       <% end %>
     <% end %>
-
-    <%= render "layouts/questionaire" %>
+    <% if @faq.present? && @faq.feature_data.present? %>
+      <button class ="tech-btn show_faq" id="faqBtn" data-toggle="modal" data-target="#faqModal" ><i class="fa fa-cogs fa-3x"></i></button>
+      <%= render "layouts/faq" %>
+    <% end %>
+    <% if user_signed_in? %>
+    <%= render "layouts/questionaire" %> 
+    <% end %>
     <%= yield %> 
     <input type="hidden" id="access_url" value = "<%=@base_url%>"/>
     <%= init_session_timeout_prompter(session_timeout_in_seconds: 1800, seconds_to_warn_before_timeout: 300, scope: :user) %>

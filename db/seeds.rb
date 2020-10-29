@@ -58,30 +58,42 @@ weeks_with_no_status.each do |w_id|
     end
   end
 end
-#Feature.find_or_initialize_by(id: 1, feature_type: "Easy Automation") do |f|
- # f.save!
-#end
-#Feature.find_or_initialize_by(id: 2, feature_type: "Employee Time Entry") do |f|
-#  f.save!
-#end
-#Feature.find_or_initialize_by(id: 3, feature_type: "Submission and Approval") do |f|
-#  f.save!
-#end
-#Feature.find_or_initialize_by(id: 4, feature_type: "Flexible Reports") do |f|
-#  f.save!
-#end
-#Feature.find_or_initialize_by(id: 5, feature_type: "Optional Payroll System Integration") do |f|
-#  f.save!
-#end
-#Feature.find_or_initialize_by(id: 6, feature_type: "Resourse Stack") do |f|
-#  f.save!
-#end
-#Feature.find_or_initialize_by(id: 7, feature_type: "JSM Consulting") do |f|
-#  f.save!
-#end
-#Feature.find_or_initialize_by(id: 8, feature_type: "About") do |f|
-#  f.save!
-#end
-#Feature.find_or_initialize_by(id: 9, feature_type: "Company Overview") do |f|
-#  f.save!
-#end
+Feature.find_or_initialize_by(id: 1, feature_type: "Easy Automation") do |f|
+ f.save!
+end
+Feature.find_or_initialize_by(id: 2, feature_type: "Employee Time Entry") do |f|
+ f.save!
+end
+Feature.find_or_initialize_by(id: 3, feature_type: "Submission and Approval") do |f|
+ f.save!
+end
+Feature.find_or_initialize_by(id: 4, feature_type: "Flexible Reports") do |f|
+ f.save!
+end
+Feature.find_or_initialize_by(id: 5, feature_type: "Optional Payroll System Integration") do |f|
+ f.save!
+end
+Feature.find_or_initialize_by(id: 6, feature_type: "Resourse Stack") do |f|
+ f.save!
+end
+Feature.find_or_initialize_by(id: 7, feature_type: "JSM Consulting") do |f|
+ f.save!
+end
+Feature.find_or_initialize_by(id: 8, feature_type: "About") do |f|
+ f.save!
+end
+Feature.find_or_initialize_by(id: 9, feature_type: "Company Overview") do |f|
+ f.save!
+end
+
+Feature.find_or_initialize_by(id: 10, feature_type: "FAQ for Project Manager") do |f|
+  f.save!
+end
+
+Feature.find_or_initialize_by(id: 11, feature_type: "FAQ for Customer Manager") do |f|
+  f.save!
+end
+
+Feature.find_or_initialize_by(id: 12, feature_type: "FAQ for User") do |f|
+  f.save!
+end

@@ -31,6 +31,7 @@ class User < ApplicationRecord
   has_many :user_inventory_and_equipments
   has_many :user_devices
   has_many :shift_change_requests
+  has_many :user_announcements
   belongs_to :customer
 
   after_update :send_password_change_email, if: :needs_password_change_email?
@@ -310,16 +311,18 @@ class User < ApplicationRecord
 
   def self.send_password_reminder_email
     User.where(is_active: true).each do |u|
-      if u.password_changed_at.nil? && Time.now > u.created_at + 86.days
+      if u.password_changed_at.nil? && Time.now > u.created_at + 86.days && !u.password_reminder_email_sent?
           token, enc = Devise.token_generator.generate(User, :reset_password_token)
           PasswordExpiration.mail_for_expiration_to_user(u,token).deliver
+          u.password_reminder_email_sent = true
           u.reset_password_token = enc
           u.reset_password_sent_at = Time.now.utc
           u.save!
-      elsif u.password_changed_at.present? && Time.now > u.password_changed_at + 86.days
+      elsif u.password_changed_at.present? && Time.now > u.password_changed_at + 86.days && !u.password_reminder_email_sent?
         token, enc = Devise.token_generator.generate(User, :reset_password_token)
         PasswordExpiration.mail_for_expiration_to_user(u,token).deliver
         u.reset_password_token = enc
+        u.password_reminder_email_sent = true
           u.reset_password_sent_at = Time.now.utc
           u.save!
       end
@@ -349,8 +352,12 @@ class User < ApplicationRecord
   def vacation_type
     
     emp_type = EmploymentTypesVacationType.where(employment_type_id: self.employment_type).first
-    vacation_type = VacationType.find emp_type.vacation_type_id
-    return vacation_type.vacation_title
+    if emp_type
+      vacation_type = VacationType.find emp_type.vacation_type_id
+      return vacation_type.vacation_title
+    else
+      nil
+    end
   end
 
   def self.reset_token

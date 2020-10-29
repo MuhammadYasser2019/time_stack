@@ -15,8 +15,8 @@
 
     tbody
       tr
-        td = select_tag('project', options_for_select(@projects.collect{ |p| [p.name, p.id]}, params[:project]), include_blank: true, id: 'project-select')
-        td = select_tag('user', options_for_select(@users.collect{ |u| [consultant_name(u.first_name, u.last_name, u.email), u.id]}, params[:user]), include_blank: true)
+        td = select_tag('project', options_for_select(@projects.collect{ |p| [p.name, p.id]}, params[:project]), include_blank: true, multiple: true, id: 'project-select', class: 'selectpicker show-menu-arrow', 'data-live-search': 'true')
+        td = select_tag('user', options_for_select(@users.collect{ |u| [consultant_name(u.first_name, u.last_name, u.email), u.id]}, params[:user]), include_blank: true, multiple: true, class: 'selectpicker show-menu-arrow', 'data-live-search': 'true')
         td = text_field_tag 'proj_report_start_date', params[:proj_report_start_date].present? ? params[:proj_report_start_date] : Date.today.beginning_of_week, {required: "required", style: 'margin: 0;', class: "datepicker"}
         
         = hidden_field_tag 'id', @customer_id

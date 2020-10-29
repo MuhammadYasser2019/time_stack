@@ -113,29 +113,28 @@ div.tab-content.white-background
                           th Email
                           th Action
                           th Shared
+                          th Previous Week
                           th PM
                           th Proxy PM
                           th Proxy CM
-                          th
+                         
 					tbody
 						-@users.each_with_index do |uop, i|
 							-if uop.customer_id == params[:customer_id].to_i
 								tr(id = "users_#{i}") 
 									td = uop.first_name
-									td = link_to uop.email, "/edit_customer_user/#{uop.id}"
+									td = link_to uop.email,  'javascript:void(0)',class: "open_edit_customer", style: "width:130px;", id: "user_#{uop.id}"
 
-									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "button alert remove-user-from-customer orange-button"
+									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "button alert remove-user-from-customer orange-button", style: "width:130px;"
 									
-									td = link_to "Change Share Status", "javascript:void()", id: "c_id_#{params[:customer_id]}_u_id_#{uop.id}", class: "shared_user orange-button", type: "link", data: {toggle: "modal", target: "#sharedUser"}
-									
+									td = link_to "Change Share Status", "javascript:void()", id: "c_id_#{params[:customer_id]}_u_id_#{uop.id}", class: "shared_user orange-button", style: "width: 130px;", type: "link", data: {toggle: "modal", target: "#sharedUser"}
+									td = link_to "Add Previous Week", 'javascript:void(0)',class: "open_previous_week orange-button", style: "width:130px;", id: "user_#{uop.id}"
 									td = check_box_tag "add_pm_role", uop.id, uop.pm?, class: "add_pm_role"
 									
 									td = check_box_tag "add_pm_role", uop.id, uop.proxy?, class: "assign_proxy_role"
 									td = check_box_tag "add_proxy_cm", uop.id, uop.proxy_cm?, class: "assign_cm_proxy_role"
 
-									td = link_to "Add Previous Week", 'javascript:void(0)',class: "open_previous_week orange-button",id: "user_#{uop.id}"
 									
-									/td = link_to "Add Previous Week",{controller: "weeks", action: "open_previous_week_modal"},  data: {customer_id: params[:customer_id], user_id: uop.id}, class: "add_previous_week orange-button", type: "link",remote: true
 									
 
 					div class = "modal" id="sharedUser" tabindex="-1" role="dialog" aria-hidden="true"
@@ -231,11 +230,15 @@ div.tab-content.white-background
   div class="tab-pane fade" role="tabpanel" aria-labelledby="configuration-tab" id="configuration"
 			 div(id="dynamic_add_configuration")
 			 	== render partial: 'add_configuration'
-			 	
+ 			 	
   - if !current_user.default_project? && current_user.parent_user_id.blank?
   	== render partial: 'users/default_projects'
 
+  - if @announcement.present? && !current_user.user_announcements.where(announcement_id: @announcement.id).present?
+	==render partial: 'announcements/new_announcement'
 div id = "add_previous_week"
+
+div id= "edit_customer_form"
 
 coffee:
 	$('.datepicker').datepicker({

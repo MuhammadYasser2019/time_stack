@@ -8,7 +8,7 @@ class ApplicationController < ActionController::Base
 
   include CanCan::ControllerAdditions
   
-  before_action :authenticate_user!, :set_mailer_host, :set_access_token, :set_base_url
+  before_action :authenticate_user!, :set_mailer_host, :set_access_token, :set_base_url, :find_faq
   before_action :configure_permitted_parameters, if: :devise_controller?
 
   rescue_from CanCan::AccessDenied do |exception|
@@ -30,6 +30,16 @@ class ApplicationController < ActionController::Base
 
   def set_mailer_host
     # ActionMailer::Base.default_url_options[:host] = "http://192.168.239.178:3000/users/sign_up"
+  end
+
+  def find_faq
+    if current_user.present? && current_user.cm?
+      @faq = Feature.where(feature_type: "FAQ for Customer Manager").last
+    elsif current_user.present? &&  current_user.pm?
+      @faq = Feature.where(feature_type: "FAQ for Project Manager").last
+    elsif current_user.present?
+      @faq = Feature.where(feature_type: "FAQ for User").last
+    end
   end
 
   def after_invite_path_for(resource)

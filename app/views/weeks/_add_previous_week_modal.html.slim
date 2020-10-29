@@ -13,11 +13,9 @@ div class="modal fade" id="previousweek" tabindex="-1" role="dialog" aria-hidden
         table
           tr
             th Start date
-            th End date
             th
           tr
             td = date_field_tag 'start_date', '', {required: "required"}
-            td = date_field_tag 'start_date'
             td = submit_tag 'Create Week'
 
         table
@@ -42,3 +40,6 @@ coffee:
 
       firstDay: 1
     })
+  $('#previousweek').on('hidden.bs.modal', ->
+    location.reload();  
+  );   

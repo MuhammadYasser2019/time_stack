@@ -93,6 +93,21 @@ jQuery ($) ->
     return
   )
 
+  $(document).on("click", ".announce_popup", ->    
+    announcement_id = $(this).attr('id')
+    console.log("THE USER ID IS: " + announcement_id)
+    $.post '/update_announcement',
+      id: announcement_id
+    return
+  )
+
+  $(document).on("click", ".announce_edit", ->
+    announcement_id = $(this).attr('id')
+    console.log("THE USER ID IS: " + announcement_id)
+    $.get '/announcements/'+announcement_id+'/edit'
+    return
+  )
+
   $(document).on('click', '.remove-user-from-customer', ->
     console.log("customers.js- romove customer")
     user_id = parse_user_id($(this).attr('id'))
@@ -204,6 +219,26 @@ jQuery ($) ->
       type: 'POST'
       data:  {project_id: project_id, task_id: task_id, shift_id: shift_id, type: type, start_date: start_date, end_date: end_date}
   )
+
+  $(document).on("click", ".users-on-project", ->
+    project_id = $(this).attr("id").split("_")[1];
+    
+    console.log("THE PROJEC ID IS: " + project_id)
+    $.ajax
+      url: '/users_on_project',
+      type: 'GET'
+      data:  {project_id: project_id}
+  )
+
+  $(document).on("click", ".project_for_pm", ->
+    user_id = $(this).attr("id").split("_")[1];
+    
+    console.log("THE USER ID IS: " + user_id)
+    $.ajax
+      url: '/show_pm_projects',
+      type: 'GET'
+      data:  {user_id: user_id}
+  )
   
   $(document).on("click", ".open_previous_week", ->
     $(this).attr("id").split("_")
@@ -214,6 +249,20 @@ jQuery ($) ->
       type: 'POST'
       data: { user_id: user_id }
   )
+
+  $(document).on("click", ".open_edit_customer", ->
+    $(this).attr("id").split("_")
+    user_id = $(this).attr("id").split("_")[1];
+    console.log("THE USER ID IS: " + user_id)
+    $.ajax
+      url: '/open_edit_customer_modal',
+      type: 'POST'
+      data: { user_id: user_id }
+  )
+
+
+
+  
 
 
   $('#show_reports').DataTable({
@@ -520,4 +569,17 @@ jQuery ($) ->
           $('#'+shift_type).append($("<option></option>").attr("value",$my_data[i][1]).text($my_data[i][0])) 
           i++
 
+  $('#project-select').selectpicker()
+
+  all = $('option[value=all]')
+  $('.selectpicker').change ->
+    all = $('option[value=all]')
+    thisVal = all.html()
+    if all.is(':selected')
+      $('#project-select').selectpicker 'deselectAll'
+      $('ul.dropdown-menu > li[rel=0]').addClass 'selected'
+      $('span.filter-option').html thisVal
+    else
+      $('ul.dropdown-menu > li[rel=0]').removeClass 'selected'
+    return
  

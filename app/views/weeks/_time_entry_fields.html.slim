@@ -11,12 +11,12 @@ td.project
     = Project.find(f.object.project_id).name
  -else
   -if !get_project_id(f.object.project_id).nil?
-    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id form-control"})
+    = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id form-control", required: true})
   -else
     -if !@week_user.default_project.nil?
-      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name",@week_user.default_project ), {include_blank: true}, {class: "project_id form-control"})
+      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name",@week_user.default_project ), {include_blank: true}, {class: "project_id form-control", required: true})
     -else
-      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id form-control"})
+      = f.select(:project_id, options_from_collection_for_select(@projects, "id", "name", get_project_id(f.object.project_id)), {include_blank: true}, {class: "project_id form-control", required: true})
 td.task
  - if !f.object.task_id.nil?
   - if f.object.week.status_id == 2 || f.object.week.status_id == 3
@@ -36,7 +36,7 @@ td(class="hour")
    - if f.object.week.status_id == 2 || f.object.week.status_id == 3
     = f.object.hours
    - else
-    = f.text_field :hours, :class =>'form-control input-sm hours-input'
+    = f.number_field :hours, :class =>'form-control input-sm hours-input'
   div(class="toggle enter_time")
     Strong(class="thisisit") In:
     = f.time_select(:time_in, ampm: true,ignore_date: true, include_blank: true,:default => {:hour => '', :minute => ''}, class: "time-in-move form-control" )

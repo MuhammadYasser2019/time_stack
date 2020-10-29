@@ -6,7 +6,7 @@
         <div class="modal-body">
           <%= application_version[:latest_version].description.html_safe %>
         </div>
-        <button id="acknowledgeVersionButton" data-versionId= "<%= application_version[:latest_version].id %>" data-name= "<%= application_version[:latest_version].version_name %>" data-description = "<%= application_version[:latest_version].description.html_safe %>"  class="btn btn-secondary">OK</button>
+        <button id="acknowledgeVersionButton" data-versionId= "<%= application_version[:latest_version].id %>" data-name= "<%= application_version[:latest_version].version_name %>" data-description = "<%= application_version[:latest_version].description %>"  class="btn btn-secondary">OK</button>
     </div>
 </div>
 

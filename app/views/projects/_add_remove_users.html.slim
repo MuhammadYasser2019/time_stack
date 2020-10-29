@@ -3,7 +3,9 @@ div class="add_remove_user"
 		= hidden_field_tag "project_id", @project.id
 		div class="add_remove_left_row"				
 			h1 Available Users
-			table
+			table#myTable
+				tr
+					input#myInput placeholder="Search.." class="form-control" type="text"
 				- (@available_users- @project.users.active_users).each_with_index do |uop,i|
 				      tr
 				      	td

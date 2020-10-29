@@ -204,7 +204,7 @@ class Project < ApplicationRecord
         end_date = end_date
       end
         
-      users_ids.each do|u|
+      users_ids.flatten.each do|u|
         c = User.find(u)
         if submitted_type == "submitted" 
           Rails.logger.info " first"
