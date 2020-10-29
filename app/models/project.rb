@@ -142,7 +142,7 @@ class Project < ApplicationRecord
     else
       end_date = end_date
     end
-    consultant_ids.each do |c|
+    consultant_ids.flatten.each do |c|
       time_entries = TimeEntry.where(user_id: c, project_id: project_id, date_of_activity: start_date..end_date).order(:date_of_activity)
       logger.debug "consultant is #{c}"
       employee_time_hash = Hash.new
