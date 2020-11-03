@@ -1,6 +1,8 @@
 class WeeksController < ApplicationController
   before_action :set_week, only: [:show, :edit, :update, :destroy]
   before_action :redirect_to_root, only: [:show]
+
+
   load_and_authorize_resource
   # GET /weeks
   # GET /weeks.json
@@ -274,7 +276,7 @@ class WeeksController < ApplicationController
     @week.proxy_updated_date = Time.now
     prev_date_of_activity =""
     week_params["time_entries_attributes"].each do |t|
-      # store the date of activity from previous row
+      # store teh date of activity from previous row
       if !t[1][:date_of_activity].nil?
         prev_date_of_activity = t[1][:date_of_activity]
       else
@@ -285,6 +287,7 @@ class WeeksController < ApplicationController
         new_day.hours = t[1][:hours]
         new_day.activity_log = t[1][:activity_log]
         new_day.updated_by = t[1][:updated_by]
+
         @week.time_entries.push(new_day)
       end
     end
@@ -302,8 +305,9 @@ class WeeksController < ApplicationController
 
   # PATCH/PUT /weeks/1
   # PATCH/PUT /weeks/1.json
+  
   def update
-      
+
     logger.debug("week params: #{params.inspect}")
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
     week = Week.find(params[:id])
@@ -312,31 +316,86 @@ class WeeksController < ApplicationController
     week_user = week.user_id
     logger.debug("THE USER ON THE WEEK IS: #{week_user}")
     prev_date_of_activity =""
+    prev_hours = 0   
+    same_task_hours=0 
+    prev_task = ""
+    overtime = false
+    notice_detail =""
+    count=0
+    task_flag =false
+
     week_params["time_entries_attributes"].permit!.to_h.each do |t|
       # store the date of activity from previous row
+      overtime=false
+  if  t[1][:hours].present?
+    if !t[1][:date_of_activity].nil? && t[1][:date_of_activity] != prev_date_of_activity
+      prev_hours = 0    
+      prev_task = ""
+      overtime = false
+      task_flag =false
       
+    end
+    prev_hours  = prev_hours + t[1][:hours].to_i    
+    prev_project = t[1][:project_id]
+project_details = Project.where(id: t[1][:project_id]).last  
+    if t[1][:task_id].present?
+      debugger
+        prev_task = t[1][:task_id]
+        @tasks_details = Task.where(id: t[1][:task_id]).last        
+        if @tasks_details.present? && @tasks_details.overtime.present?
+          overtime = @tasks_details.overtime
+        end
+    end
+    if !t[1][:date_of_activity].nil? && t[1][:date_of_activity] == prev_date_of_activity && prev_project == t[1][:project_id] && t[1][:task_id].present? && t[1][:task_id]==prev_task 
+      same_task_hours = same_task_hours+t[1][:hours].to_i
+      if same_task_hours>8 && overtime==false && task_flag == false
+      task_flag = true
+      count =count+1      
+       notice_detail += count.to_s+" : "+t[1][:date_of_activity]+"  Project #{project_details.name} and task #{@tasks_details.description} hours exide to 8 hours \n"
+             
+      end
+    else
+      same_task_hours = t[1][:hours].to_i
+      task_flag = false
+    end
+     
+    if (overtime == true || t[1][:task_id].nil?) && t[1][:hours].to_i>24
+      
+      count =count+1
+      #flash[:alert]= "Project hours exide to 24 hours"
+      #return redirect_back(fallback_location: projects_path, alert:  "Project hours exide to 24 hours")
+      notice_detail += count.to_s+" : "+t[1][:date_of_activity]+"  Project #{project_details.name} hours exide to 24 hours \n"
+    elsif (overtime == false && t[1][:hours].to_i >8)
+      
+      count =count+1
+       notice_detail += count.to_s+" : "+t[1][:date_of_activity]+"  Project #{project_details.name} hours exide to 8 hours \n"
+       #flash[:alert]= "Project hours exide to 8 hours"
+       #return redirect_back(fallback_location: projects_path, alert:  "Project hours exide to 24 hours")  
+       
+    elsif  prev_hours>24
+      count =count+1
+      notice_detail += count.to_s+" : "+t[1][:date_of_activity]+"  Over all day hours exide \n"
+    end  
+  end
+debugger
       if !t[1][:date_of_activity].nil?
         logger.debug "DATE OF ACTIVITY IS NOT NIL"
         prev_date_of_activity = t[1][:date_of_activity]
-        if prev_date_of_activity.to_date == Date.today
-        @count=1;
-        end
-      else    
+      else        
         if t[1][:date_of_activity].nil? && t[1][:hours].present?
-              logger.debug "DATE OF ACTIVITY IS ACTUALLY NIL MAN"            
-                new_day = TimeEntry.new
-                new_day.date_of_activity = prev_date_of_activity
-                new_day.project_id = t[1][:project_id]
-                new_day.task_id = t[1][:task_id]
-                new_day.hours = t[1][:hours]
-                new_day.activity_log = t[1][:activity_log]
-                new_day.updated_by = t[1][:updated_by]
-                new_day.user_id = week_user
-                new_day.partial_day = t[1][:partial_day]
-                @week.time_entries.push(new_day)            
-        end           
-      end
-       #End if !t[1]
+          logger.debug "DATE OF ACTIVITY IS ACTUALLY NIL MAN"
+          new_day = TimeEntry.new
+          new_day.date_of_activity = prev_date_of_activity
+          new_day.project_id = t[1][:project_id]
+          new_day.task_id = t[1][:task_id]
+          new_day.hours = t[1][:hours]
+          new_day.activity_log = t[1][:activity_log]
+          new_day.updated_by = t[1][:updated_by]
+          new_day.user_id = week_user
+          new_day.partial_day = t[1][:partial_day]        
+          @week.time_entries.push(new_day)
+        end
+      end                                   #End if !t[1]
       logger.debug "#{t[0]}"
       if t[1]["project_id"] == "" 
         t[1]["project_id"] = nil
@@ -363,6 +422,10 @@ class WeeksController < ApplicationController
       end
 
     end #End Of Iteration for week_params
+    if notice_detail.present?
+       flash[:alert]= notice_detail
+       return redirect_back(fallback_location: projects_path, alert:  notice_detail)
+    end
     test_array
     logger.debug("TEST ARRAY ---------------------#{test_array.inspect}")
         ##
