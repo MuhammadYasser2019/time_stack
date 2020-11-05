@@ -72,8 +72,8 @@ class Customer < ApplicationRecord
         logger.debug "Billable is : #{billable.class}"
         task_value = (task.present? && task.billable) ? "true" : "false"
         logger.debug "THE taks VALUE ARE : #{task_value.class}"
-        #logger.debug "COMPARISION IS : #{task_value == billable}"
-        if task_value == billable
+        #logger.debug "COMPARISION IS : #{task_value == billable}" 
+        if billable.blank? || task_value == billable 
           #logger.debug "TASK BILLABLE inside ARE: #{task.billable}"
           if !employee_time_hash[t.date_of_activity.strftime('%m/%d')].blank?
             logger.debug "EMPLOYEE TIME HASH: #{employee_time_hash[t.date_of_activity.strftime('%m/%d')]}"
@@ -94,6 +94,7 @@ class Customer < ApplicationRecord
           total_hours = total_hours + t.hours if !t.hours.blank?
           employee_time_hash[t.date_of_activity.strftime('%m/%d')] = { id: t.id, hours: daily_hours, activity_log: t.activity_log }
         end
+        
       end
       logger.debug "POST LOOP EMPLOYEE HASH: #{employee_time_hash.inspect}"
       if hash_report_data[c].blank?
