@@ -492,7 +492,7 @@ end
     end_date = Date.today
     @eee = end_date
        
-    @customer_types = @vacation_types.distinct{|x| x.id} 
+    @customer_types = @vacation_types.distinct{|x| x.id if x.employment_types.pluck(:id).include(u.employment_type)} 
     customer = Customer.find(@customer_id)
     shift = customer.shifts.where(name: 'Regular', default: true).first
     full_work_day = shift ? shift.regular_hours : 8
