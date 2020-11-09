@@ -491,7 +491,7 @@ end
     @sss = start_date
     end_date = Date.today
     @eee = end_date
-    emp_type = EmploymentType.where(id: u.employment_type).last
+    emp_type = EmploymentType.where(id: @user.employment_type).last
     @customer_types = emp_type.vacation_types 
     customer = Customer.find(@customer_id)
     shift = customer.shifts.where(name: 'Regular', default: true).first
