@@ -28,10 +28,10 @@ class WeeksController < ApplicationController
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(10)
     @projects.each do |p|
       if p.adhoc_pm_id.present? && p.adhoc_end_date.to_s(:db) < Time.now.to_s(:db)
-	      p.adhoc_pm_id = nil
-	      p.adhoc_start_date = nil
-	      p.adhoc_end_date = nil
-	      p.save
+        p.adhoc_pm_id = nil
+        p.adhoc_start_date = nil
+        p.adhoc_end_date = nil
+        p.save
       end
     end
   end 
@@ -316,68 +316,71 @@ class WeeksController < ApplicationController
     week_user = week.user_id
     logger.debug("THE USER ON THE WEEK IS: #{week_user}")
     prev_date_of_activity =""
-    prev_hours = 0   
-    same_task_hours=0 
-    prev_task = ""
+    prev_hours = 0      
     overtime = false
     notice_detail =""
-    count=0
-    task_flag =false
-
+    count=0   
+    timesheet_activity_list = Hash.new
+    error_activity_list = Hash.new
+    hashKey=""
+    projrct_date=""
     week_params["time_entries_attributes"].permit!.to_h.each do |t|
       # store the date of activity from previous row
       overtime=false
   if  t[1][:hours].present?
     if !t[1][:date_of_activity].nil? && t[1][:date_of_activity] != prev_date_of_activity
-      prev_hours = 0    
-      prev_task = ""
-      overtime = false
-      task_flag =false
-      
+      prev_hours = 0  
+      overtime = false      
     end
     prev_hours  = prev_hours + t[1][:hours].to_i    
-    prev_project = t[1][:project_id]
-project_details = Project.where(id: t[1][:project_id]).last  
+    #prev_project = t[1][:project_id]
+    project_details = Project.where(id: t[1][:project_id]).last  
     if t[1][:task_id].present?
-      debugger
-        prev_task = t[1][:task_id]
+        #prev_task = t[1][:task_id]
         @tasks_details = Task.where(id: t[1][:task_id]).last        
         if @tasks_details.present? && @tasks_details.overtime.present?
           overtime = @tasks_details.overtime
         end
-    end
-    if !t[1][:date_of_activity].nil? && t[1][:date_of_activity] == prev_date_of_activity && prev_project == t[1][:project_id] && t[1][:task_id].present? && t[1][:task_id]==prev_task 
-      same_task_hours = same_task_hours+t[1][:hours].to_i
-      if same_task_hours>8 && overtime==false && task_flag == false
-      task_flag = true
-      count =count+1      
-       notice_detail += count.to_s+" : "+t[1][:date_of_activity]+"  Project #{project_details.name} and task #{@tasks_details.description} hours exide to 8 hours \n"
-             
-      end
+        
+      hashKey =t[1][:date_of_activity].nil? ? prev_date_of_activity+"_"+t[1][:project_id].to_s+"_"+t[1][:task_id].to_s+"_"+overtime.to_s : t[1][:date_of_activity].to_s+"_"+t[1][:project_id].to_s+"_"+t[1][:task_id].to_s+"_"+overtime.to_s
+    
     else
-      same_task_hours = t[1][:hours].to_i
-      task_flag = false
+      hashKey =t[1][:date_of_activity].nil? ? prev_date_of_activity+"_"+t[1][:project_id].to_s : t[1][:date_of_activity].to_s+"_"+t[1][:project_id].to_s
     end
-     
-    if (overtime == true || t[1][:task_id].nil?) && t[1][:hours].to_i>24
-      
+
+   if (timesheet_activity_list.has_key?(hashKey))        
+        timesheet_activity_list[hashKey] = timesheet_activity_list[hashKey]+t[1][:hours].to_i
+    else
+     # timesheet_activity_list.key = hashKey
+      timesheet_activity_list[hashKey] = t[1][:hours].to_i
+    end
+    if t[1][:date_of_activity].nil?
+      projrct_date = (prev_date_of_activity.to_date).strftime('%Y-%m-%d')
+    else
+      projrct_date = (t[1][:date_of_activity].to_date).strftime('%Y-%m-%d')
+    end
+    if timesheet_activity_list[hashKey]>8 && overtime==false && !t[1][:task_id].nil?
+          count =count+1
+          if (!error_activity_list.has_key?(hashKey+"_8"))        
+            error_activity_list[hashKey+"_8"] = count.to_s+" : "+projrct_date+"  Project #{project_details.name} and task #{@tasks_details.description} hours exide to 8 hours. \n"
+          end
+          #notice_detail += count.to_s+" : "+projrct_date+"  Project #{project_details.name} and task #{@tasks_details.description} hours exide to 8 hours. \n"                
+    elsif (overtime == true || t[1][:task_id].nil?) && timesheet_activity_list[hashKey]>24      
       count =count+1
-      #flash[:alert]= "Project hours exide to 24 hours"
-      #return redirect_back(fallback_location: projects_path, alert:  "Project hours exide to 24 hours")
-      notice_detail += count.to_s+" : "+t[1][:date_of_activity]+"  Project #{project_details.name} hours exide to 24 hours \n"
-    elsif (overtime == false && t[1][:hours].to_i >8)
-      
-      count =count+1
-       notice_detail += count.to_s+" : "+t[1][:date_of_activity]+"  Project #{project_details.name} hours exide to 8 hours \n"
-       #flash[:alert]= "Project hours exide to 8 hours"
-       #return redirect_back(fallback_location: projects_path, alert:  "Project hours exide to 24 hours")  
-       
+      if (!error_activity_list.has_key?(hashKey+"_Task_24"))        
+            error_activity_list[hashKey+"_Task_24"] = count.to_s+" : "+projrct_date+"  Project #{project_details.name} hours exide to 24 hours. \n"  
+      end
+      #notice_detail += count.to_s+" : "+projrct_date+"  Project #{project_details.name} hours exide to 24 hours. \n"            
     elsif  prev_hours>24
       count =count+1
-      notice_detail += count.to_s+" : "+t[1][:date_of_activity]+"  Over all day hours exide \n"
+      if (!error_activity_list.has_key?(hashKey+"_OverALl_24"))        
+            error_activity_list[hashKey+"_OverALl_24"] = count.to_s+" : "+projrct_date+"  Over all day hours exide.\n"
+      end
+      #notice_detail += count.to_s+" : "+projrct_date+"  Over all day hours exide.\n"
     end  
+    
   end
-debugger
+
       if !t[1][:date_of_activity].nil?
         logger.debug "DATE OF ACTIVITY IS NOT NIL"
         prev_date_of_activity = t[1][:date_of_activity]
@@ -422,7 +425,11 @@ debugger
       end
 
     end #End Of Iteration for week_params
-    if notice_detail.present?
+    if error_activity_list.present?&& error_activity_list.count>0
+      error_activity_list.each do |error_Notice,value|
+
+      notice_detail +=value.to_s+" "
+      end
        flash[:alert]= notice_detail
        return redirect_back(fallback_location: projects_path, alert:  notice_detail)
     end
