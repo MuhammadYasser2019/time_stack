@@ -706,6 +706,6 @@ end
     # Never trust parameters from the scary internet, only allow the white list through.
     def project_params
       params.require(:project).permit(:name, :customer_id, :user_id, :proxy, :deactivate_notifications,
-      tasks_attributes: [:id, :code, :description, :project_id, :default_comment, :active , :billable, :delete])
+      tasks_attributes: [:id, :code, :description, :project_id, :default_comment, :estimated_time, :overtime, :active , :billable, :delete])
     end
 end

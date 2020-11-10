@@ -1,6 +1,8 @@
 class WeeksController < ApplicationController
   before_action :set_week, only: [:show, :edit, :update, :destroy]
   before_action :redirect_to_root, only: [:show]
+
+
   load_and_authorize_resource
   # GET /weeks
   # GET /weeks.json
@@ -26,10 +28,10 @@ class WeeksController < ApplicationController
     @weeks  = Week.where("user_id = ?", current_user.id).order(start_date: :desc).limit(10)
     @projects.each do |p|
       if p.adhoc_pm_id.present? && p.adhoc_end_date.to_s(:db) < Time.now.to_s(:db)
-	      p.adhoc_pm_id = nil
-	      p.adhoc_start_date = nil
-	      p.adhoc_end_date = nil
-	      p.save
+        p.adhoc_pm_id = nil
+        p.adhoc_start_date = nil
+        p.adhoc_end_date = nil
+        p.save
       end
     end
   end 
@@ -274,7 +276,7 @@ class WeeksController < ApplicationController
     @week.proxy_updated_date = Time.now
     prev_date_of_activity =""
     week_params["time_entries_attributes"].each do |t|
-      # store the date of activity from previous row
+      # store teh date of activity from previous row
       if !t[1][:date_of_activity].nil?
         prev_date_of_activity = t[1][:date_of_activity]
       else
@@ -285,6 +287,7 @@ class WeeksController < ApplicationController
         new_day.hours = t[1][:hours]
         new_day.activity_log = t[1][:activity_log]
         new_day.updated_by = t[1][:updated_by]
+
         @week.time_entries.push(new_day)
       end
     end
@@ -302,8 +305,9 @@ class WeeksController < ApplicationController
 
   # PATCH/PUT /weeks/1
   # PATCH/PUT /weeks/1.json
+  
   def update
-      
+
     logger.debug("week params: #{params.inspect}")
     logger.debug("week params: #{week_params["time_entries_attributes"]}")
     week = Week.find(params[:id])
@@ -312,31 +316,89 @@ class WeeksController < ApplicationController
     week_user = week.user_id
     logger.debug("THE USER ON THE WEEK IS: #{week_user}")
     prev_date_of_activity =""
+    prev_hours = 0      
+    overtime = false
+    notice_detail =""
+    count=0   
+    timesheet_activity_list = Hash.new
+    error_activity_list = Hash.new
+    hashKey=""
+    projrct_date=""
     week_params["time_entries_attributes"].permit!.to_h.each do |t|
       # store the date of activity from previous row
-      
+      overtime=false
+  if  t[1][:hours].present?
+    if !t[1][:date_of_activity].nil? && t[1][:date_of_activity] != prev_date_of_activity
+      prev_hours = 0  
+      overtime = false      
+    end
+    prev_hours  = prev_hours + t[1][:hours].to_i    
+    #prev_project = t[1][:project_id]
+    project_details = Project.where(id: t[1][:project_id]).last  
+    if t[1][:task_id].present?
+        #prev_task = t[1][:task_id]
+        @tasks_details = Task.where(id: t[1][:task_id]).last        
+        if @tasks_details.present? && @tasks_details.overtime.present?
+          overtime = @tasks_details.overtime
+        end
+        
+      hashKey =t[1][:date_of_activity].nil? ? prev_date_of_activity+"_"+t[1][:project_id].to_s+"_"+t[1][:task_id].to_s+"_"+overtime.to_s : t[1][:date_of_activity].to_s+"_"+t[1][:project_id].to_s+"_"+t[1][:task_id].to_s+"_"+overtime.to_s
+    
+    else
+      hashKey =t[1][:date_of_activity].nil? ? prev_date_of_activity+"_"+t[1][:project_id].to_s : t[1][:date_of_activity].to_s+"_"+t[1][:project_id].to_s
+    end
+
+   if (timesheet_activity_list.has_key?(hashKey))        
+        timesheet_activity_list[hashKey] = timesheet_activity_list[hashKey]+t[1][:hours].to_i
+    else
+     # timesheet_activity_list.key = hashKey
+      timesheet_activity_list[hashKey] = t[1][:hours].to_i
+    end
+    if t[1][:date_of_activity].nil?
+      projrct_date = (prev_date_of_activity.to_date).strftime('%Y-%m-%d')
+    else
+      projrct_date = (t[1][:date_of_activity].to_date).strftime('%Y-%m-%d')
+    end
+    if timesheet_activity_list[hashKey]>8 && overtime==false && !t[1][:task_id].nil?
+          count =count+1
+          if (!error_activity_list.has_key?(hashKey+"_8"))        
+            error_activity_list[hashKey+"_8"] = count.to_s+" : "+projrct_date+"  Project #{project_details.name} and task #{@tasks_details.description} hours exide to 8 hours. \n"
+          end
+          #notice_detail += count.to_s+" : "+projrct_date+"  Project #{project_details.name} and task #{@tasks_details.description} hours exide to 8 hours. \n"                
+    elsif (overtime == true || t[1][:task_id].nil?) && timesheet_activity_list[hashKey]>24      
+      count =count+1
+      if (!error_activity_list.has_key?(hashKey+"_Task_24"))        
+            error_activity_list[hashKey+"_Task_24"] = count.to_s+" : "+projrct_date+"  Project #{project_details.name} hours exide to 24 hours. \n"  
+      end
+      #notice_detail += count.to_s+" : "+projrct_date+"  Project #{project_details.name} hours exide to 24 hours. \n"            
+    elsif  prev_hours>24
+      count =count+1
+      if (!error_activity_list.has_key?(hashKey+"_OverALl_24"))        
+            error_activity_list[hashKey+"_OverALl_24"] = count.to_s+" : "+projrct_date+"  Over all day hours exide.\n"
+      end
+      #notice_detail += count.to_s+" : "+projrct_date+"  Over all day hours exide.\n"
+    end  
+    
+  end
+
       if !t[1][:date_of_activity].nil?
         logger.debug "DATE OF ACTIVITY IS NOT NIL"
         prev_date_of_activity = t[1][:date_of_activity]
-        if prev_date_of_activity.to_date == Date.today
-        @count=1;
-        end
-      else    
+      else        
         if t[1][:date_of_activity].nil? && t[1][:hours].present?
-              logger.debug "DATE OF ACTIVITY IS ACTUALLY NIL MAN"            
-                new_day = TimeEntry.new
-                new_day.date_of_activity = prev_date_of_activity
-                new_day.project_id = t[1][:project_id]
-                new_day.task_id = t[1][:task_id]
-                new_day.hours = t[1][:hours]
-                new_day.activity_log = t[1][:activity_log]
-                new_day.updated_by = t[1][:updated_by]
-                new_day.user_id = week_user
-                new_day.partial_day = t[1][:partial_day]
-                @week.time_entries.push(new_day)            
-        end           
-      end
-       #End if !t[1]
+          logger.debug "DATE OF ACTIVITY IS ACTUALLY NIL MAN"
+          new_day = TimeEntry.new
+          new_day.date_of_activity = prev_date_of_activity
+          new_day.project_id = t[1][:project_id]
+          new_day.task_id = t[1][:task_id]
+          new_day.hours = t[1][:hours]
+          new_day.activity_log = t[1][:activity_log]
+          new_day.updated_by = t[1][:updated_by]
+          new_day.user_id = week_user
+          new_day.partial_day = t[1][:partial_day]        
+          @week.time_entries.push(new_day)
+        end
+      end                                   #End if !t[1]
       logger.debug "#{t[0]}"
       if t[1]["project_id"] == "" 
         t[1]["project_id"] = nil
@@ -363,6 +425,14 @@ class WeeksController < ApplicationController
       end
 
     end #End Of Iteration for week_params
+    if error_activity_list.present?&& error_activity_list.count>0
+      error_activity_list.each do |error_Notice,value|
+
+      notice_detail +=value.to_s+" "
+      end
+       flash[:alert]= notice_detail
+       return redirect_back(fallback_location: projects_path, alert:  notice_detail)
+    end
     test_array
     logger.debug("TEST ARRAY ---------------------#{test_array.inspect}")
         ##
