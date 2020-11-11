@@ -199,9 +199,9 @@ end
           t[1]["id"] = Task.all.count + 1
         end
         if Task.where(id: t[1]["id"]).present?
-          @task = Task.find(t[1]["id"]).update(code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"], imported_from: t[1]["imported_from"])
+          @task = Task.find(t[1]["id"]).update(code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"], estimated_time: t[1]["estimated_time"], overtime: t[1]["overtime"], imported_from: t[1]["imported_from"])
         else
-          @task = Task.create(id: t[1]["id"], code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"], imported_from: t[1]["imported_from"], project_id: @project.id)
+          @task = Task.create(id: t[1]["id"], code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"],estimated_time: t[1]["estimated_time"], overtime: t[1]["overtime"], imported_from: t[1]["imported_from"], project_id: @project.id)
         end
       end
     end
