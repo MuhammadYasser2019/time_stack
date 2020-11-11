@@ -334,7 +334,9 @@ class WeeksController < ApplicationController
     end
     prev_hours  = prev_hours + t[1][:hours].to_i    
     #prev_project = t[1][:project_id]
-    project_details = Project.where(id: t[1][:project_id]).last  
+    project_details = Project.where(id: t[1][:project_id]).last     
+    project_user = ProjectsUser.where(project_id: t[1][:project_id] ,user_id: week.user_id).last    
+    shift_hours = ProjectShift.where(id: project_user.project_shift_id).last.shift.regular_hours      
     if t[1][:task_id].present?
         #prev_task = t[1][:task_id]
         @tasks_details = Task.where(id: t[1][:task_id]).last        
@@ -359,22 +361,22 @@ class WeeksController < ApplicationController
     else
       projrct_date = (t[1][:date_of_activity].to_date).strftime('%Y-%m-%d')
     end
-    if timesheet_activity_list[hashKey]>8 && overtime==false && !t[1][:task_id].nil?
+    if timesheet_activity_list[hashKey]>shift_hours && overtime==false && !t[1][:task_id].nil?
           count =count+1
-          if (!error_activity_list.has_key?(hashKey+"_8"))        
-            error_activity_list[hashKey+"_8"] = count.to_s+" : "+projrct_date+"  Project #{project_details.name} and task #{@tasks_details.description} hours exide to 8 hours. \n"
+          if (!error_activity_list.has_key?(hashKey+"_"+shift_hours.to_s))        
+            error_activity_list[hashKey+"_"+shift_hours.to_s] = count.to_s+" : "+projrct_date+"  Project #{project_details.name} and task #{@tasks_details.description} hours exceed to "+shift_hours.to_s+" hours. \n"
           end
           #notice_detail += count.to_s+" : "+projrct_date+"  Project #{project_details.name} and task #{@tasks_details.description} hours exide to 8 hours. \n"                
     elsif (overtime == true || t[1][:task_id].nil?) && timesheet_activity_list[hashKey]>24      
       count =count+1
       if (!error_activity_list.has_key?(hashKey+"_Task_24"))        
-            error_activity_list[hashKey+"_Task_24"] = count.to_s+" : "+projrct_date+"  Project #{project_details.name} hours exide to 24 hours. \n"  
+            error_activity_list[hashKey+"_Task_24"] = count.to_s+" : "+projrct_date+"  Project #{project_details.name} hours exceed to 24 hours. \n"  
       end
       #notice_detail += count.to_s+" : "+projrct_date+"  Project #{project_details.name} hours exide to 24 hours. \n"            
     elsif  prev_hours>24
       count =count+1
       if (!error_activity_list.has_key?(hashKey+"_OverALl_24"))        
-            error_activity_list[hashKey+"_OverALl_24"] = count.to_s+" : "+projrct_date+"  Over all day hours exide.\n"
+            error_activity_list[hashKey+"_OverALl_24"] = count.to_s+" : "+projrct_date+"  Over all day hours exceed.\n"
       end
       #notice_detail += count.to_s+" : "+projrct_date+"  Over all day hours exide.\n"
     end  
