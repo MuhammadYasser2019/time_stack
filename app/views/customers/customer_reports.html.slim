@@ -30,7 +30,7 @@
           
           td = check_box_tag "exclude_pending_users", true, params["exclude_pending_users"]
           td = check_box_tag "exclude_inactive_users", true, params["exclude_inactive_users"]
-          td = select_tag "Tasks", options_for_select([["Billable Tasks", "true"], ["Unbillable Tasks", "false"]], params[:Tasks])
+          td = select_tag "Tasks", options_for_select([["Billable Tasks", "true"], ["Unbillable Tasks", "false"]], params[:Tasks]), include_blank: true
           td = button_tag "Show Report", class:"orange-button", style: "width: 84px"
           td = button_tag "Set as default", name: 'default', class:"orange-button", style: "width: 84px"
           td = link_to "Clear Filter", clear_filter_path(@customer.id), class:"orange-button small-2 cell", style: "width: 84px"
