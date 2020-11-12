@@ -335,8 +335,9 @@ class WeeksController < ApplicationController
     prev_hours  = prev_hours + t[1][:hours].to_i    
     #prev_project = t[1][:project_id]
     project_details = Project.where(id: t[1][:project_id]).last     
-    project_user = ProjectsUser.where(project_id: t[1][:project_id] ,user_id: week.user_id).last    
-    shift_hours = ProjectShift.where(id: project_user.project_shift_id).last.shift.regular_hours      
+    project_user = ProjectsUser.where(project_id: t[1][:project_id] ,user_id: week.user_id).last
+    ps =  ProjectShift.where(id: project_user.project_shift_id).last 
+    shift_hours = ps.present? ? ps.shift.regular_hours : 8     
     if t[1][:task_id].present?
         #prev_task = t[1][:task_id]
         @tasks_details = Task.where(id: t[1][:task_id]).last        
