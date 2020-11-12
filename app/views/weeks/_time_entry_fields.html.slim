@@ -47,9 +47,9 @@
       = f.object.hours
      - else
       -if f.object.date_of_activity.strftime("%A") == "Saturday" || f.object.date_of_activity.strftime("%A") == "Sunday" 
-          = f.number_field :hours, :class =>'form-control input-sm hours-input' 
+          = f.number_field :hours, step: :any, :class =>'form-control input-sm hours-input' 
       -else
-        = f.number_field :hours, :class =>'form-control input-sm hours-input', min: "0", required: true   
+        = f.number_field :hours, step: :any, :class =>'form-control input-sm hours-input', min: "0", required: true   
     div(class="toggle enter_time")
       Strong(class="thisisit") In:
       = f.time_select(:time_in, ampm: true,ignore_date: true, include_blank: true,:default => {:hour => '', :minute => ''}, class: "time-in-move form-control" )
