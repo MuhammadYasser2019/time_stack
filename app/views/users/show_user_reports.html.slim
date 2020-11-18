@@ -133,6 +133,7 @@
           td Description
           td Amount          
           td Approved By
+          td Attachment
       tbody
       - @expenses.each do |t|
         tr
@@ -141,6 +142,9 @@
           td.expensetype = t.expense_type
           td.description = t.description
           td.amount = t.amount
+          td
+          td = link_to "#{t.attachment_identifier} on #{t.created_at.to_date}", t.attachment.url, :target => "_blank" if t.attachment_identifier.present?
+
       tr
         td
         td 
@@ -149,7 +153,7 @@
         td = @amount_sum
         td 
         td
-        td
+        td        
 - else
    h1 You are not allowed to access this page.
 
