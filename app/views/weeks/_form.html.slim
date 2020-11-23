@@ -1,6 +1,6 @@
 = form_for @week, :html => {:multiparts => true} do |f|
   - if @week.errors.any?
-    #error_explanation
+    #error_explanation{style="margin-left:425px;"}
       h2 = "#{pluralize(@week.errors.count, "error")} prohibited this week from being saved:"
       ul
         - @week.errors.full_messages.each do |message|
@@ -35,20 +35,22 @@
   - else
 
     div.upload_text.row
-     div.col-md-3(style="margin-left:auto;")
-      - if find_status(@week) == "APPROVED"
-         = label_tag(:time_sheet, "Upload Timesheet", class: 'orange-button action upload-timesheet', for: 'file-upload')
-         = f.fields_for :upload_timesheets do |u|
-          = u.file_field(:time_sheet, id: "file-upload",disabled: true)
-      -else
-        = label_tag(:time_sheet, "Upload Timesheet", class: 'orange-button action upload-timesheet', for: 'file-upload')
-        = f.fields_for :upload_timesheets do |u|
-        
-          = u.file_field(:time_sheet, id: "file-upload") 
-      - @week.upload_timesheets.each do |t|
-        - if t.time_sheet.present?
-          div = link_to "You have attached: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
-      = button_tag "Add Expenses", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon orange-button", data: {toggle: "modal", target: "#expenseRecordManagement"}, disabled: (@week.status_id == 3)
+      div.col-md-12(style="margin-left:auto;padding:10px;")
+        - @week.upload_timesheets.each do |t|
+          - if t.time_sheet.present?
+            div = link_to "You have attached: #{t.time_sheet_identifier} on #{t.created_at.to_date}", t.time_sheet.url, :target => "_blank"
+      div.col-md-3(style="margin-left:auto;")
+        - if find_status(@week) == "APPROVED"
+           = label_tag(:time_sheet, "Upload Timesheet", class: 'orange-button action upload-timesheet', for: 'file-upload')
+           = f.fields_for :upload_timesheets do |u|
+            = u.file_field(:time_sheet, id: "file-upload",disabled: true)
+        -else
+          = label_tag(:time_sheet, "Upload Timesheet", class: 'orange-button action upload-timesheet', for: 'file-upload')
+          = f.fields_for :upload_timesheets do |u|
+          
+            = u.file_field(:time_sheet, id: "file-upload") 
+      
+        = button_tag "Add Expenses", id: "expense_record_#{@week_user.id}_#{@week.id}_#{@project_id}", class: "button expense_record_icon orange-button", data: {toggle: "modal", target: "#expenseRecordManagement"}, disabled: (@week.status_id == 3)
 
     .actions.timesheet-actions
      = f.submit "Save Timesheet", disabled: (@week.status_id == 2 || @week.status_id == 3), style: 'border: 2px solid #10a7ff !important;' if find_status(@week) != "APPROVED"

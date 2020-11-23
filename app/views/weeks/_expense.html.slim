@@ -21,10 +21,10 @@ div class="modal-dialog" role="document" style="position:fixed;left:115px;"
 				tbody
 					tr
 
-						td = select_tag :expense_type,options_for_select(::Week::EXPENSE_TYPE),class:'form-control',selected: (@expense.present? ? @expense.expense_type : 'selected')
-						td = select_tag :date, options_for_select(@week_dates) , selected: (@expense.present? ? @expense.date : 'selected'), class: 'form-control'
-						td = select_tag :project_id, options_for_select(@projects.pluck(:name)), class: 'form-control'
-						td = text_field_tag :description ,((@expense.present? && @expense.description.present?) ? @expense.description : "")
+						td = select_tag :expense_type,options_for_select(::Week::EXPENSE_TYPE,@expense.present? ? @expense.expense_type : '' ), class:'form-control'
+						td = select_tag :date, options_for_select(@week_dates, @expense.present? ? @expense.date : ''), class: 'form-control'
+						td = select_tag :project_id, options_for_select(@projects.pluck(:name), @expense.present? ? @expense.project_id : ''), class: 'form-control'
+						td = text_field_tag :description ,((@expense.present? && @expense.description.present?) ? @expense.description : ""), class: 'form-control'
 						td = number_field_tag :amount,((@expense.present? && @expense.amount.present?) ? @expense.amount : "0"), class: "form-control"
 						td 
 							= label_tag(:attachment, "Attach Bills", for: "attachment-upload")
@@ -42,5 +42,5 @@ div class="modal-dialog" role="document" style="position:fixed;left:115px;"
 		      - @expenseattachment.each do |at|            
 	            tr
 	              td = link_to "#{at.attachment_identifier} on #{at.created_at.to_date}", at.attachment.url, :target => "_blank" if at.attachment_identifier.present?
-	              td =button_tag "Delete", id: "delete_#{at.expense_record_id}_#{at.id}", class: "button btn alert delete_attachment" 
+	              td =button_tag "Delete", id: "delete_#{at.expense_record_id}_#{at.id}", class: "button orange-button btn alert delete_attachment" 
 

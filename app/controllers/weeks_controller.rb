@@ -133,7 +133,7 @@ class WeeksController < ApplicationController
       @week.proxy_user_id = current_user.id
       @week.save!
     end
-
+debugger
     if current_user.id == @week.user_id
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", current_user.id )
     else
@@ -198,7 +198,6 @@ class WeeksController < ApplicationController
     #@week = Week.eager_load(:time_entries).where("weeks.id = ? and time_entries.user_id = ?", params[:id], current_user.id).take
     @week = Week.find(params[:id])
     @user_id = current_user.id
-
     @week_user = User.find(@week.user_id)
     logger.debug("WEEK USER IS: #{@week_user.inspect}")
     if @week.status_id == 4
@@ -209,6 +208,7 @@ class WeeksController < ApplicationController
     elsif @week.status_id == 2 || @week.status_id == 3
       @time_entries = @week.time_entries.where(status_id: @week.status_id)
     end
+    
     if current_user == @week.user_id
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=? && current_shift=?", current_user.id , true)
     else
@@ -276,6 +276,14 @@ class WeeksController < ApplicationController
     @week.proxy_user_id = current_user.id
     @week.proxy_updated_date = Time.now
     prev_date_of_activity =""
+    if current_user == @week.user_id
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=? && current_shift=?", current_user.id , true)
+    else
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=? && current_shift=?", @week.user_id, true )
+    end
+    @week_user = User.find(@week.user_id)
+    emp_type = EmploymentType.find current_user.employment_type
+    @vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", @week_user.customer_id, true)
     week_params["time_entries_attributes"].each do |t|
       # store teh date of activity from previous row
       if !t[1][:date_of_activity].nil?
@@ -325,6 +333,14 @@ class WeeksController < ApplicationController
     error_activity_list = Hash.new
     hashKey=""
     projrct_date=""
+    if current_user == @week.user_id
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=? && current_shift=?", current_user.id , true)
+    else
+      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=? && current_shift=?", @week.user_id, true )
+    end
+    @week_user = User.find(week.user_id)
+    emp_type = EmploymentType.find current_user.employment_type
+    @vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", @week_user.customer_id, true)
     week_params["time_entries_attributes"].permit!.to_h.each do |t|
       # store the date of activity from previous row
       overtime=false
