@@ -7,7 +7,7 @@ class TimeEntry < ApplicationRecord
   belongs_to :project_shift
   has_many :archived_time_entry
 
-  validates_length_of :activity_log,  maximum: 5, allow_blank: true
+  validates_length_of :activity_log,  maximum: 500, allow_blank: true
 
  
   before_save :calculate_hours
