@@ -222,6 +222,7 @@ class WeeksController < ApplicationController
     @vacation_types = emp_type.vacation_types.where("customer_id=? && active=?", @week_user.customer_id, true)
     @tasks = Task.where(project_id: 1) if @tasks.blank?
     @expenses = ExpenseRecord.where(week_id: @week.id)
+    @expenseattachment=ExpenseAttachment.where(expense_record_id: @expenses.ids)
     @week.upload_timesheets.build if @week.upload_timesheets.blank?
     vacation(@week)
     # vr.where("status = ? && vacation_start_date >= ?", "Approved", @week.start_date)
@@ -502,6 +503,7 @@ class WeeksController < ApplicationController
                      logger.debug("USER IS UPDATED ***************")
                    end
                    @expenses = ExpenseRecord.where(week_id: @week.id)
+                   @expenseattachment=ExpenseAttachment.where(expense_record_id: @expenses.ids)
                    logger.debug "THE EXPENSES IN WEEKS-UPDATE #{@expenses.inspect}"
                    create_vacation_request(@week) if params[:commit] == "Submit Timesheet"
                    if @week.status_id == 2
@@ -574,7 +576,8 @@ class WeeksController < ApplicationController
                      we.update(user_id: week_user)  
                      logger.debug("USER IS UPDATED ***************")
                    end
-                   @expenses = ExpenseRecord.where(week_id: @week.id)
+                   @expenses = ExpenseRecord.where(week_id: @week.id)                   
+                   @expenseattachment=ExpenseAttachment.where(expense_record_id: @expenses.ids)
                    logger.debug "THE EXPENSES IN WEEKS-UPDATE #{@expenses.inspect}"
                    create_vacation_request(@week) if params[:commit] == "Submit Timesheet"
                    if @week.status_id == 2
@@ -658,6 +661,7 @@ class WeeksController < ApplicationController
     @print_report = params[:hidden_print_report] if !params[:hidden_print_report].nil?
     @week = Week.find(params[:id])
     @expenses = ExpenseRecord.where(week_id: @week.id)
+    @expenseattachment=ExpenseAttachment.where(expense_record_id: @expenses.ids)
     @user_name = User.find(@week.user_id)
     @projects = @user_name.projects
     logger.debug "PROJECT quotes: #{!params[:project] == ''}"
@@ -698,44 +702,93 @@ class WeeksController < ApplicationController
   end
 
   def expense_records
-    @week = Week.find(params[:week_id])
+    @week = Week.find(params[:week_id])   
     if request.get?
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
       @week_time_entries = TimeEntry.where(project_id: params[:project], week_id: @week.id).order(:date_of_activity)
       @start_date = @week.start_date.to_date
       @end_date = @week.end_date.to_date
       logger.debug("The IN REQUEST GET WEEK STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
-      @week_dates = @start_date.upto(@end_date)
-      @expenses = ExpenseRecord.where(week_id: @week.id)
+      @week_dates = @start_date.upto(@end_date)      
+      #@expenses = ExpenseRecord.where(week_id: @week.id)
       respond_to do |format|
         format.js
       end
     else
-      logger.debug("EXPENSE RECORD- #{params.inspect}")
-      @expense = ExpenseRecord.new
-      @expense.expense_type = params[:expense_type]
-      @expense.date = params[:date]
-      @expense.description = params[:description]
-      @expense.amount = params[:amount]
-      @expense.week_id = params[:week_id]
-      @expense.attachment = params[:attachment]
-      if !params[:project_id].nil?
-        @expense.project_id = Project.find_by_name(params[:project_id]).id
+      if !params[:expense_id].present?
+          logger.debug("EXPENSE RECORD- #{params.inspect}")
+          @expense = ExpenseRecord.new
+          @expense.expense_type = params[:expense_type]
+          @expense.date = params[:date]
+          @expense.description = params[:description]
+          @expense.amount = params[:amount]
+          @expense.week_id = params[:week_id]
+         # @expense.attachment = params[:attachment]
+          if !params[:project_id].nil?
+            @expense.project_id = Project.find_by_name(params[:project_id]).id
+          end
+          #logger.debug("EXPENSE FOUND #{@expense.inspect}")
+          @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
+          logger.debug("The PROJECTS ARE #{@projects.inspect}")
+          @start_date = @week.start_date.to_date
+          @end_date = @week.end_date.to_date
+          logger.debug("The WEEK AFTER GET ----------- STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
+          @week_dates = @start_date.upto(@end_date)
+          logger.debug("The 7 DATES ARE #{@week_dates.inspect}")
+          @expense.save
+          @expense.attachment.url
+          @expense.attachment.current_path
+          @expense.attachment_identifier          
+          if params[:attachment].present?
+            params[:attachment].each do |at|            
+            @expense_attachment=ExpenseAttachment.new
+              @expense_attachment.attachment = at
+              @expense_attachment.expense_record_id =@expense.id
+              @expense_attachment.save
+             # @expense_attachment.attachment.url
+             # @expense_attachment.attachment.current_path
+             # @expense_attachment.attachment_identifier
+              end
+        end
+        else
+          @expense = ExpenseRecord.where(id: params[:expense_id]).last          
+          @expense.expense_type = params[:expense_type]
+          @expense.date = params[:date]
+          @expense.description = params[:description]
+          @expense.amount = params[:amount]
+          @expense.week_id = params[:week_id]
+         # @expense.attachment = params[:attachment]
+          if !params[:project_id].nil?
+            @expense.project_id = Project.find_by_name(params[:project_id]).id
+          end
+          #logger.debug("EXPENSE FOUND #{@expense.inspect}")
+          @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
+          logger.debug("The PROJECTS ARE #{@projects.inspect}")
+          @start_date = @week.start_date.to_date
+          @end_date = @week.end_date.to_date
+          logger.debug("The WEEK AFTER GET ----------- STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
+          @week_dates = @start_date.upto(@end_date)
+          logger.debug("The 7 DATES ARE #{@week_dates.inspect}")
+          @expense.save
+          @expense.attachment.url
+          @expense.attachment.current_path
+          @expense.attachment_identifier          
+          if params[:attachment].present?
+            params[:attachment].each do |at|            
+            @expense_attachment=ExpenseAttachment.new
+              @expense_attachment.attachment = at
+              @expense_attachment.expense_record_id =@expense.id
+              @expense_attachment.save
+             # @expense_attachment.attachment.url
+             # @expense_attachment.attachment.current_path
+             # @expense_attachment.attachment_identifier
+            end
+          end
       end
-      #logger.debug("EXPENSE FOUND #{@expense.inspect}")
-      @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
-      logger.debug("The PROJECTS ARE #{@projects.inspect}")
-      @start_date = @week.start_date.to_date
-      @end_date = @week.end_date.to_date
-      logger.debug("The WEEK AFTER GET ----------- STARTDATE #{@start_date.inspect} AND END DATE IS #{@end_date.inspect}")
-      @week_dates = @start_date.upto(@end_date)
-      logger.debug("The 7 DATES ARE #{@week_dates.inspect}")
-      @expense.save
-      @expense.attachment.url
-      @expense.attachment.current_path
-      @expense.attachment_identifier
       @expenses = ExpenseRecord.where(week_id: @week.id)
+      @expenseattachment=ExpenseAttachment.where(expense_record_id: @expenses.ids)
       logger.debug("EXPENSES COUNT #{@expenses.count}")
+      
       redirect_to edit_week_path(@week)
     end
     
@@ -746,13 +799,47 @@ class WeeksController < ApplicationController
   def delete_expense 
     @week = Week.find(params[:week_id])
     @expense_row = ExpenseRecord.find(params[:expense].to_i)
+    expense_record_id =@expense_row.id
     logger.debug("DELETING THE ROW #{@expense_row.inspect}")
-    @expense_row.destroy
+    @expense_row.destroy    
     logger.debug("DELETING THE EXPENSE*******")
+    @expense_row_id = params[:week_id]+"_"+params[:expense]
       #@verb = "Removed" 
+    #redirect_to edit_week_path(@week)
+  end
+
+  def delete_attachment     
+    @expense_attachemnt_row = ExpenseAttachment.find(params[:expense_attachment].to_i)
+    logger.debug("DELETING THE ROW #{@expense_Attachment_row.inspect}")
+    @expense_attachemnt_row.destroy
+    logger.debug("DELETING THE EXPENSE Attachement*******")
+    @expense = ExpenseRecord.where(id: params[:expense]).last
+    @week = Week.find(@expense.week_id)
+    @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
+    @expenseattachment=ExpenseAttachment.where(expense_record_id: @expense.id)
+    @start_date = @week.start_date.to_date
+      @end_date = @week.end_date.to_date   
+    @week_dates = @start_date.upto(@end_date)
     respond_to do |format|
-      format.js
+        format.js
     end
+      #@verb = "Removed" 
+    #redirect_to edit_week_path(@week)
+  end
+
+
+  def edit_expense 
+    @week = Week.find(params[:week_id])
+    @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", @week.user_id ).to_a
+    @expense = ExpenseRecord.where(id: params[:expense]).last
+    @expenseattachment=ExpenseAttachment.where(expense_record_id: @expense.id)
+    @start_date = @week.start_date.to_date
+      @end_date = @week.end_date.to_date   
+    @week_dates = @start_date.upto(@end_date)
+    respond_to do |format|
+        format.js
+    end
+   
   end
 
   def time_reject

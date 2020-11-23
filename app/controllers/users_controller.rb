@@ -334,7 +334,12 @@ class UsersController < ApplicationController
    
     # @week = Week.where("start_date >=? and end_date <=? and user_id=?", params["proj_report_start_date"], params["proj_report_end_date"], @user.id)
     @week ,@weekIds = @user.find_week_id(params[:proj_report_start_date], params[:proj_report_end_date], @user)
+    if !params[:project].blank?
+    @expenses = ExpenseRecord.where(week_id: @weekIds , project_id: params[:project])
+    else
     @expenses = ExpenseRecord.where(week_id: @weekIds)
+    end
+    @expenseattachment=ExpenseAttachment.where(expense_record_id: @expenses.ids)    
     @amount_sum = 0
     @expenses.each do |t|
       if !t.amount.nil?

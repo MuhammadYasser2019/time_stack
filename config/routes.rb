@@ -243,6 +243,8 @@ Rails.application.routes.draw do
   get 'remove_emp_from_vacation' => "customers#remove_emp_from_vacation"
   match "/expense_records" => 'weeks#expense_records', via: [:get, :post]
   get '/delete_expense' => "weeks#delete_expense"
+  get '/delete_attachment' => "weeks#delete_attachment"
+  get '/edit_expense' => "weeks#edit_expense"
   post "/add_expense_records" => "weeks#add_expense_records"
   get 'get_employment/' => 'customers#get_employment'
 

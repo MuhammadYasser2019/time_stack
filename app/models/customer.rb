@@ -199,7 +199,6 @@ class Customer < ApplicationRecord
 
   def find_week_id(start_date, end_date,user_array)
     week_array = []
-
     user_array.each do |u|
       t = TimeEntry.where(user_id: u, date_of_activity: start_date..end_date)
       logger.debug("THE T ARE : #{t} and the user is #{u}")
