@@ -655,21 +655,24 @@ end
     logger.debug "INVITED BY #{params[:invited_by_id]}"
     project = Project.find(params[:project_id])
     project_id = params[:project_id]
-    @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, default_project: project_id)
-    @user.update(invited_by_id: params[:invited_by_id], customer_id: project.customer_id, parent_user_id: current_user.id)
-    pu = ProjectsUser.new
-    # @users_on_project = @project.users
-    # @users_on_project = params[:user_id]
-    # @project = Project.find(1)
-
-    user = User.find(@user.id)
-    
-    if project.users.include?(user)
-      
+    existing_user = User.find_by(email: params[:email])
+    if existing_user.present?
+      flash[:alert]= "User already exists"
+      return redirect_to manage_profiles_path 
     else
-      project.users.push(user)
+      @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, default_project: project_id)
+      @user.update(invited_by_id: params[:invited_by_id], customer_id: project.customer_id, parent_user_id: current_user.id)
+      pu = ProjectsUser.new
+    
+      user = User.find(@user.id)
+    
+      if project.users.include?(user)
+        
+      else
+        project.users.push(user)
+      end
+      project.save
     end
-    project.save
 
     redirect_to manage_profiles_path
   end
