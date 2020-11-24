@@ -10,7 +10,7 @@
          span aria-hidden="true"> &times;</button>
           
         </div>
-      <div class="modal-body">
+      <div class="modal-body" style="overflow-y: scroll;height:500px" >
         <%= @faq.feature_data.html_safe %>
       </div>
       
@@ -20,6 +20,7 @@
 </div>
 
 <script type="text/javascript">
+  $('p').css("display", "none");
   $('h5').addClass('data_toggle glyphicon glyphicon-plus')
   $('.data_toggle').click(function (argument) {
     $(this).next('p').toggle();

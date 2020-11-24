@@ -106,9 +106,10 @@ div.tab-content.white-background
 		div class = "disp-message"
 			div class="vacation-left-row" 
 				h3.text-center Customer Employees
-				table class="table"
+				input style="margin:2px; width:35%" class="form-control"  type="text" id="myNewInput" onkeyup="myFunction()" placeholder="Search for names or emails.." 
+				table class="table" class="table" id="myNewTable" style="display:block;"
 					thead
-						tr
+						tr 
                           th User
                           th Email
                           th Action
@@ -118,21 +119,21 @@ div.tab-content.white-background
                           th Proxy PM
                           th Proxy CM
                          
-					tbody
+					tbody  style="display:block;overflow-y:scroll;overflow-x:hidden;height:400px;"
 						-@users.each_with_index do |uop, i|
 							-if uop.customer_id == params[:customer_id].to_i
 								tr(id = "users_#{i}") 
-									td = uop.first_name
-									td = link_to uop.email,  'javascript:void(0)',class: "open_edit_customer", style: "width:130px;", id: "user_#{uop.id}"
+									td style="width: 163px;" = uop.first_name
+									td = link_to uop.email,  'javascript:void(0)',class: "open_edit_customer", style: "display:block;width: 137px;overflow-wrap: break-word;", id: "user_#{uop.id}"
 
-									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "button alert remove-user-from-customer orange-button", style: "width:130px;"
+									td = button_tag "Remove", id: "#{i}_#{uop.id}", class: "button alert remove-user-from-customer orange-button", style: "width:138px;"
 									
-									td = link_to "Change Share Status", "javascript:void()", id: "c_id_#{params[:customer_id]}_u_id_#{uop.id}", class: "shared_user orange-button", style: "width: 130px;", type: "link", data: {toggle: "modal", target: "#sharedUser"}
-									td = link_to "Add Previous Week", 'javascript:void(0)',class: "open_previous_week orange-button", style: "width:130px;", id: "user_#{uop.id}"
-									td = check_box_tag "add_pm_role", uop.id, uop.pm?, class: "add_pm_role"
+									td = link_to "Change Share Status", "javascript:void()", id: "c_id_#{params[:customer_id]}_u_id_#{uop.id}", class: "shared_user orange-button", style: "width: 140px;", type: "link", data: {toggle: "modal", target: "#sharedUser"}
+									td = link_to "Add Previous Week", 'javascript:void(0)',class: "open_previous_week orange-button", style: "width:142px;", id: "user_#{uop.id}"
+									td = check_box_tag "add_pm_role", uop.id, uop.pm?, class: "add_pm_role", style:"width: 25px;"
 									
-									td = check_box_tag "add_pm_role", uop.id, uop.proxy?, class: "assign_proxy_role"
-									td = check_box_tag "add_proxy_cm", uop.id, uop.proxy_cm?, class: "assign_cm_proxy_role"
+									td  = check_box_tag "add_pm_role", uop.id, uop.proxy?, class: "assign_proxy_role", style:"width: 35px;"
+									td  = check_box_tag "add_proxy_cm", uop.id, uop.proxy_cm?, class: "assign_cm_proxy_role", style:"width: 25px;"
 
 									
 									
@@ -246,7 +247,30 @@ coffee:
     	format: "yyyy-mm-dd"
     })
 
+javascript:
+  function myFunction() {
+  // Declare variables
+  var input, filter, table, tr, td, i, txtValue;
+  input = document.getElementById("myNewInput");
+  filter = input.value.toUpperCase();
+  table = document.getElementById("myNewTable");
+  tr = table.getElementsByTagName("tr");
 
+  // Loop through all table rows, and hide those who don't match the search query
+  for (i = 0; i < tr.length; i++) {
+    td = tr[i].getElementsByTagName("td")[0];
+    td1 = tr[i].getElementsByTagName("td")[1];
+    if (td || td1) {
+      txtValue = td.textContent || td.innerHTML;
+      txtValue1 =td1.textContent || td1.innerHTML;
+      if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue1.toUpperCase().indexOf(filter)> -1){
+        tr[i].style.display = "";
+      } else {
+        tr[i].style.display = "none";
+      }
+    }
+  }
+  }
 
   
 				
