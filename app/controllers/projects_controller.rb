@@ -371,7 +371,7 @@ end
     #logger.debug "SHOW HOURS TIME ENRY #{@hours_expense_record_id}"
 
     @applicable_hours = TimeEntry.where("week_id= ? and project_id= ?", @week_id ,@project_id)
-
+    @expense_Amount  =ExpenseRecord.where("week_id= ? and project_id= ?", @week_id,@project_id).sum(:amount)  
   end
 
   def show_old_timesheets
