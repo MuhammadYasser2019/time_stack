@@ -269,6 +269,28 @@ jQuery ($) ->
       expense: expense
     return
   )
+  $(document).on('click', '.delete_attachment', ->
+    console.log("weeks.js- Delete Expense")
+    expense = $(this).attr('id').split("_")[1]
+    console.log("THE DELETE EXPENSE  ATTACHEMENT expense ID IS: " + expense)
+    expense_attachment = $(this).attr('id').split("_")[2]
+    console.log("Weeks.js- DELETE ROW "+"Expense Attachment-
+    row_id: "+ expense_attachment )
+    $.get "/delete_attachment",
+      expense: expense,
+      expense_attachment: expense_attachment
+    return
+  )
+
+  $(document).on('click', '.edit_expense', ->
+    console.log("weeks.js- Edit Expense") 
+    expense = $(this).attr('id').split("_")[2]  
+    week_id = $(this).attr('id').split("_")[1]     
+    $.get "/edit_expense",  
+      week_id: week_id,    
+      expense: expense
+    return
+  )
 
 
   $("tbody").on("click", ".add_button", ->

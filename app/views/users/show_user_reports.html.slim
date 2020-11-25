@@ -116,6 +116,57 @@
 - else
    h1 You are not allowed to access this page.
 
+
+- if (current_user.cm? && current_user.customer_id == @user.customer_id) || (current_user.proxy_cm? && current_user.customer_id == @user.customer_id) || (current_user.pm? && current_user.projects_users.collect(&:user_id).include?(@user.id)) || (current_user.pm? && @project.present? && @project.user_id == current_user.id) || current_user.id == @user.id
+  div.report
+
+    h1 Reports for Expense #{consultant_name(@user.first_name, @user.last_name, @user.email)}
+    = form_tag "/show_user_reports/#{params[:id]}",id: "user_report_form", method: :get
+    table
+        
+    table border="1"
+      thead
+        tr
+          td Project 
+          td Date
+          td Expense Type
+          td Description
+          td Amount          
+          td Approved By          
+      tbody
+      - @expenses.each do |t|
+        tr
+          td.project = t.project.name if !t.project.nil?
+          td.date = t.date.strftime('%Y-%m-%d')
+          td.expensetype = t.expense_type
+          td.description = t.description
+          td.amount = t.amount
+          td          
+
+      tr
+        td
+        td 
+        td 
+        td Total amount:
+        td = @amount_sum
+        td 
+        td
+        td                    
+    br
+    table
+      thead
+        tr
+          td Attached File          
+        tbody
+          - @expenseattachment.each do |at|            
+                tr
+                  td = link_to "#{at.attachment_identifier} on #{at.created_at.to_date}", at.attachment.url, :target => "_blank" if at.attachment_identifier.present?
+                  
+
+- else
+   h1 You are not allowed to access this page.
+
+
 coffee:
   $(document).ready ->
     checkboxes = $('input')

@@ -21,6 +21,8 @@
 				          = hidden_field_tag :customer_id, @customer.id
 				          .actions
 				            = submit_tag 'Invite Users', class: 'btn-primary invite_user_button'
+		- if flash[:alert]
+  			.alert= flash[:alert]
 		div.right-row
 			h1 Pending Users
 			table class="right-row"

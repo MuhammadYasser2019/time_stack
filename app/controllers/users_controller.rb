@@ -234,6 +234,7 @@ class UsersController < ApplicationController
   
 
   def show_user_reports
+    
     if params[:commit] == "Download Zip"
       zip_ids = params[:zip_ids]
       if zip_ids.present?
@@ -282,7 +283,7 @@ class UsersController < ApplicationController
       params[:proj_report_start_date] = Date.today.strftime("%Y-%m-01")
       params[:proj_report_end_date] = Date.today.strftime("%Y-%m-%d")
     end 
-
+    
     user_id = @user.id
     @users = User.all
     @user_projects = @user.projects
@@ -295,7 +296,8 @@ class UsersController < ApplicationController
     else
       @time_entries = TimeEntry.where(user_id: @user.id,date_of_activity: time_period).order(:date_of_activity)
     end
-
+    
+    
     @dates_array = @user.find_dates_to_print(params[:proj_report_start_date], params[:proj_report_end_date])
     logger.debug "HELLO THERE: #{@dates_array}"
     @daily_totals = Array.new
@@ -329,8 +331,21 @@ class UsersController < ApplicationController
         @hours_sum += t.hours
       end
     end
+   
     # @week = Week.where("start_date >=? and end_date <=? and user_id=?", params["proj_report_start_date"], params["proj_report_end_date"], @user.id)
-    @week = @user.find_week_id(params[:proj_report_start_date], params[:proj_report_end_date], @user)
+    @week ,@weekIds = @user.find_week_id(params[:proj_report_start_date], params[:proj_report_end_date], @user)
+    if !params[:project].blank?
+    @expenses = ExpenseRecord.where(week_id: @weekIds , project_id: params[:project])
+    else
+    @expenses = ExpenseRecord.where(week_id: @weekIds)
+    end
+    @expenseattachment=ExpenseAttachment.where(expense_record_id: @expenses.ids)    
+    @amount_sum = 0
+    @expenses.each do |t|
+      if !t.amount.nil?
+        @amount_sum += t.amount
+      end
+    end
     @available_csv = 0;
     @week.each do|w|
       w.upload_timesheets.each do |t|
@@ -456,7 +471,7 @@ end
       end
     end
     
-    @week = @user.find_week_id(proj_report_start_date, proj_report_end_date, @user)
+    @week ,@weekIds = @user.find_week_id(proj_report_start_date, proj_report_end_date, @user)
     @available_csv = 0;
     @week.each do|w|
       w.upload_timesheets.each do |t|
@@ -640,21 +655,24 @@ end
     logger.debug "INVITED BY #{params[:invited_by_id]}"
     project = Project.find(params[:project_id])
     project_id = params[:project_id]
-    @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, default_project: project_id)
-    @user.update(invited_by_id: params[:invited_by_id], customer_id: project.customer_id, parent_user_id: current_user.id)
-    pu = ProjectsUser.new
-    # @users_on_project = @project.users
-    # @users_on_project = params[:user_id]
-    # @project = Project.find(1)
-
-    user = User.find(@user.id)
-    
-    if project.users.include?(user)
-      
+    existing_user = User.find_by(email: params[:email])
+    if existing_user.present?
+      flash[:alert]= "User already exists"
+      return redirect_to manage_profiles_path 
     else
-      project.users.push(user)
+      @user = User.invite!(email: params[:email], :invitation_start_date => params[:invite_start_date],:employment_type => params[:employment_type], invited_by_id: params[:invited_by_id].to_i, default_project: project_id)
+      @user.update(invited_by_id: params[:invited_by_id], customer_id: project.customer_id, parent_user_id: current_user.id)
+      pu = ProjectsUser.new
+    
+      user = User.find(@user.id)
+    
+      if project.users.include?(user)
+        
+      else
+        project.users.push(user)
+      end
+      project.save
     end
-    project.save
 
     redirect_to manage_profiles_path
   end

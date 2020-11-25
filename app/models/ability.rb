@@ -11,7 +11,7 @@ class Ability
            :get_notification, :show_user_weekly_reports, :manage_profiles, 
            :invite_sub_users, :login_user, :assign_project, :single_vacation_request, :add_multiple_user_recommendation, :add_multiple_user_disciplinary,:add_multiple_user_inventory,:set_selected_users,:set_inventory_submitted_date,:inventory_and_equipment_reports,:accept_terms_and_condition], User
       can [:read, :available_tasks], Task
-      can [:read, :edit, :create, :update, :new, :report, :copy_timesheet, :clear_timesheet, :previous_comments, :add_previous_comments, :expense_records, :delete_expense], Week
+      can [:read, :edit, :create, :update, :new, :report, :copy_timesheet, :clear_timesheet, :previous_comments, :add_previous_comments, :expense_records, :delete_expense, :edit_expense, :delete_attachment], Week
       can [:read, :permission_denied, :show_old_timesheets], Project
       can [:vacation_request, :pre_vacation_request, :cancel_vacation_request, :shift_change_request, :shift_request], Customer
       can [:single_vacation_request,:open_previous_week_modal], Week

@@ -22,5 +22,9 @@ div class="modal-dialog" role="document"
                 = ah.hours
               td
                 = ah.activity_log
+        tr
+          td 
+            strong Total Expense :-
+          td  =@expense_Amount
 
       = link_to "WEEK","/weeks/#{@week_id}/report", class: "show_weeks orange-button", type: "button", target: :_blank
