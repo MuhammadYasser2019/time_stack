@@ -133,7 +133,7 @@ class WeeksController < ApplicationController
       @week.proxy_user_id = current_user.id
       @week.save!
     end
-debugger
+
     if current_user.id == @week.user_id
       @projects =  Project.where(inactive: [false, nil]).joins(:projects_users).where("projects_users.user_id=?", current_user.id )
     else
