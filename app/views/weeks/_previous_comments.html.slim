@@ -1,7 +1,7 @@
 div class="add_comments modal-dialog" role="document" style="position:fixed;left:115px;"
   div.modal-content
     div.modal-header
-      h5 class="modal-title" style="text-align:center;" HOURS
+      h5 class="modal-title" style="text-align:center;"DESCRIPTION
       button.close type="button" aria-label="Close" data-dismiss="modal"  
           span aria-hidden="true"  &times;
     div.modal-body
@@ -21,3 +21,12 @@ div class="add_comments modal-dialog" role="document" style="position:fixed;left
                 = radio_button_tag("activity_log",t.id, true, class: "radio_input")
 
         = submit_tag "ADD" , :id=> "add_button" , :class=> "add_button_class"
+
+javascript:
+  $(document).ready(function(){
+  $('#add_button').click(function(){  
+  $('#userPreviousComments').modal('hide');
+  });
+  });
+
+
