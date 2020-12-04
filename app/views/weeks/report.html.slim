@@ -10,7 +10,7 @@ div.report
       -if @print_report == "true"
 
       -else
-        = select_tag :project, options_from_collection_for_select(@projects, "id", "name", params[:project]), :include_blank => true
+        = select_tag :project, options_from_collection_for_select(@projects, "id", "name", params[:project]), :include_blank => true, :style=> "width:32%;margin-right:10px;outline:1px solid orange;"
         = hidden_field_tag 'hidden_print_report', false
         = submit_tag "Change Project"
 
