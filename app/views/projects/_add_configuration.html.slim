@@ -10,24 +10,22 @@ h6 New Configuration Setup
 		tr.dark_row
 			th External System
 			th Email
-			th Password
 		tr 
 
-			td = select_tag :system_type, options_for_select(Customer::EXTERNAL_SYSTEMS), required: true, include_blank: true
-			
+			td JIRA
+			= hidden_field_tag :system_type, "Jira"
 			td = text_field_tag :jira_email, '' , required: true
-			td = password_field_tag :password, '', required: true
 		tr.dark_row
+			th API Token
 			th External Url
-			th
-			th Confirm Password
 		tr 
+			td = text_field_tag :api_token, '', required: true	
 			td = text_field_tag :url, '', required: true
-			td
-			
-			td = password_field_tag :confirm_password,'', required: true
-
 			td = submit_tag 'Submit', id: 'check_password'
+
+		tr.dark_row
+			td  colspan= 3
+				 a class="nav-link" id="apitoken_types-tab"  href='https://id.atlassian.com/manage-profile/security/api-tokens' target='_blank'  Please click here to generate the API token 
 
 
 h6 Active External Systems
@@ -44,7 +42,7 @@ h6 Active External Systems
 				td = sys.system_type
 				td = sys.url
 				td = sys.jira_email
-				td = link_to 'Remove', remove_configuration_path(id: params[:customer_id], sys_id: sys.id), remote: true
+				td = link_to 'Remove', remove_configuration_path(sys_id: sys.id), remote: true
 - else
 	p There are curreltly no active external systems that have been setup
 

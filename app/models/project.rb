@@ -43,20 +43,18 @@ class Project < ApplicationRecord
 
   def self.find_jira_projects(customer_id, project_id=nil)
     current_user = User.find customer_id
-    customer = Customer.find current_user.customer_id
-    @configuration = customer.external_configurations.where(system_type: 'jira').first
+    #customer = Customer.find current_user.customer_id
+    @configuration = current_user.external_configurations.where(system_type: 'jira').first
     if @configuration.present?
 	    options = {
 	      :username     => @configuration.jira_email,
-	      :password     => @configuration.password,
+	      :password     => @configuration.api_token,
 	      :site         => @configuration.url+':443/',
 	      :context_path => '',
-	      :auth_type    => :basic
+	      :auth_type    => :basic   
 	    }
       begin
-	      client = JIRA::Client.new(options)
-      
-        
+        client = JIRA::Client.new(options)     
         if project_id.present? 
           project = client.Project.find project_id
         else

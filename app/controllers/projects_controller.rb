@@ -48,6 +48,7 @@ class ProjectsController < ApplicationController
       @holiday_exceptions = @project.holiday_exceptions
       @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
       @announcement = Announcement.where("active = true").last
+      @current_systems = ExternalConfiguration.where(user_id: current_user.id)
     elsif @adhoc_pm_project.present?
       @project = @adhoc_pm_project
       @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@adhoc_pm_project.id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
@@ -71,8 +72,9 @@ end
   def new
     @project = Project.new
     @users_on_project = User.where("parent_user_id IS null").all
+    user_detail =User.find(current_user.id)
     @customer = Customer.find current_user.customer_id
-    @configuration = @customer.external_configurations.where(system_type: 'jira').first
+    @configuration = user_detail.external_configurations.where(system_type: 'jira').first
 
   end
 
@@ -123,7 +125,7 @@ end
         
         if issue.status.name == 'In Progress'
           unless @project.tasks.where(imported_from: issue.id).present?
-            @project.tasks.build(code: issue.key, description: issue.summary, active: true, imported_from: issue.id )
+            @project.tasks.build(code: issue.key, description: issue.summary, estimated_time: issue.timeestimate,active: true, imported_from: issue.id )
           end
         end
       end
@@ -232,6 +234,7 @@ end
     @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
     @project = Project.includes(:tasks).find(params[:id])
     @projects = Project.where(id: params[:project_id])
+    @current_systems = ExternalConfiguration.where(user_id: current_user.id)
     @available_users = User.where("parent_user_id IS ? && (customer_id IS ? OR customer_id = ?)", nil, nil , @project.customer.id)
     respond_to do |format|
       if @project.update(customer_id: project_params["customer_id"], proxy: params["proxy"], deactivate_notifications: @notifications)
@@ -651,7 +654,33 @@ end
       format.js
     end
   end
+def add_configuration
+      @configuration = ExternalConfiguration.where(system_type: params[:system_type], user_id: current_user.id).first
+      unless @configuration.present?
+        @configuration = ExternalConfiguration.new
+        @configuration.system_type = params[:system_type]
+        @configuration.url = params[:url]
+        @configuration.jira_email = params[:jira_email]
+        @configuration.password = params[:password]
+        @configuration.confirm_password = params[:confirm_password]
+        @configuration.user_id = current_user.id
+        @configuration.created_by = current_user.id
+        @configuration.api_token = params[:api_token]
+        @configuration.save
+      end
+    @current_systems = ExternalConfiguration.where(user_id: current_user.id)
 
+    respond_to do |format|
+      format.js
+    end
+  end
+
+  def remove_configuration
+      @configuration = ExternalConfiguration.find(params[:sys_id])
+      @configuration.destroy   
+    @current_systems = ExternalConfiguration.where(user_id: current_user.id)
+
+  end
   def dynamic_project_update
     logger.debug("project-dynamic_project_update- PROJECT ID IS #{params.inspect}")
     @project_id = params[:project_id]
@@ -692,6 +721,7 @@ end
     @adhoc_pm_project = @project
     @projects = Project.where(id: @project_id)
     @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
+    @current_systems = ExternalConfiguration.where(user_id: current_user.id)
     respond_to do |format|  
       format.js
     end

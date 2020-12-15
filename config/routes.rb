@@ -98,8 +98,8 @@ Rails.application.routes.draw do
   
   get '/dynamic_project_update' => 'projects#dynamic_project_update'
   get '/dynamic_customer_update' => 'customers#dynamic_customer_update'
-  post '/add_configuration' => 'customers#add_configuration', as: :add_configuration
-  get '/remove_configuration' => 'customers#remove_configuration', as: :remove_configuration
+  post '/add_configuration' => 'projects#add_configuration', as: :add_configuration
+  get '/remove_configuration' => 'projects#remove_configuration', as: :remove_configuration
 
   post '/create_project_from_system' => 'projects#create_project_from_system'
   get 'show_projects/:system' => 'projects#show_projects'

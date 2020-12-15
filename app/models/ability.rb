@@ -35,8 +35,8 @@ class Ability
       end
       if user.pm
        can :manage, TimeEntry
-       can :manage, Task
-       can [:manage, :read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve, :add_adhoc_pm, :dynamic_project_update,:send_project_users_email], Project
+       can :manage, Task       
+       can [:manage, :read, :edit, :update,:show_hours, :permission_denied, :show_project_reports,:approve, :add_adhoc_pm, :dynamic_project_update,:send_project_users_email, :add_configuration, :remove_configuration], Project
        can [:new, :create, :edit, :update, :time_reject, :show_all_timesheets, :open_previous_week_modal], Week
        can [:accept_terms_and_condition], User
       end
