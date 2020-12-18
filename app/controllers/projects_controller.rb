@@ -121,8 +121,7 @@ end
         @project.external_type_id = @jira_project.id
         @project.save
       end 
-      @jira_project.issues.each do |issue|
-        
+      @jira_project.issues.each do |issue|       
         if issue.status.name == 'In Progress'
           unless @project.tasks.where(imported_from: issue.id).present?
             @project.tasks.build(code: issue.key, description: issue.summary, estimated_time: issue.timeestimate,active: true, imported_from: issue.id )
@@ -680,6 +679,58 @@ def add_configuration
       @configuration.destroy   
     @current_systems = ExternalConfiguration.where(user_id: current_user.id)
 
+  end
+  def refresh_task        
+      @projects = Project.find(params[:project_id])
+      @project_id = params[:project_id]
+      @adhoc = params["adhoc"]
+      if @projects.external_type_id.present?
+      @jira_project = Project.find_jira_projects(current_user.id, @projects.external_type_id)        
+      @jira_project.issues.each do |issue|        
+        if issue.status.name == 'In Progress'          
+          unless @projects.tasks.where(imported_from: issue.id).present?            
+            @task = Task.create(id: Task.all.count + 1, code: issue.key, description: issue.summary, active: true, estimated_time: issue.timeestimate, imported_from: issue.id, project_id: params[:project_id])            
+          end
+        end
+      end          
+      @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+    @tasks_on_project = Task.where(project_id: @project_id)
+    # @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4","1","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+     @user_projects = Project.where(user_id: current_user.id)
+  
+
+    @customers = Customer.all
+    @project = Project.includes(:tasks).find(@project_id)
+    #@applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4",@project_id,"2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
+    @users_on_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND current_shift is true AND projects_users.project_id = #{@project.id}").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
+    #@available_users = User.where("customer_id IS ? OR customer_id = ?", nil , @project.customer.id)
+    available_users = User.where("parent_user_id IS ? && (customer_id IS ? OR customer_id = ?)", nil, nil , @project.customer.id) 
+    shared_users = SharedEmployee.where(customer_id: @project.customer.id).collect{|u| u.user_id}
+    shared_user_array = Array.new
+    shared_users.each do |su|
+      u = User.find(su)
+      shared_user_array.push(u)
+    end
+    @shift_change_requests = ShiftChangeRequest.where("status = ?", "Requested")
+    logger.debug("AVAIALABLE SHARED USERS #{shared_users.inspect}, The USER IS #{shared_user_array.inspect}")
+    @available_users = available_users + shared_user_array
+    @users = User.where("parent_user_id IS null").all
+    @invited_users = User.where("invited_by_id = ?", current_user.id)
+    @proxies = User.where("customer_id =? and proxy = ?", @project.customer.id, true)
+    @customer = Customer.find(@project.customer_id)
+    customer_holiday_ids = CustomersHoliday.where(customer_id: @project.customer.id).pluck(:holiday_id)
+    @holidays = Holiday.where(global:true).or(Holiday.where(id: customer_holiday_ids))
+    @holiday_exception = HolidayException.new
+    @holiday_exceptions = @project.holiday_exceptions
+    @adhoc_pm_project = @project
+    @projects = Project.where(id: @project_id)
+    @adhoc_pm = User.where(id: @project.adhoc_pm_id).first
+    @current_systems = ExternalConfiguration.where(user_id: current_user.id)
+    respond_to do |format|  
+      format.js
+    end
+       # redirect_to projects_path
+    end
   end
   def dynamic_project_update
     logger.debug("project-dynamic_project_update- PROJECT ID IS #{params.inspect}")
