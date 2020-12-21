@@ -112,20 +112,27 @@ end
     if params[:system_type] == 'jira'
       @jira_project = Project.find_jira_projects(current_user.id, params[:system_project])
 
-      @project = Project.where(external_type_id: @jira_project.id, customer_id: params[:customer_id]).first
+      @project = Project.where(external_type_id: @jira_project.id, user_id: current_user.id).first
       unless @project.present?
         @project = Project.new
         @project.name = @jira_project.name
-        @project.customer_id = params[:customer_id]
+        @project.customer_id = current_user.customer_id
         @project.user_id = current_user.id
         @project.external_type_id = @jira_project.id
         @project.save
       end 
       @jira_project.issues.each do |issue|       
-        if issue.status.name == 'In Progress'
-          unless @project.tasks.where(imported_from: issue.id).present?
-            @project.tasks.build(code: issue.key, description: issue.summary, estimated_time: issue.timeestimate,active: true, imported_from: issue.id )
-          end
+        active = issue.status.name == 'In Progress'
+        estimate = issue.timeestimate.present? ? (issue.timeestimate/3600) : 0
+        unless @project.tasks.where(imported_from: issue.id).present?            
+          @task = Task.create(code: issue.key, description: issue.summary, active: active, estimated_time: estimate, imported_from: issue.id, project_id: @project.id)            
+        else
+          @task = Task.find_by_imported_from issue.id
+          @task.code = issue.key
+          @task.active = active
+          @task.description = issue.summary
+          @task.estimated_time = estimate
+          @task.save
         end
       end
 
@@ -687,11 +694,22 @@ def add_configuration
       if @projects.external_type_id.present?
       @jira_project = Project.find_jira_projects(current_user.id, @projects.external_type_id)        
       @jira_project.issues.each do |issue|        
-        if issue.status.name == 'In Progress'          
-          unless @projects.tasks.where(imported_from: issue.id).present?            
-            @task = Task.create(id: Task.all.count + 1, code: issue.key, description: issue.summary, active: true, estimated_time: issue.timeestimate, imported_from: issue.id, project_id: params[:project_id])            
-          end
+        active = issue.status.name == 'In Progress'
+        estimate = issue.timeestimate.present? ? (issue.timeestimate/3600) : 0
+
+
+        unless @projects.tasks.where(imported_from: issue.id).present?            
+          @task = Task.create(code: issue.key, description: issue.summary, active: active, estimated_time: estimate, imported_from: issue.id, project_id: params[:project_id])            
+        else
+          @task = Task.find_by_imported_from issue.id
+          @task.code = issue.key
+          @task.active = active
+          @task.description = issue.summary
+          @task.estimated_time = estimate
+          @task.project_id =  params[:project_id]
+          @task.save
         end
+        
       end          
       @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @tasks_on_project = Task.where(project_id: @project_id)

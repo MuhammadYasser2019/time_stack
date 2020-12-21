@@ -16,19 +16,17 @@
   table.table border="1" id="tasklist"
     thead
       tr 
-        td Code
-        td Description
-        td Comment
-        td Estimated Time To Complete
-        td Active
-        td Billable
-        td Overtime
+        th Code
+        th Description
+        th Default Comment
+        th Estimated Time
+        th Available Hours
+        th Active Flag
+        th Billable
+        th Overtime
 
     tbody
       = f.fields_for :tasks do |tf|
         == render 'task_fields', f: tf
-    tr
-      td colspan="5"
-        = link_to_add_association "Add Task", f, :tasks, class: " btn btn-primary btn-xs", 'data-association-insertion-method' => "append"
           
   .actions#new-project-actions = f.submit
