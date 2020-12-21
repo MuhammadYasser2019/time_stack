@@ -69,7 +69,7 @@
 
 - elsif @projects.present?
 	div.tab-content.white-background
-		div class="tab-pane fade show active" role="tabpanel" aria-labelledby="information-tab" id="information"
+		div class="tab-pane fade show active" role="tabpanel" aria-labelledby="information-tab" id="information" 
 			div class= "display-text"
 			= form_for @project, remote: true do |f|
 				- if @project.errors.any?
@@ -91,23 +91,25 @@
 
 
 				h1 class="task-center-row" Tasks
+				<input  type="text" placeholder="search task id or description..." style="width:30em;height:3em;margin-bottom:10px;" id="mytaskInput" onkeyup="mytaskfunc()" />
+				div = link_to "Refresh Task", 'javascript:void(0)',class: "btn btn-primary refresh_task" ,id: "#{@project.id}"
 				table class="center-row table " id="tasklist"
 					thead
 					  tr 
-					    td Code
-					    td Description
-					    td Default Comment
-					    td Estimated Time
-					    td Active Flag
-					    td Billable
-					    td Overtime
+					    th Code
+					    th Description
+					    th Default Comment
+					    th Estimated Time
+					    th Active Flag
+					    th Billable
+					    th Overtime
 					tbody
 					  = f.fields_for :tasks do |tf|
 					    == render 'task_fields', f: tf
 
 					tr
       					td colspan="5"
-        					= link_to_add_association "Add Task", f, :tasks, class: " btn btn-primary btn-xs", 'data-association-insertion-method' => "append"
+        					= link_to_add_association "Add Task", f, :tasks, class: "btn btn-primary btn-xs", 'data-association-insertion-method' => "append"
 				
 				table class="center-row table"
 					thead
@@ -238,3 +240,32 @@ coffee:
     	format: "yyyy-mm-dd"
 
     })
+javascript:    
+	function mytaskfunc() {
+	  var input, filter, table, tr, td, j, txtValue;
+	  input = document.getElementById("mytaskInput");
+	  console.log(input)
+	  filter = input.value.toUpperCase();
+	  console.log(filter)
+	  table = document.getElementById("tasklist");
+	  console.log("table",table)
+	  tr = table.getElementsByTagName("tr");
+	  console.log(tr)
+	  console.log(tr.length)
+	  for (j = 0; j < tr.length; j++) {
+	    td = tr[j].getElementsByTagName("td")[0];
+	    console.log(td)
+	    td1 = tr[j].getElementsByTagName("td")[1];
+	    console.log(td1)
+	    if (td || td1) {
+	      txtValue = td.textContent || td.innerHTML;
+	      txtValue1 =td1.textContent || td1.innerHTML;
+	      if (txtValue.toUpperCase().indexOf(filter) > -1 || txtValue1.toUpperCase().indexOf(filter)> -1){
+	    	  tr[j].style.display = "";
+	      } 
+	      else {
+	        tr[j].style.display = "none";
+	      }
+	    }       
+	  }
+	 }
