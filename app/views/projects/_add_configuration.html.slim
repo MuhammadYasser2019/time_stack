@@ -21,7 +21,7 @@ h6 New Configuration Setup
 		tr 
 			td = text_field_tag :api_token, '', required: true	
 			td = text_field_tag :url, '', required: true
-			td = submit_tag 'Submit', id: 'check_password' , disabled: (@current_systems.present? ? 'disabled' : '')
+			td = submit_tag 'Submit', id: 'check_password' , disabled: @current_systems.present? ? true : false
 
 		tr.dark_row
 			td  colspan= 3
