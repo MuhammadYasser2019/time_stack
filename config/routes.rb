@@ -58,6 +58,8 @@ Rails.application.routes.draw do
     get 'delete_time_entry', to: "time_entries#delete_time_entry"
     get 'get_time_entry_detail', to: "time_entries#get_time_entry_detail"
     post 'save_time_entry', to: "time_entries#save_time_entry"
+    post 'checkin_time_entry', to: "time_entries#checkin_time_entry"
+    post 'checkout_time_entry', to: "time_entries#checkout_time_entry"
     get 'get_user_projects', to: "time_entries#get_user_projects"
     get 'get_project_tasks', to: "time_entries#get_project_tasks"
     post 'save_device_info', to: "notifications#save_device_info"

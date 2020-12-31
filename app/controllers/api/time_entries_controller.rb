@@ -77,7 +77,8 @@ module Api
 		def save_time_entry
 			begin
 				@time_entry = params[:entry_data]
-				@entry_id =  @time_entry[:id]
+				@projectid =  @time_entry[:id]
+				@projectid =  @time_entry[:id]
 				@success = false
 				if @entry_id>0
 					# UPDATE
@@ -88,9 +89,67 @@ module Api
 				end
 
 				render json: format_response_json({
-					message:@success? "Time entry saved successfully!" : "Failed to save time entry!",
+					message:@success? "Time entry checkin successfully!" : "Failed to checkin time entry!",
 					status: @success
 				})        
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to checkin time entry!',
+					status: false
+				})
+			end
+		end	
+
+		api :POST, '/checkin_time_entry', "Checkin user time entry"
+		formats ['json']		
+			param :task_id, String, :desc => "Task ID", :required => true
+			param :project_id, String, :desc => "Project ID", :required => true			
+			param :time_in, Time, :desc => "In time", :required => true
+			param :date_of_activity, String, :desc => "Date of activity", :required => true
+		
+		def checkin_time_entry
+			begin
+				debugger				
+				@project_id =  params[:project_id]
+				@task_id =  params[:task_id]
+				@user_id =  params[:user_id]
+				@date_of_activity=params[:date_of_activity]
+				@time_in=params[:time_in]
+
+				@week=Week.where("user_id = ? and start_date <= ? AND end_date >= ?",  @user_id,@date_of_activity,@date_of_activity).first				
+				debugger
+				#if @week.present?
+					@time_entry = TimeEntry.where("week_id = ? and user_id = ? and date_of_activity = ? and project_id = ? and task_id = ?", @week.id, @user_id, @date_of_activity, @project_id , @task_id).first
+					debugger
+					@success = false
+					if @time_entry.present?
+						 @timeEntry = TimeEntry.find_by_id @time_entry.id
+				          @timeEntry.user_id = @user_id
+				          @timeEntry.week_id = @week.id
+				          @timeEntry.time_in = @time_in
+				          @timeEntry.task_id = @task_id
+				          @timeEntry.project_id = @project_id
+				          @timeEntry.updated_by = @user_id
+				          @timeEntry.save
+				          					 						# UPDATE
+						@success = 'true' 
+					else
+						# INSERT
+						#@success =TimeEntry.new(time_entry_params(@time_entry.except(:id))).save
+						TimeEntry.create(project_id: @project_id,task_id: @task_id,date_of_activity: @date_of_activity,time_in: @time_in,week_id: @week.id,user_id: @user_id, updated_by: @user_id)
+						@success = 'true'
+					end
+
+					render json: format_response_json({
+						message:@success? "Time entry saved successfully!" : "Failed to save time entry!",
+						status: @success
+					})
+				#else
+				#	render json: format_response_json({
+				#		message: 'Week does not exist!',
+				#		status: false
+				#end
+
 			rescue
 			    render json: format_response_json({
 					message: 'Failed to save time entry!',
@@ -98,6 +157,9 @@ module Api
 				})
 			end
 		end	
+
+
+
 
 		api :GET, '/submit_weekly_time_entry', "Submit weekly entries"
 		formats ['json']
@@ -185,6 +247,7 @@ module Api
 		param :project_id, Integer, :desc => "Project ID to fetch all tasks", :required => true
 		def get_project_tasks
 			begin
+				debugger
 				@project_id = params[:project_id]
 				@tasks=Task.where(:project_id=> @project_id).select("id as taskID, code as taskName").as_json
 
@@ -205,6 +268,10 @@ module Api
 
 		def time_entry_params(entry)
 			entry.permit(:date_of_activity, :project_id, :hours, :activity_log, :task_id, :week_id, :user_id, :sick, :partial_day, :personal_day, :updated_by)
+		end
+
+		def time_entry_checkin_params(entry)
+			entry.permit(:date_of_activity, :project_id, :time_in, :time_out, :activity_log, :task_id, :week_id, :user_id, :sick, :partial_day, :personal_day, :updated_by)
 		end
     end
 end
