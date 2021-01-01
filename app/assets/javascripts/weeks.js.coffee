@@ -46,9 +46,11 @@ jQuery ($) ->
           console.log "data is "+item.code + "  "  + item.description
           $('#'+field_id).append($("<option></option>").attr("value",item.id).text(item.description))
         #task_id = $('#'+field_id+' :selected').val()
-        $('#'+field_id).selectpicker('refresh')      
+        $('#'+field_id).selectpicker('refresh')    
+        $('.selectpicker').selectpicker('refresh');  
       else
         $('#'+field_id).selectpicker('refresh')
+        $('.selectpicker').selectpicker('refresh');
   
   check_holidays = (project_id, date, tr) ->
     url = "/check_holidays/" + project_id
