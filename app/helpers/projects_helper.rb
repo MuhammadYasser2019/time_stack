@@ -25,4 +25,27 @@ module ProjectsHelper
   	return avaliable_time 		
   	
   end
+  def estimated_task_time_exceed(project_id,week_id) 
+    if project_id.present?
+      task=Task.where(:project_id => project_id)
+      time_exceed = false
+      task.each  do |t|
+        task_hours=TimeEntry.where(:task_id => t.id,:week_id => week_id).sum(:hours)
+        esmt_hours=Task.find(t.id).estimated_time
+        if esmt_hours.present? && task_hours > esmt_hours 
+          time_exceed = true
+          break;
+        else
+          next
+        end
+       end 
+       if time_exceed
+        return true
+       else
+        return false
+       end 
+    else
+      return false
+    end
+  end
 end

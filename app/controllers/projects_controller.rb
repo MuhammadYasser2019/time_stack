@@ -695,6 +695,9 @@ def add_configuration
       @jira_project = Project.find_jira_projects(current_user.id, @projects.external_type_id)        
       @jira_project.issues.each do |issue|        
         active = issue.status.name == 'In Progress'
+        if issue.status.name =='Done'
+          next
+        end
         estimate = issue.timeestimate.present? ? (issue.timeestimate/3600) : 0
 
 
