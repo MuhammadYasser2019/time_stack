@@ -183,7 +183,17 @@ jQuery ($) ->
 
   $("tbody").on("change", ".vacation-change, .partial_day", ->
     orig = $(this)
-    
+    vc = this.options[this.selectedIndex].text;
+    console.log("VC",vc)
+    if(!vc)
+      console.log('vacation type',vc)
+      tr = orig.parent().parent("tr")
+      console.log(tr)
+      hr=tr.find(".hour").children('div').children(".hours-input").val(null)
+    else
+      tr = orig.parent().parent("tr")
+      console.log(tr)
+      hr=tr.find(".hour").children('div').children(".hours-input").val(0)
     tr = orig.parent().parent("tr")
     label = tr.find(".date1").children("label")
     console.log(label.text())

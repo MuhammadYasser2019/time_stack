@@ -204,16 +204,18 @@ end
         logger.debug "id: #{t[1]["id"]}"
         if t[1]["id"].blank?
           logger.debug "ID IS NILLLLLLLL"
-          t[1]["id"] = Task.all.count + 1
-        end
-        if Task.where(id: t[1]["id"]).present?
+         # t[1]["id"] = Task.all.count + 1
+        end        
+        if Task.where(id: t[1]["id"]).present? && !t[1]["imported_from"].present? 
           @task = Task.find(t[1]["id"]).update(code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"], estimated_time: t[1]["estimated_time"], overtime: t[1]["overtime"], imported_from: t[1]["imported_from"])
+        elsif t[1]["imported_from"].present?
+          @task = Task.find(t[1]["id"]).update( billable: t[1]["billable"], overtime: t[1]["overtime"])
+                   
         else
-          @task = Task.create(id: t[1]["id"], code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"],estimated_time: t[1]["estimated_time"], overtime: t[1]["overtime"], imported_from: t[1]["imported_from"], project_id: @project.id)
+          @task = Task.create(code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"],estimated_time: t[1]["estimated_time"], overtime: t[1]["overtime"], imported_from: t[1]["imported_from"], project_id: @project.id)
         end
       end
     end
-
     logger.debug("############################ the tasks code in projects CONTROLLER #{@task.inspect}")
     logger.debug "PROJECT PARAMS: #{project_params.inspect}"
     pp = project_params.delete("tasks_attributes")
@@ -763,6 +765,7 @@ def add_configuration
     #logger.debug("project-dynamic_project_update- PROJECT ID IS #{@projects.inspect} ********#{@projects.first.id} ")
     @users_assignied_to_project = User.joins("LEFT OUTER JOIN projects_users ON users.id = projects_users.user_id AND projects_users.project_id = 1").select("users.email,first_name,email,users.id id,user_id, projects_users.project_id, projects_users.active,project_id")
     @tasks_on_project = Task.where(project_id: @project_id)
+
     # @applicable_week = Week.joins(:time_entries).where("(weeks.status_id = ? or weeks.status_id = ?) and time_entries.project_id= ? and time_entries.status_id=?", "2", "4","1","2").select(:id, :user_id, :start_date, :end_date , :comments).distinct
      @user_projects = Project.where(user_id: current_user.id)
   
