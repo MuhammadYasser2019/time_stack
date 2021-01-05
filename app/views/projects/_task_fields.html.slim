@@ -3,6 +3,8 @@ tr.task-row
   td.code
     = f.hidden_field :id, class: 'form-control'
     = f.text_field :code, class: 'form-control task-code', readonly:  f.object.imported_from.present? ? true :false
+  td style="display:none;"
+    = "#{f.object.description}"
   td.desc
     = f.text_field :description, :class =>'form-control task-description', readonly:  f.object.imported_from.present? ? true :false
   td.default
@@ -17,6 +19,25 @@ tr.task-row
     = f.check_box :billable, class: "form-control"
   td.overtime {style="width:100px;"}
     = f.check_box :overtime, class: "form-control"  
+
+javascript: 
+    $(document).ready(function(){
+      $("#tasklist").DataTable({
+        dom: 'lfrtip',
+        "info": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "paging": false,
+        "order" : [[2, 'asc']],
+        "columnDefs": [
+        { "orderData":[1],   "targets": [ 2 ] },
+       {
+          "visible": false,
+            "targets": [1]
+       }
+    ]
+      })   
+    });
   
 
 
