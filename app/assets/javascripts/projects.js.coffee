@@ -98,7 +98,17 @@ jQuery ($) ->
       project_id: p_id      
     return
   )
-
+  
+  $('#tasklist').DataTable({
+    dom: 'lfrtip',
+    "info": false,
+    "bLengthChange": false,
+    "bFilter": false,
+    "paging": false,
+    "order" : [[2, 'asc']],
+    "columnDefs": [{ "orderData":[1], "targets": [ 2 ] },{ "visible": false,"targets": [1] }]
+  })   
+    
 
   $('#project_left_table').dataTable({
     dom: 'lfrtip',
