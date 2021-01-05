@@ -37,6 +37,24 @@ div[style="width: 90%; margin-left: 7%;"]
   span class="badge"
     = link_to "User Report", "/show_user_reports/#{current_user.id}", class: "orange-button large-3 cell", style: "margin: 5px;"
 
+javascript: 
+    $(document).ready(function(){
+      $("#tasklist").DataTable({
+        dom: 'lfrtip',
+        "info": false,
+        "bLengthChange": false,
+        "bFilter": false,
+        "paging": false,
+        "order" : [[2, 'asc']],
+        "columnDefs": [
+        { "orderData":[1],   "targets": [ 2 ] },
+       {
+          "visible": false,
+            "targets": [1]
+       }
+    ]
+      })   
+    });
       
       
 
