@@ -105,6 +105,12 @@
 					    th Active Flag
 					    th Billable
 					    th Overtime
+					    th style="display:none;"
+					    th style="display:none;"
+					    th style="display:none;"
+					    th style="display:none;"
+					    th style="display:none;"
+					    th style="display:none;"
 					tbody
 					  = f.fields_for :tasks do |tf|
 					    == render 'task_fields', f: tf
@@ -272,4 +278,3 @@ javascript:
 	    }       
 	  }
 	 }
-	 

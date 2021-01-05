@@ -209,7 +209,7 @@ end
         if Task.where(id: t[1]["id"]).present? && !t[1]["imported_from"].present? 
           @task = Task.find(t[1]["id"]).update(code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"], estimated_time: t[1]["estimated_time"], overtime: t[1]["overtime"], imported_from: t[1]["imported_from"])
         elsif t[1]["imported_from"].present?
-          @task = Task.find(t[1]["id"]).update( billable: t[1]["billable"], overtime: t[1]["overtime"])
+          @task = Task.find(t[1]["id"]).update( default_comment: t[1]["default_comment"], billable: t[1]["billable"], overtime: t[1]["overtime"])
                    
         else
           @task = Task.create(code: t[1]["code"], description: t[1]["description"], default_comment: t[1]["default_comment"], active: t[1]["active"], billable: t[1]["billable"],estimated_time: t[1]["estimated_time"], overtime: t[1]["overtime"], imported_from: t[1]["imported_from"], project_id: @project.id)
