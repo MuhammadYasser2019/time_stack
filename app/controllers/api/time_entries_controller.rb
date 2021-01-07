@@ -62,6 +62,110 @@ module Api
 				})
 			end
 		end	
+		api :POST, '/checkin_time_entry', "Checkin user time entry"
+		formats ['json']		
+			param :task_id, String, :desc => "Task ID", :required => true
+			param :project_id, String, :desc => "Project ID", :required => true			
+			param :time_in, Time, :desc => "In time", :required => true
+			param :estimated_time_out, Time, :desc => "Estimated Out time", :required => true			
+			param :date_of_activity, String, :desc => "Date of activity", :required => true
+		
+		def checkin_time_entry
+			begin
+				@project_id =  params[:project_id]
+				@task_id =  params[:task_id]
+				@user_id =  params[:user_id]
+				@date_of_activity=params[:date_of_activity]
+				@time_in=params[:time_in]
+				@estimated_time_out=params[:estimated_time_out]				
+				@week=Week.where("user_id = ? and start_date <= ? AND end_date >= ?",  @user_id,@date_of_activity,@date_of_activity).first								
+				#if @week.present?
+					@time_entry = TimeEntry.where("week_id = ? and user_id = ? and date_of_activity = ? and project_id = ? and task_id = ?", @week.id, @user_id, @date_of_activity, @project_id , @task_id).first					
+					@success = false
+					if @time_entry.present?
+						 @timeEntry = TimeEntry.find_by_id @time_entry.id				          				          
+				          @timeEntry.time_in = @time_in
+				          @timeEntry.task_id = @task_id
+				          @timeEntry.project_id = @project_id
+				          @timeEntry.updated_by = @user_id
+				          @timeEntry.mobile_data = true
+				          @timeEntry.estimated_time_out=@estimated_time_out
+				          @timeEntry.save
+				          					 						# UPDATE
+						@success = 'true' 
+					else
+						# INSERT
+						#@success =TimeEntry.new(time_entry_params(@time_entry.except(:id))).save
+						TimeEntry.create(project_id: @project_id,task_id: @task_id,date_of_activity: @date_of_activity,time_in: @time_in,week_id: @week.id,user_id: @user_id, updated_by: @user_id, mobile_data: true, estimated_time_out: @estimated_time_out)
+						@success = 'true'
+					end
+
+					render json: format_response_json({
+						message:@success? "Checkin successfully!" : "Failed to checkin!",
+						status: @success
+					})
+				#else
+				#	render json: format_response_json({
+				#		message: 'Week does not exist!',
+				#		status: false
+				#end
+
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to checkin!',
+					status: false
+				})
+			end
+		end
+
+		api :POST, '/checkout_time_entry', "Checkout user time entry"
+		formats ['json']		
+			param :task_id, String, :desc => "Task ID", :required => true
+			param :project_id, String, :desc => "Project ID", :required => true	
+			param :activity_log, String, :desc => "Task description", :required => true		
+			param :time_out, Time, :desc => "Out time", :required => true
+			param :date_of_activity, String, :desc => "Date of activity", :required => true
+		
+		def checkout_time_entry
+			begin								
+				@project_id =  params[:project_id]
+				@task_id =  params[:task_id]
+				@user_id =  params[:user_id] 
+				@activity_log = params[:activity_log] 
+				@date_of_activity=params[:date_of_activity]
+				@time_out=params[:time_out]			
+				@week=Week.where("user_id = ? and start_date <= ? AND end_date >= ?",  @user_id,@date_of_activity,@date_of_activity).first
+					@time_entry = TimeEntry.where("week_id = ? and user_id = ? and date_of_activity = ? and project_id = ? and task_id = ?", @week.id, @user_id, @date_of_activity, @project_id , @task_id).first					
+					@success = false
+					if @time_entry.present?
+						 @timeEntry = TimeEntry.find_by_id @time_entry.id				          				          
+				          @timeEntry.time_out = @time_out
+				          @timeEntry.task_id = @task_id
+				          @timeEntry.activity_log = @activity_log
+				          @timeEntry.project_id = @project_id
+				          @timeEntry.updated_by = @user_id
+				          @timeEntry.mobile_data = true
+				          @timeEntry.save				          					 						# UPDATE
+						@success = 'true' 
+					else
+						render json: format_response_json({
+							message: 'Failed to checkout!',
+							status: false
+						})
+					end
+
+					render json: format_response_json({
+						message:@success? "Checkout successfully!" : "Failed to checkout!",
+						status: @success
+					})
+				
+			rescue
+			    render json: format_response_json({
+					message: 'Failed to checkout!',
+					status: false
+				})
+			end
+		end	
 
 		api :POST, '/save_time_entry', "Save user time entry"
 		formats ['json']
