@@ -29,8 +29,13 @@ LABEL summary="$SUMMARY" \
 # To use subscription inside container yum command has to be run first (before yum-config-manager)
 # https://access.redhat.com/solutions/1443553
 RUN yum install -y centos-release-scl && \
-    INSTALL_PKGS="rh-ruby24 rh-ruby24-ruby-devel rh-ruby24-rubygem-rake rh-ruby24-rubygem-bundler" && \
-    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && rpm -V $INSTALL_PKGS && \
+    # INSTALL_PKGS="rh-ruby24 rh-ruby24-ruby-devel rh-ruby24-rubygem-rake rh-ruby24-rubygem-bundler" && \
+    # yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && rpm -V $INSTALL_PKGS && \
+    curl -sSL https://get.rvm.io/ | bash && \
+    usermod -a -G rvm root && \
+    source /etc/profile.d/rvm.sh &&\
+    rvm requirements &&\
+    rvm install ruby-2.4.1 && \
     yum install -y ImageMagick-devel && \
     yum -y clean all --enablerepo='*'
 
