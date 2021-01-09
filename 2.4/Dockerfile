@@ -37,7 +37,7 @@ RUN yum install -y centos-release-scl && \
 RUN echo $STI_SCRIPTS_PATH
 RUN pwd
 RUN locate s2i
-COPY s2i/bin/ $STI_SCRIPTS_PATH
+COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
 # Copy extra files to the image.
 COPY ./root/ /
