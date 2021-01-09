@@ -35,6 +35,8 @@ RUN yum install -y centos-release-scl && \
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 RUN echo $STI_SCRIPTS_PATH
+RUN pwd
+RUN ls -l .
 RUN ls -l ./s2i/bin/
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
