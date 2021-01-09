@@ -29,14 +29,12 @@ LABEL summary="$SUMMARY" \
 # To use subscription inside container yum command has to be run first (before yum-config-manager)
 # https://access.redhat.com/solutions/1443553
 RUN yum install -y centos-release-scl && \
-    yum install -y ImageMagick-devel && \
-# RUN yum install -y centos-release-scl-rh && \
     INSTALL_PKGS="rh-ruby24 rh-ruby24-ruby-devel rh-ruby24-rubygem-rake rh-ruby24-rubygem-bundler" && \
     yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && rpm -V $INSTALL_PKGS && \
+    yum install -y ImageMagick-devel && \
     yum -y clean all --enablerepo='*'
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
-
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
 
 # Copy extra files to the image.
