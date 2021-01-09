@@ -1,8 +1,4 @@
-# TimeStack - Time Sheet Management System
+Ruby 2.4 container image
+=================
 
-#### To set React with TimeStack
-- Checkout to the branch "react-rails"
-- Change the "database.yml" configuration
-- Run the command "bundle update"
-- Run the command "yarn install"
-- Run "rails s"
+**The Ruby 2.4 image is deprecated.**
