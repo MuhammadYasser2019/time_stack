@@ -45,7 +45,10 @@ RUN gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462
     curl --silent --location https://rpm.nodesource.com/setup_10.x | bash - && \
     yum install -y nodejs yarn && \
     yum -y clean all --enablerepo='*' && \
-    echo "source /etc/profile.d/rvm.sh" >> /etc/profile
+    # echo "source /etc/profile.d/rvm.sh" >> /etc/profile
+
+# copy entrypoint-prod.sh
+COPY ./bash.sh /etc
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
@@ -60,3 +63,4 @@ RUN chown -R 1001:0 ${APP_ROOT} && chmod -R ug+rwx ${APP_ROOT} && \
 # RUN source /etc/profile.d/rvm.sh
 # Set the default CMD to print the usage of the language image
 CMD $STI_SCRIPTS_PATH/usage
+ENTRYPOINT [ " /etc/bash.sh " ]
