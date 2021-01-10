@@ -62,4 +62,4 @@ RUN chown -R 1001:0 ${APP_ROOT} && chmod -R ug+rwx ${APP_ROOT} && \
 # RUN source /etc/profile.d/rvm.sh
 # Set the default CMD to print the usage of the language image
 CMD $STI_SCRIPTS_PATH/usage
-# ENTRYPOINT [ " /etc/bash.sh " ]
+ENTRYPOINT [ " /etc/bash.sh " ]
