@@ -31,12 +31,18 @@ LABEL summary="$SUMMARY" \
 RUN yum install -y centos-release-scl && \
     # INSTALL_PKGS="rh-ruby24 rh-ruby24-ruby-devel rh-ruby24-rubygem-rake rh-ruby24-rubygem-bundler" && \
     # yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && rpm -V $INSTALL_PKGS && \
-    # curl -sSL https://get.rvm.io/ | bash && \
-    # usermod -a -G rvm root && \
-    # source /etc/profile.d/rvm.sh &&\
-    # rvm requirements &&\
-    # rvm install ruby-2.4 && \
-    # yum install -y ImageMagick-devel && \
+    ## C9 update to install ruby 2.4.1 with installing nodejs to use yarn
+    gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462A1703113804BB82D39DC0E3 7D2BAF1CF37B13E2069D6956105BD0E739499BDB &&\
+    curl -sSL https://get.rvm.io/ | bash -s stable && \
+    usermod -a -G rvm root && \
+    source /etc/profile.d/rvm.sh && \
+    rvm requirements && \
+    rvm install  ruby-2.4.1 && \
+    yum install -y ImageMagick-devel && \
+    curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
+    rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg && \
+    curl --silent --location https://rpm.nodesource.com/setup_10.x | bash - && \
+    yum install -y nodejs yarn && \
     yum -y clean all --enablerepo='*'
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
@@ -49,8 +55,7 @@ COPY ./root/ /
 RUN chown -R 1001:0 ${APP_ROOT} && chmod -R ug+rwx ${APP_ROOT} && \
     rpm-file-permissions
 
-# USER 1001
-USER 0 
+USER 1001
 
 # Set the default CMD to print the usage of the language image
 CMD $STI_SCRIPTS_PATH/usage
