@@ -44,9 +44,9 @@ RUN gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462
     rpm --import https://dl.yarnpkg.com/rpm/pubkey.gpg && \
     curl --silent --location https://rpm.nodesource.com/setup_10.x | bash - && \
     yum install -y nodejs yarn && \
-    yum -y clean all --enablerepo='*' && \
+    yum -y clean all --enablerepo='*'
+    
     # echo "source /etc/profile.d/rvm.sh" >> /etc/profile
-
 # copy entrypoint-prod.sh
 COPY bash.sh /etc
 
