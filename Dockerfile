@@ -36,6 +36,7 @@ RUN yum install -y centos-release-scl && \
     curl -sSL https://get.rvm.io/ | bash -s stable && \
     usermod -a -G rvm root && \
     source /etc/profile.d/rvm.sh && \
+    sleep 5 && \
     which rvm && \
     rvm requirements && \
     rvm install  ruby-2.4.1 && \
