@@ -5,7 +5,7 @@ FROM centos/s2i-base-centos7
 
 EXPOSE 8080
 
-ENV RUBY_VERSION 2.4.1
+ENV RUBY_VERSION 2.4
 
 ENV SUMMARY="Platform for building and running Ruby $RUBY_VERSION applications" \
     DESCRIPTION="Ruby $RUBY_VERSION available as container is a base platform for \
@@ -17,13 +17,13 @@ It is simple, straight-forward, and extensible."
 LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
       io.k8s.description="$DESCRIPTION" \
-      io.k8s.display-name="Ruby 2.4.1" \
+      io.k8s.display-name="Ruby 2.4" \
       io.openshift.expose-services="8080:http" \
       io.openshift.tags="builder,ruby,ruby24,rh-ruby24" \
       com.redhat.component="rh-ruby24-container" \
       name="centos/ruby-24-centos7" \
-      version="2.4.1" \
-      usage="s2i build https://github.com/sclorg/s2i-ruby-container.git --context-dir=2.4.1/test/puma-test-app/ centos/ruby-24-centos7 ruby-sample-app" \
+      version="2.4" \
+      usage="s2i build https://github.com/sclorg/s2i-ruby-container.git --context-dir=2.4/test/puma-test-app/ centos/ruby-24-centos7 ruby-sample-app" \
       maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
 # To use subscription inside container yum command has to be run first (before yum-config-manager)
@@ -35,7 +35,7 @@ RUN yum install -y centos-release-scl && \
     # usermod -a -G rvm root && \
     # source /etc/profile.d/rvm.sh &&\
     # rvm requirements &&\
-    # rvm install ruby-2.4.1 && \
+    # rvm install ruby-2.4 && \
     # yum install -y ImageMagick-devel && \
     yum -y clean all --enablerepo='*'
 
