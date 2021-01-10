@@ -36,8 +36,8 @@ RUN yum install -y centos-release-scl && \
     curl -sSL https://get.rvm.io/ | bash -s stable && \
     usermod -a -G rvm root && \
     source /etc/profile.d/rvm.sh && \
-    rvm requirements && \
     which rvm && \
+    rvm requirements && \
     rvm install  ruby-2.4.1 && \
     yum install -y ImageMagick-devel && \
     curl --silent --location https://dl.yarnpkg.com/rpm/yarn.repo | tee /etc/yum.repos.d/yarn.repo && \
