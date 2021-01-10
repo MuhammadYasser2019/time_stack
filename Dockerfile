@@ -48,7 +48,7 @@ RUN gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462
     # echo "source /etc/profile.d/rvm.sh" >> /etc/profile
 
 # copy entrypoint-prod.sh
-COPY ./bash.sh /etc
+COPY bash.sh /etc
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
