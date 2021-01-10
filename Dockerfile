@@ -37,7 +37,7 @@ RUN gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462
     usermod -a -G rvm root && \
     ls -l /usr/local/rvm/bin/rvm && \
     source /etc/profile.d/rvm.sh && \
-    sleep 5 && \
+    export PATH=/usr/local/rvm/bin:$PATH && \
     which rvm && \
     rvm requirements && \
     rvm install  ruby-2.4.1 && \
