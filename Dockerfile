@@ -35,7 +35,7 @@ RUN gpg2 --keyserver hkp://pool.sks-keyservers.net --recv-keys 409B6B1796C275462
     curl -sSL https://get.rvm.io/ | bash -s stable && \
     usermod -a -G rvm root && \
     source /etc/profile.d/rvm.sh && \
-    # export PATH=/usr/local/rvm/bin:$PATH && \
+    export PATH=/usr/local/rvm/bin:$PATH && \
     rvm requirements && \
     rvm install  ruby-2.4.1 && \
     yum install -y ImageMagick-devel && \
