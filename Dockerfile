@@ -1,13 +1,16 @@
-FROM image-registry.openshift-image-registry.svc:5000/time-stack-4/s2i-base-centos7
-
-# This image provides a Ruby 2.4 environment you can use to run your Ruby
-# applications.
+FROM image-registry.openshift-image-registry.svc:5000/time-stack-4/s2i-base
 
 EXPOSE 8080
 
-ENV RUBY_VERSION 2.4
+ENV RUBY_MAJOR_VERSION=2 \
+    RUBY_MINOR_VERSION=5
 
-ENV SUMMARY="Platform for building and running Ruby $RUBY_VERSION applications" \
+ENV RUBY_VERSION="${RUBY_MAJOR_VERSION}.${RUBY_MINOR_VERSION}" \
+    RUBY_SCL_NAME_VERSION="${RUBY_MAJOR_VERSION}${RUBY_MINOR_VERSION}"
+
+ENV RUBY_SCL="ruby-${RUBY_SCL_NAME_VERSION}" \
+    IMAGE_NAME="ubi8/ruby-${RUBY_SCL_NAME_VERSION}" \
+    SUMMARY="Platform for building and running Ruby $RUBY_VERSION applications" \
     DESCRIPTION="Ruby $RUBY_VERSION available as container is a base platform for \
 building and running various Ruby $RUBY_VERSION applications and frameworks. \
 Ruby is the interpreted scripting language for quick and easy object-oriented programming. \
@@ -17,23 +20,29 @@ It is simple, straight-forward, and extensible."
 LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
       io.k8s.description="$DESCRIPTION" \
-      io.k8s.display-name="Ruby 2.4" \
+      io.k8s.display-name="Ruby ${RUBY_VERSION}" \
       io.openshift.expose-services="8080:http" \
-      io.openshift.tags="builder,ruby,ruby24,rh-ruby24" \
-      com.redhat.component="rh-ruby24-container" \
-      name="centos/ruby-24-centos7" \
-      version="2.4" \
-      usage="s2i build https://github.com/sclorg/s2i-ruby-container.git --context-dir=2.4/test/puma-test-app/ centos/ruby-24-centos7 ruby-sample-app" \
+      io.openshift.tags="builder,ruby,ruby${RUBY_SCL_NAME_VERSION},${RUBY_SCL}" \
+      com.redhat.component="${RUBY_SCL}-container" \
+      name="${IMAGE_NAME}" \
+      version="1" \
+      com.redhat.license_terms="https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI" \
+      usage="s2i build https://github.com/sclorg/s2i-ruby-container.git \
+--context-dir=${RUBY_VERSION}/test/puma-test-app/ ${IMAGE_NAME} ruby-sample-app" \
       maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
-# To use subscription inside container yum command has to be run first (before yum-config-manager)
-# https://access.redhat.com/solutions/1443553
-    
-    
-RUN yum install -y centos-release-scl && \
-    INSTALL_PKGS="rh-ruby24 rh-ruby24-ruby-devel rh-ruby24-rubygem-rake rh-ruby24-rubygem-bundler" && \
-    yum install -y --setopt=tsflags=nodocs $INSTALL_PKGS && rpm -V $INSTALL_PKGS && \
-    yum -y clean all --enablerepo='*'
+RUN yum -y module enable ruby:$RUBY_VERSION && \
+    INSTALL_PKGS=" \
+    libffi-devel \
+    ruby \
+    ruby-devel \
+    rubygem-rake \
+    rubygem-bundler \
+    redhat-rpm-config \
+    " && \
+    yum install -y --setopt=tsflags=nodocs ${INSTALL_PKGS} && \
+    yum -y clean all --enablerepo='*' && \
+    rpm -V ${INSTALL_PKGS}
 
 # Copy the S2I scripts from the specific language image to $STI_SCRIPTS_PATH
 COPY ./s2i/bin/ $STI_SCRIPTS_PATH
