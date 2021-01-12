@@ -1,4 +1,7 @@
-FROM image-registry.openshift-image-registry.svc:5000/time-stack-4/s2i-base
+FROM image-registry.openshift-image-registry.svc:5000/time-stack-4/s2i-base-centos7
+
+# This image provides a Ruby environment you can use to run your Ruby
+# applications.
 
 EXPOSE 8080
 
@@ -8,14 +11,21 @@ ENV RUBY_MAJOR_VERSION=2 \
 ENV RUBY_VERSION="${RUBY_MAJOR_VERSION}.${RUBY_MINOR_VERSION}" \
     RUBY_SCL_NAME_VERSION="${RUBY_MAJOR_VERSION}${RUBY_MINOR_VERSION}"
 
-ENV RUBY_SCL="ruby-${RUBY_SCL_NAME_VERSION}" \
-    IMAGE_NAME="ubi8/ruby-${RUBY_SCL_NAME_VERSION}" \
+# Set SCL related variables in Dockerfile so that the collection is enabled by default
+ENV RUBY_SCL="rh-ruby${RUBY_SCL_NAME_VERSION}" \
+    IMAGE_NAME="centos7/ruby-${RUBY_SCL_NAME_VERSION}-centos7" \
     SUMMARY="Platform for building and running Ruby $RUBY_VERSION applications" \
     DESCRIPTION="Ruby $RUBY_VERSION available as container is a base platform for \
 building and running various Ruby $RUBY_VERSION applications and frameworks. \
 Ruby is the interpreted scripting language for quick and easy object-oriented programming. \
 It has many features to process text files and to do system management tasks (as in Perl). \
-It is simple, straight-forward, and extensible."
+It is simple, straight-forward, and extensible." \
+    PATH="/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/local/bin:/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/bin:/opt/rh/${NODEJS_SCL}/root/usr/bin:${PATH}" \
+    LD_LIBRARY_PATH="/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/local/lib64:/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/lib64:/opt/rh/${NODEJS_SCL}/root/usr/lib64" \
+    X_SCLS="${NODEJS_SCL} rh-ruby${RUBY_SCL_NAME_VERSION}" \
+    MANPATH="/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/local/share/man:/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/share/man:/opt/rh/${NODEJS_SCL}/root/usr/share/man:" \
+    XDG_DATA_DIRS="/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/local/share:/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/share:/usr/local/share:/usr/share" \
+    PKG_CONFIG_PATH="/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/local/lib64/pkgconfig:/opt/rh/rh-ruby${RUBY_SCL_NAME_VERSION}/root/usr/lib64/pkgconfig"
 
 LABEL summary="$SUMMARY" \
       description="$DESCRIPTION" \
@@ -25,21 +35,19 @@ LABEL summary="$SUMMARY" \
       io.openshift.tags="builder,ruby,ruby${RUBY_SCL_NAME_VERSION},${RUBY_SCL}" \
       com.redhat.component="${RUBY_SCL}-container" \
       name="${IMAGE_NAME}" \
-      version="1" \
-      com.redhat.license_terms="https://www.redhat.com/en/about/red-hat-end-user-license-agreements#UBI" \
+      version="${RUBY_VERSION}" \
       usage="s2i build https://github.com/sclorg/s2i-ruby-container.git \
 --context-dir=${RUBY_VERSION}/test/puma-test-app/ ${IMAGE_NAME} ruby-sample-app" \
       maintainer="SoftwareCollections.org <sclorg@redhat.com>"
 
-RUN yum -y module enable ruby:$RUBY_VERSION && \
+RUN yum install -y centos-release-scl-rh && \
     INSTALL_PKGS=" \
-    libffi-devel \
-    ruby \
-    ruby-devel \
-    rubygem-rake \
-    rubygem-bundler \
-    redhat-rpm-config \
-    " && \
+libffi-devel \
+${RUBY_SCL} \
+${RUBY_SCL}-ruby-devel \
+${RUBY_SCL}-rubygem-rake \
+${RUBY_SCL}-rubygem-bundler \
+" && \
     yum install -y --setopt=tsflags=nodocs ${INSTALL_PKGS} && \
     yum -y clean all --enablerepo='*' && \
     rpm -V ${INSTALL_PKGS}
