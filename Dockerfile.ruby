@@ -31,7 +31,8 @@ ENV RAILS_ENV='development'
 ENV NODE_ENV='development'
 
 # Adding gems
-COPY ./Gemfile Gemfile
+COPY Gemfile /app
+RUN ls -l
 # COPY Gemfile.lock Gemfile.lock
 
 RUN bundle install 
