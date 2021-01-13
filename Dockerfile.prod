@@ -1,4 +1,4 @@
-FROM image-registry.openshift-image-registry.svc:5000/time-stack-4/time-stack24:5000/time-stack-4/ruby:2.4.1
+FROM image-registry.openshift-image-registry.svc:5000/time-stack-4/time-stack24
 
 # adding source code
 RUN git clone https://github.com/MuhammadYasser2019/time_stack.git
