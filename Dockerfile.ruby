@@ -33,8 +33,8 @@ ENV NODE_ENV='development'
 # Adding gems
 RUN ls -l
 RUN pwd
-COPY Gemfile /app
 RUN find / -name Gemfile
+COPY Gemfile /app
 # COPY Gemfile.lock Gemfile.lock
 
 # RUN bundle install 
