@@ -22,8 +22,7 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get -yq dist-upgrad
 RUN mkdir -p /app
 RUN useradd -u 1001 -r -g 0 -d /app default
 WORKDIR /app
-RUN chown -R 1001:0 /app && chmod -R ug+rwx /app && \
-    rpm-file-permissions
+RUN chown -R 1001:0 /app && chmod -R ug+rwx /app 
 
 USER 1001
 
