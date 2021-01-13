@@ -31,8 +31,6 @@ ENV RAILS_ENV='development'
 ENV NODE_ENV='development'
 
 # Adding gems
-RUN ls -l
-RUN pwd
 COPY Gemfile /app
 # COPY Gemfile.lock Gemfile.lock
 
