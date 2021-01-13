@@ -18,9 +18,14 @@ RUN apt-get update -qq && DEBIAN_FRONTEND=noninteractive apt-get -yq dist-upgrad
     rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/* && \
     truncate -s 0 /var/log/*log
 
-# Create a directory for the app code
+# Create a user and a directory for the app code
 RUN mkdir -p /app
+RUN useradd -u 1001 -r -g 0 -d /app default
 WORKDIR /app
+RUN chown -R 1001:0 /app && chmod -R ug+rwx /app && \
+    rpm-file-permissions
+
+USER 1001
 
 # Setting env up
 ENV RAILS_ENV='development'
