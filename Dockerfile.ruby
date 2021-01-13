@@ -1,4 +1,4 @@
-FROM image-registry.openshift-image-registry.svc:5000/time-stack-4/ruby
+FROM image-registry.openshift-image-registry.svc:5000/time-stack-4/ruby:2.4.1
 
 ARG BUNDLER_VERSION
 # ARG NODE_MAJOR
