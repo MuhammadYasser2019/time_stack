@@ -1,19 +1,20 @@
 defaults: &defaults
   adapter: mysql2
   encoding: utf8
-  username: $USERNAME
-  password: $PASSWORD
+  username: <%= ENV['USERNAME'] %> 
+  password: <%= ENV['PASSWORD'] %> 
   pool: 5
   host: mysql
 
-### ALTER USER 'root'@'%' IDENTIFIED WITH mysql_native_password BY 'rsi1111'; 
+### ALTER USER 'yasser'@'%' IDENTIFIED WITH mysql_native_password BY 'rsi1111'; 
+    ALTER USER 'yasser'@'%' IDENTIFIED WITH mysql_native_password BY 'rsi1111'; 
 test: &test
   <<: *defaults
   database: timestack_test
 
 development:
   <<: *defaults
-  database: $DATABASE
+  database: <%= ENV['DATABASE'] %> 
 
 cucumber:
   <<: *test
